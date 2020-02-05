@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
+import { StorageService } from './core/services/storage.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'manage';
+
+  isLogin = this.storageService.hasUserToken();
+
+  constructor(private storageService: StorageService, private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isLogin = this.storageService.hasUserToken();
+      }
+    });
+  }
+
 }
