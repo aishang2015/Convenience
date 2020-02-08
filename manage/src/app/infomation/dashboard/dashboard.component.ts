@@ -9,14 +9,9 @@ import {  Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private storageService: StorageService, private router: Router) { }
+  constructor() { }
 
   ngOnInit() {
-  }
-
-  logout() {
-    this.storageService.removeUserToken();
-    this.router.navigate(['/account/login']);
   }
 
 }

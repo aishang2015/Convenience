@@ -1,0 +1,56 @@
+nz-header {
+  .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 30px 16px 0;
+    float: left;
+  }
+
+  .header-menu {
+    float: left;
+    line-height: 64px;
+  }
+
+  .user {
+    width: 120px;
+    height: 43px;
+    margin: 10px 0 10px 0;
+    float: right;
+    line-height: 43px;
+
+    .userName {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .userName:hover {
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+.sider-menu {
+  height: 100%;
+  border-right: 0;
+}
+
+.inner-layout {
+  padding: 0 24px 24px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+nz-content {
+  background: #fff;
+  padding: 24px;
+}
+
+nz-sider {
+  overflow: auto;
+  height: 100vh;
+}
+
+.fullscreen {
+  min-height: 100%;
+}
