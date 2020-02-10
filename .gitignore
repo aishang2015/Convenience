@@ -4,3 +4,10 @@
 
 /manage/node_modules
 /manage/.vscode
+/backend/.vs
+/backend/backend/bin
+/backend/backend/obj
+/backend/backend.core/bin
+/backend/backend.core/obj
+/backend/backend.data/bin
+/backend/backend.data/obj
