@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using backend.core.Data;
+using backend.data.Extensions;
+using backend.data.Infrastructure;
+using backend.data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +30,8 @@ namespace backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddApplicationDbContext(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +52,20 @@ namespace backend
             {
                 endpoints.MapControllers();
             });
+        }
+    }
+
+    public static class CustomExtension
+    {
+        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("PostgreSQL");
+            services.AddCustomDbContext<ApplicationDbContext, ApplicationUser, ApplicationRole, string>
+                (connectionString, DataBaseType.PostgreSQL);
+
+            services.AddRepositories<ApplicationDbContext>();
+            
+            return services;
         }
     }
 }

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.api", "backend\backend.api.csproj", "{80FDEED6-C283-4901-9B55-BA08D4C98394}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.api", "backend\backend.api.csproj", "{80FDEED6-C283-4901-9B55-BA08D4C98394}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.data", "backend.data\backend.data.csproj", "{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.data", "backend.data\backend.data.csproj", "{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.core", "backend.core\backend.core.csproj", "{DFCA502F-F81B-47DA-A3B7-00984F05BC2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.core", "backend.core\backend.core.csproj", "{DFCA502F-F81B-47DA-A3B7-00984F05BC2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
