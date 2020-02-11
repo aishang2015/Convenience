@@ -33,7 +33,14 @@ namespace backend.data.Extensions
                         option.UseNpgsql(connectionString);
                         break;
                 }
-            }).AddIdentity<TUser, TRole>()
+            }).AddIdentity<TUser, TRole>(option =>
+            {
+                option.Password.RequireDigit = false;
+                option.Password.RequireLowercase = false;
+                option.Password.RequireUppercase = false;
+                option.Password.RequireNonAlphanumeric = false;
+                option.Password.RequiredLength = 4;
+            })
             .AddEntityFrameworkStores<TDbContext>()
             .AddDefaultTokenProviders();
             return services;

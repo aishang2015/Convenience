@@ -11,3 +11,7 @@
 /backend/backend.core/obj
 /backend/backend.data/bin
 /backend/backend.data/obj
+/backend/backend.model/bin
+/backend/backend.model/obj
+/backend/backend.service/bin
+/backend/backend.service/obj
