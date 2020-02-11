@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AccountService } from 'src/app/common/services/account.service';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +15,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private storage: StorageService,
-    private router: Router) { }
+    private accountService: AccountService) { }
 
   ngOnInit() {
     this.validateForm = this.fb.group({
@@ -31,8 +31,7 @@ export class LoginComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if (this.validateForm.valid) {
-      this.storage.userToken = "usertoken";
-      this.router.navigate(['/dashboard']);
+      this.accountService.login(this.validateForm.controls['userName'].value, this.validateForm.controls['password'].value);
     }
   }
 }
