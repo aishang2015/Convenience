@@ -13,6 +13,7 @@ import zh from '@angular/common/locales/zh';
 import { LayoutComponent } from './common/components/layout/layout.component';
 import { AuthHeaderInterceptor } from './core/inceptors/auth-header-inceptor';
 import { CacheInterceptor } from './core/inceptors/cache-inceptor';
+import { ErrorHandlerInterceptor } from './core/inceptors/error-handler-inceptor';
 registerLocaleData(zh);
 
 @NgModule({
@@ -35,6 +36,7 @@ registerLocaleData(zh);
     { provide: NZ_I18N, useValue: zh_CN },
     { provide: HTTP_INTERCEPTORS, useClass: AuthHeaderInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
   ]
 })
 export class AppModule { }
