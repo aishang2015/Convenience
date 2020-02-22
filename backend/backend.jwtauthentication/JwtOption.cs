@@ -1,11 +1,9 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace backend.core.Authentication
+using System;
+using System.Text;
+
+namespace backend.jwtauthentication
 {
     public class JwtOption
     {

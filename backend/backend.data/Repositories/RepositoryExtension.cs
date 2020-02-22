@@ -1,13 +1,10 @@
-﻿using backend.core.Data;
+﻿using backend.data.Infrastructure;
+using backend.util;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using System;
-using System.Collections.Generic;
+
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Loader;
-using System.Text;
 
 namespace backend.data.Repositories
 {
@@ -16,15 +13,14 @@ namespace backend.data.Repositories
         public static IServiceCollection AddRepositories<TDbContext>(this IServiceCollection services)
             where TDbContext : DbContext
         {
-            var libs = DependencyContext.Default.CompileLibraries
-                .Where(lib => !lib.Serviceable && lib.Type != "referenceassembly").ToList();
-            libs.ForEach(lib =>
-            {
-                var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
+            var assemblyList = ReflectionUtil.AssemblyList;
 
-                foreach (var type in assembly.GetTypes())
+            foreach (var types in assemblyList.Select(assembly => assembly.GetTypes().ToList()))
+            {
+                types.ForEach(type =>
                 {
-                    var attribute = type.GetCustomAttributes(typeof(EntityAttribute), false).FirstOrDefault();
+                    var attribute = type.GetCustomAttributes(typeof(EntityAttribute), false)
+                        .FirstOrDefault();
                     if (attribute != null)
                     {
                         if (typeof(TDbContext) == ((EntityAttribute)attribute).dbContextType)
@@ -34,8 +30,8 @@ namespace backend.data.Repositories
                             services.AddScoped(interfaceRepository, baseRepository);
                         }
                     }
-                }
-            });
+                });
+            }
 
             services.AddScoped<IUnitOfWork<TDbContext>, UnitOfWork<TDbContext>>();
 

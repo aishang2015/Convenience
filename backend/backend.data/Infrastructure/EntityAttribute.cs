@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace backend.core.Data
+namespace backend.data.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EntityAttribute : Attribute

@@ -1,5 +1,4 @@
-﻿using backend.core.Data;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend.data.Infrastructure

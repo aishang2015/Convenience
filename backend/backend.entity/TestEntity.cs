@@ -1,10 +1,6 @@
-﻿using backend.core.Data;
-using backend.data.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using backend.data.Infrastructure;
 
-namespace backend.data.Entities
+namespace backend.entity.Entities
 {
     [Entity(dbContextType = typeof(ApplicationDbContext))]
     public class TestEntity

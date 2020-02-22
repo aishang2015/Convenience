@@ -1,4 +1,3 @@
-using backend.core.Data;
 using backend.data.Infrastructure;
 
 using Microsoft.AspNetCore.Hosting;

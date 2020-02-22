@@ -1,10 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <OutputType>Library</OutputType>
-    <ApplicationIcon />
-    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,18 +13,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.1.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\backend.data\backend.data.csproj" />
-    <ProjectReference Include="..\backend.dependency\backend.dependency.csproj" />
-    <ProjectReference Include="..\backend.fluentvalidation\backend.fluentvalidation.csproj" />
-    <ProjectReference Include="..\backend.jwtauthentication\backend.jwtauthentication.csproj" />
-    <ProjectReference Include="..\backend.util\backend.util.csproj" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
   </ItemGroup>
 
 </Project>

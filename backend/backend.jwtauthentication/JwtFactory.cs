@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.Options;
-using System;
+
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace backend.core.Authentication
+namespace backend.jwtauthentication
 {
     public class JwtFactory : IJwtFactory
     {

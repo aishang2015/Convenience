@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace backend.core.Data
+namespace backend.data.Infrastructure
 {
     public static class DataBaseInitializer
     {

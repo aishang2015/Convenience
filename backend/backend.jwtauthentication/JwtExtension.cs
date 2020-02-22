@@ -3,9 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+
 using System.Threading.Tasks;
 
-namespace backend.core.Authentication
+namespace backend.jwtauthentication
 {
     public static class JwtExtension
     {

@@ -5,12 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Infrastructure\ApplicationDbContext.cs~RF42f470a3.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\backend.dependency\backend.dependency.csproj" />
-    <ProjectReference Include="..\backend.util\backend.util.csproj" />
   </ItemGroup>
 
 </Project>

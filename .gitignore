@@ -5,13 +5,5 @@
 /manage/node_modules
 /manage/.vscode
 /backend/.vs
-/backend/backend/bin
-/backend/backend/obj
-/backend/backend.core/bin
-/backend/backend.core/obj
-/backend/backend.data/bin
-/backend/backend.data/obj
-/backend/backend.model/bin
-/backend/backend.model/obj
-/backend/backend.service/bin
-/backend/backend.service/obj
+/backend/*/bin
+/backend/*/obj
