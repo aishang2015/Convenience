@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
-using System.Text;
 
 namespace backend.util
 {
@@ -38,6 +37,17 @@ namespace backend.util
                 }
                 return _assemblyList;
             }
+        }
+
+
+        public static List<Type> GetAllSubClass<T>()
+        {
+            var result = new List<Type>();
+            AssemblyList.ForEach(assembly =>
+            {
+                result.AddRange(assembly.GetTypes().Where(type => type.BaseType == typeof(T)));
+            });
+            return result;
         }
 
 

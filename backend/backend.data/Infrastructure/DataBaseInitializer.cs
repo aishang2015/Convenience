@@ -2,9 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace backend.data.Infrastructure
 {
@@ -31,7 +30,7 @@ namespace backend.data.Infrastructure
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e,$"初始化数据库{dbContext.GetType().Name}失败");
+                    logger.LogError(e, $"初始化数据库{dbContext.GetType().Name}失败");
                 }
             }
         }

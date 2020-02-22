@@ -19,13 +19,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend.Modules", "Backend.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.entity", "backend.entity\backend.entity.csproj", "{0DAC03B3-CFED-49FB-AFB0-5DC27B29C5FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.fluentvalidation", "backend.fluentvalidation\backend.fluentvalidation.csproj", "{9634CD98-3133-46F5-8BBF-608F35872C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.fluentvalidation", "backend.fluentvalidation\backend.fluentvalidation.csproj", "{9634CD98-3133-46F5-8BBF-608F35872C10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.util", "backend.util\backend.util.csproj", "{22E971E8-9B3C-43FC-9448-815DA6127A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.util", "backend.util\backend.util.csproj", "{22E971E8-9B3C-43FC-9448-815DA6127A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.dependency", "backend.dependency\backend.dependency.csproj", "{2857DB29-DB19-4DCA-9F24-518B316EFE8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.dependency", "backend.dependency\backend.dependency.csproj", "{2857DB29-DB19-4DCA-9F24-518B316EFE8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.jwtauthentication", "backend.jwtauthentication\backend.jwtauthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.jwtauthentication", "backend.jwtauthentication\backend.jwtauthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend.taskscheduling", "backend.taskscheduling", "{53B8A136-289D-4861-87C9-00078E217FE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.automapper", "backend.automapper\backend.automapper.csproj", "{C5C9A0DF-21D2-4083-8E29-695A9B809485}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +77,10 @@ Global
 		{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C9A0DF-21D2-4083-8E29-695A9B809485}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C9A0DF-21D2-4083-8E29-695A9B809485}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C9A0DF-21D2-4083-8E29-695A9B809485}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C9A0DF-21D2-4083-8E29-695A9B809485}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +96,8 @@ Global
 		{22E971E8-9B3C-43FC-9448-815DA6127A9E} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{2857DB29-DB19-4DCA-9F24-518B316EFE8C} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{61CCDE66-1638-49E0-BCB4-A15396BCC2EA} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
+		{53B8A136-289D-4861-87C9-00078E217FE6} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
+		{C5C9A0DF-21D2-4083-8E29-695A9B809485} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}

@@ -11,7 +11,7 @@ namespace backend.data.Infrastructure
         {
             base.OnModelCreating(builder);
 
-            builder.ConfigurationEntity(typeof(ApplicationDbContext));            
+            builder.ConfigurationEntity(typeof(ApplicationDbContext));
         }
 
     }

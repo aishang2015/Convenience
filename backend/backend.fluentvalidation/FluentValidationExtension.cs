@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using backend.util;
+
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using System.Reflection;
-using System.Collections.Generic;
+
 using Microsoft.AspNetCore.Mvc;
-using backend.util;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace backend.fluentvalidation
 {
@@ -12,7 +12,7 @@ namespace backend.fluentvalidation
     {
         public static IMvcBuilder AddFluentValidation(this IMvcBuilder builder, IServiceCollection services)
         {
-            ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;            
+            ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
             builder.AddFluentValidation(configuration =>
             {
                 var assemblies = ReflectionUtil.AssemblyList;

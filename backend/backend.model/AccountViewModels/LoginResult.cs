@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace backend.model.AccountViewModels
+﻿namespace backend.model.AccountViewModels
 {
     public class LoginResult
     {
