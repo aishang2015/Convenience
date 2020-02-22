@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\backend.dependency\backend.dependency.csproj" />
+    <ProjectReference Include="..\backend.util\backend.util.csproj" />
   </ItemGroup>
 
 </Project>
