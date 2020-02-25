@@ -1,6 +1,8 @@
+using backend.automapper;
 using backend.data.Infrastructure;
 using backend.data.Repositories;
 using backend.fluentvalidation;
+using backend.hangfire;
 using backend.jwtauthentication;
 using backend.service;
 
@@ -30,7 +32,9 @@ namespace backend
             services.AddApplicationDbContext(Configuration)
                 .AddJwtBearer(Configuration)
                 .AddCorsPolicy()
-                .AddServices();
+                .AddServices()
+                .AddAutoMapper()
+                .AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +48,8 @@ namespace backend
             }
 
             app.UseHttpsRedirection();
+
+            app.UseHFDashBoard();
 
             app.UseAuthentication();
 

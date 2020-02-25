@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\backend.core\backend.core.csproj" />
+    <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\backend.data\backend.data.csproj" />
+    <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
     <ProjectReference Include="..\backend.jwtauthentication\backend.jwtauthentication.csproj" />
   </ItemGroup>
 
