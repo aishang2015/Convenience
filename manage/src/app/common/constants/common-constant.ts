@@ -1,7 +1,7 @@
-export class CommonConstant {
+export class UriConstant {
 
     static readonly BaseUri: string = 'https://localhost:44356/api';
 
-    static readonly LoginUri: string = `${CommonConstant.BaseUri}/login`;
+    static readonly LoginUri: string = `${UriConstant.BaseUri}/login`;
 
 }

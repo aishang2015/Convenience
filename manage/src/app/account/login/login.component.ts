@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
       this.accountService.login(this.validateForm.controls['userName'].value, this.validateForm.controls['password'].value)
         .subscribe(
           result => {
-            this.storage.userToken = result["Token"];
+            this.storage.userToken = result["token"];
             this.router.navigate(['/dashboard']);
           },
           error => {
