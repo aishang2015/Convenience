@@ -84,9 +84,14 @@ namespace backend.data.Repositories
             _dataSet.UpdateRange(entities);
         }
 
-        public async Task<int> CountAsync(IQueryable<TEntity> query)
+        public async Task<long> CountAsync(IQueryable<TEntity> query)
         {
             return await query.CountAsync();
+        }
+
+        public Task<int> ExecuteSqlAsync(string sql)
+        {
+            return _context.Database.ExecuteSqlRawAsync(sql);
         }
     }
 }

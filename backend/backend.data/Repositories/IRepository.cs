@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace backend.data.Repositories
         IQueryable<TEntity> Get(IQueryable<TEntity> query, Expression<Func<TEntity, object>> order,
             bool isDesc = false, bool tracking = false);
         IQueryable<TEntity> Get(IQueryable<TEntity> query, int page, int size, bool tracking = false);
-        Task<int> CountAsync(IQueryable<TEntity> query);
+        Task<long> CountAsync(IQueryable<TEntity> query);
 
         Task<TEntity> AddAsync(TEntity entity);
         Task AddAsync(IEnumerable<TEntity> entities);
@@ -24,5 +25,7 @@ namespace backend.data.Repositories
 
         void Update(TEntity entity);
         void UpdateRange(IEnumerable<TEntity> entities);
+
+        Task<int> ExecuteSqlAsync(string sql);
     }
 }

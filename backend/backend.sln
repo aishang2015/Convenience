@@ -37,7 +37,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend.caches", "backend.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.cache", "backend.cache\backend.cache.csproj", "{744E4CE4-078F-4415-AB0B-BBDD25225D9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.hangfire", "backend.hangfire\backend.hangfire.csproj", "{9A2E8CEC-681E-47AC-87FD-A36C93D2E8F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.hangfire", "backend.hangfire\backend.hangfire.csproj", "{9A2E8CEC-681E-47AC-87FD-A36C93D2E8F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
