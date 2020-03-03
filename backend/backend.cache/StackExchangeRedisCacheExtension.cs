@@ -4,12 +4,14 @@ namespace backend.cache
 {
     public static class StackExchangeRedisCacheExtension
     {
-        public static IServiceCollection AddCustomRedisCache(this IServiceCollection services)
+        public static IServiceCollection AddCustomRedisCache(this IServiceCollection services,
+            string configuration,
+            string instanceName)
         {
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "";
-                options.InstanceName = "";
+                options.Configuration = configuration;
+                options.InstanceName = instanceName;
             });
             return services;
         }

@@ -23,7 +23,7 @@ namespace backend.data.Repositories
                         .FirstOrDefault();
                     if (attribute != null)
                     {
-                        if (typeof(TDbContext) == ((EntityAttribute)attribute).dbContextType)
+                        if (typeof(TDbContext) == ((EntityAttribute)attribute).DbContextType)
                         {
                             var interfaceRepository = typeof(IRepository<>).MakeGenericType(type);
                             var baseRepository = typeof(BaseRepository<,>).MakeGenericType(type, typeof(TDbContext)); ;

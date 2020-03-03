@@ -49,11 +49,9 @@ namespace backend
 
             app.UseHttpsRedirection();
 
-            app.UseHFDashBoard();
-
             app.UseAuthentication();
 
-            app.UseAuthorization();
+            app.UseHFDashBoard();
 
             app.UseRouting();
 
@@ -71,10 +69,10 @@ namespace backend
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("PostgreSQL");
-            services.AddCustomDbContext<ApplicationDbContext, ApplicationUser, ApplicationRole, string>
+            services.AddCustomDbContext<AppIdentityDbContext, ApplicationUser, ApplicationRole, string>
                 (connectionString, DataBaseType.PostgreSQL);
 
-            services.AddRepositories<ApplicationDbContext>();
+            services.AddRepositories<AppIdentityDbContext>();
 
             return services;
         }

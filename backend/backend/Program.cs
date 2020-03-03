@@ -15,7 +15,7 @@ namespace backend
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             logger.Debug("init main");
             var host = CreateHostBuilder(args).Build();
-            DataBaseInitializer.InitialDataBase<ApplicationDbContext>(host, ApplicationDbSeed.InitialApplicationDataBase);
+            DataBaseInitializer.InitialDataBase<AppIdentityDbContext>(host, AppDbContextSeed.InitialApplicationDataBase);
             host.Run();
             NLog.LogManager.Shutdown();
         }

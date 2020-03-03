@@ -5,6 +5,6 @@ namespace backend.data.Infrastructure
     [AttributeUsage(AttributeTargets.Class)]
     public class EntityAttribute : Attribute
     {
-        public Type dbContextType { get; set; }
+        public Type DbContextType { get; set; }
     }
 }

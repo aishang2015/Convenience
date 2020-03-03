@@ -2,7 +2,7 @@
 
 namespace backend.entity.Entities
 {
-    [Entity(dbContextType = typeof(ApplicationDbContext))]
+    [Entity(DbContextType = typeof(AppIdentityDbContext))]
     public class TestEntity
     {
         public string Id { get; set; }

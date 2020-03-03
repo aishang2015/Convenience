@@ -22,7 +22,7 @@ namespace backend.data.Infrastructure
                     var attribute = type.GetCustomAttributes(typeof(EntityAttribute), false).FirstOrDefault();
                     if (attribute != null)
                     {
-                        if (dbContextType == ((EntityAttribute)attribute).dbContextType)
+                        if (dbContextType == ((EntityAttribute)attribute).DbContextType)
                         {
                             builder.Entity(type);
                             entityTypeList.Add(type);

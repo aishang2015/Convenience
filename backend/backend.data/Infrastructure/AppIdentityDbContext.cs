@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.data.Infrastructure
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class AppIdentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options) { }
+        public AppIdentityDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.ConfigurationEntity(typeof(ApplicationDbContext));
+            builder.ConfigurationEntity(typeof(AppIdentityDbContext));
         }
 
     }

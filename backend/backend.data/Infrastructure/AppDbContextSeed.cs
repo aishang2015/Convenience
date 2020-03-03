@@ -5,9 +5,9 @@ using System;
 
 namespace backend.data.Infrastructure
 {
-    public class ApplicationDbSeed
+    public class AppDbContextSeed
     {
-        public static void InitialApplicationDataBase(ApplicationDbContext dbContext,
+        public static void InitialApplicationDataBase(AppIdentityDbContext dbContext,
             IServiceProvider services)
         {
             var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
