@@ -1,5 +1,6 @@
-﻿using backend.model.AccountViewModels;
-using backend.service;
+﻿
+using backend.model.backend.api.AccountViewModels;
+using backend.service.backend.api.Account;
 
 using Microsoft.AspNetCore.Mvc;
 

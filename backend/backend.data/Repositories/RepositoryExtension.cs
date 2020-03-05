@@ -1,5 +1,5 @@
 ﻿using backend.data.Infrastructure;
-using backend.util;
+using backend.util.helpers;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +13,7 @@ namespace backend.data.Repositories
         public static IServiceCollection AddRepositories<TDbContext>(this IServiceCollection services)
             where TDbContext : DbContext
         {
-            var assemblyList = ReflectionUtil.AssemblyList;
+            var assemblyList = ReflectionHelper.AssemblyList;
 
             foreach (var types in assemblyList.Select(assembly => assembly.GetTypes().ToList()))
             {

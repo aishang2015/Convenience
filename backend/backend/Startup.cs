@@ -4,7 +4,7 @@ using backend.data.Repositories;
 using backend.fluentvalidation;
 using backend.hangfire;
 using backend.jwtauthentication;
-using backend.service;
+using backend.service.backend.api;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

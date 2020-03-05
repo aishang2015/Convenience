@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace backend.model.AccountViewModels
+namespace backend.model.backend.api.AccountViewModels
 {
     public class LoginViewModel
     {

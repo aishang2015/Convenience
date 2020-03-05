@@ -1,12 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using backend.util.helpers;
 
-namespace backend.service
+using Microsoft.Extensions.DependencyInjection;
+
+namespace backend.service.backend.api
 {
     public static class ServiceExtension
     {
+        // 把所有Iservice和实现注入容器
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<ILoginService, LoginService>();
+            var pairs = ReflectionHelper.GetInterfaceAndImplementByName("Service");
+            pairs.ForEach(pair => services.AddScoped(pair.Item1, pair.Item2));
             return services;
         }
     }

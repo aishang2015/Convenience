@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
 
-using backend.util;
+using backend.util.helpers;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +12,7 @@ namespace backend.automapper
         public static IServiceCollection AddAutoMapper(this IServiceCollection services)
         {
             // 扫描工程中所有Profile文件 加入配置。
-            var mapperProfiles = ReflectionUtil.GetAllSubClass<Profile>();
+            var mapperProfiles = ReflectionHelper.GetAllSubClass<Profile>();
 
             // 整合profile添加 初始化mapper
             var mapperConfigurationExpression = new MapperConfigurationExpression();

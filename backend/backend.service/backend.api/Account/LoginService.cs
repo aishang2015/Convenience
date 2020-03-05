@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 using System.Threading.Tasks;
 
-namespace backend.service
+namespace backend.service.backend.api.Account
 {
     public class LoginService : ILoginService
     {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 
-using backend.model.AccountViewModels;
+using backend.model.backend.api.AccountViewModels;
 
-namespace backend.model
+namespace backend.model.backend.api
 {
     public class TestProfile : Profile
     {

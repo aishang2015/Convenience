@@ -6,9 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace backend.util
+namespace backend.util.helpers
 {
-    public static class ReflectionUtil
+    public static class ReflectionHelper
     {
         private static List<CompilationLibrary> _libraryList;
 
@@ -47,6 +47,23 @@ namespace backend.util
             AssemblyList.ForEach(assembly =>
             {
                 result.AddRange(assembly.GetTypes().Where(type => type.BaseType == typeof(T)));
+            });
+            return result;
+        }
+
+        public static List<(Type, Type)> GetInterfaceAndImplementByName(string interfaceName)
+        {
+            var result = new List<(Type, Type)>();
+            AssemblyList.ForEach(assembly =>
+            {
+                var interfaceTypes = assembly.GetTypes()
+                        .Where(type => type.Name.Contains(interfaceName) && type.IsInterface);
+                foreach (var interfaceType in interfaceTypes)
+                {
+                    var implementType = assembly.GetTypes()
+                        .FirstOrDefault(type => type.IsClass && interfaceType.IsAssignableFrom(type));
+                    result.Add((interfaceType, implementType));
+                }
             });
             return result;
         }

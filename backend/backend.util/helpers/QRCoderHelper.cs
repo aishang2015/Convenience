@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace backend.core.helpers
+namespace backend.util.helpers
 {
     public static class QRCoderHelper
     {

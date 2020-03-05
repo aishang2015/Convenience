@@ -1,4 +1,5 @@
-﻿using backend.util;
+﻿
+using backend.util.helpers;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -15,7 +16,7 @@ namespace backend.fluentvalidation
             ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
             builder.AddFluentValidation(configuration =>
             {
-                var assemblies = ReflectionUtil.AssemblyList;
+                var assemblies = ReflectionHelper.AssemblyList;
                 configuration.RegisterValidatorsFromAssemblies(assemblies);
             });
 

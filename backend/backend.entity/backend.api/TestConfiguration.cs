@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace backend.entity.Entities
+namespace backend.entity.backend.api
 {
     public class TestConfiguration : IEntityTypeConfiguration<TestEntity>
     {

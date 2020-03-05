@@ -1,4 +1,5 @@
-﻿using backend.util;
+﻿
+using backend.util.helpers;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,7 @@ namespace backend.data.Infrastructure
     {
         public static void ConfigurationEntity(this ModelBuilder builder, Type dbContextType)
         {
-            var assemblyList = ReflectionUtil.AssemblyList;
+            var assemblyList = ReflectionHelper.AssemblyList;
 
             assemblyList.ForEach(assembly =>
             {

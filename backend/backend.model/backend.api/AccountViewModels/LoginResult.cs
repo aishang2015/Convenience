@@ -1,4 +1,4 @@
-﻿namespace backend.model.AccountViewModels
+﻿namespace backend.model.backend.api.AccountViewModels
 {
     public class LoginResult
     {

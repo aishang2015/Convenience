@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace backend.service
+namespace backend.service.backend.api.Account
 {
     public interface ILoginService
     {
