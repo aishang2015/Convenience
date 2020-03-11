@@ -14,7 +14,6 @@ export class LayoutComponent implements OnInit {
   ngOnInit() {
   }
 
-
   logout() {
     this.storageService.removeUserToken();
     this.router.navigate(['/account/login']);
