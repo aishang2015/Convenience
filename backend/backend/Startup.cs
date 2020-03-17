@@ -1,10 +1,14 @@
+using backend.api.Infrastruct;
 using backend.automapper;
 using backend.data.Infrastructure;
 using backend.data.Repositories;
+using backend.entity.backend.api;
 using backend.fluentvalidation;
 using backend.hangfire;
 using backend.jwtauthentication;
+using backend.repository.backend.api;
 using backend.service.backend.api;
+using backend.swashbuckle;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +36,7 @@ namespace backend
             services.AddApplicationDbContext(Configuration)
                 .AddJwtBearer(Configuration)
                 .AddCorsPolicy()
+                .AddSwashbuckle()
                 .AddServices()
                 .AddAutoMapper()
                 .AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
@@ -46,6 +51,8 @@ namespace backend
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwashbuckle("backend");
 
             app.UseHttpsRedirection();
 
@@ -69,10 +76,12 @@ namespace backend
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("PostgreSQL");
-            services.AddCustomDbContext<AppIdentityDbContext, ApplicationUser, ApplicationRole, string>
+            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, string>
                 (connectionString, DataBaseType.PostgreSQL);
 
-            services.AddRepositories<AppIdentityDbContext>();
+            services.AddRepositories<SystemIdentityDbContext>();
+
+            services.AddRepositories();
 
             return services;
         }

@@ -1,4 +1,5 @@
 ﻿
+using backend.fluentvalidation;
 using backend.model.backend.api.AccountViewModels;
 using backend.service.backend.api.Account;
 
@@ -25,8 +26,7 @@ namespace backend.api.Controllers
             var result = await _loginService.ValidateCredentials(model.UserName, model.Password);
             if (string.IsNullOrEmpty(result))
             {
-                ModelState.AddModelError(string.Empty, "错误的用户名或密码！");
-                return BadRequest(ModelState);
+                return this.BadRequestResult("错误的用户名或密码！");
             }
             return Ok(new LoginResult
             {
@@ -34,5 +34,10 @@ namespace backend.api.Controllers
                 Token = result
             });
         }
+
+        //public async Task<IActionResult> ChangePwdByOldPwd()
+        //{
+        //    return Ok();
+        //}
     }
 }

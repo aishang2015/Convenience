@@ -10,8 +10,8 @@ namespace backend.data.Infrastructure
         public static void InitialApplicationDataBase(AppIdentityDbContext dbContext,
             IServiceProvider services)
         {
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-            var user = new ApplicationUser
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
+            var user = new AppUser
             {
                 UserName = $"admin",
             };

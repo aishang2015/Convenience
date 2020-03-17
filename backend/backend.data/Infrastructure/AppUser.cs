@@ -2,7 +2,7 @@
 
 namespace backend.data.Infrastructure
 {
-    public class ApplicationUser : IdentityUser
+    public class AppUser : IdentityUser
     {
     }
 }

@@ -1,7 +1,5 @@
-﻿using backend.data.Infrastructure;
-using backend.jwtauthentication;
-
-using Microsoft.AspNetCore.Identity;
+﻿using backend.jwtauthentication;
+using backend.repository.backend.api;
 
 using System.Threading.Tasks;
 
@@ -9,28 +7,43 @@ namespace backend.service.backend.api.Account
 {
     public class LoginService : ILoginService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
 
         private readonly IJwtFactory _jwtFactory;
 
-        public LoginService(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory)
+        public LoginService(IUserRepository userRepository, IJwtFactory jwtFactory)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
             _jwtFactory = jwtFactory;
         }
 
         public async Task<string> ValidateCredentials(string userName, string password)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await _userRepository.GetUserByName(userName);
             if (user != null)
             {
-                var isValid = await _userManager.CheckPasswordAsync(user, password);
+                var isValid = await _userRepository.CheckPasswordAsync(user, password);
                 if (isValid)
                 {
                     return _jwtFactory.GenerateJwtToken();
                 }
             }
             return string.Empty;
+        }
+
+        public async Task<bool> ChangePassword(string userName, string oldPassword, string newPassword)
+        {
+            var user = await _userRepository.GetUserByName(userName);
+            if (user != null)
+            {
+                var isValid = await _userRepository.ChangePasswordAsync(user, oldPassword, newPassword);
+                if (isValid)
+                {
+                    return true;
+                }
+            }
+            return false;
+
         }
     }
 }

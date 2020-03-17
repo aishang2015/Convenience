@@ -2,7 +2,7 @@
 
 namespace backend.data.Infrastructure
 {
-    public class ApplicationRole : IdentityRole
+    public class AppRole : IdentityRole
     {
     }
 }

@@ -1,3 +1,5 @@
+using backend.api.Infrastruct;
+using backend.api.Infrastructure;
 using backend.data.Infrastructure;
 
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +17,7 @@ namespace backend
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             logger.Debug("init main");
             var host = CreateHostBuilder(args).Build();
-            DataBaseInitializer.InitialDataBase<AppIdentityDbContext>(host, AppDbContextSeed.InitialApplicationDataBase);
+            DataBaseInitializer.InitialDataBase<SystemIdentityDbContext>(host, DbContextSeed.InitialApplicationDataBase);
             host.Run();
             NLog.LogManager.Shutdown();
         }

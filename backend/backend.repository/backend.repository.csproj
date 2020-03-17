@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,11 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\backend.core\backend.core.csproj" />
-    <ProjectReference Include="..\backend.data\backend.data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="backend.api\Configurations\" />
+    <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
   </ItemGroup>
 
 </Project>

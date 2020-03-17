@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.data.Infrastructure
 {
-    public class AppIdentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class AppIdentityDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         public AppIdentityDbContext(DbContextOptions options) : base(options) { }
 

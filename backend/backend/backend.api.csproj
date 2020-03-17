@@ -24,6 +24,7 @@
     <ProjectReference Include="..\backend.core\backend.core.csproj" />
     <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
     <ProjectReference Include="..\backend.model\backend.model.csproj" />
+    <ProjectReference Include="..\backend.repository\backend.repository.csproj" />
     <ProjectReference Include="..\backend.service\backend.service.csproj" />
   </ItemGroup>
 

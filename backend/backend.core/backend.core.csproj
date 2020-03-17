@@ -12,6 +12,7 @@
     <ProjectReference Include="..\backend.fluentvalidation\backend.fluentvalidation.csproj" />
     <ProjectReference Include="..\backend.hangfire\backend.hangfire.csproj" />
     <ProjectReference Include="..\backend.jwtauthentication\backend.jwtauthentication.csproj" />
+    <ProjectReference Include="..\backend.Swashbuckle\backend.swashbuckle.csproj" />
     <ProjectReference Include="..\backend.util\backend.util.csproj" />
   </ItemGroup>
 

@@ -45,6 +45,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.filestorage.abstrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.filestorage.filesystem", "backend.filestorage.filesystem\backend.filestorage.filesystem.csproj", "{B5676197-19AD-477F-ABEF-BD0834A4DAB1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "backend.repository", "backend.repository\backend.repository.csproj", "{E861149A-90BA-4FE0-959B-F19719231367}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend.swashbuckle", "backend.Swashbuckle\backend.swashbuckle.csproj", "{050C553F-01CA-4AE0-B904-E695FF6A480F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +119,14 @@ Global
 		{B5676197-19AD-477F-ABEF-BD0834A4DAB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5676197-19AD-477F-ABEF-BD0834A4DAB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5676197-19AD-477F-ABEF-BD0834A4DAB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E861149A-90BA-4FE0-959B-F19719231367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E861149A-90BA-4FE0-959B-F19719231367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E861149A-90BA-4FE0-959B-F19719231367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E861149A-90BA-4FE0-959B-F19719231367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{050C553F-01CA-4AE0-B904-E695FF6A480F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{050C553F-01CA-4AE0-B904-E695FF6A480F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{050C553F-01CA-4AE0-B904-E695FF6A480F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{050C553F-01CA-4AE0-B904-E695FF6A480F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -139,6 +151,8 @@ Global
 		{2C278402-21EE-42CE-8B28-64C495DB89CD} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{CFAB1ADB-344A-4BF7-8EED-A80A68139564} = {2C278402-21EE-42CE-8B28-64C495DB89CD}
 		{B5676197-19AD-477F-ABEF-BD0834A4DAB1} = {2C278402-21EE-42CE-8B28-64C495DB89CD}
+		{E861149A-90BA-4FE0-959B-F19719231367} = {116CE78A-855F-4077-B201-45C2564B8E51}
+		{050C553F-01CA-4AE0-B904-E695FF6A480F} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}
