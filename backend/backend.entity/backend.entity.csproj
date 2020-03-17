@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.core\backend.core.csproj" />
-    <ProjectReference Include="..\backend.data\backend.data.csproj" />
+    <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
+    <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

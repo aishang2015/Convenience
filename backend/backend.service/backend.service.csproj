@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.data\backend.data.csproj" />
-    <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
-    <ProjectReference Include="..\backend.jwtauthentication\backend.jwtauthentication.csproj" />
-    <ProjectReference Include="..\backend.repository\backend.repository.csproj" />
+    <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
+    <ProjectReference Include="..\backend.entity\Backend.Entity.csproj" />
+    <ProjectReference Include="..\backend.jwtauthentication\Backend.Jwtauthentication.csproj" />
+    <ProjectReference Include="..\backend.repository\Backend.Repository.csproj" />
   </ItemGroup>
 
 </Project>

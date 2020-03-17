@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.core\backend.core.csproj" />
-    <ProjectReference Include="..\backend.entity\backend.entity.csproj" />
-    <ProjectReference Include="..\backend.model\backend.model.csproj" />
-    <ProjectReference Include="..\backend.repository\backend.repository.csproj" />
-    <ProjectReference Include="..\backend.service\backend.service.csproj" />
+    <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
+    <ProjectReference Include="..\backend.entity\Backend.Entity.csproj" />
+    <ProjectReference Include="..\backend.model\Backend.Model.csproj" />
+    <ProjectReference Include="..\backend.repository\Backend.Repository.csproj" />
+    <ProjectReference Include="..\backend.service\Backend.Service.csproj" />
   </ItemGroup>
 
 
