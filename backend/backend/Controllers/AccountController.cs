@@ -2,7 +2,7 @@
 using backend.fluentvalidation;
 using backend.model.backend.api.AccountViewModels;
 using backend.service.backend.api.Account;
-
+using Backend.Api.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
@@ -13,9 +13,9 @@ namespace backend.api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly ILoginService _loginService;
+        private readonly IAccountService _loginService;
 
-        public AccountController(ILoginService loginService)
+        public AccountController(IAccountService loginService)
         {
             _loginService = loginService;
         }
@@ -35,9 +35,15 @@ namespace backend.api.Controllers
             });
         }
 
-        //public async Task<IActionResult> ChangePwdByOldPwd()
-        //{
-        //    return Ok();
-        //}
+        [HttpPost("password")]
+        public async Task<IActionResult> ChangePwdByOldPwd(ChangePwdViewModel viewmodel)
+        {
+            var result = await _loginService.ChangePassword(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);
+            if (!result)
+            {
+                return this.BadRequestResult("密码修改失败！");
+            }            
+            return Ok();
+        }
     }
 }

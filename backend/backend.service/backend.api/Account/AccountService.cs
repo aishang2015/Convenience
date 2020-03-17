@@ -1,17 +1,19 @@
 ﻿using backend.jwtauthentication;
 using backend.repository.backend.api;
-
+using Backend.Jwtauthentication;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace backend.service.backend.api.Account
 {
-    public class LoginService : ILoginService
+    public class AccountService : IAccountService
     {
         private readonly IUserRepository _userRepository;
 
         private readonly IJwtFactory _jwtFactory;
 
-        public LoginService(IUserRepository userRepository, IJwtFactory jwtFactory)
+        public AccountService(IUserRepository userRepository, IJwtFactory jwtFactory)
         {
             _userRepository = userRepository;
             _jwtFactory = jwtFactory;
@@ -25,6 +27,10 @@ namespace backend.service.backend.api.Account
                 var isValid = await _userRepository.CheckPasswordAsync(user, password);
                 if (isValid)
                 {
+                    var pairs = new List<(string, string)>
+                    {
+                        (CustomClaimTypes.UserName,user.UserName)
+                    };
                     return _jwtFactory.GenerateJwtToken();
                 }
             }
