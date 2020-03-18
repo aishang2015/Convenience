@@ -17,11 +17,15 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                     if (event instanceof HttpResponse) {
                     }
                 }, error => {
+                    let msg = '';
                     if (error.status == 0) {
                         this.messageService.error('无法连接服务器');
                     } else {
-                        this.messageService.error(error['error'][''][0]);
+                        for (var key in error['error']) {
+                            msg += error.error[key];
+                        }
                     }
+                    this.messageService.error(msg);
                 }
             )
         );

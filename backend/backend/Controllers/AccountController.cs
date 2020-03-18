@@ -41,7 +41,7 @@ namespace backend.api.Controllers
             var result = await _loginService.ChangePassword(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);
             if (!result)
             {
-                return this.BadRequestResult("密码修改失败！");
+                return this.BadRequestResult("密码修改失败,请确认旧密码是否正确！");
             }            
             return Ok();
         }

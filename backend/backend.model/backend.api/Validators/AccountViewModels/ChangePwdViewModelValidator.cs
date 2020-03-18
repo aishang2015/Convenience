@@ -14,7 +14,7 @@ namespace backend.model.backend.api.Validators.AccountViewModels
             RuleFor(viewmodel => viewmodel.NewPassword).NotEmpty().NotNull()
                 .WithMessage("新密码不能为空");
 
-            RuleFor(viewmodel => viewmodel.NewPassword).Equal(viewmodel => viewmodel.OldPassword)
+            RuleFor(viewmodel => viewmodel.NewPassword).NotEqual(viewmodel => viewmodel.OldPassword)
                 .WithMessage("旧密码不能和新密码相同");
         }
     }

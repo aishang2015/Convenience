@@ -4,4 +4,6 @@ export class UriConstant {
 
     static readonly LoginUri: string = `${UriConstant.BaseUri}/login`;
 
+    static readonly ModifySelfPasswordUri: string = `${UriConstant.BaseUri}/password`;
+
 }

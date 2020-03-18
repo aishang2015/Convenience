@@ -31,7 +31,7 @@ namespace backend.service.backend.api.Account
                     {
                         (CustomClaimTypes.UserName,user.UserName)
                     };
-                    return _jwtFactory.GenerateJwtToken();
+                    return _jwtFactory.GenerateJwtToken(pairs);
                 }
             }
             return string.Empty;

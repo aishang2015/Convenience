@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 })
 export class LayoutComponent implements OnInit {
 
+  breadcrumbInfo: string[] = ['仪表盘'];
+
   constructor(private storageService: StorageService, private router: Router) { }
 
   ngOnInit() {
@@ -17,5 +19,13 @@ export class LayoutComponent implements OnInit {
   logout() {
     this.storageService.removeUserToken();
     this.router.navigate(['/account/login']);
+  }
+
+  setBreadcrumb(first: string, ...rest: string[]) {
+    this.breadcrumbInfo = [];
+    this.breadcrumbInfo.push(first);
+    rest.forEach(element => {
+      this.breadcrumbInfo.push(element);
+    });
   }
 }

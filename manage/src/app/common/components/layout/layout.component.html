@@ -7,16 +7,18 @@
             <li nz-menu-item>nav 3</li>
         </ul>
         <div class="user">
-            <nz-badge nzDot>
-                <nz-avatar nzIcon="user"></nz-avatar>
-            </nz-badge>
-            <a nz-dropdown [nzDropdownMenu]="menu" class="userName">
+            <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
+                <nz-badge nzDot>
+                    <nz-avatar nzIcon="user"></nz-avatar>
+                </nz-badge>
                 Hover me
                 <i nz-icon nzType="down"></i>
             </a>
             <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu nzSelectable>
                     <li nz-menu-item>个人信息</li>
+                    <li nz-menu-item [routerLink]="[ '/account/changePwd' ]" (click)="setBreadcrumb('账户','修改密码')">修改密码</li>
+                    <li nz-menu-divider></li>
                     <li nz-menu-item (click)="logout()">注销</li>
                 </ul>
             </nz-dropdown-menu>
@@ -25,9 +27,9 @@
     <nz-layout>
         <nz-sider nzWidth="200px">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
-                <li nz-menu-item >
-                    <i nz-icon nzType="file"></i>                    
-                    <span><a [routerLink]="[ '/dashboard' ]">公告栏</a></span>
+                <li nz-menu-item>
+                    <i nz-icon nzType="file"></i>
+                    <span><a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">仪表盘</a></span>
                 </li>
                 <li nz-submenu nzOpen nzIcon="user" nzTitle="subnav 1">
                     <ul>
@@ -63,11 +65,11 @@
             </ul>
         </nz-sider>
         <nz-layout class="inner-layout">
-            <nz-breadcrumb>
-                <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-                <nz-breadcrumb-item>List</nz-breadcrumb-item>
-                <nz-breadcrumb-item>App</nz-breadcrumb-item>
-            </nz-breadcrumb>
+            <nz-card [nzSize]="'small'" style="margin-top: 10px;">
+                <nz-breadcrumb style="margin:0">
+                    <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
+                </nz-breadcrumb>
+            </nz-card>
             <ng-content></ng-content>
         </nz-layout>
     </nz-layout>

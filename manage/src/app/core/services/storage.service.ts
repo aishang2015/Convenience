@@ -13,7 +13,8 @@ export class StorageService {
   set userToken(value) {
     localStorage.setItem('userToken', value);
     let expirationDate = this.jwtService.getTokenExpirationDate(value);
-    console.log(expirationDate);
+    let decodeToken = this.jwtService.decodeToken(value);
+    localStorage.setItem('username', decodeToken['username']);
     localStorage.setItem('userTokenExpiration', expirationDate.toString());
   }
 
@@ -21,8 +22,12 @@ export class StorageService {
     return localStorage.getItem('userToken');
   }
 
-  get tokenExpiration(){
+  get tokenExpiration() {
     return localStorage.getItem('userTokenExpiration');
+  }
+
+  get userName() {
+    return localStorage.getItem("username");
   }
 
   removeUserToken() {
