@@ -56,7 +56,7 @@ namespace backend.repository.backend.api
         public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size)
         {
             var skip = size * (page - 1);
-            return GetUsers(where).Take(size).Skip(skip);
+            return GetUsers(where).Skip(skip).Take(size);
         }
 
         public async Task RemoveUserById(string id)

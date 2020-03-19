@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Form, Validators } from '@angular/forms';
 import { Role } from '../model/role';
 import { of } from 'rxjs';
-import { NzModalService, NzModalRef } from 'ng-zorro-antd';
+import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/common/services/role.service';
 
 @Component({
@@ -27,25 +27,25 @@ export class RoleManageComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private modalService: NzModalService,
-    private roleService: RoleService) { }
+    private roleService: RoleService,
+    private messageService: NzMessageService) { }
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
       roleName: [""]
     });
-    this.roleService.getRole(null, this.page, this.size)
-      .subscribe((result: any) => { this.data = result; });
+    this.refresh();
   }
 
   refresh() {
     this.roleService.getRole(null, this.page, this.size)
-      .subscribe((result: any) => { this.data = result; });
+      .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
   submitSearch() {
     let key = this.searchForm.value["roleName"];
     this.roleService.getRole(key, this.page, this.size)
-      .subscribe((result: any) => { this.data = result; });
+      .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
   addRole(title: TemplateRef<{}>, content: TemplateRef<{}>) {
@@ -75,8 +75,16 @@ export class RoleManageComponent implements OnInit {
   }
 
   removeRole(roleName: string) {
-    this.roleService.deleteRole(roleName)
-      .subscribe(result => { this.refresh(); })
+    this.modalService.confirm({
+      nzTitle: '是否删除该角色?',
+      nzContent: null,
+      nzOnOk: () =>
+        this.roleService.deleteRole(roleName).subscribe(result => {
+          this.refresh();
+          this.messageService.success("删除成功！");
+        })
+    });
+
   }
 
   submitEdit() {
@@ -89,15 +97,30 @@ export class RoleManageComponent implements OnInit {
       this.editedRole.remark = this.editForm.value['remark'];
       if (this.editedRole.id) {
         this.roleService.updateRole(this.editedRole)
-          .subscribe(result => { this.refresh(); this.tplModal.close(); })
+          .subscribe(result => {
+            this.refresh(); this.tplModal.close();
+            this.messageService.success("更新成功！");
+          });
       } else {
         this.roleService.addRole(this.editedRole)
-          .subscribe(result => { this.refresh(); this.tplModal.close(); })
+          .subscribe(result => {
+            this.refresh(); this.tplModal.close();
+            this.messageService.success("修改成功！");
+          });
       }
     }
   }
   cancelEdit() {
     this.tplModal.close();
+  }
+
+  pageChange() {
+    this.refresh();
+  }
+
+  sizeChange() {
+    this.page = 1;
+    this.refresh();
   }
 
 }

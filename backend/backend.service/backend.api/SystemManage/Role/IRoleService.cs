@@ -15,5 +15,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
         Task<bool> AddRole(RoleViewModel model);
 
         Task Update(RoleViewModel model);
+
+        int Count();
     }
 }

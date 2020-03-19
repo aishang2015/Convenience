@@ -21,21 +21,21 @@
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
     <div class="mt-10">
-        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false">
             <thead>
                 <tr>
-                    <th>名称</th>
-                    <th>成员数</th>
-                    <th>备注</th>
-                    <th>操作</th>
+                    <th nzAlign="center">名称</th>
+                    <th nzAlign="center">成员数</th>
+                    <th nzAlign="center">备注</th>
+                    <th nzAlign="center">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let data of dataTable.data">
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.number }}</td>
-                    <td>{{ data.remark }}</td>
-                    <td>
+                    <td nzAlign="center">{{ data.name }}</td>
+                    <td nzAlign="center">{{ data.number }}</td>
+                    <td nzAlign="center">{{ data.remark }}</td>
+                    <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle" (click)="editRole(addRoleTitleTpl,roleContentTpl,data)" class="mr-10"><i nz-icon nzType="edit"></i></button>
                         <button nz-button nzType="default" nzShape="circle" (click)="removeRole(data.name)"><i nz-icon nzType="delete"></i></button>
                     </td>
@@ -44,8 +44,8 @@
         </nz-table>
     </div>
     <div class="mt-10">
-        <nz-pagination [nzPageSize]="size" [nzPageIndex]="page" [nzTotal]="total" nzShowSizeChanger nzShowQuickJumper>
-        </nz-pagination>
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger nzShowQuickJumper
+            (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
     </div>
 </nz-card>
 

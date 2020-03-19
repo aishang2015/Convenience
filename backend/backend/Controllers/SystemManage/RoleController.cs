@@ -26,7 +26,11 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpGet]
         public IActionResult GetRoles([FromQuery]string name, [FromQuery]int page, [FromQuery]int size)
         {
-            return Ok(_roleService.GetRoles(page, size, name));
+            return Ok(new
+            {
+                data = _roleService.GetRoles(page, size, name),
+                count = _roleService.Count()
+            });
         }
 
         [HttpDelete]

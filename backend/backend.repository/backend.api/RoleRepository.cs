@@ -38,7 +38,12 @@ namespace Backend.Repository.backend.api
         public IQueryable<SystemRole> GetRoles(int page, int size)
         {
             var skip = size * (page - 1);
-            return _roleManager.Roles.Take(size).Skip(skip);
+            return _roleManager.Roles.Skip(skip).Take(size);
+        }
+
+        public IQueryable<SystemRole> GetRoles()
+        {
+            return _roleManager.Roles;
         }
 
         public async Task<bool> RemoveRole(string roleName)

@@ -18,6 +18,8 @@ namespace Backend.Repository.backend.api
 
         public Task<SystemRole> GetRole(string roleName);
 
+        public IQueryable<SystemRole> GetRoles();
+
         public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where);
 
         public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size);

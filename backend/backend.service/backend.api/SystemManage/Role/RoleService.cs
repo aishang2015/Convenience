@@ -30,6 +30,11 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return await _roleRepository.AddRole(role);
         }
 
+        public int Count()
+        {
+            return _roleRepository.GetRoles().Count();
+        }
+
         public IEnumerable<RoleResult> GetRoles(int page, int size, string name)
         {
 
