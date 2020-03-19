@@ -1,0 +1,77 @@
+<nz-card [nzSize]="'small'" class="mt-10">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <nz-form-item>
+            <nz-form-control>
+                <nz-input-group nzPrefixIcon="search">
+                    <input formControlName="roleName" nz-input placeholder="角色名称" />
+                </nz-input-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+<nz-card [nzSize]="'small'" class="mt-10" style="min-height: 500px;">
+    <div>
+        <button nz-button class="mr-10" (click)="addRole(addRoleTitleTpl,roleContentTpl)"><i nz-icon
+                nzType="plus"></i>添加角色</button>
+        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+    </div>
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>成员数</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data">
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.number }}</td>
+                    <td>{{ data.remark }}</td>
+                    <td>
+                        <button nz-button nzType="default" nzShape="circle" (click)="editRole(addRoleTitleTpl,roleContentTpl,data)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                        <button nz-button nzType="default" nzShape="circle" (click)="removeRole(data.name)"><i nz-icon nzType="delete"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [nzPageSize]="size" [nzPageIndex]="page" [nzTotal]="total" nzShowSizeChanger nzShowQuickJumper>
+        </nz-pagination>
+    </div>
+</nz-card>
+
+<ng-template #editRoleTitleTpl>
+    <span>编辑角色</span>
+</ng-template>
+<ng-template #addRoleTitleTpl>
+    <span>创建新角色</span>
+</ng-template>
+<ng-template #roleContentTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-control nzErrorTip="请输入角色名称！">
+                <input formControlName="roleName" nz-input placeholder="角色名称" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <textarea formControlName="remark" nz-input placeholder="角色备注" rows="2"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary" class="mr-10">提交</button>                
+                <button nz-button (click)="cancelEdit()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>

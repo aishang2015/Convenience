@@ -23,8 +23,8 @@ namespace backend.repository.backend.api
 
         public Task<SystemUser> GetUserByName(string name);
 
-        public IQueryable<SystemUser> GetUsersByPage(IQueryable<SystemUser> users, int page, int size);
+        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size);
 
-        public IQueryable<SystemUser> GetUserByCondition(Expression<Func<SystemUser, bool>> where);
+        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where);
     }
 }

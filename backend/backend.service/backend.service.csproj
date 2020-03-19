@@ -8,6 +8,7 @@
     <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
     <ProjectReference Include="..\backend.entity\Backend.Entity.csproj" />
     <ProjectReference Include="..\backend.jwtauthentication\Backend.Jwtauthentication.csproj" />
+    <ProjectReference Include="..\backend.model\Backend.Model.csproj" />
     <ProjectReference Include="..\backend.repository\Backend.Repository.csproj" />
   </ItemGroup>
 

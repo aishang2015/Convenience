@@ -3,6 +3,7 @@ using backend.fluentvalidation;
 using backend.model.backend.api.AccountViewModels;
 using backend.service.backend.api.Account;
 using Backend.Api.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace backend.api.Controllers
         }
 
         [HttpPost("password")]
+        [Authorize]
         public async Task<IActionResult> ChangePwdByOldPwd(ChangePwdViewModel viewmodel)
         {
             var result = await _loginService.ChangePassword(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);

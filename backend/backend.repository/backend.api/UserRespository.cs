@@ -38,7 +38,7 @@ namespace backend.repository.backend.api
             return await _userManager.CheckPasswordAsync(user, password);
         }
 
-        public IQueryable<SystemUser> GetUserByCondition(Expression<Func<SystemUser, bool>> where)
+        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where)
         {
             return _userManager.Users.Where(where);
         }
@@ -53,10 +53,10 @@ namespace backend.repository.backend.api
             return await _userManager.FindByNameAsync(name);
         }
 
-        public IQueryable<SystemUser> GetUsersByPage(IQueryable<SystemUser> users, int page, int size)
+        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size)
         {
             var skip = size * (page - 1);
-            return users.Take(size).Skip(skip);
+            return GetUsers(where).Take(size).Skip(skip);
         }
 
         public async Task RemoveUserById(string id)

@@ -19,7 +19,7 @@ registerLocaleData(zh);
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent,
+    LayoutComponent
   ],
   imports: [
     AppRoutingModule,

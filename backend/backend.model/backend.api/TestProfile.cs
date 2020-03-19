@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
-
+using backend.entity.backend.api;
 using backend.model.backend.api.AccountViewModels;
+using Backend.Model.backend.api.SystemManage;
 
 namespace backend.model.backend.api
 {
-    public class TestProfile : Profile
+    public class ModelProfile : Profile
     {
-        public TestProfile()
+        public ModelProfile()
         {
-            CreateMap<LoginViewModel, LoginViewModel>();
+            
+            CreateMap<RoleViewModel, SystemRole>();
+            CreateMap<SystemRole, RoleResult>();
         }
     }
 }

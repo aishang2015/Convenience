@@ -17,7 +17,8 @@
             <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu nzSelectable>
                     <li nz-menu-item>个人信息</li>
-                    <li nz-menu-item [routerLink]="[ '/account/changePwd' ]" (click)="setBreadcrumb('账户','修改密码')">修改密码</li>
+                    <li nz-menu-item [routerLink]="[ '/account/changePwd' ]" (click)="setBreadcrumb('账户','修改密码')">修改密码
+                    </li>
                     <li nz-menu-divider></li>
                     <li nz-menu-item (click)="logout()">注销</li>
                 </ul>
@@ -27,39 +28,23 @@
     <nz-layout>
         <nz-sider nzWidth="200px">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
-                <li nz-menu-item>
-                    <i nz-icon nzType="file"></i>
-                    <span><a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">仪表盘</a></span>
+                <li nz-menu-item nzMatchRouter>
+                    <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
+                        <i nz-icon nzType="dot-chart"></i>仪表盘</a>
                 </li>
-                <li nz-submenu nzOpen nzIcon="user" nzTitle="subnav 1">
+                <li nz-submenu nzIcon="setting" nzTitle="系统管理">
                     <ul>
-                        <li nz-menu-item nzSelected>option1</li>
-                        <li nz-menu-item>option2</li>
-                        <li nz-menu-item>option3</li>
-                        <li nz-menu-item>option4</li>
+                        <li nz-menu-item nzMatchRouter><i nz-icon [nzType]="'user'"></i>用户管理</li>
+                        <li nz-menu-item nzMatchRouter>
+                            <a [routerLink]="[ '/system/role' ]" (click)="setBreadcrumb('系统管理','角色管理')">
+                                <i nz-icon [nzType]="'idcard'"></i>角色管理</a></li>
+                        <li nz-menu-item nzMatchRouter><i nz-icon [nzType]="'menu'"></i>菜单管理</li>
                     </ul>
                 </li>
-                <li nz-submenu nzTitle="subnav 2" nzIcon="laptop">
+                <li nz-submenu nzIcon="laptop" nzTitle="组织管理">
                     <ul>
-                        <li nz-menu-item>option5</li>
-                        <li nz-menu-item>option6</li>
-                        <li nz-menu-item>option7</li>
-                        <li nz-menu-item>option8</li>
-                    </ul>
-                </li>
-                <li nz-submenu nzTitle="subnav 3" nzIcon="notification">
-                    <ul>
-                        <li nz-menu-item>option9</li>
-                        <li nz-menu-item>option10</li>
-                        <li nz-menu-item>option11</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option12</li>
-                        <li nz-menu-item>option18</li>
+                        <li nz-menu-item>部门管理</li>
+                        <li nz-menu-item>职位管理</li>
                     </ul>
                 </li>
             </ul>
