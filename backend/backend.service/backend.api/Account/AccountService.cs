@@ -20,7 +20,7 @@ namespace backend.service.backend.api.Account
 
         public async Task<string> ValidateCredentials(string userName, string password)
         {
-            var user = await _userRepository.GetUserByName(userName);
+            var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
             {
                 var isValid = await _userRepository.CheckPasswordAsync(user, password);
@@ -38,7 +38,7 @@ namespace backend.service.backend.api.Account
 
         public async Task<bool> ChangePassword(string userName, string oldPassword, string newPassword)
         {
-            var user = await _userRepository.GetUserByName(userName);
+            var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
             {
                 var isValid = await _userRepository.ChangePasswordAsync(user, oldPassword, newPassword);

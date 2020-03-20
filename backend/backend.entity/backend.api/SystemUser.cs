@@ -8,8 +8,8 @@ namespace backend.entity.backend.api
 
         public string Name { get; set; }
 
-        public int Sex { get; set; }
+        public string RoleNames { get; set; }
 
-        public int DepartmentId { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -1,0 +1,19 @@
+﻿using Backend.Model.backend.api.Models.SystemManage;
+using FluentValidation;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Backend.Model.backend.api.Validators.SystemManage
+{
+    public class UserViewModelValidator : AbstractValidator<UserViewModel>
+    {
+        public UserViewModelValidator()
+        {
+            RuleFor(viewmodel => viewmodel.UserName).MaximumLength(15).WithMessage("用户名过长！");
+            RuleFor(viewmodel => viewmodel.Name).MaximumLength(10).WithMessage("人名过长！");
+            RuleFor(viewmodel => viewmodel.PhoneNumber).MaximumLength(11).WithMessage("电话号码过长！");
+            RuleFor(viewmodel => viewmodel.Avatar).MaximumLength(5).WithMessage("头像内容过长！");
+        }
+    }
+}
