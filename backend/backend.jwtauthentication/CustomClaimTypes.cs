@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Backend.Jwtauthentication
+﻿namespace Backend.Jwtauthentication
 {
     public static class CustomClaimTypes
     {

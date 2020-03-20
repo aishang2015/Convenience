@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using backend.entity.backend.api;
-using backend.model.backend.api.AccountViewModels;
-using Backend.Model.backend.api.SystemManage;
+using Backend.Model.backend.api.Models.SystemManage;
 
 namespace backend.model.backend.api
 {
@@ -9,7 +8,7 @@ namespace backend.model.backend.api
     {
         public ModelProfile()
         {
-            
+
             CreateMap<RoleViewModel, SystemRole>();
             CreateMap<SystemRole, RoleResult>();
         }

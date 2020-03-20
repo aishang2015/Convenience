@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using backend.entity.backend.api;
-using Backend.Model.backend.api.SystemManage;
+using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Repository.backend.api;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Backend.Service.backend.api.SystemManage.Role

@@ -2,7 +2,6 @@
 using backend.repository.backend.api;
 using Backend.Jwtauthentication;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace backend.service.backend.api.Account

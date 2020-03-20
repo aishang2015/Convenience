@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Backend.Model.backend.api.SystemManage
+﻿namespace Backend.Model.backend.api.Models.SystemManage
 {
     public class RoleViewModel
     {

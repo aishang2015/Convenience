@@ -2,7 +2,7 @@
 
 namespace backend.entity.backend.api
 {
-    public class SystemUser : IdentityUser
+    public class SystemUser : IdentityUser<int>
     {
         public string Avatar { get; set; }
 

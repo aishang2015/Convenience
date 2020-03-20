@@ -76,7 +76,7 @@ namespace backend
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("PostgreSQL");
-            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, string>
+            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int>
                 (connectionString, DataBaseType.PostgreSQL);
 
             services.AddRepositories<SystemIdentityDbContext>();

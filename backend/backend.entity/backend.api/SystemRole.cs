@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-
 using System.ComponentModel;
 
 namespace backend.entity.backend.api
 {
-    public class SystemRole : IdentityRole
+    public class SystemRole : IdentityRole<int>
     {
+
         [Description("成员数量")]
         public int Number { get; set; }
 

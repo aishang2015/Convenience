@@ -1,4 +1,4 @@
-﻿namespace backend.model.backend.api.AccountViewModels
+﻿namespace Backend.Model.backend.api.Models.AccountViewModels
 {
     public class ChangePwdViewModel
     {

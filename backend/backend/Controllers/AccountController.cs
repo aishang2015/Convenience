@@ -1,8 +1,8 @@
 ﻿
 using backend.fluentvalidation;
-using backend.model.backend.api.AccountViewModels;
 using backend.service.backend.api.Account;
 using Backend.Api.Infrastructure;
+using Backend.Model.backend.api.Models.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,7 +44,7 @@ namespace backend.api.Controllers
             if (!result)
             {
                 return this.BadRequestResult("密码修改失败,请确认旧密码是否正确！");
-            }            
+            }
             return Ok();
         }
     }

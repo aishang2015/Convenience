@@ -51,8 +51,8 @@ export class RoleManageComponent implements OnInit {
   addRole(title: TemplateRef<{}>, content: TemplateRef<{}>) {
     this.editedRole = new Role();
     this.editForm = this.fb.group({
-      roleName: [this.editedRole.name, [Validators.required]],
-      remark: [this.editedRole.remark]
+      roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
+      remark: [this.editedRole.remark, [Validators.maxLength(30)]]
     });
     this.tplModal = this.modalService.create({
       nzTitle: title,
@@ -64,8 +64,8 @@ export class RoleManageComponent implements OnInit {
   editRole(title: TemplateRef<{}>, content: TemplateRef<{}>, role: Role) {
     this.editedRole = role;
     this.editForm = this.fb.group({
-      roleName: [this.editedRole.name, [Validators.required]],
-      remark: [this.editedRole.remark]
+      roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
+      remark: [this.editedRole.remark, [Validators.maxLength(30)]]
     });
     this.tplModal = this.modalService.create({
       nzTitle: title,

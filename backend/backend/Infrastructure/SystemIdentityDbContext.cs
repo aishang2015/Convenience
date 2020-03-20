@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.api.Infrastruct
 {
-    public class SystemIdentityDbContext : IdentityDbContext<SystemUser, SystemRole, string>
+    public class SystemIdentityDbContext : IdentityDbContext<SystemUser, SystemRole, int>
     {
         public SystemIdentityDbContext(DbContextOptions options) : base(options) { }
 
