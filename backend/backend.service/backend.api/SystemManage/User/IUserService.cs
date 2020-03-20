@@ -14,8 +14,10 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         public Task<bool> AddUserAsync(UserViewModel model);
 
-        public Task UpdateUserAsync(UserViewModel model);
+        public Task<bool> UpdateUserAsync(UserViewModel model);
 
         public Task<bool> RemoveUserAsync(string Id);
+
+        public Task<bool> SetUserPassword(string userName, string password);
     }
 }

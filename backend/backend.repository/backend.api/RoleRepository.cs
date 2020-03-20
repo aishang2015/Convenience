@@ -60,9 +60,10 @@ namespace Backend.Repository.backend.api
             return await _roleManager.FindByNameAsync(roleName);
         }
 
-        public async Task UpdateRole(SystemRole role)
+        public async Task<bool> UpdateRole(SystemRole role)
         {
-            await _roleManager.UpdateAsync(role);
+            var result = await _roleManager.UpdateAsync(role);
+            return result.Succeeded;
         }
     }
 }

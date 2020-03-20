@@ -42,6 +42,11 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return _mapper.Map<SystemRole[], IEnumerable<RoleResult>>(roles);
         }
 
+        public IEnumerable<string> GetRoles()
+        {
+            return _roleRepository.GetRoles().Select(r => r.Name);
+        }
+
         public async Task<bool> RemoveRole(string roleName)
         {
             var role = await _roleRepository.GetRole(roleName);
@@ -52,12 +57,12 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return await _roleRepository.RemoveRole(roleName);
         }
 
-        public async Task Update(RoleViewModel model)
+        public async Task<bool> Update(RoleViewModel model)
         {
             var role = await _roleRepository.GetRole(model.Name);
             role.Name = model.Name;
             role.Remark = model.Remark;
-            await _roleRepository.UpdateRole(role);
+            return await _roleRepository.UpdateRole(role);
         }
     }
 }

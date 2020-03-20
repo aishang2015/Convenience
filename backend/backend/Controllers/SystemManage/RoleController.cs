@@ -46,7 +46,7 @@ namespace Backend.Api.Controllers.SystemManage
             var isSuccess = await _roleService.AddRole(viewModel);
             if (!isSuccess)
             {
-                return this.BadRequestResult("无法创建角色，请检查名称是否相同！");
+                return this.BadRequestResult("无法创建角色，请检查角色名是否相同！");
             }
             return Ok();
         }
@@ -54,8 +54,18 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpPatch]
         public async Task<IActionResult> UpdateRole([FromBody]RoleViewModel viewModel)
         {
-            await _roleService.Update(viewModel);
+            var isSuccess = await _roleService.Update(viewModel);
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("无法更新角色，请检查角色名是否相同！");
+            }
             return Ok();
+        }
+
+        [HttpGet("list")]
+        public IActionResult GetAllRoles()
+        {
+            return Ok(_roleService.GetRoles());
         }
     }
 }

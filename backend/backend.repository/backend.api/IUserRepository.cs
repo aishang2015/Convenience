@@ -12,11 +12,13 @@ namespace backend.repository.backend.api
     {
         public Task<bool> AddUserAsync(SystemUser user);
 
+        public Task<bool> SetPasswordAsync(SystemUser user, string password);
+
         public Task<bool> CheckPasswordAsync(SystemUser user, string password);
 
         public Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword);
 
-        public Task UpdateUserAsync(SystemUser user);
+        public Task<bool> UpdateUserAsync(SystemUser user);
 
         public Task<bool> RemoveUserByIdAsync(string id);
 

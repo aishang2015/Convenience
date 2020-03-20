@@ -28,6 +28,12 @@ namespace backend.repository.backend.api
             return result.Succeeded;
         }
 
+        public async Task<bool> SetPasswordAsync(SystemUser user, string password)
+        {
+            var result = await _userManager.AddPasswordAsync(user, password);
+            return result.Succeeded;
+        }
+
         public async Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword)
         {
             var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
@@ -71,9 +77,10 @@ namespace backend.repository.backend.api
             return true;
         }
 
-        public async Task UpdateUserAsync(SystemUser user)
+        public async Task<bool> UpdateUserAsync(SystemUser user)
         {
-            await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
+            return result.Succeeded;
         }
 
         public IQueryable<SystemUser> GetUsers(int page, int size)

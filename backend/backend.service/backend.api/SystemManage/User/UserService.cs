@@ -52,10 +52,17 @@ namespace Backend.Service.backend.api.SystemManage.User
             return await _userRepository.RemoveUserByIdAsync(Id);
         }
 
-        public async Task UpdateUserAsync(UserViewModel model)
+        public async Task<bool> SetUserPassword(string userName, string password)
+        {
+            var user = await _userRepository.GetUserByNameAsync(userName);
+            return user != null ?
+                await _userRepository.SetPasswordAsync(user, password) : false;
+        }
+
+        public async Task<bool> UpdateUserAsync(UserViewModel model)
         {
             var user = _mapper.Map<SystemUser>(model);
-            await _userRepository.UpdateUserAsync(user);
+            return await _userRepository.UpdateUserAsync(user);
         }
     }
 }

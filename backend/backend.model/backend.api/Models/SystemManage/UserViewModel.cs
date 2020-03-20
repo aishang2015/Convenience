@@ -12,6 +12,8 @@ namespace Backend.Model.backend.api.Models.SystemManage
 
         public string PhoneNumber { get; set; }
 
+        public int Sex { get; set; }
+
         public string Avatar { get; set; }
 
         public string Name { get; set; }
@@ -19,5 +21,7 @@ namespace Backend.Model.backend.api.Models.SystemManage
         public string RoleNames { get; set; }
 
         public bool IsActive { get; set; }
+
+        public string Password { get; set; }
     }
 }

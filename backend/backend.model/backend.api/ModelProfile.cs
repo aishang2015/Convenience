@@ -11,6 +11,10 @@ namespace backend.model.backend.api
 
             CreateMap<RoleViewModel, SystemRole>();
             CreateMap<SystemRole, RoleResult>();
+
+            CreateMap<UserViewModel, SystemUser>();
+            CreateMap<SystemUser, UserResult>().ForMember(user => user.Sex,
+                ex => ex.MapFrom(result => (int)result.Sex));
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Backend.Repository.backend.api
 
         public Task<bool> RemoveRole(string roleName);
 
-        public Task UpdateRole(SystemRole role);
+        public Task<bool> UpdateRole(SystemRole role);
 
         public Task<SystemRole> GetRole(string roleName);
 

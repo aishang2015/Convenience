@@ -4,6 +4,7 @@ import { AppCommonModule } from '../common/modules/app-common/app-common.module'
 import { RouterModule } from '@angular/router';
 import { RoleManageComponent } from './role-manage/role-manage.component';
 import { LoginGuard } from '../core/guards/login.guard';
+import { UserManageComponent } from './user-manage/user-manage.component';
 
 
 
@@ -16,6 +17,7 @@ import { LoginGuard } from '../core/guards/login.guard';
     AppCommonModule,
     RouterModule.forChild([
       { path: 'role', component: RoleManageComponent, canActivate: [LoginGuard] },
+      { path: 'user', component: UserManageComponent, canActivate: [LoginGuard] },
     ])
   ]
 })

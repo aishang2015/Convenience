@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="backend.api\Configurations\" />
+    <Folder Include="backend.api\Entity\Common\" />
   </ItemGroup>
 
 </Project>
