@@ -21,16 +21,17 @@ namespace backend.data.Infrastructure
 
                 try
                 {
-                    logger.LogInformation($"初始化数据库{dbContext.GetType().Name}");
                     if (dbContext.Database.EnsureCreated())
                     {
+                        logger.LogInformation($"初始化数据库{dbContext.GetType().Name}");
                         databaseSeeder(dbContext, services);
+                        logger.LogInformation($"初始化数据库{dbContext.GetType().Name}成功");
                     }
-                    logger.LogInformation($"初始化数据库{dbContext.GetType().Name}成功");
                 }
                 catch (Exception e)
                 {
                     logger.LogError(e, $"初始化数据库{dbContext.GetType().Name}失败");
+                    throw e;
                 }
             }
         }

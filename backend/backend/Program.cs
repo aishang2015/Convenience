@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using NLog.Web;
+using System;
 
 namespace backend
 {
@@ -15,22 +16,34 @@ namespace backend
         public static void Main(string[] args)
         {
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-            logger.Debug("init main");
-            var host = CreateHostBuilder(args).Build();
-            DataBaseInitializer.InitialDataBase<SystemIdentityDbContext>(host, DbContextSeed.InitialApplicationDataBase);
-            host.Run();
-            NLog.LogManager.Shutdown();
+            try
+            {
+                logger.Debug("init main");
+                var host = CreateHostBuilder(args).Build();
+                DataBaseInitializer.InitialDataBase<SystemIdentityDbContext>(host, DbContextSeed.InitialApplicationDataBase);
+                host.Run();
+            }
+            catch (Exception ex)
+            {
+                // ²¶×½Æô¶¯Òì³£
+                logger.Error(ex, "Program stopped because of exception");
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().ConfigureLogging(logging =>
-                    {
-                        logging.ClearProviders();
-                        logging.SetMinimumLevel(LogLevel.Trace);
-                    }).UseNLog();
-                });
+                    webBuilder.UseStartup<Startup>();
+                }).ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(LogLevel.Trace);
+                }).UseNLog();
     }
 }
