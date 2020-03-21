@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { LoginGuard } from '../core/guards/login.guard';
-import { AppCommonModule } from '../common/modules/app-common/app-common.module';
+import { LoginGuard } from '../../core/guards/login.guard';
+import { AppCommonModule } from '../../common/modules/app-common/app-common.module';
 import { ModifyPasswordComponent } from './modify-password/modify-password.component';
 
 @NgModule({
