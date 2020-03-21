@@ -19,7 +19,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                 }, error => {
                     let msg = '';
                     if (error.status == 0) {
-                        this.messageService.error('无法连接服务器');
+                        msg = '无法连接服务器,请联系管理员！';
                     } else {
                         for (var key in error['error']) {
                             msg += error.error[key];

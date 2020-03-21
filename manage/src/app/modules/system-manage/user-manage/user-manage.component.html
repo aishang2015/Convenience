@@ -1,1 +1,184 @@
-<p>user-manage works!</p>
+<nz-card [nzSize]="'small'">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <nz-form-item class="mb-5">
+            <nz-form-label [nzFor]="'userName'">用户名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="用户名" [formControlName]="'userName'" [attr.id]="'userName'" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="mb-5">
+            <nz-form-label [nzFor]="'phoneNumber'">电话号码</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="mb-5">
+            <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="mb-5">
+            <nz-form-label [nzFor]="'roleName'">角色</nz-form-label>
+            <nz-form-control>
+                <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleName'"
+                    [formControlName]="'roleName'">
+                    <nz-option *ngFor="let roleName of roleNames" [nzValue]="roleName" [nzLabel]="roleName"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+
+<nz-card [nzSize]="'small'" style="min-height: 500px;">
+    <div>
+        <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)"><i nz-icon
+                nzType="plus"></i>添加用户</button>
+        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+    </div>
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+            nzBordered="true">
+            <thead>
+                <tr>
+                    <th nzAlign="center" nzWidth="50px">#</th>
+                    <th nzAlign="center" nzWidth="120px">用户名</th>
+                    <th nzAlign="center" nzWidth="120px">姓名</th>
+                    <th nzAlign="center" nzWidth="120px">电话号码</th>
+                    <th nzAlign="center" nzWidth="50px">性别</th>
+                    <th nzAlign="center">系统角色</th>
+                    <th nzAlign="center" nzWidth="50px">状态</th>
+                    <th nzAlign="center" nzWidth="200px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data;let i = index">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">{{ data.userName }}</td>
+                    <td nzAlign="center">{{ data.name }}</td>
+                    <td nzAlign="center">{{ data.phoneNumber }}</td>
+                    <td nzAlign="center">{{ data.sex | gender }}</td>
+                    <td nzAlign="center">{{ data.roleNames }}</td>
+                    <td nzAlign="center">
+                        <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
+                        <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
+                    </td>
+                    <td nzAlign="center">
+                        <button nz-button nzType="default" nzShape="circle"
+                            (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
+                                nzType="edit"></i></button>
+                        <button nz-button nzType="default" nzShape="circle" (click)="remove(data.id)" class="mr-10"><i
+                                nz-icon nzType="delete"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
+    </div>
+</nz-card>
+
+<ng-template #addUserTitleTpl>
+    <span>添加用户</span>
+</ng-template>
+<ng-template #editUserTitleTpl>
+    <span>编辑用户</span>
+</ng-template>
+<ng-template #userContentTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_userName'">用户名</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
+                <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="用户名" />
+            </nz-form-control>
+            <ng-template #userNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入用户名！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    角色名长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzRequired]="isNewUser" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_password'">密码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="passwordErrorTpl">
+                <input type="password" [attr.id]="'edit_password'" formControlName="password" nz-input
+                    placeholder="密码" />
+            </nz-form-control>
+            <ng-template #passwordErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入密码！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    密码长度不能超过30！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_name'">姓名</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="nameErrorTpl">
+                <input [attr.id]="'edit_name'" formControlName="name" nz-input placeholder="姓名" />
+            </nz-form-control>
+            <ng-template #nameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入姓名！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    姓名长度不能超过10！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_phoneNumber'">手机号码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="号码格式不对！">
+                <input type="number" [attr.id]="'edit_phoneNumber'" formControlName="phoneNumber" nz-input
+                    placeholder="手机号码" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sex'">性别</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
+                <nz-radio-group [attr.id]="'edit_sex'" formControlName="sex">
+                    <label nz-radio nzValue="0">未知</label>
+                    <label nz-radio nzValue="1">男</label>
+                    <label nz-radio nzValue="2">女</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_isActive'">激活状态</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
+                <nz-switch [attr.id]="'edit_isActive'" formControlName="isActive" nzCheckedChildren="激活"
+                    nzUnCheckedChildren="停用"></nz-switch>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">系统角色</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
+                <nz-select nzAllowClear nzPlaceHolder="请选择" [formControlName]="'roleNames'" nzMode="multiple">
+                    <nz-option *ngFor="let roleName of roleNames" [nzValue]="roleName" [nzLabel]="roleName"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button (click)="cancelEdit()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+<ng-template #roleNameErrorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        请输入内容！
+    </ng-container>
+</ng-template>

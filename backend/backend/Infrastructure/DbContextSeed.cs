@@ -17,6 +17,11 @@ namespace backend.api.Infrastructure
             var user = new SystemUser
             {
                 UserName = $"admin",
+                Name = "管管",
+                Sex = Sex.Male,
+                Avatar = "0",
+                PhoneNumber = "12312341234",
+                IsActive = true
             };
             userManager.CreateAsync(user, "admin").Wait();
         }

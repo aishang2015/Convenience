@@ -30,4 +30,8 @@ export class RoleService {
   updateRole(role) {
     return this.httpClient.patch(UriConstant.RoleUri, role);
   };
+
+  getRoleList() {
+    return this.httpClient.get(UriConstant.RoleUri + '/list');
+  }
 }

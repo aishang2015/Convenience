@@ -8,4 +8,6 @@ export class UriConstant {
 
     static readonly RoleUri: string = `${UriConstant.BaseUri}/role`;
 
+    static readonly UserUri: string = `${UriConstant.BaseUri}/user`;
+
 }

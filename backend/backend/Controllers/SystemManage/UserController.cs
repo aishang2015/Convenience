@@ -27,7 +27,11 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpGet("list")]
         public IActionResult GetUserList([FromQuery]UserQuery userQuery)
         {
-            return Ok(_userService.GetUsers(userQuery));
+            return Ok(new
+            {
+                data = _userService.GetUsers(userQuery),
+                count = _userService.Count()
+            });
         }
 
         [HttpGet]

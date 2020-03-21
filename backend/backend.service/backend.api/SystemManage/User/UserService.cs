@@ -29,6 +29,11 @@ namespace Backend.Service.backend.api.SystemManage.User
             return await _userRepository.AddUserAsync(user);
         }
 
+        public int Count()
+        {
+            return _userRepository.GetUsers().Count();
+        }
+
         public async Task<UserResult> GetUserAsync(string Id)
         {
             var user = await _userRepository.GetUserByIdAsync(Id);

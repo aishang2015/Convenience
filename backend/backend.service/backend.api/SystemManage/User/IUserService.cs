@@ -8,6 +8,8 @@ namespace Backend.Service.backend.api.SystemManage.User
 {
     public interface IUserService
     {
+        public int Count();
+
         public IEnumerable<UserResult> GetUsers(UserQuery query);
 
         public Task<UserResult> GetUserAsync(string Id);

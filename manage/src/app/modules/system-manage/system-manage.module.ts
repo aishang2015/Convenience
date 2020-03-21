@@ -10,7 +10,8 @@ import { UserManageComponent } from './user-manage/user-manage.component';
 
 @NgModule({
   declarations: [
-    RoleManageComponent
+    RoleManageComponent,
+    UserManageComponent
   ],
   imports: [
     CommonModule,
