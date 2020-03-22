@@ -21,5 +21,7 @@ namespace Backend.Service.backend.api.SystemManage.User
         public Task<bool> RemoveUserAsync(string Id);
 
         public Task<bool> SetUserPassword(string userName, string password);
+
+        public Task<bool> ResetUserPassword(string userName, string password);
     }
 }

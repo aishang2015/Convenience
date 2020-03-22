@@ -147,9 +147,9 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sex'">性别</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
                 <nz-radio-group [attr.id]="'edit_sex'" formControlName="sex">
-                    <label nz-radio nzValue="0">未知</label>
-                    <label nz-radio nzValue="1">男</label>
-                    <label nz-radio nzValue="2">女</label>
+                    <label nz-radio [nzValue]="0">未知</label>
+                    <label nz-radio [nzValue]="1">男</label>
+                    <label nz-radio [nzValue]="2">女</label>
                 </nz-radio-group>
             </nz-form-control>
         </nz-form-item>
@@ -171,7 +171,7 @@
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">
                 <button nz-button nzType="primary" class="mr-10">提交</button>
-                <button nz-button (click)="cancelEdit()">取消</button>
+                <button nz-button type="reset" (click)="cancelEdit()">取消</button>
             </nz-form-control>
         </nz-form-item>
     </form>

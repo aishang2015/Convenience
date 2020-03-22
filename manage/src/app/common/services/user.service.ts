@@ -11,6 +11,10 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
+  getUser(id) {
+    return this.httpClient.get(`${UriConstant.UserUri}?id=${id}`);
+  }
+
   getUsers(page, size, userName, phoneNumber, name, roleName) {
     var uri = `${UriConstant.UserUri}/list?page=${page}&&size=${size}`;
     uri += userName ? `&&userName=${userName}` : '';
@@ -21,7 +25,7 @@ export class UserService {
   }
 
   delete(id: String) {
-    this.httpClient.delete(`${UriConstant.UserUri}?id=${id}`);
+    return this.httpClient.delete(`${UriConstant.UserUri}?id=${id}`);
   }
 
   update(user: User) {
@@ -29,7 +33,7 @@ export class UserService {
   }
 
   add(user: User) {
-    return this.httpClient.patch(UriConstant.UserUri, user);
+    return this.httpClient.post(UriConstant.UserUri, user);
   }
 
 }

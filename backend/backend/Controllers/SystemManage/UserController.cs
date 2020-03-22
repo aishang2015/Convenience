@@ -65,6 +65,14 @@ namespace Backend.Api.Controllers.SystemManage
             {
                 return this.BadRequestResult("无法更新用户，请检查用户名是否相同！");
             }
+            if (!string.IsNullOrEmpty(model.Password))
+            {
+                isSuccess = await _userService.ResetUserPassword(model.UserName, model.Password);
+                if (!isSuccess)
+                {
+                    return this.BadRequestResult("重置密码失败！");
+                }
+            }
             return Ok();
         }
 

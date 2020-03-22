@@ -5,7 +5,7 @@ export class User {
     sex?: number;
     avatar?: string;
     name?: string;
-    roleNames?: string;
+    roleNames?: string[];
     isActive?: boolean;
     password?: string;
 }

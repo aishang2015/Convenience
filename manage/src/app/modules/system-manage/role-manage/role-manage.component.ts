@@ -12,8 +12,8 @@ import { RoleService } from 'src/app/common/services/role.service';
 })
 export class RoleManageComponent implements OnInit {
 
-  searchForm: FormGroup;
-  editForm: FormGroup;
+  searchForm: FormGroup = new FormGroup({});;
+  editForm: FormGroup = new FormGroup({});;
 
   tplModal: NzModalRef;
 
@@ -84,7 +84,6 @@ export class RoleManageComponent implements OnInit {
           this.messageService.success("删除成功！");
         })
     });
-
   }
 
   submitEdit() {
@@ -105,7 +104,7 @@ export class RoleManageComponent implements OnInit {
         this.roleService.addRole(this.editedRole)
           .subscribe(result => {
             this.refresh(); this.tplModal.close();
-            this.messageService.success("修改成功！");
+            this.messageService.success("添加成功！");
           });
       }
     }

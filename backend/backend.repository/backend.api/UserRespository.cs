@@ -34,6 +34,12 @@ namespace backend.repository.backend.api
             return result.Succeeded;
         }
 
+        public async Task<bool> ResetPasswordAsync(SystemUser user,string password)
+        {
+            var result = await _userManager.RemovePasswordAsync(user);
+            return result.Succeeded ? await SetPasswordAsync(user, password) : false;
+        }
+
         public async Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword)
         {
             var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);

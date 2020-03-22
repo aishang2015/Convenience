@@ -14,6 +14,8 @@ namespace backend.repository.backend.api
 
         public Task<bool> SetPasswordAsync(SystemUser user, string password);
 
+        public Task<bool> ResetPasswordAsync(SystemUser user, string password);
+
         public Task<bool> CheckPasswordAsync(SystemUser user, string password);
 
         public Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword);
