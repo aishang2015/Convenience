@@ -5,11 +5,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CommonModule } from '@angular/common';
-import { GenderPipe } from '../../pipes/gender.pipe';
+import { GenderPipe } from './pipes/gender.pipe';
+import { AvatarSelectComponent } from './components/avatar-select/avatar-select.component';
 
 @NgModule({
   declarations: [
-    GenderPipe
+    GenderPipe,
+    AvatarSelectComponent,
+  ],
+  imports:[
+    CommonModule,
+    NgZorroAntdModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -17,7 +23,8 @@ import { GenderPipe } from '../../pipes/gender.pipe';
     HttpClientModule, 
     CommonModule,
     NgZorroAntdModule,
-    GenderPipe
+    GenderPipe,
+    AvatarSelectComponent,
   ]
 })
 export class AppCommonModule { }

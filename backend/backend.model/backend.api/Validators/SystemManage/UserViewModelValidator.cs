@@ -12,7 +12,7 @@ namespace Backend.Model.backend.api.Validators.SystemManage
             RuleFor(viewmodel => viewmodel.UserName).NotEmpty().NotNull()
                 .WithMessage("用户名不能为空！");
 
-            RuleFor(viewmodel => viewmodel.Password).Must((vm, pwd) => vm.Id == 0 && !string.IsNullOrEmpty(pwd))
+            RuleFor(viewmodel => viewmodel.Password).Must((vm, pwd) => (vm.Id == 0 && !string.IsNullOrEmpty(pwd)) || (vm.Id != 0))
                 .WithMessage("密码不能为空！");
 
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(10).WithMessage("人名过长！");

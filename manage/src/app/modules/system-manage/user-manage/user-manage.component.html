@@ -96,6 +96,12 @@
 <ng-template #userContentTpl>
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
         <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">头像</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <app-avatar-select formControlName="avatar"></app-avatar-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_userName'">用户名</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
                 <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="用户名"
