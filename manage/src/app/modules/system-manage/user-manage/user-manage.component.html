@@ -3,19 +3,21 @@
         <nz-form-item class="mb-5">
             <nz-form-label [nzFor]="'userName'">用户名</nz-form-label>
             <nz-form-control>
-                <input nz-input placeholder="用户名" [formControlName]="'userName'" [attr.id]="'userName'" />
+                <input nz-input placeholder="用户名" [formControlName]="'userName'" [attr.id]="'userName'"
+                    autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item class="mb-5">
             <nz-form-label [nzFor]="'phoneNumber'">电话号码</nz-form-label>
             <nz-form-control>
-                <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'" />
+                <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'"
+                    autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item class="mb-5">
             <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
             <nz-form-control>
-                <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'" />
+                <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'" autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item class="mb-5">
@@ -96,7 +98,8 @@
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_userName'">用户名</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
-                <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="用户名" />
+                <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="用户名"
+                    autocomplete="off" />
             </nz-form-control>
             <ng-template #userNameErrorTpl let-control>
                 <ng-container *ngIf="control.hasError('required')">
@@ -110,8 +113,8 @@
         <nz-form-item>
             <nz-form-label [nzRequired]="isNewUser" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_password'">密码</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="passwordErrorTpl">
-                <input type="password" [attr.id]="'edit_password'" formControlName="password" nz-input
-                    placeholder="密码" />
+                <input type="password" [attr.id]="'edit_password'" formControlName="password" nz-input placeholder="密码"
+                    autocomplete="off" />
             </nz-form-control>
             <ng-template #passwordErrorTpl let-control>
                 <ng-container *ngIf="control.hasError('required')">
@@ -125,7 +128,7 @@
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_name'">姓名</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="nameErrorTpl">
-                <input [attr.id]="'edit_name'" formControlName="name" nz-input placeholder="姓名" />
+                <input [attr.id]="'edit_name'" formControlName="name" nz-input placeholder="姓名" autocomplete="off" />
             </nz-form-control>
             <ng-template #nameErrorTpl let-control>
                 <ng-container *ngIf="control.hasError('required')">
@@ -140,7 +143,7 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_phoneNumber'">手机号码</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="号码格式不对！">
                 <input type="number" [attr.id]="'edit_phoneNumber'" formControlName="phoneNumber" nz-input
-                    placeholder="手机号码" />
+                    placeholder="手机号码" autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

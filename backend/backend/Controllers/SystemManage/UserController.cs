@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using backend.fluentvalidation;
+﻿using backend.fluentvalidation;
+
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Service.backend.api.SystemManage.User;
+
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Threading.Tasks;
 
 namespace Backend.Api.Controllers.SystemManage
 {
@@ -44,15 +43,10 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody]UserViewModel model)
         {
-            var isSuccess = await _userService.AddUserAsync(model);
-            if (!isSuccess)
+            var result = await _userService.AddUserAsync(model);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法创建用户，请检查用户名是否相同！");
-            }
-            isSuccess = await _userService.SetUserPassword(model.UserName, model.Password);
-            if (!isSuccess)
-            {
-                return this.BadRequestResult("初始密码创建失败！");
+                return this.BadRequestResult(result);
             }
             return Ok();
         }
@@ -60,18 +54,10 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpPatch]
         public async Task<IActionResult> UpdateUser([FromBody]UserViewModel model)
         {
-            var isSuccess = await _userService.UpdateUserAsync(model);
-            if (!isSuccess)
+            var result = await _userService.UpdateUserAsync(model);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法更新用户，请检查用户名是否相同！");
-            }
-            if (!string.IsNullOrEmpty(model.Password))
-            {
-                isSuccess = await _userService.ResetUserPassword(model.UserName, model.Password);
-                if (!isSuccess)
-                {
-                    return this.BadRequestResult("重置密码失败！");
-                }
+                return this.BadRequestResult(result);
             }
             return Ok();
         }

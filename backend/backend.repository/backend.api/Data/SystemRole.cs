@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
 using System.ComponentModel;
 
-namespace backend.entity.backend.api
+namespace Backend.Repository.backend.api.Data
 {
     public class SystemRole : IdentityRole<int>
     {

@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using backend.entity.backend.api;
+
 using backend.repository.backend.api;
+
 using Backend.Model.backend.api.Models.SystemManage;
+using Backend.Repository.backend.api.Data;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Backend.Service.backend.api.SystemManage.User
@@ -17,16 +19,41 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        private readonly SystemIdentityDbContext _systemIdentityDbContext;
+
+        public UserService(IUserRepository userRepository, IMapper mapper, SystemIdentityDbContext systemIdentityDbContext)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _systemIdentityDbContext = systemIdentityDbContext;
         }
 
-        public async Task<bool> AddUserAsync(UserViewModel model)
+        public async Task<string> AddUserAsync(UserViewModel model)
         {
-            var user = _mapper.Map<SystemUser>(model);
-            return await _userRepository.AddUserAsync(user);
+            using (var trans = _systemIdentityDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var user = _mapper.Map<SystemUser>(model);
+                    var isSuccess = await _userRepository.AddUserAsync(user);
+                    if (!isSuccess)
+                    {
+                        return "无法创建用户，请检查用户名是否相同！";
+                    }
+                    isSuccess = await SetUserPassword(model.UserName, model.Password);
+                    if (!isSuccess)
+                    {
+                        await trans.RollbackAsync();
+                        return "无法创建用户，初始密码创建失败！";
+                    }
+                    await trans.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await trans.RollbackAsync();
+                }
+            }
+            return string.Empty;
         }
 
         public int Count()
@@ -57,6 +84,11 @@ namespace Backend.Service.backend.api.SystemManage.User
             return await _userRepository.RemoveUserByIdAsync(Id);
         }
 
+        public async Task<bool> RemoveUserByNameAsync(string Name)
+        {
+            return await _userRepository.RemoveUserByNameAsync(Name);
+        }
+
         public async Task<bool> ResetUserPassword(string userName, string password)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
@@ -71,15 +103,44 @@ namespace Backend.Service.backend.api.SystemManage.User
                 await _userRepository.SetPasswordAsync(user, password) : false;
         }
 
-        public async Task<bool> UpdateUserAsync(UserViewModel model)
+        public async Task<string> UpdateUserAsync(UserViewModel model)
         {
-            var user = await _userRepository.GetUserByIdAsync(model.Id.ToString());
-            if (user != null)
+            using (var trans = _systemIdentityDbContext.Database.BeginTransaction())
             {
-                _mapper.Map(model, user);
-                return await _userRepository.UpdateUserAsync(user);
+                try
+                {
+                    var user = await _userRepository.GetUserByIdAsync(model.Id.ToString());
+                    if (user != null)
+                    {
+                        _mapper.Map(model, user);
+                        var isSuccess = await _userRepository.UpdateUserAsync(user);
+                        if (!isSuccess)
+                        {
+                            return "无法更新用户，请检查用户名是否相同！";
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(model.Password))
+                            {
+                                isSuccess = await _userRepository.ResetPasswordAsync(user, model.Password);
+                                if (!isSuccess)
+                                {
+                                    await trans.RollbackAsync();
+                                    return "更新密码失败！";
+                                }
+                            }
+
+                        }
+                        await trans.CommitAsync();
+                    }
+                }
+                catch (Exception)
+                {
+                    await trans.RollbackAsync();
+                }
             }
-            return false;
+
+            return string.Empty;
         }
     }
 }

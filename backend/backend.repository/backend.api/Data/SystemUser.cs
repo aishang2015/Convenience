@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace backend.entity.backend.api
+namespace Backend.Repository.backend.api.Data
 {
     public class SystemUser : IdentityUser<int>
     {

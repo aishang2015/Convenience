@@ -1,14 +1,14 @@
-using backend.api.Infrastruct;
 using backend.automapper;
 using backend.data.Infrastructure;
 using backend.data.Repositories;
-using backend.entity.backend.api;
 using backend.fluentvalidation;
 using backend.hangfire;
 using backend.jwtauthentication;
 using backend.repository.backend.api;
 using backend.service.backend.api;
 using backend.swashbuckle;
+
+using Backend.Repository.backend.api.Data;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -1,8 +1,10 @@
 ﻿
 using backend.fluentvalidation;
 using backend.service.backend.api.Account;
+
 using Backend.Api.Infrastructure;
 using Backend.Model.backend.api.Models.AccountViewModels;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,15 +26,16 @@ namespace backend.api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+
             var result = await _loginService.ValidateCredentials(model.UserName, model.Password);
-            if (string.IsNullOrEmpty(result))
+            if (!result.Item1)
             {
-                return this.BadRequestResult("错误的用户名或密码！");
+                return this.BadRequestResult(result.Item2);
             }
             return Ok(new LoginResult
             {
                 UserName = model.UserName,
-                Token = result
+                Token = result.Item2
             });
         }
 

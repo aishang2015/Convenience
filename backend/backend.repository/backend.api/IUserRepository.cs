@@ -1,4 +1,4 @@
-﻿using backend.entity.backend.api;
+﻿using Backend.Repository.backend.api.Data;
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +23,8 @@ namespace backend.repository.backend.api
         public Task<bool> UpdateUserAsync(SystemUser user);
 
         public Task<bool> RemoveUserByIdAsync(string id);
+
+        public Task<bool> RemoveUserByNameAsync(string name);
 
         public Task<SystemUser> GetUserByIdAsync(string id);
 

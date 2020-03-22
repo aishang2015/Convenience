@@ -1,8 +1,6 @@
 ﻿using Backend.Model.backend.api.Models.SystemManage;
+
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Backend.Model.backend.api.Validators.SystemManage
 {

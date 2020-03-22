@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using backend.entity.backend.api;
+
 using Backend.Model.backend.api.Models.SystemManage;
+using Backend.Repository.backend.api.Data;
 
 namespace backend.model.backend.api
 {

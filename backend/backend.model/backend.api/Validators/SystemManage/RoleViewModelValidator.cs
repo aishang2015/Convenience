@@ -1,4 +1,5 @@
 ﻿using Backend.Model.backend.api.Models.SystemManage;
+
 using FluentValidation;
 
 namespace Backend.Model.backend.api.Validators.SystemManage

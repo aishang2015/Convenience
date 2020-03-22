@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
-using backend.entity.backend.api;
+
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Repository.backend.api;
+using Backend.Repository.backend.api.Data;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

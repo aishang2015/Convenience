@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
     <ProjectReference Include="..\backend.entity\Backend.Entity.csproj" />
+    <ProjectReference Include="..\backend.repository\Backend.Repository.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using backend.entity.backend.api;
+﻿using Backend.Repository.backend.api.Data;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -34,7 +34,7 @@ namespace backend.repository.backend.api
             return result.Succeeded;
         }
 
-        public async Task<bool> ResetPasswordAsync(SystemUser user,string password)
+        public async Task<bool> ResetPasswordAsync(SystemUser user, string password)
         {
             var result = await _userManager.RemovePasswordAsync(user);
             return result.Succeeded ? await SetPasswordAsync(user, password) : false;
@@ -103,6 +103,17 @@ namespace backend.repository.backend.api
         public IQueryable<SystemUser> GetUsers()
         {
             return _userManager.Users;
+        }
+
+        public async Task<bool> RemoveUserByNameAsync(string name)
+        {
+            var user = await GetUserByNameAsync(name);
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                return result.Succeeded;
+            }
+            return true;
         }
     }
 }

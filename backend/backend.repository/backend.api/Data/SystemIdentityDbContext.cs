@@ -1,10 +1,9 @@
 ﻿using backend.data.Infrastructure;
-using backend.entity.backend.api;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.api.Infrastruct
+namespace Backend.Repository.backend.api.Data
 {
     public class SystemIdentityDbContext : IdentityDbContext<SystemUser, SystemRole, int>
     {

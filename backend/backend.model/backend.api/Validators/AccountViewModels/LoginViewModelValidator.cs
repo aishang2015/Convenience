@@ -1,5 +1,6 @@
 ﻿
 using Backend.Model.backend.api.Models.AccountViewModels;
+
 using FluentValidation;
 
 namespace backend.model.backend.api.Validators.AccountViewModels

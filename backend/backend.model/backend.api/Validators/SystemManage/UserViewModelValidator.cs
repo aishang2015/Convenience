@@ -1,8 +1,6 @@
 ﻿using Backend.Model.backend.api.Models.SystemManage;
+
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Backend.Model.backend.api.Validators.SystemManage
 {
@@ -13,6 +11,9 @@ namespace Backend.Model.backend.api.Validators.SystemManage
             RuleFor(viewmodel => viewmodel.UserName).MaximumLength(15).WithMessage("用户名过长！");
             RuleFor(viewmodel => viewmodel.UserName).NotEmpty().NotNull()
                 .WithMessage("用户名不能为空！");
+
+            RuleFor(viewmodel => viewmodel.Password).Must((vm, pwd) => vm.Id == 0 && !string.IsNullOrEmpty(pwd))
+                .WithMessage("密码不能为空！");
 
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(10).WithMessage("人名过长！");
             RuleFor(viewmodel => viewmodel.Name).NotEmpty().NotNull()

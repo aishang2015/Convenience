@@ -1,7 +1,6 @@
 ﻿using Backend.Model.backend.api.Models.SystemManage;
-using System;
+
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Backend.Service.backend.api.SystemManage.User
@@ -14,11 +13,13 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         public Task<UserResult> GetUserAsync(string Id);
 
-        public Task<bool> AddUserAsync(UserViewModel model);
+        public Task<string> AddUserAsync(UserViewModel model);
 
-        public Task<bool> UpdateUserAsync(UserViewModel model);
+        public Task<string> UpdateUserAsync(UserViewModel model);
 
         public Task<bool> RemoveUserAsync(string Id);
+
+        public Task<bool> RemoveUserByNameAsync(string Name);
 
         public Task<bool> SetUserPassword(string userName, string password);
 
