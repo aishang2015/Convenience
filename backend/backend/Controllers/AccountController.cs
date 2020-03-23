@@ -34,7 +34,8 @@ namespace backend.api.Controllers
             }
             return Ok(new LoginResult
             {
-                UserName = model.UserName,
+                Name = result.Item3.Name,
+                Avatar = result.Item3.Avatar,
                 Token = result.Item2
             });
         }

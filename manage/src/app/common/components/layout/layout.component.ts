@@ -11,9 +11,14 @@ export class LayoutComponent implements OnInit {
 
   breadcrumbInfo: string[] = ['仪表盘'];
 
+  name;
+  avatar;
+
   constructor(private storageService: StorageService, private router: Router) { }
 
   ngOnInit() {
+    this.name = this.storageService.Name;
+    this.avatar = this.storageService.Avatar;
   }
 
   logout() {
@@ -27,5 +32,9 @@ export class LayoutComponent implements OnInit {
     rest.forEach(element => {
       this.breadcrumbInfo.push(element);
     });
+  }
+
+  getImgUrl(name) {
+    return `/assets/avatars/${name}.png`;
   }
 }

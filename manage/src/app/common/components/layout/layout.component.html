@@ -9,9 +9,10 @@
         <div class="user">
             <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
                 <nz-badge nzDot>
-                    <nz-avatar nzIcon="user"></nz-avatar>
+                    <nz-avatar *ngIf="!avatar" nzIcon="user"></nz-avatar>
+                    <nz-avatar *ngIf="avatar" [nzSrc]="getImgUrl(avatar)"></nz-avatar>
                 </nz-badge>
-                Hover me
+                {{name}}
                 <i nz-icon nzType="down"></i>
             </a>
             <nz-dropdown-menu #menu="nzDropdownMenu">

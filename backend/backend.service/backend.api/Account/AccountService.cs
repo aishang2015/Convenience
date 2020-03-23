@@ -2,7 +2,7 @@
 using backend.repository.backend.api;
 
 using Backend.Jwtauthentication;
-
+using Backend.Repository.backend.api.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,14 +30,14 @@ namespace backend.service.backend.api.Account
             return false;
         }
 
-        public async Task<(bool, string)> ValidateCredentials(string userName, string password)
+        public async Task<(bool, string, SystemUser)> ValidateCredentials(string userName, string password)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
             {
                 if (!user.IsActive)
                 {
-                    return (false, "此账号未激活！");
+                    return (false, "此账号未激活！", null);
                 }
                 var isValid = await _userRepository.CheckPasswordAsync(user, password);
                 if (isValid)
@@ -46,10 +46,10 @@ namespace backend.service.backend.api.Account
                     {
                         (CustomClaimTypes.UserName,user.UserName)
                     };
-                    return (true, _jwtFactory.GenerateJwtToken(pairs));
+                    return (true, _jwtFactory.GenerateJwtToken(pairs), user);
                 }
             }
-            return (false, "错误的用户名或密码！");
+            return (false, "错误的用户名或密码！", null);
         }
 
         public async Task<bool> ChangePassword(string userName, string oldPassword, string newPassword)

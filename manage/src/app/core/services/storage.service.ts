@@ -38,4 +38,19 @@ export class StorageService {
     return this.userToken != null;
   }
 
+  get Name() {
+    return localStorage.getItem("name");
+  }
+  set Name(value) {
+    localStorage.setItem("name", value);
+  }
+
+  get Avatar() {
+    return localStorage.getItem("avatar");
+  }
+  set Avatar(value) {
+    localStorage.setItem("avatar", value);
+  }
+
+
 }

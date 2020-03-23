@@ -41,6 +41,8 @@ export class LoginComponent implements OnInit {
         .subscribe(
           result => {
             this.storage.userToken = result["token"];
+            this.storage.Name = result["name"];
+            this.storage.Avatar = result["avatar"];
             this.router.navigate(['/dashboard']);
           },
           error => {
