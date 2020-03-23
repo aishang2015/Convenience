@@ -24,10 +24,11 @@ namespace backend.api.Infrastructure
                 UserName = $"admin",
                 Name = "管管",
                 Sex = Sex.Male,
-                Avatar = "0",
+                Avatar = "1",
                 PhoneNumber = "15800001111",
                 RoleNames = "超级管理员",
-                IsActive = true
+                IsActive = true,
+                CreatedTime = DateTime.Now
             };
             userManager.CreateAsync(user, "admin").Wait();
             userManager.AddToRoleAsync(user, "超级管理员").Wait();

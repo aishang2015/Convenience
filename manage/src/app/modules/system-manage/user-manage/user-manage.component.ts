@@ -168,4 +168,8 @@ export class UserManageComponent implements OnInit {
     this.refresh();
   }
 
+  getImgUrl(name) {
+    return `/assets/avatars/${name}.png`;
+  }
+
 }

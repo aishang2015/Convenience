@@ -8,4 +8,5 @@ export class User {
     roleNames?: string[];
     isActive?: boolean;
     password?: string;
+    createdTime?: Date;
 }

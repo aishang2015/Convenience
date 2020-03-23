@@ -27,6 +27,7 @@ namespace backend.repository.backend.api
 
         public async Task<bool> AddUserAsync(SystemUser user)
         {
+            user.CreatedTime = DateTime.Now;
             var result = await _userManager.CreateAsync(user);
             return result.Succeeded;
         }
@@ -71,6 +72,7 @@ namespace backend.repository.backend.api
         public IQueryable<SystemUser> GetUsers()
         {
             var users = from u in _systemIdentityDbContext.Users
+                        orderby u.Id descending
                         let q = (
                              from ur in _systemIdentityDbContext.UserRoles
                              where ur.UserId == u.Id
@@ -85,6 +87,7 @@ namespace backend.repository.backend.api
                             Id = u.Id,
                             IsActive = u.IsActive,
                             Sex = u.Sex,
+                            CreatedTime = u.CreatedTime,
                             RoleNames = string.Join(',', q.ToArray())
                         };
             return users;
@@ -114,6 +117,7 @@ namespace backend.repository.backend.api
                          where u.UserName.Contains(userName ?? string.Empty)
                             && u.Name.Contains(Name ?? string.Empty)
                             && u.PhoneNumber.Contains(phoneNumber ?? string.Empty)
+                         orderby u.Id descending
                          let q = (
                               from ur in _systemIdentityDbContext.UserRoles
                               where ur.UserId == u.Id
@@ -128,11 +132,18 @@ namespace backend.repository.backend.api
                              Id = u.Id,
                              IsActive = u.IsActive,
                              Sex = u.Sex,
+                             CreatedTime = u.CreatedTime,
                              RoleNames = string.Join(',', q.ToArray())
                          };
 
             var skip = size * (page - 1);
             return result.Skip(skip).Take(size).ToList();
+        }
+
+        public async Task<int> GetSuperManagerUserCount()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("超级管理员");
+            return users.Count(user => user.IsActive);
         }
 
         public async Task<bool> RemoveUserByIdAsync(string id)

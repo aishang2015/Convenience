@@ -17,9 +17,9 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         public Task<string> UpdateUserAsync(UserViewModel model);
 
-        public Task<bool> RemoveUserAsync(string Id);
+        public Task<string> RemoveUserAsync(string Id);
 
-        public Task<bool> RemoveUserByNameAsync(string Name);
+        public Task<string> RemoveUserByNameAsync(string Name);
 
         public Task<bool> SetUserPassword(string userName, string password);
 

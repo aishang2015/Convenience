@@ -3,6 +3,7 @@
 using backend.repository.backend.api;
 
 using Backend.Model.backend.api.Models.SystemManage;
+using Backend.Repository.backend.api;
 using Backend.Repository.backend.api.Data;
 
 using System;
@@ -21,7 +22,8 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         private readonly SystemIdentityDbContext _systemIdentityDbContext;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, SystemIdentityDbContext systemIdentityDbContext)
+        public UserService(IUserRepository userRepository,
+            IMapper mapper, SystemIdentityDbContext systemIdentityDbContext)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -95,14 +97,59 @@ namespace Backend.Service.backend.api.SystemManage.User
             }
         }
 
-        public async Task<bool> RemoveUserAsync(string Id)
+        public async Task<string> RemoveUserAsync(string Id)
         {
-            return await _userRepository.RemoveUserByIdAsync(Id);
+            using (var trans = _systemIdentityDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var isSuccess = await _userRepository.RemoveUserByIdAsync(Id);
+                    if (!isSuccess)
+                    {
+                        return "删除失败！";
+                    }
+                    var count = await _userRepository.GetSuperManagerUserCount();
+                    if (count == 0)
+                    {
+                        await trans.RollbackAsync();
+                        return "可用的超级管理员数量不能为0！";
+                    }
+                    await trans.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await trans.RollbackAsync();
+                }
+            }
+            return string.Empty;
         }
 
-        public async Task<bool> RemoveUserByNameAsync(string Name)
+        public async Task<string> RemoveUserByNameAsync(string Name)
         {
-            return await _userRepository.RemoveUserByNameAsync(Name);
+            using (var trans = _systemIdentityDbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var isSuccess = await _userRepository.RemoveUserByNameAsync(Name);
+                    if (!isSuccess)
+                    {
+                        return "删除失败！";
+                    }
+                    var count = await _userRepository.GetSuperManagerUserCount();
+                    if (count == 0)
+                    {
+                        await trans.RollbackAsync();
+                        return "可用的超级管理员数量不能为0！";
+                    }
+                    await trans.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await trans.RollbackAsync();
+                }
+            }
+
+            return string.Empty;
         }
 
         public async Task<bool> ResetUserPassword(string userName, string password)
@@ -145,7 +192,6 @@ namespace Backend.Service.backend.api.SystemManage.User
                                     return "更新密码失败！";
                                 }
                             }
-
                         }
 
                         isSuccess = await _userRepository.AddUserToRoles(user,
@@ -154,6 +200,13 @@ namespace Backend.Service.backend.api.SystemManage.User
                         {
                             await trans.RollbackAsync();
                             return "无法更新用户，更新角色失败！";
+                        }
+
+                        var count = await _userRepository.GetSuperManagerUserCount();
+                        if (count == 0)
+                        {
+                            await trans.RollbackAsync();
+                            return "可用的超级管理员数量不能为0！";
                         }
                         await trans.CommitAsync();
                     }

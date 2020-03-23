@@ -49,18 +49,24 @@
             <thead>
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
+                    <th nzAlign="center" nzWidth="80px">头像</th>
                     <th nzAlign="center" nzWidth="120px">用户名</th>
                     <th nzAlign="center" nzWidth="120px">姓名</th>
                     <th nzAlign="center" nzWidth="120px">电话号码</th>
-                    <th nzAlign="center" nzWidth="50px">性别</th>
+                    <th nzAlign="center" nzWidth="60px">性别</th>
                     <th nzAlign="center">系统角色</th>
-                    <th nzAlign="center" nzWidth="50px">状态</th>
-                    <th nzAlign="center" nzWidth="200px">操作</th>
+                    <th nzAlign="center" nzWidth="60px">状态</th>
+                    <th nzAlign="center" nzWidth="180px">创建时间</th>
+                    <th nzAlign="center" nzWidth="120px">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let data of dataTable.data;let i = index">
                     <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">
+                        <nz-avatar *ngIf="!data.avatar" nzSize="large" nzIcon="user"></nz-avatar>
+                        <nz-avatar *ngIf="data.avatar" nzSize="large" [nzSrc]="getImgUrl(data.avatar)"></nz-avatar>
+                    </td>
                     <td nzAlign="center">{{ data.userName }}</td>
                     <td nzAlign="center">{{ data.name }}</td>
                     <td nzAlign="center">{{ data.phoneNumber }}</td>
@@ -70,6 +76,7 @@
                         <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
                         <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
                     </td>
+                    <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle"
                             (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon

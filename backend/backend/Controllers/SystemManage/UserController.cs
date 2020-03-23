@@ -65,10 +65,10 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpDelete]
         public async Task<IActionResult> RemoveUser([FromQuery]string id)
         {
-            var isSuccess = await _userService.RemoveUserAsync(id);
-            if (!isSuccess)
+            var result = await _userService.RemoveUserAsync(id);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法删除角色！");
+                return this.BadRequestResult(result);
             }
             return Ok();
         }

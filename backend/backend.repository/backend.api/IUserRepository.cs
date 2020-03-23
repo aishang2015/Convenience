@@ -43,5 +43,7 @@ namespace backend.repository.backend.api
         public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
 
         Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roles);
+
+        Task<int> GetSuperManagerUserCount();
     }
 }
