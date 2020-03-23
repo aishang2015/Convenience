@@ -12,10 +12,12 @@ namespace Backend.Repository.backend.api
     public class RoleRepository : IRoleRepository
     {
         private readonly RoleManager<SystemRole> _roleManager;
+        private readonly UserManager<SystemUser> _userManager;
 
-        public RoleRepository(RoleManager<SystemRole> roleManager)
+        public RoleRepository(RoleManager<SystemRole> roleManager, UserManager<SystemUser> userManager)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task<bool> AddRole(SystemRole role)
@@ -66,6 +68,12 @@ namespace Backend.Repository.backend.api
         {
             var result = await _roleManager.UpdateAsync(role);
             return result.Succeeded;
+        }
+
+        public async Task<int> GetMemberCount(string roleName)
+        {
+            var users = await _userManager.GetUsersInRoleAsync(roleName);
+            return users.Count;
         }
     }
 }

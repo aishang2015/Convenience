@@ -20,7 +20,7 @@ export class UserService {
     uri += userName ? `&&userName=${userName}` : '';
     uri += phoneNumber ? `&&phoneNumber=${phoneNumber}` : '';
     uri += name ? `&&name=${name}` : '';
-    uri += roleName ? `&&userName=${roleName}` : '';
+    uri += roleName ? `&&roleName=${roleName}` : '';
     return this.httpClient.get(uri);
   }
 

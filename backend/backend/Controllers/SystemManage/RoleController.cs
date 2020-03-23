@@ -35,10 +35,10 @@ namespace Backend.Api.Controllers.SystemManage
         [HttpDelete]
         public async Task<IActionResult> DeleteRole([FromQuery]string name)
         {
-            var isSuccess = await _roleService.RemoveRole(name);
-            if (!isSuccess)
+            var result = await _roleService.RemoveRole(name);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法删除角色，角色中包含用户！");
+                return this.BadRequestResult(result);
             }
             return Ok();
         }

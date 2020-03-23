@@ -61,9 +61,9 @@ export class UserManageComponent implements OnInit {
     this.isNewUser = true;
     this.editedUser = new User();
     this.editForm = this.formBuilder.group({
-      avatar:[''],
+      avatar: [''],
       userName: ['', [Validators.required, Validators.maxLength(15)]],
-      password: ['', [Validators.required, Validators.maxLength(30)]],
+      password: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(4)]],
       name: ['', [Validators.required, Validators.maxLength(10)]],
       phoneNumber: ['', [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
       roleNames: [[]],
@@ -85,9 +85,9 @@ export class UserManageComponent implements OnInit {
       this.isNewUser = false;
       this.editedUser = user;
       this.editForm = this.formBuilder.group({
-        avatar:[user['avatar']],
+        avatar: [user['avatar']],
         userName: [user['userName'], [Validators.required, Validators.maxLength(15)]],
-        password: [null, [Validators.maxLength(30)]],
+        password: [null, [Validators.maxLength(30), Validators.minLength(4)]],
         name: [user['name'], [Validators.required, Validators.maxLength(10)]],
         phoneNumber: [user['phoneNumber'], [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
         roleNames: [user['roleNames'].split(',')],
@@ -129,7 +129,7 @@ export class UserManageComponent implements OnInit {
     }
     if (this.editForm.valid) {
       let user = new User();
-      user.avatar = this.editForm.value['avatar'].toString();
+      user.avatar = this.editForm.value['avatar'];
       user.userName = this.editForm.value['userName'];
       user.password = this.editForm.value['password'];
       user.name = this.editForm.value['name'];

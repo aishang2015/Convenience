@@ -24,7 +24,6 @@ namespace Backend.Service.backend.api.SystemManage.Role
         public async Task<bool> AddRole(RoleViewModel model)
         {
             var role = new SystemRole();
-            role.Number = 0;
             role.Name = model.Name;
             role.Remark = model.Remark;
             return await _roleRepository.AddRole(role);
@@ -49,14 +48,28 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return _roleRepository.GetRoles().Select(r => r.Name);
         }
 
-        public async Task<bool> RemoveRole(string roleName)
+        public async Task<string> RemoveRole(string roleName)
         {
             var role = await _roleRepository.GetRole(roleName);
-            if (role != null && role.Number > 0)
+            if (role == null)
             {
-                return false;
+                return "无法删除角色，角色不存在！";
             }
-            return await _roleRepository.RemoveRole(roleName);
+            else if (role.Name == "超级管理员")
+            {
+                return "系统超级管理员,不可删除修改!";
+            }
+            var count = await _roleRepository.GetMemberCount(roleName);
+            if (count > 0)
+            {
+                return "无法删除角色，角色中包含用户！";
+            }
+            var isSuccess = await _roleRepository.RemoveRole(roleName);
+            if (!isSuccess)
+            {
+                return "角色删除失败！";
+            }
+            return string.Empty;
         }
 
         public async Task<bool> Update(RoleViewModel model)
@@ -66,5 +79,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
             role.Remark = model.Remark;
             return await _roleRepository.UpdateRole(role);
         }
+
+
     }
 }

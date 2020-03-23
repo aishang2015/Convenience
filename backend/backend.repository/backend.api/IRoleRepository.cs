@@ -24,5 +24,7 @@ namespace Backend.Repository.backend.api
         public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size);
 
         public IQueryable<SystemRole> GetRoles(int page, int size);
+
+        Task<int> GetMemberCount(string roleName);
     }
 }

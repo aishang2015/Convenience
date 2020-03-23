@@ -13,16 +13,24 @@ namespace backend.api.Infrastructure
             IServiceProvider services)
         {
             var userManager = services.GetRequiredService<UserManager<SystemUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<SystemRole>>();
+            roleManager.CreateAsync(new SystemRole
+            {
+                Name = "超级管理员",
+                Remark = "系统超级管理员,不可删除修改"
+            });
             var user = new SystemUser
             {
                 UserName = $"admin",
                 Name = "管管",
                 Sex = Sex.Male,
                 Avatar = "0",
-                PhoneNumber = "12312341234",
+                PhoneNumber = "15800001111",
+                RoleNames = "超级管理员",
                 IsActive = true
             };
             userManager.CreateAsync(user, "admin").Wait();
+            userManager.AddToRoleAsync(user, "超级管理员").Wait();
         }
     }
 }

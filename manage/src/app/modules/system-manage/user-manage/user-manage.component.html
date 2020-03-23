@@ -96,7 +96,7 @@
 <ng-template #userContentTpl>
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
         <nz-form-item>
-            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24">头像</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24">头像</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
                 <app-avatar-select formControlName="avatar"></app-avatar-select>
             </nz-form-control>
@@ -128,6 +128,9 @@
                 </ng-container>
                 <ng-container *ngIf="control.hasError('maxlength')">
                     密码长度不能超过30！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('minlength')">
+                    密码长度不能小于4！
                 </ng-container>
             </ng-template>
         </nz-form-item>

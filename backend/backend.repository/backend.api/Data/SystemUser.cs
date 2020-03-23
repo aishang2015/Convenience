@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Repository.backend.api.Data
 {
@@ -10,9 +11,10 @@ namespace Backend.Repository.backend.api.Data
 
         public string Name { get; set; }
 
-        public string RoleNames { get; set; }
-
         public bool IsActive { get; set; }
+
+        [NotMapped]
+        public string RoleNames { get; set; }
     }
 
     public enum Sex

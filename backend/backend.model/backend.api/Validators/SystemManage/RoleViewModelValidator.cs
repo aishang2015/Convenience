@@ -8,6 +8,8 @@ namespace Backend.Model.backend.api.Validators.SystemManage
     {
         public RoleViewModelValidator()
         {
+            RuleFor(viewmodel => viewmodel.Name).NotEqual("超级管理员")
+                .WithMessage("系统超级管理员,不可删除修改!");
 
             RuleFor(viewmodel => viewmodel.Name).NotNull().NotEmpty()
                 .WithMessage("角色名不能为空！");

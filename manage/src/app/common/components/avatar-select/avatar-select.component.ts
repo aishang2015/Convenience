@@ -16,7 +16,7 @@ import { NzModalService, NzModalRef } from 'ng-zorro-antd';
 export class AvatarSelectComponent implements OnInit, ControlValueAccessor {
 
   selectedAvatar;
-  avatarList: number[] = [];
+  avatarList: string[] = [];
 
   @ViewChild('input', { static: true, read: ElementRef })
   inputElementRef: ElementRef;
@@ -48,7 +48,7 @@ export class AvatarSelectComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit(): void {
     for (let i = 1; i <= 33; i++) {
-      this.avatarList.push(i);
+      this.avatarList.push(i.toString());
     }
   }
 

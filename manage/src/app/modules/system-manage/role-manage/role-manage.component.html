@@ -25,23 +25,26 @@
             nzBordered="true">
             <thead>
                 <tr>
+                    <th nzAlign="center" nzWidth="100px">#</th>
                     <th nzAlign="center" nzWidth="230px">名称</th>
-                    <th nzAlign="center" nzWidth="110px">成员数</th>
                     <th nzAlign="center">备注</th>
                     <th nzAlign="center" nzWidth="120px">操作</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let data of dataTable.data">
+                <tr *ngFor="let data of dataTable.data;let i = index;">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                     <td nzAlign="center">{{ data.name }}</td>
-                    <td nzAlign="center">{{ data.number }}</td>
                     <td nzAlign="center">{{ data.remark }}</td>
                     <td nzAlign="center">
-                        <button nz-button nzType="default" nzShape="circle"
-                            (click)="editRole(addRoleTitleTpl,roleContentTpl,data)" class="mr-10"><i nz-icon
-                                nzType="edit"></i></button>
-                        <button nz-button nzType="default" nzShape="circle" (click)="removeRole(data.name)"><i nz-icon
-                                nzType="delete"></i></button>
+                        <button nz-button nzType="default" nzShape="circle" [disabled]="data.name=='超级管理员'"
+                            (click)="editRole(addRoleTitleTpl,roleContentTpl,data)" class="mr-10">
+                            <i nz-icon nzType="edit"></i>
+                        </button>
+                        <button nz-button nzType="default" nzShape="circle" (click)="removeRole(data.name)"
+                            [disabled]="data.name=='超级管理员'">
+                            <i nz-icon nzType="delete"></i>
+                        </button>
                     </td>
                 </tr>
             </tbody>
@@ -74,7 +77,7 @@
         <nz-form-item>
             <nz-form-control>
                 <button nz-button nzType="primary" class="mr-10">提交</button>
-                <button nz-button (click)="cancelEdit()">取消</button>
+                <button nz-button type="button" (click)="cancelEdit()">取消</button>
             </nz-form-control>
         </nz-form-item>
     </form>

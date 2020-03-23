@@ -40,17 +40,25 @@ namespace Backend.Service.backend.api.SystemManage.User
                     {
                         return "无法创建用户，请检查用户名是否相同！";
                     }
-                    isSuccess = await SetUserPassword(model.UserName, model.Password);
+                    isSuccess = await _userRepository.SetPasswordAsync(user, model.Password);
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
                         return "无法创建用户，初始密码创建失败！";
                     }
+                    isSuccess = await _userRepository.AddUserToRoles(user,
+                        model.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                    if (!isSuccess)
+                    {
+                        await trans.RollbackAsync();
+                        return "无法创建用户，设置角色失败！";
+                    }
                     await trans.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     await trans.RollbackAsync();
+                    throw e;
                 }
             }
             return string.Empty;
@@ -69,14 +77,22 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         public IEnumerable<UserResult> GetUsers(UserQuery query)
         {
-            Expression<Func<SystemUser, bool>> where = u => (
-                (string.IsNullOrEmpty(query.UserName) || u.UserName.Contains(query.UserName)) &&
-                (string.IsNullOrEmpty(query.Name) || u.Name.Contains(query.Name)) &&
-                (string.IsNullOrEmpty(query.PhoneNumber) || u.PhoneNumber.Contains(query.PhoneNumber)) &&
-                (string.IsNullOrEmpty(query.RoleName) || u.Name.Contains(query.RoleName))
-            );
-            var users = _userRepository.GetUsers(where, query.Page, query.Size).ToArray();
-            return _mapper.Map<SystemUser[], IEnumerable<UserResult>>(users);
+            if (!string.IsNullOrEmpty(query.RoleName))
+            {
+                var users = _userRepository.GetUsers(query.UserName, query.Name,
+                    query.PhoneNumber, query.RoleName, query.Page, query.Size).Result;
+                return _mapper.Map<SystemUser[], IEnumerable<UserResult>>(users.ToArray());
+            }
+            else
+            {
+                Expression<Func<SystemUser, bool>> where = u => (
+                    (string.IsNullOrEmpty(query.UserName) || u.UserName.Contains(query.UserName)) &&
+                    (string.IsNullOrEmpty(query.Name) || u.Name.Contains(query.Name)) &&
+                    (string.IsNullOrEmpty(query.PhoneNumber) || u.PhoneNumber.Contains(query.PhoneNumber))
+                );
+                var users = _userRepository.GetUsers(where, query.Page, query.Size);
+                return _mapper.Map<SystemUser[], IEnumerable<UserResult>>(users.ToArray());
+            }
         }
 
         public async Task<bool> RemoveUserAsync(string Id)
@@ -130,6 +146,14 @@ namespace Backend.Service.backend.api.SystemManage.User
                                 }
                             }
 
+                        }
+
+                        isSuccess = await _userRepository.AddUserToRoles(user,
+                            model.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                        if (!isSuccess)
+                        {
+                            await trans.RollbackAsync();
+                            return "无法更新用户，更新角色失败！";
                         }
                         await trans.CommitAsync();
                     }

@@ -11,7 +11,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
 
         IEnumerable<string> GetRoles();
 
-        Task<bool> RemoveRole(string roleName);
+        Task<string> RemoveRole(string roleName);
 
         Task<bool> AddRole(RoleViewModel model);
 
