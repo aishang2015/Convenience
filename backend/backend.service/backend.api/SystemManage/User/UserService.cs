@@ -219,5 +219,11 @@ namespace Backend.Service.backend.api.SystemManage.User
 
             return string.Empty;
         }
+
+        public async Task<IEnumerable<string>> GetUserRoles(string userName)
+        {
+            var user = await _userRepository.GetUserByNameAsync(userName);
+            return user.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        }
     }
 }

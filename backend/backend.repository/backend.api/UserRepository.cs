@@ -57,16 +57,24 @@ namespace backend.repository.backend.api
 
         public async Task<SystemUser> GetUserByIdAsync(string id)
         {
-
             var user = await _userManager.FindByIdAsync(id);
-            var roles = await _userManager.GetRolesAsync(user);
-            user.RoleNames = string.Join(',', roles);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                user.RoleNames = string.Join(',', roles);
+            }
             return user;
         }
 
         public async Task<SystemUser> GetUserByNameAsync(string name)
         {
-            return await _userManager.FindByNameAsync(name);
+            var user = await _userManager.FindByNameAsync(name);
+            if (user != null)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                user.RoleNames = string.Join(',', roles);
+            }
+            return user;
         }
 
         public IQueryable<SystemUser> GetUsers()

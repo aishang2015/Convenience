@@ -1,5 +1,5 @@
 ﻿using backend.fluentvalidation;
-
+using Backend.Api.Infrastructure.Authorization;
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Service.backend.api.SystemManage.User;
 
@@ -24,6 +24,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpGet("list")]
+        [Permission("userList")]
         public IActionResult GetUserList([FromQuery]UserQuery userQuery)
         {
             return Ok(new
@@ -34,6 +35,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpGet]
+        [Permission("userDetail")]
         public async Task<IActionResult> GetUser([FromQuery]string id)
         {
             var user = await _userService.GetUserAsync(id);
@@ -41,6 +43,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPost]
+        [Permission("userAdd")]
         public async Task<IActionResult> AddUser([FromBody]UserViewModel model)
         {
             var result = await _userService.AddUserAsync(model);
@@ -52,6 +55,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPatch]
+        [Permission("userUpdate")]
         public async Task<IActionResult> UpdateUser([FromBody]UserViewModel model)
         {
             var result = await _userService.UpdateUserAsync(model);
@@ -63,6 +67,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpDelete]
+        [Permission("userDelete")]
         public async Task<IActionResult> RemoveUser([FromQuery]string id)
         {
             var result = await _userService.RemoveUserAsync(id);
