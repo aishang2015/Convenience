@@ -1,0 +1,130 @@
+﻿using AutoMapper;
+using backend.data.Repositories;
+using Backend.Entity.backend.api.Data;
+using Backend.Entity.backend.api.Entity;
+using Backend.Model.backend.api.Models.SystemManage;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MenuEntity = Backend.Entity.backend.api.Entity.Menu;
+
+namespace Backend.Service.backend.api.SystemManage.Menu
+{
+    public class MenuService : IMenuService
+    {
+        private readonly IRepository<MenuEntity> _menuRepository;
+
+        private readonly IRepository<MenuTree> _menuTreeRepository;
+
+        private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
+
+        private IMapper _mapper;
+
+
+        public MenuService(IRepository<MenuEntity> menuRepository,
+            IRepository<MenuTree> menuTreeRepository,
+            IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IMapper mapper)
+        {
+            _menuRepository = menuRepository;
+            _menuTreeRepository = menuTreeRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<bool> AddMenuAsync(MenuViewModel model)
+        {
+            await _unitOfWork.StartTransactionAsync();
+            try
+            {
+                var menu = _mapper.Map<MenuEntity>(model);
+                var entity = await _menuRepository.AddAsync(menu);
+                await _unitOfWork.SaveAsync();
+
+                if (!string.IsNullOrEmpty(model.UpId))
+                {
+                    var upid = int.Parse(model.UpId);
+                    var tree = _menuTreeRepository.Get(t => t.Descendant == upid);
+
+                    // 做成树数据
+                    foreach (var m in tree)
+                    {
+                        await _menuTreeRepository.AddAsync(new MenuTree
+                        {
+                            Ancestor = m.Ancestor,
+                            Descendant = entity.Id,
+                            Length = m.Length + 1
+                        });
+                    }
+                }
+                await _menuTreeRepository.AddAsync(new MenuTree
+                {
+                    Ancestor = entity.Id,
+                    Descendant = entity.Id,
+                    Length = 0
+                });
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollBackAsync();
+            }
+            return false;
+        }
+
+        public async Task<bool> DeleteMenuAsync(int id)
+        {
+            try
+            {
+                var descendantIds = _menuTreeRepository.Get(menu => menu.Ancestor == id)
+                    .Select(menu => menu.Descendant);
+                await _menuRepository.RemoveAsync(menu => descendantIds.Contains(menu.Id));
+                await _menuTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
+                await _unitOfWork.SaveAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollBackAsync();
+            }
+            return false;
+        }
+
+        public IQueryable<MenuResult> GetAllMenu()
+        {
+            var query = from menu in _menuRepository.Get()
+                        join tree in _menuTreeRepository.Get() on menu.Id equals tree.Descendant
+                        where tree.Length == 1
+                        select new MenuResult
+                        {
+                            Id = menu.Id,
+                            UpId = tree.Ancestor.ToString(),
+                            Name = menu.Name,
+                            Identification = menu.Identification,
+                            Permission = menu.Permission,
+                            Type = (int)menu.Type,
+                            Route = menu.Route,
+                            Sort = menu.Sort,
+                        };
+            return query;
+        }
+
+        public async Task<bool> UpdateMenuAsync(MenuViewModel model)
+        {
+            try
+            {
+                var menu = await _menuRepository.GetAsync(model.Id);
+                _mapper.Map(model, menu);
+                _menuRepository.Update(menu);
+                await _unitOfWork.SaveAsync();
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollBackAsync();
+            }
+            return false;
+        }
+    }
+}

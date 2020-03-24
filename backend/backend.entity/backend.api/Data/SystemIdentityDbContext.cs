@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Repository.backend.api.Data
+namespace Backend.Entity.backend.api.Data
 {
     public class SystemIdentityDbContext : IdentityDbContext<SystemUser, SystemRole, int>
     {

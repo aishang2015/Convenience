@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Backend.Repository.backend.api.Data
+namespace Backend.Entity.backend.api.Data
 {
     public class SystemUser : IdentityUser<int>
     {

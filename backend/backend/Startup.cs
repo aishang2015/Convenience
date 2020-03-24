@@ -8,8 +8,7 @@ using backend.repository.backend.api;
 using backend.service.backend.api;
 using backend.swashbuckle;
 using Backend.Api.Infrastructure.Authorization;
-using Backend.Repository.backend.api.Data;
-
+using Backend.Entity.backend.api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

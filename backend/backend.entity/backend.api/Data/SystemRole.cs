@@ -2,7 +2,7 @@
 
 using System.ComponentModel;
 
-namespace Backend.Repository.backend.api.Data
+namespace Backend.Entity.backend.api.Data
 {
     public class SystemRole : IdentityRole<int>
     {
