@@ -1,0 +1,14 @@
+.content {
+  position: relative;
+  .tree {
+    position: absolute;
+    left: 0;
+    width: 500px;
+    nz-card {
+      margin-top: 0;
+    }
+  }
+  .menuTable {
+    margin-left: 510px;
+  }
+}

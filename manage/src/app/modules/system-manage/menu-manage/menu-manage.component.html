@@ -1,0 +1,19 @@
+<div class="content">
+    <div class="tree">
+        <nz-card [nzSize]="'small'">
+            <nz-tree #nzTreeComponent [nzData]="nodes" nzShowIcon="true" (nzClick)="treeClick($event)"
+                [nzExpandedIcon]="mutiExpandedIconTpl">
+                <ng-template #mutiExpandedIconTpl let-node>
+                    <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'caret-down' : 'caret-right'"
+                        style="color: lightgray;"></i>
+                    <i *ngIf="node.origin.isLeaf" nz-icon nzType="file" class="ant-tree-switcher-line-icon"></i>
+                </ng-template>
+            </nz-tree>
+        </nz-card>
+    </div>
+    <div class="menuTable">
+        <nz-card [nzSize]="'small'">
+
+        </nz-card>
+    </div>
+</div>

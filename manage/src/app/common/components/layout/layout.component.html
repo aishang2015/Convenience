@@ -41,7 +41,9 @@
                         <li nz-menu-item nzMatchRouter>
                             <a [routerLink]="[ '/system/role' ]" (click)="setBreadcrumb('系统管理','角色管理')">
                                 <i nz-icon [nzType]="'idcard'"></i>角色管理</a></li>
-                        <li nz-menu-item nzMatchRouter><i nz-icon [nzType]="'menu'"></i>菜单管理</li>
+                        <li nz-menu-item nzMatchRouter>
+                            <a [routerLink]="[ '/system/menu' ]" (click)="setBreadcrumb('系统管理','菜单管理')">
+                                <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>
                 </li>
                 <li nz-submenu nzIcon="laptop" nzTitle="组织管理">
@@ -54,7 +56,7 @@
         </nz-sider>
         <nz-layout class="inner-layout">
             <nz-card [nzSize]="'small'" style="margin-top: 10px;">
-                <nz-breadcrumb style="margin:0">
+                <nz-breadcrumb style="margin:0;">
                     <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
                 </nz-breadcrumb>
             </nz-card>
