@@ -9,8 +9,12 @@ export class RoleService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getRole(name, page, size) {
-    var uri = UriConstant.RoleUri;
+  getRole(id) {
+    return this.httpClient.get(`${UriConstant.RoleUri}?id=${id}`);
+  }
+
+  getRoles(name, page, size) {
+    var uri = `${UriConstant.RoleUri}/list`;
     if (name) {
       uri += `?name=${name}&&page=${page}&&size=${size}`;
     } else {
@@ -32,6 +36,6 @@ export class RoleService {
   };
 
   getRoleList() {
-    return this.httpClient.get(UriConstant.RoleUri + '/list');
+    return this.httpClient.get(UriConstant.RoleUri + '/nameList');
   }
 }

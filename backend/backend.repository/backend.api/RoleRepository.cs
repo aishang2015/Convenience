@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Backend.Repository.backend.api
@@ -64,6 +65,11 @@ namespace Backend.Repository.backend.api
             return await _roleManager.FindByNameAsync(roleName);
         }
 
+        public async Task<SystemRole> GetRoleById(string id)
+        {
+            return await _roleManager.FindByIdAsync(id);
+        }
+
         public async Task<bool> UpdateRole(SystemRole role)
         {
             var result = await _roleManager.UpdateAsync(role);
@@ -74,6 +80,30 @@ namespace Backend.Repository.backend.api
         {
             var users = await _userManager.GetUsersInRoleAsync(roleName);
             return users.Count;
+        }
+
+        public async Task<bool> AddOrUpdateRoleClaim(SystemRole role, string claimType, string claimValue)
+        {
+            var claims = await _roleManager.GetClaimsAsync(role);
+            var values = from claim in claims
+                         where claim.Type == claimType
+                         select claim;
+            if (values.Count() > 0)
+            {
+                await _roleManager.RemoveClaimAsync(role, values.FirstOrDefault());
+            }
+            var result = await _roleManager.AddClaimAsync(role, new Claim(type: claimType, value: claimValue));
+
+            return result.Succeeded;
+        }
+
+        public async Task<string> GetRoleClaimValue(SystemRole role, string claimType)
+        {
+            var claims = await _roleManager.GetClaimsAsync(role);
+            var value = from claim in claims
+                        where claim.Type == claimType
+                        select claim.Value;
+            return value.FirstOrDefault();
         }
     }
 }

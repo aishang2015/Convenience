@@ -22,7 +22,14 @@ namespace Backend.Api.Controllers.SystemManage
             _roleService = roleService;
         }
 
-        [HttpGet]
+        [HttpGet()]
+        [Permission("roleGet")]
+        public async Task<IActionResult> GetRoles([FromQuery]string id)
+        {
+            return Ok(await _roleService.GetRole(id));
+        }
+
+        [HttpGet("list")]
         [Permission("roleList")]
         public IActionResult GetRoles([FromQuery]string name, [FromQuery]int page, [FromQuery]int size)
         {
@@ -49,10 +56,10 @@ namespace Backend.Api.Controllers.SystemManage
         [Permission("roleAdd")]
         public async Task<IActionResult> AddRole([FromBody]RoleViewModel viewModel)
         {
-            var isSuccess = await _roleService.AddRole(viewModel);
-            if (!isSuccess)
+            var result = await _roleService.AddRole(viewModel);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法创建角色，请检查角色名是否相同！");
+                return this.BadRequestResult(result);
             }
             return Ok();
         }
@@ -61,15 +68,15 @@ namespace Backend.Api.Controllers.SystemManage
         [Permission("roleUpdate")]
         public async Task<IActionResult> UpdateRole([FromBody]RoleViewModel viewModel)
         {
-            var isSuccess = await _roleService.Update(viewModel);
-            if (!isSuccess)
+            var result = await _roleService.Update(viewModel);
+            if (!string.IsNullOrEmpty(result))
             {
-                return this.BadRequestResult("无法更新角色，请检查角色名是否相同！");
+                return this.BadRequestResult(result);
             }
             return Ok();
         }
 
-        [HttpGet("list")]
+        [HttpGet("namelist")]
         [Permission("roleNameList")]
         public IActionResult GetAllRoles()
         {

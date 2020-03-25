@@ -6,6 +6,8 @@
 
         public string Name { get; set; }
 
+        public string Menus { get; set; }
+
         public string Remark { get; set; }
     }
 }

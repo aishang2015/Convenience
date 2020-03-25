@@ -1,9 +1,10 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormGroup, FormBuilder, Form, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from '../model/role';
-import { of } from 'rxjs';
-import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
+import { NzModalService, NzModalRef, NzMessageService, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/common/services/role.service';
+import { Menu } from '../model/menu';
+import { MenuService } from 'src/app/common/services/menu.service';
 
 @Component({
   selector: 'app-role-manage',
@@ -12,8 +13,10 @@ import { RoleService } from 'src/app/common/services/role.service';
 })
 export class RoleManageComponent implements OnInit {
 
-  searchForm: FormGroup = new FormGroup({});;
-  editForm: FormGroup = new FormGroup({});;
+  searchForm: FormGroup = new FormGroup({});
+  editForm: FormGroup = new FormGroup({});
+
+  nodes: NzTreeNodeOptions[] = [];
 
   tplModal: NzModalRef;
 
@@ -28,6 +31,7 @@ export class RoleManageComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private modalService: NzModalService,
     private roleService: RoleService,
+    private menuService: MenuService,
     private messageService: NzMessageService) { }
 
   ngOnInit(): void {
@@ -35,16 +39,34 @@ export class RoleManageComponent implements OnInit {
       roleName: [""]
     });
     this.refresh();
+    this.initNodes();
   }
 
   refresh() {
-    this.roleService.getRole(null, this.page, this.size)
+    this.roleService.getRoles(null, this.page, this.size)
       .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
+  }
+
+  initNodes() {
+    let nodes: NzTreeNodeOptions[] = [{ title: '菜单管理', key: null, icon: 'global', expanded: true, children: [] }];
+    this.menuService.get().subscribe((result: any) => {
+      this.makeNodes(null, nodes[0], result);
+      this.nodes = nodes;
+    });
+  }
+
+  makeNodes(upId, node, menus: Menu[]) {
+    var ms = menus.filter(menu => menu.upId == upId);
+    ms.forEach(menu => {
+      let data = { title: menu.name, key: menu.id.toString(), children: [], isLeaf: menu.type == 2 || menu.type == 3 };
+      this.makeNodes(menu.id, data, menus);
+      node.children.push(data);
+    });
   }
 
   submitSearch() {
     let key = this.searchForm.value["roleName"];
-    this.roleService.getRole(key, this.page, this.size)
+    this.roleService.getRoles(key, this.page, this.size)
       .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
@@ -52,7 +74,8 @@ export class RoleManageComponent implements OnInit {
     this.editedRole = new Role();
     this.editForm = this.fb.group({
       roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
-      remark: [this.editedRole.remark, [Validators.maxLength(30)]]
+      remark: [this.editedRole.remark, [Validators.maxLength(30)]],
+      menus: [[]]
     });
     this.tplModal = this.modalService.create({
       nzTitle: title,
@@ -62,15 +85,19 @@ export class RoleManageComponent implements OnInit {
   }
 
   editRole(title: TemplateRef<{}>, content: TemplateRef<{}>, role: Role) {
-    this.editedRole = role;
-    this.editForm = this.fb.group({
-      roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
-      remark: [this.editedRole.remark, [Validators.maxLength(30)]]
-    });
-    this.tplModal = this.modalService.create({
-      nzTitle: title,
-      nzContent: content,
-      nzFooter: null,
+    this.roleService.getRole(role.id).subscribe(reuslt => {
+      this.editedRole = reuslt;
+      this.editForm = this.fb.group({
+        roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
+        remark: [this.editedRole.remark, [Validators.maxLength(30)]],
+        menus: [this.editedRole.menus?.split(',')]
+      });
+      this.tplModal = this.modalService.create({
+        nzTitle: title,
+        nzContent: content,
+        nzFooter: null,
+      });
+
     });
   }
 
@@ -94,6 +121,7 @@ export class RoleManageComponent implements OnInit {
     if (this.editForm.valid) {
       this.editedRole.name = this.editForm.value['roleName'];
       this.editedRole.remark = this.editForm.value['remark'];
+      this.editedRole.menus = this.editForm.value['menus'].join(',');
       if (this.editedRole.id) {
         this.roleService.updateRole(this.editedRole)
           .subscribe(result => {
@@ -121,5 +149,6 @@ export class RoleManageComponent implements OnInit {
     this.page = 1;
     this.refresh();
   }
+
 
 }

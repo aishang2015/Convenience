@@ -3,28 +3,35 @@ using Backend.Entity.backend.api.Data;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Backend.Repository.backend.api
 {
     public interface IRoleRepository
     {
-        public Task<bool> AddRole(SystemRole role);
+        Task<bool> AddRole(SystemRole role);
 
-        public Task<bool> RemoveRole(string roleName);
+        Task<bool> RemoveRole(string roleName);
 
-        public Task<bool> UpdateRole(SystemRole role);
+        Task<bool> UpdateRole(SystemRole role);
 
-        public Task<SystemRole> GetRole(string roleName);
+        Task<SystemRole> GetRole(string roleName);
 
-        public IQueryable<SystemRole> GetRoles();
+        Task<SystemRole> GetRoleById(string id);
 
-        public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where);
+        IQueryable<SystemRole> GetRoles();
 
-        public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size);
+        IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where);
 
-        public IQueryable<SystemRole> GetRoles(int page, int size);
+        IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size);
+
+        IQueryable<SystemRole> GetRoles(int page, int size);
 
         Task<int> GetMemberCount(string roleName);
+
+        Task<bool> AddOrUpdateRoleClaim(SystemRole role, string claimType, string claimValue);
+
+        Task<string> GetRoleClaimValue(SystemRole role, string claimType);
     }
 }

@@ -9,13 +9,15 @@ namespace Backend.Service.backend.api.SystemManage.Role
     {
         IEnumerable<RoleResult> GetRoles(int page, int size, string name);
 
+        Task<RoleResult> GetRole(string id);
+
         IEnumerable<string> GetRoles();
 
         Task<string> RemoveRole(string roleName);
 
-        Task<bool> AddRole(RoleViewModel model);
+        Task<string> AddRole(RoleViewModel model);
 
-        Task<bool> Update(RoleViewModel model);
+        Task<string> Update(RoleViewModel model);
 
         int Count();
     }

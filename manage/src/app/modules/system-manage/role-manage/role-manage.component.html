@@ -65,19 +65,31 @@
 <ng-template #roleContentTpl>
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
         <nz-form-item>
-            <nz-form-control [nzErrorTip]="roleNameErrorTpl">
-                <input formControlName="roleName" nz-input placeholder="角色名称" />
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_roleName'">角色名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
+                <input [attr.id]="'edit_roleName'" formControlName="roleName" nz-input placeholder="角色名称" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-control nzErrorTip="备注长度不能超过30！">
-                <textarea formControlName="remark" nz-input placeholder="角色备注" rows="2"></textarea>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_roleRemark'">角色备注</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="备注长度不能超过30！">
+                <textarea [attr.id]="'edit_roleRemark'" formControlName="remark" nz-input placeholder="角色备注"
+                    rows="2"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_menu'">菜单权限</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-tree-select [nzNodes]="nodes" nzCheckable nzPlaceHolder="请选择" formControlName="menus">
+                </nz-tree-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>
-                <button nz-button nzType="primary" class="mr-10">提交</button>
-                <button nz-button type="button" (click)="cancelEdit()">取消</button>
+                <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                    <button nz-button nzType="primary" class="mr-10">提交</button>
+                    <button nz-button type="button" (click)="cancelEdit()">取消</button>
+                </nz-form-control>
             </nz-form-control>
         </nz-form-item>
     </form>
