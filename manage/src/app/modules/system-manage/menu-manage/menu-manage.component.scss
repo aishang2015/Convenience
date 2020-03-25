@@ -3,12 +3,17 @@
   .tree {
     position: absolute;
     left: 0;
-    width: 500px;
+    width: 400px;
     nz-card {
       margin-top: 0;
+      min-height: calc(100vh - 153px);
     }
   }
   .menuTable {
-    margin-left: 510px;
+    margin-left: 410px;
+    min-width: 400px;
+    nz-card {
+      min-height: calc(100vh - 153px);
+    }
   }
 }

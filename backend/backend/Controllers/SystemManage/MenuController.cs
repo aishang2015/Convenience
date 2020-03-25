@@ -1,4 +1,5 @@
 ﻿using backend.fluentvalidation;
+using Backend.Api.Infrastructure.Authorization;
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Service.backend.api.SystemManage.Menu;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +19,15 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpGet]
+        [Permission("menuList")]
         public IActionResult Get()
         {
             return Ok(_menuService.GetAllMenu());
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Remove(int id)
+        [Permission("menuDelete")]
+        public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _menuService.DeleteMenuAsync(id);
             if (!isSuccess)
@@ -35,6 +38,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPost]
+        [Permission("menuAdd")]
         public async Task<IActionResult> Add(MenuViewModel menuViewModel)
         {
             var isSuccess = await _menuService.AddMenuAsync(menuViewModel);
@@ -46,6 +50,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPatch]
+        [Permission("menuUpdate")]
         public async Task<IActionResult> Update(MenuViewModel menuViewModel)
         {
             var isSuccess = await _menuService.UpdateMenuAsync(menuViewModel);

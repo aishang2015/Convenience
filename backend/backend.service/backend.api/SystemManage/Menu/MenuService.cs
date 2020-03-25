@@ -95,12 +95,15 @@ namespace Backend.Service.backend.api.SystemManage.Menu
         public IQueryable<MenuResult> GetAllMenu()
         {
             var query = from menu in _menuRepository.Get()
-                        join tree in _menuTreeRepository.Get() on menu.Id equals tree.Descendant
-                        where tree.Length == 1
+                        join tree in _menuTreeRepository.Get()
+                        on new { id = menu.Id, length = 1 } equals new { id = tree.Descendant, length = tree.Length }
+                        into e
+                        from rtree in e.DefaultIfEmpty()
+                        orderby menu.Sort
                         select new MenuResult
                         {
                             Id = menu.Id,
-                            UpId = tree.Ancestor.ToString(),
+                            UpId = rtree.Ancestor.ToString(),
                             Name = menu.Name,
                             Identification = menu.Identification,
                             Permission = menu.Permission,
@@ -119,6 +122,7 @@ namespace Backend.Service.backend.api.SystemManage.Menu
                 _mapper.Map(model, menu);
                 _menuRepository.Update(menu);
                 await _unitOfWork.SaveAsync();
+                return true;
             }
             catch (Exception)
             {

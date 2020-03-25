@@ -7,23 +7,26 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { CommonModule } from '@angular/common';
 import { GenderPipe } from './pipes/gender.pipe';
 import { AvatarSelectComponent } from './components/avatar-select/avatar-select.component';
+import { MenuTypePipe } from './pipes/menu-type.pipe';
 
 @NgModule({
   declarations: [
     GenderPipe,
+    MenuTypePipe,
     AvatarSelectComponent,
   ],
-  imports:[
+  imports: [
     CommonModule,
     NgZorroAntdModule,
   ],
   exports: [
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule, 
+    HttpClientModule,
     CommonModule,
     NgZorroAntdModule,
     GenderPipe,
+    MenuTypePipe,
     AvatarSelectComponent,
   ]
 })

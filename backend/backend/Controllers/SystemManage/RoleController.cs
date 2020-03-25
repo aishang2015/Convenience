@@ -1,5 +1,5 @@
 ﻿using backend.fluentvalidation;
-
+using Backend.Api.Infrastructure.Authorization;
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Service.backend.api.SystemManage.Role;
 
@@ -23,6 +23,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpGet]
+        [Permission("roleList")]
         public IActionResult GetRoles([FromQuery]string name, [FromQuery]int page, [FromQuery]int size)
         {
             return Ok(new
@@ -33,6 +34,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpDelete]
+        [Permission("roleDelete")]
         public async Task<IActionResult> DeleteRole([FromQuery]string name)
         {
             var result = await _roleService.RemoveRole(name);
@@ -44,6 +46,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPost]
+        [Permission("roleAdd")]
         public async Task<IActionResult> AddRole([FromBody]RoleViewModel viewModel)
         {
             var isSuccess = await _roleService.AddRole(viewModel);
@@ -55,6 +58,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpPatch]
+        [Permission("roleUpdate")]
         public async Task<IActionResult> UpdateRole([FromBody]RoleViewModel viewModel)
         {
             var isSuccess = await _roleService.Update(viewModel);
@@ -66,6 +70,7 @@ namespace Backend.Api.Controllers.SystemManage
         }
 
         [HttpGet("list")]
+        [Permission("roleNameList")]
         public IActionResult GetAllRoles()
         {
             return Ok(_roleService.GetRoles());

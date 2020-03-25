@@ -10,4 +10,6 @@ export class UriConstant {
 
     static readonly UserUri: string = `${UriConstant.BaseUri}/user`;
 
+    static readonly MenuUri: string = `${UriConstant.BaseUri}/menu`;
+
 }
