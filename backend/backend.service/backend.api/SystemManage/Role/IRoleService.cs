@@ -20,5 +20,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
         Task<string> Update(RoleViewModel model);
 
         int Count();
+
+        IEnumerable<string> GetRoleClaims(string roleIds, string claimType);
     }
 }

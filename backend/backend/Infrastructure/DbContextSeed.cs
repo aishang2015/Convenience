@@ -18,7 +18,7 @@ namespace backend.api.Infrastructure
             {
                 Name = "超级管理员",
                 Remark = "系统超级管理员,不可删除修改"
-            });
+            }).Wait();
             var user = new SystemUser
             {
                 UserName = $"admin",

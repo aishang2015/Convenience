@@ -20,6 +20,10 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                     let msg = '';
                     if (error.status == 0) {
                         msg = '无法连接服务器,请联系管理员！';
+                    } else if (error.status == 401) {
+                        msg = '还没有进行授权！';
+                    } else if (error.status == 403) {
+                        msg = '没有操作的权限！';
                     } else {
                         for (var key in error['error']) {
                             msg += error.error[key];

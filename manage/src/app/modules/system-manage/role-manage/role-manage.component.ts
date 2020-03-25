@@ -48,9 +48,9 @@ export class RoleManageComponent implements OnInit {
   }
 
   initNodes() {
-    let nodes: NzTreeNodeOptions[] = [{ title: '菜单管理', key: null, icon: 'global', expanded: true, children: [] }];
+    let nodes: NzTreeNodeOptions[] = [];
     this.menuService.get().subscribe((result: any) => {
-      this.makeNodes(null, nodes[0], result);
+      this.makeNodes(null, nodes, result);
       this.nodes = nodes;
     });
   }
@@ -59,8 +59,8 @@ export class RoleManageComponent implements OnInit {
     var ms = menus.filter(menu => menu.upId == upId);
     ms.forEach(menu => {
       let data = { title: menu.name, key: menu.id.toString(), children: [], isLeaf: menu.type == 2 || menu.type == 3 };
-      this.makeNodes(menu.id, data, menus);
-      node.children.push(data);
+      this.makeNodes(menu.id, data.children, menus);
+      node.push(data);
     });
   }
 

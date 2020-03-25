@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using backend.data.Repositories;
 using Backend.Entity.backend.api.Data;
+using Backend.Entity.backend.api.Entity;
 using Backend.Jwtauthentication;
 using Backend.Model.backend.api.Models.SystemManage;
 using Backend.Repository.backend.api;
@@ -15,13 +17,16 @@ namespace Backend.Service.backend.api.SystemManage.Role
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IMapper _mapper;
+        private readonly IRepository<MenuTree> _menuTreeRepository;
         private readonly SystemIdentityDbContext _systemIdentityDbContext;
 
         public RoleService(IRoleRepository roleRepository, IMapper mapper,
+            IRepository<MenuTree> menuTreeRepository,
             SystemIdentityDbContext systemIdentityDbContext)
         {
             _roleRepository = roleRepository;
             _mapper = mapper;
+            _menuTreeRepository = menuTreeRepository;
             _systemIdentityDbContext = systemIdentityDbContext;
         }
 
@@ -37,9 +42,16 @@ namespace Backend.Service.backend.api.SystemManage.Role
                     {
                         return "无法创建角色，请检查角色名是否相同！";
                     }
+
+                    // 找到所有子节点
+                    var menusArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var menus = from tree in _menuTreeRepository.Get(false)
+                                where menusArray.Contains(tree.Ancestor.ToString())
+                                select tree.Descendant;
+
                     role = await _roleRepository.GetRole(model.Name);
                     isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                        CustomClaimTypes.RoleMenus, model.Menus);
+                        CustomClaimTypes.RoleMenus, string.Join(',', menus.Distinct()));
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
@@ -119,9 +131,16 @@ namespace Backend.Service.backend.api.SystemManage.Role
                     {
                         return "无法更新角色，请检查角色名是否相同！";
                     }
+
+                    // 找到所有子节点
+                    var menusArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var menus = from tree in _menuTreeRepository.Get(false)
+                                where menusArray.Contains(tree.Ancestor.ToString())
+                                select tree.Descendant;
+
                     role = await _roleRepository.GetRole(model.Name);
                     isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                        CustomClaimTypes.RoleMenus, model.Menus);
+                        CustomClaimTypes.RoleMenus, string.Join(',', menus.Distinct()));
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
@@ -136,6 +155,16 @@ namespace Backend.Service.backend.api.SystemManage.Role
                 }
             }
             return string.Empty;
+        }
+
+        public IEnumerable<string> GetRoleClaims(string roleIds, string claimType)
+        {
+            var roleIdArray = roleIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+            var result = from rc in _systemIdentityDbContext.RoleClaims
+                         where rc.ClaimType == claimType && roleIdArray.Contains(rc.RoleId.ToString())
+                         select rc.ClaimValue;
+            return string.Join(',', result).Split(',');
         }
 
 
