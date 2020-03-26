@@ -39,7 +39,7 @@
 
 <nz-card [nzSize]="'small'" style="min-height: 500px;">
     <div>
-        <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)"><i nz-icon
+        <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)" *canOperate="'adduserbtn'"><i nz-icon
                 nzType="plus"></i>添加用户</button>
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
@@ -78,10 +78,10 @@
                     </td>
                     <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
-                        <button nz-button nzType="default" nzShape="circle"
+                        <button nz-button nzType="default" nzShape="circle" *canOperate="'updateUserBtn'"
                             (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
                                 nzType="edit"></i></button>
-                        <button nz-button nzType="default" nzShape="circle" (click)="remove(data.id)" class="mr-10"><i
+                        <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteUserBtn'" (click)="remove(data.id)" class="mr-10"><i
                                 nz-icon nzType="delete"></i></button>
                     </td>
                 </tr>

@@ -130,5 +130,24 @@ namespace Backend.Service.backend.api.SystemManage.Menu
             }
             return false;
         }
+
+        public bool HavePermission(string[] menuIds, string permission)
+        {
+            var query = from menu in _menuRepository.Get()
+                        where menuIds.Contains(menu.Id.ToString()) && menu.Permission.Contains(permission)
+                        select menu;
+            return query.Any();
+        }
+
+
+        public (string, string) GetIdentificationRoutes(string[] menuIds)
+        {
+            var query = from menu in _menuRepository.Get()
+                        where menuIds.Contains(menu.Id.ToString())
+                        select menu;
+            var identifications = string.Join(',', query.Select(m => m.Identification));
+            var routes = string.Join(',', query.Select(m => m.Route));
+            return (identifications, routes);
+        }
     }
 }

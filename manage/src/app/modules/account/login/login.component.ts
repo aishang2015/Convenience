@@ -43,6 +43,8 @@ export class LoginComponent implements OnInit {
             this.storage.userToken = result["token"];
             this.storage.Name = result["name"];
             this.storage.Avatar = result["avatar"];
+            this.storage.Identifycation = result["identification"];
+            this.storage.Route = result["routes"];
             this.router.navigate(['/dashboard']);
           },
           error => {

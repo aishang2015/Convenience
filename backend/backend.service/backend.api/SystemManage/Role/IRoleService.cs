@@ -21,6 +21,8 @@ namespace Backend.Service.backend.api.SystemManage.Role
 
         int Count();
 
-        IEnumerable<string> GetRoleClaims(string roleIds, string claimType);
+        IEnumerable<string> GetRoleClaims(string[] roleIds, string claimType);
+
+        IEnumerable<string> GetRoleClaimsByName(string[] roleNames, string claimType);
     }
 }

@@ -14,12 +14,15 @@ import { LayoutComponent } from './common/components/layout/layout.component';
 import { AuthHeaderInterceptor } from './core/inceptors/auth-header-inceptor';
 import { CacheInterceptor } from './core/inceptors/cache-inceptor';
 import { ErrorHandlerInterceptor } from './core/inceptors/error-handler-inceptor';
+import { CanOperateDirective } from './common/directives/can-operate.directive';
+import { OperateDirective } from './common/directives/operate.directive';
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    LayoutComponent
+    LayoutComponent,
+    OperateDirective
   ],
   imports: [
     AppRoutingModule,
@@ -28,7 +31,7 @@ registerLocaleData(zh);
     HttpClientModule,
     BrowserAnimationsModule,
     /** 导入 ng-zorro-antd 模块 **/
-    NgZorroAntdModule
+    NgZorroAntdModule,
   ],
   bootstrap: [AppComponent],
   /** 配置 ng-zorro-antd 国际化（文案 及 日期） **/

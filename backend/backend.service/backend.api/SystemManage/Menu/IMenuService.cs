@@ -13,5 +13,9 @@ namespace Backend.Service.backend.api.SystemManage.Menu
         Task<bool> UpdateMenuAsync(MenuViewModel model);
 
         Task<bool> DeleteMenuAsync(int id);
+
+        bool HavePermission(string[] menuIds, string permission);
+
+        (string, string) GetIdentificationRoutes(string[] menuIds);
     }
 }

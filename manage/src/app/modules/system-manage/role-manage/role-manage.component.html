@@ -16,8 +16,8 @@
 </nz-card>
 <nz-card [nzSize]="'small'" class="mt-10" style="min-height: 500px;">
     <div>
-        <button nz-button class="mr-10" (click)="addRole(addRoleTitleTpl,roleContentTpl)"><i nz-icon
-                nzType="plus"></i>添加角色</button>
+        <button nz-button class="mr-10" (click)="addRole(addRoleTitleTpl,roleContentTpl)" *canOperate="'addRoleBtn'"><i
+                nz-icon nzType="plus"></i>添加角色</button>
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
     <div class="mt-10">
@@ -38,11 +38,12 @@
                     <td nzAlign="center">{{ data.remark }}</td>
                     <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle" [disabled]="data.name=='超级管理员'"
-                            (click)="editRole(addRoleTitleTpl,roleContentTpl,data)" class="mr-10">
+                            *canOperate="'updateRoleBtn'" (click)="editRole(addRoleTitleTpl,roleContentTpl,data)"
+                            class="mr-10">
                             <i nz-icon nzType="edit"></i>
                         </button>
                         <button nz-button nzType="default" nzShape="circle" (click)="removeRole(data.name)"
-                            [disabled]="data.name=='超级管理员'">
+                            *canOperate="'deleteRoleBtn'" [disabled]="data.name=='超级管理员'">
                             <i nz-icon nzType="delete"></i>
                         </button>
                     </td>
@@ -80,7 +81,7 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_menu'">菜单权限</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-tree-select [nzNodes]="nodes" nzCheckable nzPlaceHolder="请选择" formControlName="menus">
+                <nz-tree-select #menuTree [nzNodes]="nodes" nzCheckable nzPlaceHolder="请选择" formControlName="menus">
                 </nz-tree-select>
             </nz-form-control>
         </nz-form-item>

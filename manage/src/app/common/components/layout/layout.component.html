@@ -33,15 +33,15 @@
                     <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
                         <i nz-icon nzType="dot-chart"></i>仪表盘</a>
                 </li>
-                <li nz-submenu nzIcon="setting" nzTitle="系统管理">
+                <li nz-submenu nzIcon="setting" nzTitle="系统管理" *operate="'systemmanage'">
                     <ul>
-                        <li nz-menu-item nzMatchRouter>
+                        <li nz-menu-item nzMatchRouter *operate="'userManage'">
                             <a [routerLink]="[ '/system/user' ]" (click)="setBreadcrumb('系统管理','用户管理')">
                                 <i nz-icon [nzType]="'user'"></i>用户管理</a></li>
-                        <li nz-menu-item nzMatchRouter>
+                        <li nz-menu-item nzMatchRouter *operate="'roleManage'">
                             <a [routerLink]="[ '/system/role' ]" (click)="setBreadcrumb('系统管理','角色管理')">
                                 <i nz-icon [nzType]="'idcard'"></i>角色管理</a></li>
-                        <li nz-menu-item nzMatchRouter>
+                        <li nz-menu-item nzMatchRouter *operate="'menuManage'">
                             <a [routerLink]="[ '/system/menu' ]" (click)="setBreadcrumb('系统管理','菜单管理')">
                                 <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>

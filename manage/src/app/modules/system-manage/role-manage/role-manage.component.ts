@@ -1,7 +1,7 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from '../model/role';
-import { NzModalService, NzModalRef, NzMessageService, NzTreeNodeOptions } from 'ng-zorro-antd';
+import { NzModalService, NzModalRef, NzMessageService, NzTreeNodeOptions, NzTreeSelectComponent } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/common/services/role.service';
 import { Menu } from '../model/menu';
 import { MenuService } from 'src/app/common/services/menu.service';
@@ -13,6 +13,8 @@ import { MenuService } from 'src/app/common/services/menu.service';
 })
 export class RoleManageComponent implements OnInit {
 
+  @ViewChild('menuTree', { static: false }) menuTree: NzTreeSelectComponent;
+  
   searchForm: FormGroup = new FormGroup({});
   editForm: FormGroup = new FormGroup({});
 

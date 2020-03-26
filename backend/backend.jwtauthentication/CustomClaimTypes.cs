@@ -6,5 +6,6 @@
         public const string UserRoles = "userroles";
 
         public const string RoleMenus = "rolemenus";
+        public const string RoleMenusFront = "rolemenusfront";
     }
 }

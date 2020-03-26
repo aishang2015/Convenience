@@ -43,19 +43,32 @@ namespace Backend.Service.backend.api.SystemManage.Role
                         return "无法创建角色，请检查角色名是否相同！";
                     }
 
-                    // 找到所有子节点
-                    var menusArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    var menus = from tree in _menuTreeRepository.Get(false)
-                                where menusArray.Contains(tree.Ancestor.ToString())
-                                select tree.Descendant;
+                    // 找到所有父和子节点
+                    var menuIdArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var menuTree = from tree in _menuTreeRepository.Get(false)
+                                   where menuIdArray.Contains(tree.Ancestor.ToString())
+                                        || menuIdArray.Contains(tree.Descendant.ToString())
+                                   select tree;
+
+                    var menuIds = menuTree.Select(tree => tree.Descendant).Concat(
+                            menuTree.Select(tree => tree.Ancestor)).Distinct();
 
                     role = await _roleRepository.GetRole(model.Name);
                     isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                        CustomClaimTypes.RoleMenus, string.Join(',', menus.Distinct()));
+                        CustomClaimTypes.RoleMenus, string.Join(',', menuIds.Distinct()));
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
                         return "无法创建角色，菜单权限添加失败！";
+                    }
+
+                    // 存储原始选中节点前端用
+                    isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
+                        CustomClaimTypes.RoleMenusFront, string.Join(',', menuIdArray.Distinct()));
+                    if (!isSuccess)
+                    {
+                        await trans.RollbackAsync();
+                        return "无法更新角色，菜单权限添加失败！";
                     }
                     await trans.CommitAsync();
                 }
@@ -77,7 +90,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
         {
             var role = await _roleRepository.GetRoleById(id);
             var roleResult = _mapper.Map<RoleResult>(role);
-            roleResult.Menus = await _roleRepository.GetRoleClaimValue(role, CustomClaimTypes.RoleMenus);
+            roleResult.Menus = await _roleRepository.GetRoleClaimValue(role, CustomClaimTypes.RoleMenusFront);
             return roleResult;
         }
 
@@ -132,15 +145,28 @@ namespace Backend.Service.backend.api.SystemManage.Role
                         return "无法更新角色，请检查角色名是否相同！";
                     }
 
-                    // 找到所有子节点
-                    var menusArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    var menus = from tree in _menuTreeRepository.Get(false)
-                                where menusArray.Contains(tree.Ancestor.ToString())
-                                select tree.Descendant;
+                    // 找到所有父和子节点
+                    var menuIdArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    var menuTree = from tree in _menuTreeRepository.Get(false)
+                                   where menuIdArray.Contains(tree.Ancestor.ToString())
+                                        || menuIdArray.Contains(tree.Descendant.ToString())
+                                   select tree;
+
+                    var menuIds = menuTree.Select(tree => tree.Descendant).Concat(
+                            menuTree.Select(tree => tree.Ancestor)).Distinct();
 
                     role = await _roleRepository.GetRole(model.Name);
                     isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                        CustomClaimTypes.RoleMenus, string.Join(',', menus.Distinct()));
+                        CustomClaimTypes.RoleMenus, string.Join(',', menuIds.Distinct()));
+                    if (!isSuccess)
+                    {
+                        await trans.RollbackAsync();
+                        return "无法更新角色，菜单权限添加失败！";
+                    }
+
+                    // 存储原始选中节点前端用
+                    isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
+                        CustomClaimTypes.RoleMenusFront, string.Join(',', menuIdArray.Distinct()));
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
@@ -157,16 +183,23 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return string.Empty;
         }
 
-        public IEnumerable<string> GetRoleClaims(string roleIds, string claimType)
+        public IEnumerable<string> GetRoleClaims(string[] roleIds, string claimType)
         {
-            var roleIdArray = roleIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
             var result = from rc in _systemIdentityDbContext.RoleClaims
-                         where rc.ClaimType == claimType && roleIdArray.Contains(rc.RoleId.ToString())
+                         where rc.ClaimType == claimType && roleIds.Contains(rc.RoleId.ToString())
                          select rc.ClaimValue;
             return string.Join(',', result).Split(',');
         }
 
+
+        public IEnumerable<string> GetRoleClaimsByName(string[] roleNames, string claimType)
+        {
+            var result = from rc in _systemIdentityDbContext.RoleClaims
+                         join r in _systemIdentityDbContext.Roles on rc.RoleId equals r.Id
+                         where rc.ClaimType == claimType && roleNames.Contains(r.Name)
+                         select rc.ClaimValue;
+            return string.Join(',', result).Split(',');
+        }
 
     }
 }

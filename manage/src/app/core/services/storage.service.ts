@@ -14,7 +14,7 @@ export class StorageService {
     localStorage.setItem('userToken', value);
     let expirationDate = this.jwtService.getTokenExpirationDate(value);
     let decodeToken = this.jwtService.decodeToken(value);
-    localStorage.setItem('username', decodeToken['username']);
+    this.UserRoles = decodeToken['userroles'];
     localStorage.setItem('userTokenExpiration', expirationDate.toString());
   }
 
@@ -45,6 +45,13 @@ export class StorageService {
     localStorage.setItem("name", value);
   }
 
+  get UserRoles() {
+    return localStorage.getItem("userroles");
+  }
+  set UserRoles(value) {
+    localStorage.setItem("userroles", value);
+  }
+  
   get Avatar() {
     return localStorage.getItem("avatar");
   }
@@ -52,5 +59,18 @@ export class StorageService {
     localStorage.setItem("avatar", value);
   }
 
+  get Identifycation(){
+    return localStorage.getItem("identifycation");
+  }
+  set Identifycation(value) {
+    localStorage.setItem("identifycation", value);
+  }
+
+  get Route(){
+    return localStorage.getItem("route");
+  }
+  set Route(value) {
+    localStorage.setItem("route", value);
+  }
 
 }

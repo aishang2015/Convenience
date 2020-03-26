@@ -8,12 +8,14 @@ import { CommonModule } from '@angular/common';
 import { GenderPipe } from './pipes/gender.pipe';
 import { AvatarSelectComponent } from './components/avatar-select/avatar-select.component';
 import { MenuTypePipe } from './pipes/menu-type.pipe';
+import { CanOperateDirective } from './directives/can-operate.directive';
 
 @NgModule({
   declarations: [
     GenderPipe,
     MenuTypePipe,
     AvatarSelectComponent,
+    CanOperateDirective
   ],
   imports: [
     CommonModule,
@@ -28,6 +30,7 @@ import { MenuTypePipe } from './pipes/menu-type.pipe';
     GenderPipe,
     MenuTypePipe,
     AvatarSelectComponent,
+    CanOperateDirective
   ]
 })
 export class AppCommonModule { }
