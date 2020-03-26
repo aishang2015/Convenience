@@ -17,7 +17,7 @@ namespace Backend.Entity.backend.api.Data
         public DateTime CreatedTime { get; set; }
 
         [NotMapped]
-        public string RoleNames { get; set; }
+        public string RoleIds { get; set; }
     }
 
     public enum Sex

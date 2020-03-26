@@ -26,7 +26,6 @@ namespace backend.api.Infrastructure
                 Sex = Sex.Male,
                 Avatar = "1",
                 PhoneNumber = "15800001111",
-                RoleNames = "超级管理员",
                 IsActive = true,
                 CreatedTime = DateTime.Now
             };

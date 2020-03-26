@@ -60,8 +60,10 @@ namespace backend.repository.backend.api
             var user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                user.RoleNames = string.Join(',', roles);
+                var roleIds = from ur in _systemIdentityDbContext.UserRoles
+                              where ur.UserId == user.Id
+                              select ur.RoleId;
+                user.RoleIds = string.Join(',', roleIds);
             }
             return user;
         }
@@ -71,8 +73,10 @@ namespace backend.repository.backend.api
             var user = await _userManager.FindByNameAsync(name);
             if (user != null)
             {
-                var roles = await _userManager.GetRolesAsync(user);
-                user.RoleNames = string.Join(',', roles);
+                var roleIds = from ur in _systemIdentityDbContext.UserRoles
+                              where ur.UserId == user.Id
+                              select ur.RoleId;
+                user.RoleIds = string.Join(',', roleIds);
             }
             return user;
         }
@@ -85,7 +89,7 @@ namespace backend.repository.backend.api
                              from ur in _systemIdentityDbContext.UserRoles
                              where ur.UserId == u.Id
                              join r in _systemIdentityDbContext.Roles on ur.RoleId equals r.Id
-                             select r.Name)
+                             select r.Id)
                         select new SystemUser
                         {
                             Avatar = u.Avatar,
@@ -96,7 +100,7 @@ namespace backend.repository.backend.api
                             IsActive = u.IsActive,
                             Sex = u.Sex,
                             CreatedTime = u.CreatedTime,
-                            RoleNames = string.Join(',', q.ToArray())
+                            RoleIds = string.Join(',', q.ToArray())
                         };
             return users;
         }
@@ -118,9 +122,10 @@ namespace backend.repository.backend.api
             return GetUsers(where).Skip(skip).Take(size);
         }
 
-        public async Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleName, int page, int size)
+        public async Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleId, int page, int size)
         {
-            var users = await _userManager.GetUsersInRoleAsync(roleName);
+            var role = await _roleManger.FindByIdAsync(roleId);
+            var users = await _userManager.GetUsersInRoleAsync(role.Name);
             var result = from u in users
                          where u.UserName.Contains(userName ?? string.Empty)
                             && u.Name.Contains(Name ?? string.Empty)
@@ -130,7 +135,7 @@ namespace backend.repository.backend.api
                               from ur in _systemIdentityDbContext.UserRoles
                               where ur.UserId == u.Id
                               join r in _systemIdentityDbContext.Roles on ur.RoleId equals r.Id
-                              select r.Name)
+                              select r.Id)
                          select new SystemUser
                          {
                              Avatar = u.Avatar,
@@ -141,7 +146,7 @@ namespace backend.repository.backend.api
                              IsActive = u.IsActive,
                              Sex = u.Sex,
                              CreatedTime = u.CreatedTime,
-                             RoleNames = string.Join(',', q.ToArray())
+                             RoleIds = string.Join(',', q.ToArray())
                          };
 
             var skip = size * (page - 1);
@@ -186,16 +191,17 @@ namespace backend.repository.backend.api
             return true;
         }
 
-        public async Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roles)
+        public async Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds)
         {
             // remove all old roles,add some news
-            var userRoles = from ur in _systemIdentityDbContext.UserRoles
-                            where ur.UserId == user.Id
-                            select ur;
-            _systemIdentityDbContext.UserRoles.RemoveRange(userRoles);
-            await _systemIdentityDbContext.SaveChangesAsync();
+            var roles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, roles);
 
-            var result = await _userManager.AddToRolesAsync(user, roles);
+            var roleaArray = from role in _roleManger.Roles
+                             where roleIds.Contains(role.Id.ToString())
+                             select role.Name;
+
+            var result = await _userManager.AddToRolesAsync(user, roleaArray);
             return result.Succeeded;
         }
     }

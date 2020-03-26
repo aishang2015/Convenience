@@ -11,7 +11,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
 
         Task<RoleResult> GetRole(string id);
 
-        IEnumerable<string> GetRoles();
+        IEnumerable<RoleResult> GetRoles();
 
         Task<string> RemoveRole(string roleName);
 
@@ -21,8 +21,8 @@ namespace Backend.Service.backend.api.SystemManage.Role
 
         int Count();
 
-        IEnumerable<string> GetRoleClaims(string[] roleIds, string claimType);
+        IEnumerable<string> GetRoleClaimValue(string[] roleIds, string claimType);
 
-        IEnumerable<string> GetRoleClaimsByName(string[] roleNames, string claimType);
+        IEnumerable<string> GetRoleClaimValueByName(string[] roleNames, string claimType);
     }
 }

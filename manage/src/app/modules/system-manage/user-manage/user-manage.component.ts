@@ -4,6 +4,7 @@ import { User } from '../model/user';
 import { UserService } from 'src/app/common/services/user.service';
 import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/common/services/role.service';
+import { Role } from '../model/role';
 
 @Component({
   selector: 'app-user-manage',
@@ -25,7 +26,7 @@ export class UserManageComponent implements OnInit {
   total: number = 0;
 
   data: User[] = [];
-  roleNames: string[] = [];
+  roles: Role[] = [];
 
   constructor(private formBuilder: FormBuilder,
     private userService: UserService,
@@ -40,17 +41,17 @@ export class UserManageComponent implements OnInit {
       userName: [null],
       phoneNumber: [null],
       name: [null],
-      roleName: [null],
+      roleid: [null],
     });
   }
 
   initRoleList() {
-    this.roleService.getRoleList().subscribe((result: any) => this.roleNames = result);
+    this.roleService.getRoleList().subscribe((result: any) => this.roles = result);
   }
 
   refresh() {
     this.userService.getUsers(this.page, this.size, this.searchForm.value['userName'],
-      this.searchForm.value['phoneNumber'], this.searchForm.value['name'], this.searchForm.value['roleName'])
+      this.searchForm.value['phoneNumber'], this.searchForm.value['name'], this.searchForm.value['roleid'])
       .subscribe(result => {
         this.data = result['data'];
         this.total = result['count'];
@@ -66,7 +67,7 @@ export class UserManageComponent implements OnInit {
       password: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(4)]],
       name: ['', [Validators.required, Validators.maxLength(10)]],
       phoneNumber: ['', [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
-      roleNames: [[]],
+      roleIds: [[]],
       sex: [0],
       isActive: [false],
     });
@@ -90,7 +91,7 @@ export class UserManageComponent implements OnInit {
         password: [null, [Validators.maxLength(30), Validators.minLength(4)]],
         name: [user['name'], [Validators.required, Validators.maxLength(10)]],
         phoneNumber: [user['phoneNumber'], [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
-        roleNames: [user['roleNames'].split(',')],
+        roleIds: [user['roleIds'].split(',')],
         sex: [user['sex']],
         isActive: [user['isActive']],
       });
@@ -134,7 +135,7 @@ export class UserManageComponent implements OnInit {
       user.password = this.editForm.value['password'];
       user.name = this.editForm.value['name'];
       user.phoneNumber = this.editForm.value['phoneNumber'].toString();
-      user.roleNames = (this.editForm.value['roleNames']).filter(item => item !== '').join(',');
+      user.roleIds = (this.editForm.value['roleIds']).filter(item => item !== '').join(',');
       user.sex = this.editForm.value['sex'];
       user.isActive = this.editForm.value['isActive'];
       if (this.editedUser.id) {
@@ -153,6 +154,17 @@ export class UserManageComponent implements OnInit {
       }
     }
 
+  }
+
+  getRoleName(ids: string) {
+    let idarray = ids.split(',');
+    let result: string[] = [];
+    this.roles.forEach(r => {
+      if (idarray.includes(r.id)) {
+        result.push(r.name);
+      }
+    });
+    return result.join(',');
   }
 
   cancelEdit() {

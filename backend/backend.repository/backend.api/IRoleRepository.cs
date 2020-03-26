@@ -31,7 +31,5 @@ namespace Backend.Repository.backend.api
         Task<int> GetMemberCount(string roleName);
 
         Task<bool> AddOrUpdateRoleClaim(SystemRole role, string claimType, string claimValue);
-
-        Task<string> GetRoleClaimValue(SystemRole role, string claimType);
     }
 }

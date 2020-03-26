@@ -44,7 +44,7 @@ namespace backend.api.Controllers
             }
 
             // 取得权限信息
-            var menuIds = _roleService.GetRoleClaimsByName(result.Item3.RoleNames.Split(',',
+            var menuIds = _roleService.GetRoleClaimValue(result.Item3.RoleIds.Split(',',
                 System.StringSplitOptions.RemoveEmptyEntries), CustomClaimTypes.RoleMenus);
 
             var irs = _menuService.GetIdentificationRoutes(menuIds.ToArray());

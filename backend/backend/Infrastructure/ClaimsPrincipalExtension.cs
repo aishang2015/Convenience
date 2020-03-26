@@ -13,9 +13,9 @@ namespace Backend.Api.Infrastructure
                 ?.Value ?? string.Empty;
         }
 
-        public static string GetUserRoles(this ClaimsPrincipal claimsPrincipal)
+        public static string GetUserRoleIds(this ClaimsPrincipal claimsPrincipal)
         {
-            return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserRoles)
+            return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserRoleIds)
                 ?.Value ?? string.Empty;
         }
     }

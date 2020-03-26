@@ -14,7 +14,7 @@ export class StorageService {
     localStorage.setItem('userToken', value);
     let expirationDate = this.jwtService.getTokenExpirationDate(value);
     let decodeToken = this.jwtService.decodeToken(value);
-    this.UserRoles = decodeToken['userroles'];
+    this.UserRoles = decodeToken['userroleids'];
     localStorage.setItem('userTokenExpiration', expirationDate.toString());
   }
 

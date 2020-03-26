@@ -30,7 +30,7 @@ namespace backend.repository.backend.api
 
         public Task<SystemUser> GetUserByNameAsync(string name);
 
-        Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleName, int page, int size);
+        Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleId, int page, int size);
 
         public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size);
 
@@ -42,7 +42,7 @@ namespace backend.repository.backend.api
 
         public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
 
-        Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roles);
+        Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds);
 
         Task<int> GetSuperManagerUserCount();
     }

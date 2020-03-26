@@ -24,7 +24,5 @@ namespace Backend.Service.backend.api.SystemManage.User
         public Task<bool> SetUserPassword(string userName, string password);
 
         public Task<bool> ResetUserPassword(string userName, string password);
-
-        public Task<IEnumerable<string>> GetUserRoles(string userName);
     }
 }

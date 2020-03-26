@@ -44,7 +44,7 @@ namespace backend.service.backend.api.Account
                     var pairs = new List<(string, string)>
                     {
                         (CustomClaimTypes.UserName,user.UserName),
-                        (CustomClaimTypes.UserRoles,user.RoleNames)
+                        (CustomClaimTypes.UserRoleIds,user.RoleIds)
                     };
                     return (true, _jwtFactory.GenerateJwtToken(pairs), user);
                 }

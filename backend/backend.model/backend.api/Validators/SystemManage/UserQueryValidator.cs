@@ -14,7 +14,7 @@ namespace Backend.Model.backend.api.Validators.SystemManage
             RuleFor(viewmodel => viewmodel.UserName).MaximumLength(15).WithMessage("检索内容过长！");
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(10).WithMessage("检索内容过长！");
             RuleFor(viewmodel => viewmodel.PhoneNumber).MaximumLength(11).WithMessage("检索内容过长！");
-            RuleFor(viewmodel => viewmodel.RoleName).MaximumLength(15).WithMessage("检索内容过长！");
+            RuleFor(viewmodel => viewmodel.RoleId).MaximumLength(15).WithMessage("检索内容过长！");
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Backend.Service.backend.api.SystemManage.User
                         return "无法创建用户，初始密码创建失败！";
                     }
                     isSuccess = await _userRepository.AddUserToRoles(user,
-                        model.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                        model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
                     if (!isSuccess)
                     {
                         await trans.RollbackAsync();
@@ -77,10 +77,10 @@ namespace Backend.Service.backend.api.SystemManage.User
 
         public IEnumerable<UserResult> GetUsers(UserQuery query)
         {
-            if (!string.IsNullOrEmpty(query.RoleName))
+            if (!string.IsNullOrEmpty(query.RoleId))
             {
                 var users = _userRepository.GetUsers(query.UserName, query.Name,
-                    query.PhoneNumber, query.RoleName, query.Page, query.Size).Result;
+                    query.PhoneNumber, query.RoleId, query.Page, query.Size).Result;
                 return _mapper.Map<SystemUser[], IEnumerable<UserResult>>(users.ToArray());
             }
             else
@@ -193,7 +193,7 @@ namespace Backend.Service.backend.api.SystemManage.User
                         }
 
                         isSuccess = await _userRepository.AddUserToRoles(user,
-                            model.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                            model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
                         if (!isSuccess)
                         {
                             await trans.RollbackAsync();
@@ -214,14 +214,8 @@ namespace Backend.Service.backend.api.SystemManage.User
                     await trans.RollbackAsync();
                 }
             }
-
             return string.Empty;
         }
 
-        public async Task<IEnumerable<string>> GetUserRoles(string userName)
-        {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            return user.RoleNames.Split(',', StringSplitOptions.RemoveEmptyEntries);
-        }
     }
 }

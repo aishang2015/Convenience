@@ -90,7 +90,11 @@ namespace Backend.Service.backend.api.SystemManage.Role
         {
             var role = await _roleRepository.GetRoleById(id);
             var roleResult = _mapper.Map<RoleResult>(role);
-            roleResult.Menus = await _roleRepository.GetRoleClaimValue(role, CustomClaimTypes.RoleMenusFront);
+            var menus = from roleclaim in _systemIdentityDbContext.RoleClaims
+                        where roleclaim.RoleId == role.Id
+                            && roleclaim.ClaimType == CustomClaimTypes.RoleMenusFront
+                        select roleclaim.ClaimValue;
+            roleResult.Menus = menus.FirstOrDefault();
             return roleResult;
         }
 
@@ -102,9 +106,10 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return _mapper.Map<SystemRole[], IEnumerable<RoleResult>>(roles);
         }
 
-        public IEnumerable<string> GetRoles()
+        public IEnumerable<RoleResult> GetRoles()
         {
-            return _roleRepository.GetRoles().Select(r => r.Name);
+            var roles = _roleRepository.GetRoles();
+            return _mapper.Map<SystemRole[], IEnumerable<RoleResult>>(roles.ToArray());
         }
 
         public async Task<string> RemoveRole(string roleName)
@@ -183,7 +188,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
             return string.Empty;
         }
 
-        public IEnumerable<string> GetRoleClaims(string[] roleIds, string claimType)
+        public IEnumerable<string> GetRoleClaimValue(string[] roleIds, string claimType)
         {
             var result = from rc in _systemIdentityDbContext.RoleClaims
                          where rc.ClaimType == claimType && roleIds.Contains(rc.RoleId.ToString())
@@ -192,7 +197,7 @@ namespace Backend.Service.backend.api.SystemManage.Role
         }
 
 
-        public IEnumerable<string> GetRoleClaimsByName(string[] roleNames, string claimType)
+        public IEnumerable<string> GetRoleClaimValueByName(string[] roleNames, string claimType)
         {
             var result = from rc in _systemIdentityDbContext.RoleClaims
                          join r in _systemIdentityDbContext.Roles on rc.RoleId equals r.Id

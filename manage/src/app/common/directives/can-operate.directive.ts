@@ -15,7 +15,7 @@ export class CanOperateDirective {
         let identifications = this.storageService.Identifycation.split(',');
 
         // 判断是否包含此元素的操作权
-        let hasRight = roles.find(r => r == '超级管理员') ? true : identifications.find(i => i == identification);
+        let hasRight = roles.find(r => r == '1') ? true : identifications.find(i => i == identification);
 
         if (hasRight) {
             this.viewContainer.createEmbeddedView(this.templateRef);

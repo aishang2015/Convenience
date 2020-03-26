@@ -23,13 +23,13 @@ namespace Backend.Api.Infrastructure.Authorization
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             PermissionAuthorizationRequirement requirement)
         {
-            var userRoles = context.User.GetUserRoles()
+            var userRoleIds = context.User.GetUserRoleIds()
                 .Split(',', StringSplitOptions.RemoveEmptyEntries);
-            if (userRoles.Contains("超级管理员"))
+            if (userRoleIds.Contains("1"))
             {
                 context.Succeed(requirement);
             }
-            var menuIds = _roleService.GetRoleClaimsByName(userRoles, CustomClaimTypes.RoleMenus);
+            var menuIds = _roleService.GetRoleClaimValue(userRoleIds, CustomClaimTypes.RoleMenus);
             if (_menuService.HavePermission(menuIds.ToArray(), requirement.Name))
             {
                 context.Succeed(requirement);

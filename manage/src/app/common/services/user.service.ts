@@ -15,12 +15,12 @@ export class UserService {
     return this.httpClient.get(`${UriConstant.UserUri}?id=${id}`);
   }
 
-  getUsers(page, size, userName, phoneNumber, name, roleName) {
+  getUsers(page, size, userName, phoneNumber, name, roleid) {
     var uri = `${UriConstant.UserUri}/list?page=${page}&&size=${size}`;
     uri += userName ? `&&userName=${userName}` : '';
     uri += phoneNumber ? `&&phoneNumber=${phoneNumber}` : '';
     uri += name ? `&&name=${name}` : '';
-    uri += roleName ? `&&roleName=${roleName}` : '';
+    uri += roleid ? `&&roleid=${roleid}` : '';
     return this.httpClient.get(uri);
   }
 
