@@ -14,7 +14,6 @@ import { LayoutComponent } from './common/components/layout/layout.component';
 import { AuthHeaderInterceptor } from './core/inceptors/auth-header-inceptor';
 import { CacheInterceptor } from './core/inceptors/cache-inceptor';
 import { ErrorHandlerInterceptor } from './core/inceptors/error-handler-inceptor';
-import { CanOperateDirective } from './common/directives/can-operate.directive';
 import { OperateDirective } from './common/directives/operate.directive';
 registerLocaleData(zh);
 

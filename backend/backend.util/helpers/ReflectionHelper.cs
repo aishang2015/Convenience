@@ -68,6 +68,12 @@ namespace backend.util.helpers
             return result;
         }
 
+        public static object GetPropertyValue(object obj, string property)
+        {
+            PropertyInfo propertyInfo = obj.GetType().GetProperty(property);
+            return propertyInfo.GetValue(obj, null);
+        }
+
 
     }
 }

@@ -48,15 +48,26 @@ namespace backend.data.Repositories
             return tracking ? _dataSet.Where(where).AsTracking() : _dataSet.Where(where).AsNoTracking();
         }
 
-        public IQueryable<TEntity> Get(IQueryable<TEntity> query,
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> where,
             Expression<Func<TEntity, object>> order, bool isDesc = false, bool tracking = false)
         {
+            var query = tracking ? _dataSet.Where(where).AsTracking() : _dataSet.Where(where).AsNoTracking();
             query = isDesc ? query.OrderByDescending(order) : query.OrderBy(order);
             query = tracking ? query.AsTracking() : query.AsNoTracking();
             return query;
         }
 
-        public IQueryable<TEntity> Get(IQueryable<TEntity> query, int page, int size, bool tracking = false)
+        public IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, object>> order,
+            int page, int size, bool isDesc = false, bool tracking = false)
+        {
+            var query = tracking ? _dataSet.Where(where).AsTracking() : _dataSet.Where(where).AsNoTracking();
+            query = isDesc ? query.OrderByDescending(order) : query.OrderBy(order);
+            query = tracking ? query.AsTracking() : query.AsNoTracking();
+            var skip = size * (page - 1);
+            return query.Skip(skip).Take(size);
+        }
+
+        public IQueryable<TEntity> Get(IQueryable<TEntity> query, int page, int size)
         {
             var skip = size * (page - 1);
             return query.Skip(skip).Take(size);
@@ -87,6 +98,11 @@ namespace backend.data.Repositories
         public async Task<long> CountAsync(IQueryable<TEntity> query)
         {
             return await query.CountAsync();
+        }
+
+        public async Task<long> CountAsync()
+        {
+            return await _dataSet.CountAsync();
         }
 
         public Task<int> ExecuteSqlAsync(string sql)

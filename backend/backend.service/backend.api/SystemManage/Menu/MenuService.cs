@@ -76,13 +76,14 @@ namespace Backend.Service.backend.api.SystemManage.Menu
 
         public async Task<bool> DeleteMenuAsync(int id)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
                 var descendantIds = _menuTreeRepository.Get(menu => menu.Ancestor == id)
                     .Select(menu => menu.Descendant);
                 await _menuRepository.RemoveAsync(menu => descendantIds.Contains(menu.Id));
                 await _menuTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
-                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
                 return true;
             }
             catch (Exception)
@@ -116,12 +117,13 @@ namespace Backend.Service.backend.api.SystemManage.Menu
 
         public async Task<bool> UpdateMenuAsync(MenuViewModel model)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
                 var menu = await _menuRepository.GetAsync(model.Id);
                 _mapper.Map(model, menu);
                 _menuRepository.Update(menu);
-                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
                 return true;
             }
             catch (Exception)

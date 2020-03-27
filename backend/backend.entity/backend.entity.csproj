@@ -5,13 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="backend.api\Entity\Common\**" />
+    <EmbeddedResource Remove="backend.api\Entity\Common\**" />
+    <None Remove="backend.api\Entity\Common\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
     <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="backend.api\Configurations\" />
-    <Folder Include="backend.api\Entity\Common\" />
   </ItemGroup>
 
 </Project>

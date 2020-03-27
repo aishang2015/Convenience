@@ -11,9 +11,12 @@ namespace backend.data.Repositories
         Task<TEntity> GetAsync(object key);
         IQueryable<TEntity> Get(bool tracking = false);
         IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> where, bool tracking = false);
-        IQueryable<TEntity> Get(IQueryable<TEntity> query, Expression<Func<TEntity, object>> order,
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, object>> order,
             bool isDesc = false, bool tracking = false);
-        IQueryable<TEntity> Get(IQueryable<TEntity> query, int page, int size, bool tracking = false);
+        IQueryable<TEntity> Get(Expression<Func<TEntity, bool>> where, Expression<Func<TEntity, object>> order,
+            int page, int size, bool isDesc = false, bool tracking = false);
+        IQueryable<TEntity> Get(IQueryable<TEntity> query, int page, int size);
+        Task<long> CountAsync();
         Task<long> CountAsync(IQueryable<TEntity> query);
 
         Task<TEntity> AddAsync(TEntity entity);
