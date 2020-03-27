@@ -21,8 +21,8 @@ namespace backend.model.backend.api
             CreateMap<Menu, MenuResult>().ForMember(menu => menu.Type,
                 ex => ex.MapFrom(result => (int)result.Type));
 
-            CreateMap<Tenant, TenantResult>();
             CreateMap<TenantViewModel, Tenant>();
+            CreateMap<Tenant, TenantResult>();
         }
     }
 }

@@ -9,11 +9,13 @@ import { GenderPipe } from './pipes/gender.pipe';
 import { AvatarSelectComponent } from './components/avatar-select/avatar-select.component';
 import { MenuTypePipe } from './pipes/menu-type.pipe';
 import { CanOperateDirective } from './directives/can-operate.directive';
+import { DbTypePipe } from './pipes/db-type.pipe';
 
 @NgModule({
   declarations: [
     GenderPipe,
     MenuTypePipe,
+    DbTypePipe,
     AvatarSelectComponent,
     CanOperateDirective
   ],
@@ -29,6 +31,7 @@ import { CanOperateDirective } from './directives/can-operate.directive';
     NgZorroAntdModule,
     GenderPipe,
     MenuTypePipe,
+    DbTypePipe,
     AvatarSelectComponent,
     CanOperateDirective
   ]

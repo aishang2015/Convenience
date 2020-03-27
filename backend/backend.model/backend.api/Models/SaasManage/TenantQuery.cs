@@ -12,7 +12,7 @@ namespace Backend.Model.backend.api.Models.SaasManage
 
         public string Name { get; set; }
 
-        public int? DataBaseType { get; set; }
+        public string DataBaseType { get; set; }
 
         public string SortKey { get; set; }
 

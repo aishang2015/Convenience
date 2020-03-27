@@ -24,6 +24,8 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                         msg = '还没有进行授权！';
                     } else if (error.status == 403) {
                         msg = '没有操作的权限！';
+                    } else if (error.status == 500) {
+                        msg = '发生系统错误！';
                     } else {
                         for (var key in error['error']) {
                             msg += error.error[key];

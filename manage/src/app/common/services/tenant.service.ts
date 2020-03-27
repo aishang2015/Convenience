@@ -17,7 +17,7 @@ export class TenantService {
   getTenants(page, size, name, dataBaseType, sortKey, isDesc) {
     var uri = `${UriConstant.TenantUri}/list?page=${page}&&size=${size}`;
     uri += name ? `&&name=${name}` : '';
-    uri += dataBaseType ? `&&dataBaseType=${dataBaseType}` : '';
+    uri += dataBaseType || dataBaseType == 0 ? `&&dataBaseType=${dataBaseType}` : '';
     uri += sortKey ? `&&sortKey=${sortKey}` : '';
     uri += isDesc ? `&&isDesc=${isDesc}` : '';
     return this.httpClient.get(uri);

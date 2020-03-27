@@ -46,7 +46,7 @@
 <nz-card [nzSize]="'small'" class="fullwindow">
     <div>
         <button nz-button class="mr-10" (click)="add(addTenantTitleTpl,tenantContentTpl)" *canOperate="'adduserbtn'"><i
-                nz-icon nzType="plus"></i>添加用户</button>
+                nz-icon nzType="plus"></i>添加租户</button>
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
     <div class="mt-10">
@@ -55,12 +55,12 @@
             <thead>
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
-                    <th nzAlign="center" nzWidth="80px">名称</th>
-                    <th nzAlign="center" nzWidth="120px">Url前缀</th>
+                    <th nzAlign="center" nzWidth="150px">名称</th>
+                    <th nzAlign="center" nzWidth="150px">Url前缀</th>
                     <th nzAlign="center" nzWidth="120px">数据库类型</th>
                     <th nzAlign="center">连接串</th>
                     <th nzAlign="center" nzWidth="90px">激活状态</th>
-                    <th nzAlign="center" nzWidth="200px">创建日期</th>
+                    <th nzAlign="center" nzWidth="180px">创建日期</th>
                     <th nzAlign="center" nzWidth="120px">操作</th>
                 </tr>
             </thead>
@@ -69,7 +69,7 @@
                     <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                     <td nzAlign="center">{{ data.name }}</td>
                     <td nzAlign="center">{{ data.urlPrefix }}</td>
-                    <td nzAlign="center">{{ data.dataBaseType | gender }}</td>
+                    <td nzAlign="center">{{ data.dataBaseType | dbType }}</td>
                     <td nzAlign="center">{{ data.connectionString }}</td>
                     <td nzAlign="center">
                         <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>

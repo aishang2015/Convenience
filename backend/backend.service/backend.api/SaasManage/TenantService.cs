@@ -1,6 +1,7 @@
 ﻿
 
 using AutoMapper;
+using backend.data.Infrastructure;
 using backend.data.Repositories;
 using backend.util.helpers;
 using Backend.Entity.backend.api.Data;
@@ -43,8 +44,8 @@ namespace Backend.Service.backend.api.SaasManage
         public long Count(TenantQuery query)
         {
             Expression<Func<Tenant, bool>> where = t => (
-                   (string.IsNullOrEmpty(query.Name) || t.Name.Contains(query.Name)) &&
-                   (query.DataBaseType == null || (int)t.DataBaseType == (int)query.DataBaseType)
+                   (string.IsNullOrEmpty(query.Name) || t.Name.Contains(query.Name))
+                   && (string.IsNullOrEmpty(query.DataBaseType) || t.DataBaseType == (DataBaseType)Enum.Parse(typeof(DataBaseType), query.DataBaseType))
                );
             var queryExpress = _tenantRepository.Get(where);
             return _tenantRepository.CountAsync(queryExpress).Result;
@@ -54,7 +55,7 @@ namespace Backend.Service.backend.api.SaasManage
         {
             Expression<Func<Tenant, bool>> where = t => (
                    (string.IsNullOrEmpty(query.Name) || t.Name.Contains(query.Name))
-                   && (query.DataBaseType == null || (int)t.DataBaseType == (int)query.DataBaseType)
+                   && (string.IsNullOrEmpty(query.DataBaseType) || t.DataBaseType == (DataBaseType)Enum.Parse(typeof(DataBaseType), query.DataBaseType))
                );
 
             Expression<Func<Tenant, object>> order = query.SortKey switch
