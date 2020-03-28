@@ -1,11 +1,14 @@
 <nz-layout class="fullscreen">
     <nz-header>
-        <div class="logo"></div>
-        <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+        <div class="logo">
+            <label>Convience</label>
+        </div>
+        <!-- <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
             <li nz-menu-item>nav 1</li>
             <li nz-menu-item>nav 2</li>
             <li nz-menu-item>nav 3</li>
-        </ul>
+        </ul> -->
+
         <div class="user">
             <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
                 <nz-badge nzDot>
@@ -27,7 +30,7 @@
         </div>
     </nz-header>
     <nz-layout>
-        <nz-sider nzWidth="200px">
+        <nz-sider nzWidth="200px" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
                 <li nz-menu-item nzMatchRouter>
                     <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
@@ -46,7 +49,7 @@
                                 <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>
                 </li>
-                <li nz-submenu nzIcon="setting" nzTitle="SAAS管理">
+                <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理">
                     <ul>
                         <li nz-menu-item nzMatchRouter>
                             <a [routerLink]="[ '/saas/tenant' ]" (click)="setBreadcrumb('SAAS管理','租户管理')">
@@ -63,7 +66,12 @@
         </nz-sider>
         <nz-layout class="inner-layout">
             <nz-card [nzSize]="'small'" style="margin-top: 10px;">
-                <nz-breadcrumb style="margin:0;">
+                <div style="color: black;float: left;">
+                    <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+                        (click)="isCollapsed = !isCollapsed"></i>
+                </div>
+                <div style="float: left;padding:0 10px;color: lightgray;">|</div>
+                <nz-breadcrumb style="margin:0;float: left;">
                     <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
                 </nz-breadcrumb>
             </nz-card>
