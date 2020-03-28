@@ -2,7 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace backend.service.backend.api
+namespace Convience.Service
 {
     public static class ServiceExtension
     {

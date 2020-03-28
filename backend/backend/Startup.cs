@@ -4,18 +4,20 @@ using backend.data.Repositories;
 using backend.fluentvalidation;
 using backend.hangfire;
 using backend.jwtauthentication;
-using backend.repository.backend.api;
-using backend.service.backend.api;
 using backend.swashbuckle;
-using Backend.Api.Infrastructure.Authorization;
-using Backend.Entity.backend.api.Data;
+
+using Convience.Entity.Data;
+using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.Repository;
+using Convience.Service;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace backend
+namespace Convience.ManagentApi
 {
     public class Startup
     {

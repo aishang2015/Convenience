@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 using System;
 using System.Threading.Tasks;
 
-namespace Backend.Api.Infrastructure.Authorization
+namespace Convience.ManagentApi.Infrastructure.Authorization
 {
     public class PermissionFilter : Attribute, IAsyncAuthorizationFilter
     {

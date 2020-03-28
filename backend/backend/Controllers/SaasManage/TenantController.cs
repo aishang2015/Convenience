@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Backend.Model.backend.api.Models.SaasManage;
-using Backend.Service.backend.api.SaasManage;
-using Microsoft.AspNetCore.Http;
+﻿using Convience.Model.Models.SaasManage;
+using Convience.Service.SaasManage;
+
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Api.Controllers.SaasManage
+using System;
+using System.Threading.Tasks;
+
+namespace Convience.ManagentApi.Controllers.SaasManage
 {
     [Route("api/[controller]")]
     [ApiController]

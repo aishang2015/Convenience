@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Backend.Api.Infrastructure.Authorization
+namespace Convience.ManagentApi.Infrastructure.Authorization
 {
     public class PermissionAuthorizationRequirement : IAuthorizationRequirement
     {

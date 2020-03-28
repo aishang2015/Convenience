@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Backend.Api.Infrastructure.Authorization
+namespace Convience.ManagentApi.Infrastructure.Authorization
 {
     public static class PermissionAuthorizationExtension
     {

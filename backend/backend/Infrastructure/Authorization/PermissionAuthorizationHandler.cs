@@ -1,13 +1,14 @@
 ﻿using Backend.Jwtauthentication;
-using Backend.Service.backend.api.SystemManage.Menu;
-using Backend.Service.backend.api.SystemManage.Role;
-using Backend.Service.backend.api.SystemManage.User;
+
+using Convience.Service.SystemManage;
+
 using Microsoft.AspNetCore.Authorization;
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backend.Api.Infrastructure.Authorization
+namespace Convience.ManagentApi.Infrastructure.Authorization
 {
     public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionAuthorizationRequirement>
     {

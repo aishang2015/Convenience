@@ -3,7 +3,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace Backend.Api.Infrastructure
+namespace Convience.ManagentApi.Infrastructure
 {
     public static class ClaimsPrincipalExtension
     {

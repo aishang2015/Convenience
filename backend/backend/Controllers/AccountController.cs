@@ -1,18 +1,19 @@
-﻿
-using backend.fluentvalidation;
-using backend.service.backend.api.Account;
+﻿using backend.fluentvalidation;
 
-using Backend.Api.Infrastructure;
 using Backend.Jwtauthentication;
-using Backend.Model.backend.api.Models.AccountViewModels;
-using Backend.Service.backend.api.SystemManage.Menu;
-using Backend.Service.backend.api.SystemManage.Role;
+
+using Convience.ManagentApi.Infrastructure;
+using Convience.Model.Models.AccountViewModels;
+using Convience.Service.Account;
+using Convience.Service.SystemManage;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace backend.api.Controllers
+namespace Convience.ManagentApi.Controllers
 {
     [Route("api")]
     [ApiController]

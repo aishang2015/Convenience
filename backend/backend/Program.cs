@@ -1,6 +1,8 @@
-using backend.api.Infrastructure;
 using backend.data.Infrastructure;
-using Backend.Entity.backend.api.Data;
+
+using Convience.Entity.Data;
+using Convience.ManagentApi.Infrastructure;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -9,7 +11,7 @@ using NLog.Web;
 
 using System;
 
-namespace backend
+namespace Convience.ManagentApi
 {
     public class Program
     {
@@ -20,7 +22,7 @@ namespace backend
             {
                 logger.Debug("init main");
                 var host = CreateHostBuilder(args).Build();
-                DataBaseInitializer.InitialDataBase<SystemIdentityDbContext>(host, DbContextSeed.InitialApplicationDataBase);
+                host.InitialDataBase<SystemIdentityDbContext>(DbContextSeed.InitialApplicationDataBase);
                 host.Run();
             }
             catch (Exception ex)

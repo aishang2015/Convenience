@@ -1,12 +1,12 @@
-﻿
-using Backend.Entity.backend.api.Data;
+﻿using Convience.Entity.Data;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-namespace backend.api.Infrastructure
+namespace Convience.ManagentApi.Infrastructure
 {
     public class DbContextSeed
     {

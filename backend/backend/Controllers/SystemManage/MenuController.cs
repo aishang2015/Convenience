@@ -1,11 +1,14 @@
 ﻿using backend.fluentvalidation;
-using Backend.Api.Infrastructure.Authorization;
-using Backend.Model.backend.api.Models.SystemManage;
-using Backend.Service.backend.api.SystemManage.Menu;
+
+using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.Model.Models.SystemManage;
+using Convience.Service.SystemManage;
+
 using Microsoft.AspNetCore.Mvc;
+
 using System.Threading.Tasks;
 
-namespace Backend.Api.Controllers.SystemManage
+namespace Convience.ManagentApi.Controllers.SystemManage
 {
     [Route("api/[controller]")]
     [ApiController]

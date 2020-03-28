@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Backend.Core\Backend.Core.csproj" />
+    <ProjectReference Include="..\backend.entity\Convience.Entity.csproj" />
+    <ProjectReference Include="..\backend.repository\Convience.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
