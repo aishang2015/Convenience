@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.automapper\Convience.Automapper.csproj" />
     <ProjectReference Include="..\backend.cache\Convience.Cache.csproj" />
     <ProjectReference Include="..\backend.data\Convience.EntityFrameWork.csproj" />
-    <ProjectReference Include="..\backend.dependency\Convience.Dependency.csproj" />
-    <ProjectReference Include="..\backend.fluentvalidation\Convience.Fluentvalidation.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Automapper\Convience.Automapper.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Dependency\Convience.Dependency.csproj" />
     <ProjectReference Include="..\backend.hangfire\Convience.Hangfire.csproj" />
-    <ProjectReference Include="..\backend.jwtauthentication\Convience.Jwtauthentication.csproj" />
-    <ProjectReference Include="..\backend.Swashbuckle\Convience.Swashbuckle.csproj" />
-    <ProjectReference Include="..\backend.util\Convience.Util.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Fluentvalidation\Convience.Fluentvalidation.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Jwtauthentication\Convience.Jwtauthentication.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Swashbuckle\Convience.Swashbuckle.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Util\Convience.Util.csproj" />
   </ItemGroup>
 
 </Project>

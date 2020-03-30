@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.dependency\Convience.Dependency.csproj" />
+    <ProjectReference Include="..\Convience.FrameWork\Convience.Dependency\Convience.Dependency.csproj" />
   </ItemGroup>
 
 </Project>

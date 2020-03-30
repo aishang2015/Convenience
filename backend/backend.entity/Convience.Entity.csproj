@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\backend.core\Convience.Core.csproj" />
-    <ProjectReference Include="..\backend.data\Convience.EntityFrameWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>
