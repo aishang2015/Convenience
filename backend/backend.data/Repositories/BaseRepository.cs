@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace backend.data.Repositories
+namespace Convience.EntityFrameWork.Repositories
 {
     public class BaseRepository<TEntity, TDbContext> : IRepository<TEntity>
         where TEntity : class

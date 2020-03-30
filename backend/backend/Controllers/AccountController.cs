@@ -1,7 +1,6 @@
-﻿using backend.fluentvalidation;
-
-using Backend.Jwtauthentication;
-
+﻿
+using Convience.Fluentvalidation;
+using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.Model.Models.AccountViewModels;
 using Convience.Service.Account;

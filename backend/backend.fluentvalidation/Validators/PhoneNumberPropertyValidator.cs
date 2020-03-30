@@ -2,7 +2,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace backend.fluentvalidation.Validators
+namespace Convience.Fluentvalidation.Validators
 {
     public class PhoneNumberPropertyValidator : PropertyValidator
     {

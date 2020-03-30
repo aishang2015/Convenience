@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 
-namespace backend.data.Repositories
+namespace Convience.EntityFrameWork.Repositories
 {
     public interface IUnitOfWork<TDbContext> where TDbContext : DbContext
     {

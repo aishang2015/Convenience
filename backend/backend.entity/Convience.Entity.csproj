@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
-    <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
+    <ProjectReference Include="..\backend.core\Convience.Core.csproj" />
+    <ProjectReference Include="..\backend.data\Convience.EntityFrameWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

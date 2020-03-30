@@ -1,4 +1,4 @@
-﻿namespace Backend.Jwtauthentication
+﻿namespace Convience.Jwtauthentication
 {
     public static class CustomClaimTypes
     {

@@ -2,15 +2,12 @@
 
 using AutoMapper;
 
-using backend.data.Infrastructure;
-using backend.data.Repositories;
-
-using Backend.Util.Extension;
-
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.EntityFrameWork.Infrastructure;
+using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.SaasManage;
-
+using Convience.Util.Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;

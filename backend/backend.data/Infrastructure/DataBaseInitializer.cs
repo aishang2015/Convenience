@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 using System;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     public static class DataBaseInitializer
     {

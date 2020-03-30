@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EntityAttribute : Attribute

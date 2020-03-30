@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.ManagentApi", "backend\Convience.ManagentApi.csproj", "{80FDEED6-C283-4901-9B55-BA08D4C98394}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Data", "backend.data\Backend.Data.csproj", "{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.EntityFrameWork", "backend.data\Convience.EntityFrameWork.csproj", "{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Core", "backend.core\Backend.Core.csproj", "{DFCA502F-F81B-47DA-A3B7-00984F05BC2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Core", "backend.core\Convience.Core.csproj", "{DFCA502F-F81B-47DA-A3B7-00984F05BC2A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Model", "backend.model\Convience.Model.csproj", "{0C968981-5652-490B-ACDE-61B43B31F434}"
 EndProject
@@ -15,39 +15,41 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Service", "backen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Applications", "Convience.Applications", "{116CE78A-855F-4077-B201-45C2564B8E51}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend.FrameWork", "Backend.FrameWork", "{B2FBD460-03C9-44A5-8325-4DE983290B8E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.FrameWork", "Convience.FrameWork", "{B2FBD460-03C9-44A5-8325-4DE983290B8E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Entity", "backend.entity\Convience.Entity.csproj", "{0DAC03B3-CFED-49FB-AFB0-5DC27B29C5FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Fluentvalidation", "backend.fluentvalidation\Backend.Fluentvalidation.csproj", "{9634CD98-3133-46F5-8BBF-608F35872C10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Fluentvalidation", "backend.fluentvalidation\Convience.Fluentvalidation.csproj", "{9634CD98-3133-46F5-8BBF-608F35872C10}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Util", "backend.util\Backend.Util.csproj", "{22E971E8-9B3C-43FC-9448-815DA6127A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Util", "backend.util\Convience.Util.csproj", "{22E971E8-9B3C-43FC-9448-815DA6127A9E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Dependency", "backend.dependency\Backend.Dependency.csproj", "{2857DB29-DB19-4DCA-9F24-518B316EFE8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Dependency", "backend.dependency\Convience.Dependency.csproj", "{2857DB29-DB19-4DCA-9F24-518B316EFE8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Jwtauthentication", "backend.jwtauthentication\Backend.Jwtauthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Jwtauthentication", "backend.jwtauthentication\Convience.Jwtauthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend.Taskscheduling", "Backend.Taskscheduling", "{53B8A136-289D-4861-87C9-00078E217FE6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Taskscheduling", "Convience.Taskscheduling", "{53B8A136-289D-4861-87C9-00078E217FE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Automapper", "backend.automapper\Backend.Automapper.csproj", "{C5C9A0DF-21D2-4083-8E29-695A9B809485}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Automapper", "backend.automapper\Convience.Automapper.csproj", "{C5C9A0DF-21D2-4083-8E29-695A9B809485}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Easycaching", "backend.easycaching\Backend.Easycaching.csproj", "{9F804ED4-B502-40FA-99DA-2D7CECE55BA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Easycaching", "backend.easycaching\Convience.Easycaching.csproj", "{9F804ED4-B502-40FA-99DA-2D7CECE55BA6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend.Caches", "Backend.Caches", "{89F35753-2C06-4679-8291-26DC5D0F3EA6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Caches", "Convience.Caches", "{89F35753-2C06-4679-8291-26DC5D0F3EA6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Cache", "backend.cache\Backend.Cache.csproj", "{744E4CE4-078F-4415-AB0B-BBDD25225D9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Cache", "backend.cache\Convience.Cache.csproj", "{744E4CE4-078F-4415-AB0B-BBDD25225D9A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Hangfire", "backend.hangfire\Backend.Hangfire.csproj", "{9A2E8CEC-681E-47AC-87FD-A36C93D2E8F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Hangfire", "backend.hangfire\Convience.Hangfire.csproj", "{9A2E8CEC-681E-47AC-87FD-A36C93D2E8F3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend.Filestorage", "Backend.Filestorage", "{2C278402-21EE-42CE-8B28-64C495DB89CD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Filestorage", "Convience.Filestorage", "{2C278402-21EE-42CE-8B28-64C495DB89CD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Filestorage.Abstraction", "backend.filestorage.abstraction\Backend.Filestorage.Abstraction.csproj", "{CFAB1ADB-344A-4BF7-8EED-A80A68139564}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Filestorage.Abstraction", "backend.filestorage.abstraction\Convience.Filestorage.Abstraction.csproj", "{CFAB1ADB-344A-4BF7-8EED-A80A68139564}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Filestorage.Filesystem", "backend.filestorage.filesystem\Backend.Filestorage.Filesystem.csproj", "{B5676197-19AD-477F-ABEF-BD0834A4DAB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Filestorage.Filesystem", "backend.filestorage.filesystem\Convience.Filestorage.Filesystem.csproj", "{B5676197-19AD-477F-ABEF-BD0834A4DAB1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Repository", "backend.repository\Convience.Repository.csproj", "{E861149A-90BA-4FE0-959B-F19719231367}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backend.Swashbuckle", "backend.Swashbuckle\Backend.Swashbuckle.csproj", "{050C553F-01CA-4AE0-B904-E695FF6A480F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Swashbuckle", "backend.Swashbuckle\Convience.Swashbuckle.csproj", "{050C553F-01CA-4AE0-B904-E695FF6A480F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Data", "Convience.Data", "{81BF728C-D3B4-4E2A-94B4-7A3D730026B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,7 +135,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{80FDEED6-C283-4901-9B55-BA08D4C98394} = {116CE78A-855F-4077-B201-45C2564B8E51}
-		{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
+		{4BEFDB37-E9D3-48E0-8CC4-2CC622F063C8} = {81BF728C-D3B4-4E2A-94B4-7A3D730026B3}
 		{DFCA502F-F81B-47DA-A3B7-00984F05BC2A} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{0C968981-5652-490B-ACDE-61B43B31F434} = {116CE78A-855F-4077-B201-45C2564B8E51}
 		{87A6FC9D-257D-41EF-8A64-3BA80E5F2F81} = {116CE78A-855F-4077-B201-45C2564B8E51}
@@ -153,6 +155,7 @@ Global
 		{B5676197-19AD-477F-ABEF-BD0834A4DAB1} = {2C278402-21EE-42CE-8B28-64C495DB89CD}
 		{E861149A-90BA-4FE0-959B-F19719231367} = {116CE78A-855F-4077-B201-45C2564B8E51}
 		{050C553F-01CA-4AE0-B904-E695FF6A480F} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
+		{81BF728C-D3B4-4E2A-94B4-7A3D730026B3} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}

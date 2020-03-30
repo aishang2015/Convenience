@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace backend.filestorage.abstraction
+namespace Convience.Filestorage.Abstraction
 {
     public interface IFileStore
     {

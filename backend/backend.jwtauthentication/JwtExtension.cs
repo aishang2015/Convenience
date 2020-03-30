@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 using System.Threading.Tasks;
 
-namespace backend.jwtauthentication
+namespace Convience.Jwtauthentication
 {
     public static class JwtExtension
     {

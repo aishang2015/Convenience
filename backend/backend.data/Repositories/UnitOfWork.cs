@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 using System.Threading.Tasks;
 
-namespace backend.data.Repositories
+namespace Convience.EntityFrameWork.Repositories
 {
     public class UnitOfWork<TDbContext> : IUnitOfWork<TDbContext> where TDbContext : DbContext
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace backend.filestorage.abstraction
+namespace Convience.Filestorage.Abstraction
 {
     public interface IFileStoreEntry
     {

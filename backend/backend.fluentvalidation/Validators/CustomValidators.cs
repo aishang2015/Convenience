@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace backend.fluentvalidation.Validators
+namespace Convience.Fluentvalidation.Validators
 {
     public static class CustomValidators
     {

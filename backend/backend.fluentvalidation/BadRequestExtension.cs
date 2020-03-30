@@ -2,7 +2,7 @@
 
 using System.Linq;
 
-namespace backend.fluentvalidation
+namespace Convience.Fluentvalidation
 {
     public static class BadRequestExtension
     {

@@ -1,5 +1,5 @@
-﻿
-using backend.util.helpers;
+﻿using Convience.Fluentvalidation;
+using Convience.Util.helpers;
 
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -7,7 +7,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace backend.fluentvalidation
+namespace Convience.Fluentvalidation
 {
     public static class FluentValidationExtension
     {

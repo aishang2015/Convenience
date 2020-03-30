@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace backend.jwtauthentication
+namespace Convience.Jwtauthentication
 {
     public class JwtFactory : IJwtFactory
     {

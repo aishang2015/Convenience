@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.core\Backend.Core.csproj" />
+    <ProjectReference Include="..\backend.core\Convience.Core.csproj" />
     <ProjectReference Include="..\backend.entity\Convience.Entity.csproj" />
     <ProjectReference Include="..\backend.model\Convience.Model.csproj" />
     <ProjectReference Include="..\backend.repository\Convience.Repository.csproj" />

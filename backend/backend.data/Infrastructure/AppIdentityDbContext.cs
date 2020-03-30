@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     public class AppIdentityDbContext : IdentityDbContext<AppUser, AppRole, string>
     {

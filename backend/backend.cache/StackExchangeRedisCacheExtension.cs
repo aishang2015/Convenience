@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace backend.cache
+namespace Convience.Cache
 {
     public static class StackExchangeRedisCacheExtension
     {

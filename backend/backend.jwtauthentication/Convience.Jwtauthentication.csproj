@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.dependency\Backend.Dependency.csproj" />
+    <ProjectReference Include="..\backend.dependency\Convience.Dependency.csproj" />
   </ItemGroup>
 
 </Project>

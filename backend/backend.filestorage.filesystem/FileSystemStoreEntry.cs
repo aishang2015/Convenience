@@ -1,11 +1,10 @@
-﻿
-using backend.filestorage.abstraction;
+﻿using Convience.Filestorage.Abstraction;
 
 using Microsoft.Extensions.FileProviders;
 
 using System;
 
-namespace backend.filestorage.filesystem
+namespace Convience.Filestorage.Filesystem
 {
     public class FileSystemStoreEntry : IFileStoreEntry
     {

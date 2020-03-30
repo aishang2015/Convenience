@@ -1,8 +1,6 @@
-﻿using backend.jwtauthentication;
-
-using Backend.Jwtauthentication;
-
+﻿
 using Convience.Entity.Data;
+using Convience.Jwtauthentication;
 using Convience.Repository;
 
 using System.Collections.Generic;

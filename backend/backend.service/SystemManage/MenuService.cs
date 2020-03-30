@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 
-using backend.data.Repositories;
-
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.SystemManage;
 
 using System;

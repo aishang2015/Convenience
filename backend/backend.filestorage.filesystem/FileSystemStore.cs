@@ -1,4 +1,4 @@
-﻿using backend.filestorage.abstraction;
+﻿using Convience.Filestorage.Abstraction;
 
 using Microsoft.Extensions.FileProviders.Physical;
 
@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace backend.filestorage.filesystem
+namespace Convience.Filestorage.Filesystem
 {
     public class FileSystemStore : IFileStore
     {
@@ -236,7 +236,7 @@ namespace backend.filestorage.filesystem
         {
             path = this.NormalizePath(path);
 
-            var physicalPath = String.IsNullOrEmpty(path) ? _fileSystemPath : Path.Combine(_fileSystemPath, path);
+            var physicalPath = string.IsNullOrEmpty(path) ? _fileSystemPath : Path.Combine(_fileSystemPath, path);
 
             // Verify that the resulting path is inside the root file system path.
             var pathIsAllowed = Path.GetFullPath(physicalPath).StartsWith(_fileSystemPath, StringComparison.OrdinalIgnoreCase);

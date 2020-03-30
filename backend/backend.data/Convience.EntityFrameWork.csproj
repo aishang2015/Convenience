@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.dependency\Backend.Dependency.csproj" />
-    <ProjectReference Include="..\backend.util\Backend.Util.csproj" />
+    <ProjectReference Include="..\backend.dependency\Convience.Dependency.csproj" />
+    <ProjectReference Include="..\backend.util\Convience.Util.csproj" />
   </ItemGroup>
 
 </Project>

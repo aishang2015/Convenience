@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 
-using backend.data.Repositories;
-
-using Backend.Jwtauthentication;
-
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.EntityFrameWork.Repositories;
+using Convience.Jwtauthentication;
 using Convience.Model.Models.SystemManage;
 using Convience.Repository;
 

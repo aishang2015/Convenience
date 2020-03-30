@@ -1,4 +1,4 @@
-﻿using backend.data.Infrastructure;
+﻿using Convience.EntityFrameWork.Infrastructure;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

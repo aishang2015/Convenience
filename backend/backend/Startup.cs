@@ -1,16 +1,14 @@
-using backend.automapper;
-using backend.data.Infrastructure;
-using backend.data.Repositories;
-using backend.fluentvalidation;
-using backend.hangfire;
-using backend.jwtauthentication;
-using backend.swashbuckle;
-
+using Convience.Automapper;
 using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
+using Convience.EntityFrameWork.Repositories;
+using Convience.Fluentvalidation;
+using Convience.Hangfire;
+using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
 using Convience.Service;
-
+using Convience.Swashbuckle;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

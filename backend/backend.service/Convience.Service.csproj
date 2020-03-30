@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\backend.data\Backend.Data.csproj" />
+    <ProjectReference Include="..\backend.data\Convience.EntityFrameWork.csproj" />
     <ProjectReference Include="..\backend.entity\Convience.Entity.csproj" />
-    <ProjectReference Include="..\backend.jwtauthentication\Backend.Jwtauthentication.csproj" />
+    <ProjectReference Include="..\backend.jwtauthentication\Convience.Jwtauthentication.csproj" />
     <ProjectReference Include="..\backend.model\Convience.Model.csproj" />
     <ProjectReference Include="..\backend.repository\Convience.Repository.csproj" />
+    <ProjectReference Include="..\backend.util\Convience.Util.csproj" />
   </ItemGroup>
 
 </Project>

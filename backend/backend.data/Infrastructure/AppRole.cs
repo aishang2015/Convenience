@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     public class AppRole : IdentityRole
     {

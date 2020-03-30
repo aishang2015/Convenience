@@ -4,11 +4,11 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace backend.util.helpers
+namespace Convience.Util.helpers
 {
     public static class CaptchaHelper
     {
-        private static Char[] _characters = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        private static char[] _characters = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a','b','c','d','e','f','j','h','i','g','k','l','m','n','o','p','q','r','s','t','u','v',
         'w','x','y','z'};
 
@@ -24,7 +24,7 @@ namespace backend.util.helpers
             var result = string.Empty;
 
             // 字符集 todo配置到文件
-            Char[] chars = _characters;
+            char[] chars = _characters;
 
             // 生成的字符串长度 todo配置到文件
             var codeCharCount = _length;
@@ -74,8 +74,8 @@ namespace backend.util.helpers
                 var font = new Font(fontFamilies[random.Next(0, fontFamilies.Length)], random.Next(12, 16));
 
                 // 生成随机角度
-                int x = 30 * i + (random.Next(0, 15));
-                int y = (random.Next(0, 10));
+                int x = 30 * i + random.Next(0, 15);
+                int y = random.Next(0, 10);
 
                 // 图片所占空间
                 var sf = graph.MeasureString(randomCode[i].ToString(), font);

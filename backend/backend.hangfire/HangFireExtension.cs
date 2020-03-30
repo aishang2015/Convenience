@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-namespace backend.hangfire
+namespace Convience.Hangfire
 {
     public static class HangFireExtension
     {

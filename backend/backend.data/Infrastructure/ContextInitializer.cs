@@ -1,5 +1,4 @@
-﻿
-using backend.util.helpers;
+﻿using Convience.Util.helpers;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -7,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     public static class ContextInitializer
     {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
 
-using backend.util.helpers;
+using Convience.Util.helpers;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace backend.automapper
+namespace Convience.Automapper
 {
     public static class AutoMapperExtension
     {

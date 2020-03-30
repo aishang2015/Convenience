@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Convience.Easycaching;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Collections.Generic;
 
-namespace backend.easycaching
+namespace Convience.Easycaching
 {
     public static class EasyCachingExtension
     {

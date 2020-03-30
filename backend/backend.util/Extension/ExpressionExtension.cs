@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Backend.Util.Extension
+namespace Convience.Util.Extension
 {
     public static class ExpressionExtension
     {

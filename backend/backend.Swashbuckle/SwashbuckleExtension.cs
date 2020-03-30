@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace backend.swashbuckle
+namespace Convience.Swashbuckle
 {
     public static class SwashbuckleExtension
     {

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using System;
 
-namespace backend.data.Infrastructure
+namespace Convience.EntityFrameWork.Infrastructure
 {
     public class AppDbContextSeed
     {

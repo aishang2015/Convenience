@@ -1,12 +1,12 @@
-﻿using backend.data.Infrastructure;
-using backend.util.helpers;
+﻿using Convience.EntityFrameWork.Infrastructure;
+using Convience.Util.helpers;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Linq;
 
-namespace backend.data.Repositories
+namespace Convience.EntityFrameWork.Repositories
 {
     public static class RepositoryExtension
     {

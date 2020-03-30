@@ -1,4 +1,4 @@
-﻿namespace backend.data.Infrastructure
+﻿namespace Convience.EntityFrameWork.Infrastructure
 {
     public enum DataBaseType
     {

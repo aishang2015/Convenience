@@ -2,7 +2,7 @@
 
 using System;
 
-namespace backend.cache
+namespace Convience.Cache
 {
     public static class SqlServerCacheExtension
     {
