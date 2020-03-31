@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Convience.Caches\Convience.Cache\Convience.Cache.csproj" />
     <ProjectReference Include="..\Convience.Caches\Convience.Easycaching\Convience.Easycaching.csproj" />
     <ProjectReference Include="..\Convience.Data\Convience.EntityFrameWork\Convience.EntityFrameWork.csproj" />
+    <ProjectReference Include="..\Convience.Data\Convience.MongoDB\Convience.MongoDB.csproj" />
     <ProjectReference Include="..\Convience.Dependency\Convience.Dependency.csproj" />
     <ProjectReference Include="..\Convience.Filestorage\Convience.Filestorage.Filesystem\Convience.Filestorage.Filesystem.csproj" />
     <ProjectReference Include="..\Convience.Fluentvalidation\Convience.Fluentvalidation.csproj" />
