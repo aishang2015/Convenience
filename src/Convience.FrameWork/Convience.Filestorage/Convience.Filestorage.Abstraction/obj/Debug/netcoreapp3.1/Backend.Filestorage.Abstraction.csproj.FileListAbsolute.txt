@@ -1,9 +1,0 @@
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\bin\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.deps.json
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\bin\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.dll
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\bin\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.pdb
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.csproj.CoreCompileInputs.cache
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.AssemblyInfoInputs.cache
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.AssemblyInfo.cs
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.dll
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.pdb
-D:\Project\Convience\Convenience\backend\backend.filestorage.abstraction\obj\Debug\netcoreapp3.1\Backend.Filestorage.Abstraction.csprojAssemblyReference.cache
