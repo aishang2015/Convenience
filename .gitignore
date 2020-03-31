@@ -1,6 +1,9 @@
-﻿/manage/node_modules
-/manage/.vscode
-/backend/.vs
-/backend/*/bin
-/backend/*/obj
-/backend/*/*.csproj.user
+﻿/src/Convience.Web/node_modules
+/src/Convience.Web/.vscode
+/src/.vs
+/src/*/*/bin
+/src/*/*/obj
+/src/*/*/*/bin
+/src/*/*/*/obj
+/src/*/*/*.csproj.user
+/src/*/*/*/*.csproj.user
