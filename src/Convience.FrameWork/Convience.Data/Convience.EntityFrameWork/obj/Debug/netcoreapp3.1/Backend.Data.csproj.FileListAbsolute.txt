@@ -1,0 +1,15 @@
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Data.deps.json
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Data.dll
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Data.pdb
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Dependency.dll
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Util.dll
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Dependency.pdb
+D:\Project\Convience\Convenience\backend\backend.data\bin\Debug\netcoreapp3.1\Backend.Util.pdb
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.csprojAssemblyReference.cache
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.csproj.CoreCompileInputs.cache
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.AssemblyInfoInputs.cache
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.AssemblyInfo.cs
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.csproj.CopyComplete
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.dll
+D:\Project\Convience\Convenience\backend\backend.data\obj\Debug\netcoreapp3.1\Backend.Data.pdb

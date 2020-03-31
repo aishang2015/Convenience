@@ -1,0 +1,13 @@
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Backend.Cache.deps.json
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Backend.Cache.dll
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Backend.Cache.pdb
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Backend.Dependency.dll
+D:\Project\Convience\Convenience\backend\backend.cache\bin\Debug\netcoreapp3.1\Backend.Dependency.pdb
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.csprojAssemblyReference.cache
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.csproj.CoreCompileInputs.cache
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.AssemblyInfoInputs.cache
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.AssemblyInfo.cs
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.csproj.CopyComplete
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.dll
+D:\Project\Convience\Convenience\backend\backend.cache\obj\Debug\netcoreapp3.1\Backend.Cache.pdb

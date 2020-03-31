@@ -1,0 +1,204 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Microsoft.Extensions.FileProviders.Abstractions/3.1.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "3.1.2"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+        }
+      },
+      "Microsoft.Extensions.FileProviders.Physical/3.1.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Abstractions": "3.1.2",
+          "Microsoft.Extensions.FileSystemGlobbing": "3.1.2"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.dll": {}
+        }
+      },
+      "Microsoft.Extensions.FileSystemGlobbing/3.1.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll": {}
+        }
+      },
+      "Microsoft.Extensions.Primitives/3.1.2": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll": {}
+        }
+      },
+      "Convience.Filestorage.Abstraction/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/Convience.Filestorage.Abstraction.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Convience.Filestorage.Abstraction.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Extensions.FileProviders.Abstractions/3.1.2": {
+      "sha512": "O9+N6KuA7kiPIYpdgRFFveKRyI3X2hLgdqdEwQki0MOA5XtCVOkxz8O+6CK1+b1a7Y1TildGfx3i+h/652vyHg==",
+      "type": "package",
+      "path": "microsoft.extensions.fileproviders.abstractions/3.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "microsoft.extensions.fileproviders.abstractions.3.1.2.nupkg.sha512",
+        "microsoft.extensions.fileproviders.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.FileProviders.Physical/3.1.2": {
+      "sha512": "lAbbwKapBfwGLVcfNL7TG4o7zRqLOiVY7/ylUKgnh2D9TotJ2riXzNTmQldksIYrmcJcNrq/WBalTpawSSAkJg==",
+      "type": "package",
+      "path": "microsoft.extensions.fileproviders.physical/3.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.FileProviders.Physical.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Physical.xml",
+        "microsoft.extensions.fileproviders.physical.3.1.2.nupkg.sha512",
+        "microsoft.extensions.fileproviders.physical.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.FileSystemGlobbing/3.1.2": {
+      "sha512": "/EgWQ25z1RZgzAT6JSOJiuQ/PFm53Kl1H3kzAgs5JIh52UaD1RmxW1znv5VbQlTfgLzRSeQZ3aPPA9SNakuSzw==",
+      "type": "package",
+      "path": "microsoft.extensions.filesystemglobbing/3.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileSystemGlobbing.xml",
+        "microsoft.extensions.filesystemglobbing.3.1.2.nupkg.sha512",
+        "microsoft.extensions.filesystemglobbing.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/3.1.2": {
+      "sha512": "WGtoFWY9yc9HGMG6ObDNQPz9dBP+xz/GqFe2dKjdE/cSdXFEKxCFTyYCzL/e8kxVkc/Bq9qjOsXRWydvn0g9Uw==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/3.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll",
+        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.3.1.2.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec"
+      ]
+    },
+    "Convience.Filestorage.Abstraction/1.0.0": {
+      "type": "project",
+      "path": "../Convience.Filestorage.Abstraction/Convience.Filestorage.Abstraction.csproj",
+      "msbuildProject": "../Convience.Filestorage.Abstraction/Convience.Filestorage.Abstraction.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "Convience.Filestorage.Abstraction >= 1.0.0",
+      "Microsoft.Extensions.FileProviders.Physical >= 3.1.2"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\Project\\Convience\\src\\Convience.FrameWork\\Convience.Filestorage\\Convience.Filestorage.Filesystem\\Convience.Filestorage.Filesystem.csproj",
+      "projectName": "Convience.Filestorage.Filesystem",
+      "projectPath": "D:\\Project\\Convience\\src\\Convience.FrameWork\\Convience.Filestorage\\Convience.Filestorage.Filesystem\\Convience.Filestorage.Filesystem.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\Convience\\src\\Convience.FrameWork\\Convience.Filestorage\\Convience.Filestorage.Filesystem\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "projectReferences": {
+            "D:\\Project\\Convience\\src\\Convience.FrameWork\\Convience.Filestorage\\Convience.Filestorage.Abstraction\\Convience.Filestorage.Abstraction.csproj": {
+              "projectPath": "D:\\Project\\Convience\\src\\Convience.FrameWork\\Convience.Filestorage\\Convience.Filestorage.Abstraction\\Convience.Filestorage.Abstraction.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Physical": {
+            "target": "Package",
+            "version": "[3.1.2, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Infrastructure\ApplicationDbContext.cs~RF42f470a3.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Convience.Dependency\Convience.Dependency.csproj" />
+    <ProjectReference Include="..\..\Convience.Util\Convience.Util.csproj" />
+  </ItemGroup>
+
+</Project>

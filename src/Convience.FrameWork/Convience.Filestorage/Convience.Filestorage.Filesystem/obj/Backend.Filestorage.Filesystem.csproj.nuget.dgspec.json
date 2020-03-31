@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.filesystem\\Backend.Filestorage.Filesystem.csproj": {}
+  },
+  "projects": {
+    "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\Backend.Filestorage.Abstraction.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\Backend.Filestorage.Abstraction.csproj",
+        "projectName": "Backend.Filestorage.Abstraction",
+        "projectPath": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\Backend.Filestorage.Abstraction.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.filesystem\\Backend.Filestorage.Filesystem.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.filesystem\\Backend.Filestorage.Filesystem.csproj",
+        "projectName": "Backend.Filestorage.Filesystem",
+        "projectPath": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.filesystem\\Backend.Filestorage.Filesystem.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.filesystem\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\Backend.Filestorage.Abstraction.csproj": {
+                "projectPath": "D:\\Project\\Convience\\Convenience\\backend\\backend.filestorage.abstraction\\Backend.Filestorage.Abstraction.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.Extensions.FileProviders.Physical": {
+              "target": "Package",
+              "version": "[3.1.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

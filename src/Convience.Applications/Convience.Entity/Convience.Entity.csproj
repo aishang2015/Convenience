@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entity\Common\**" />
+    <EmbeddedResource Remove="Entity\Common\**" />
+    <None Remove="Entity\Common\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Configurations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Convience.FrameWork\Convience.Core\Convience.Core.csproj" />
+  </ItemGroup>
+
+</Project>

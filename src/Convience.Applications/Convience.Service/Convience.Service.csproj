@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Convience.Model\Convience.Model.csproj" />
+    <ProjectReference Include="..\Convience.Repository\Convience.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
