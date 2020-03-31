@@ -53,6 +53,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Data", "Convience
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.MongoDB", "Convience.FrameWork\Convience.Data\Convience.MongoDB\Convience.MongoDB.csproj", "{3491099C-4A8F-4FEA-AFBD-53467C24CF31}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Comunication", "Convience.Comunication", "{259BDEF8-1D7D-44BE-B9EB-F48511353BD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.WebSockets", "Convience.FrameWork\Convience.Comunication\Convience.WebSocket\Convience.WebSockets.csproj", "{91E1D1C0-DDA2-4863-AC4C-C94F110FF067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +139,10 @@ Global
 		{3491099C-4A8F-4FEA-AFBD-53467C24CF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3491099C-4A8F-4FEA-AFBD-53467C24CF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3491099C-4A8F-4FEA-AFBD-53467C24CF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E1D1C0-DDA2-4863-AC4C-C94F110FF067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E1D1C0-DDA2-4863-AC4C-C94F110FF067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E1D1C0-DDA2-4863-AC4C-C94F110FF067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E1D1C0-DDA2-4863-AC4C-C94F110FF067}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +171,8 @@ Global
 		{050C553F-01CA-4AE0-B904-E695FF6A480F} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{81BF728C-D3B4-4E2A-94B4-7A3D730026B3} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{3491099C-4A8F-4FEA-AFBD-53467C24CF31} = {81BF728C-D3B4-4E2A-94B4-7A3D730026B3}
+		{259BDEF8-1D7D-44BE-B9EB-F48511353BD5} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
+		{91E1D1C0-DDA2-4863-AC4C-C94F110FF067} = {259BDEF8-1D7D-44BE-B9EB-F48511353BD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}
