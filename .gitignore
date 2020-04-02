@@ -1,6 +1,6 @@
-﻿/src/Convience.Web/node_modules
-/src/Convience.Web/.vscode
-/src/Convience.Web/dist
+﻿/src/*/*/node_modules
+/src/*/*/.vscode
+/src/*/*/dist
 /src/.vs
 /src/*/*/bin
 /src/*/*/obj
