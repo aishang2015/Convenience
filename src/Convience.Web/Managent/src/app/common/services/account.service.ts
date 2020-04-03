@@ -11,14 +11,15 @@ import { Observable } from 'rxjs';
 })
 export class AccountService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+    private uriConstant: UriConstant) { }
 
   login(userName, password): Observable<any> {
-    return this.httpClient.post(UriConstant.LoginUri, { "UserName": userName, "Password": password });
+    return this.httpClient.post(this.uriConstant.LoginUri, { "UserName": userName, "Password": password });
   }
 
   modifyPassword(oldPassword, newPassword) {
-    return this.httpClient.post(UriConstant.ModifySelfPasswordUri, { "OldPassword": oldPassword, "NewPassword": newPassword });
+    return this.httpClient.post(this.uriConstant.ModifySelfPasswordUri, { "OldPassword": oldPassword, "NewPassword": newPassword });
   }
 
 

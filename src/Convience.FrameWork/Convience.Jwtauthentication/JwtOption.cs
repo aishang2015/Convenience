@@ -11,7 +11,7 @@ namespace Convience.Jwtauthentication
 
         public string Audience { get; set; }
 
-        public int ExpireSpan { get; set; }
+        public double ExpireSpan { get; set; }
 
         private string _secretKey;
 

@@ -61,7 +61,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.HttpClients", "Co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.MessageQueue", "Convience.MessageQueue", "{8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.MediatRs", "Convience.FrameWork\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj", "{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.MediatRs", "Convience.FrameWork\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj", "{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

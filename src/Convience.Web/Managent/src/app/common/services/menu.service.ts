@@ -7,21 +7,22 @@ import { UriConstant } from '../constants/uri-constant';
 })
 export class MenuService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+    private uriConstant: UriConstant) { }
 
   get() {
-    return this.httpClient.get(UriConstant.MenuUri);
+    return this.httpClient.get(this.uriConstant.MenuUri);
   }
 
   delete(id) {
-    return this.httpClient.delete(`${UriConstant.MenuUri}?id=${id}`);
+    return this.httpClient.delete(`${this.uriConstant.MenuUri}?id=${id}`);
   }
 
   update(menu) {
-    return this.httpClient.patch(UriConstant.MenuUri, menu);
+    return this.httpClient.patch(this.uriConstant.MenuUri, menu);
   }
 
   add(menu) {
-    return this.httpClient.post(UriConstant.MenuUri, menu);
+    return this.httpClient.post(this.uriConstant.MenuUri, menu);
   }
 }

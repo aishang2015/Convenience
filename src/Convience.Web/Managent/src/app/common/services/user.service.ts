@@ -9,14 +9,15 @@ import { User } from 'src/app/modules/system-manage/model/user';
 })
 export class UserService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+    private uriConstant: UriConstant) { }
 
   getUser(id) {
-    return this.httpClient.get(`${UriConstant.UserUri}?id=${id}`);
+    return this.httpClient.get(`${this.uriConstant.UserUri}?id=${id}`);
   }
 
   getUsers(page, size, userName, phoneNumber, name, roleid) {
-    var uri = `${UriConstant.UserUri}/list?page=${page}&&size=${size}`;
+    var uri = `${this.uriConstant.UserUri}/list?page=${page}&&size=${size}`;
     uri += userName ? `&&userName=${userName}` : '';
     uri += phoneNumber ? `&&phoneNumber=${phoneNumber}` : '';
     uri += name ? `&&name=${name}` : '';
@@ -25,15 +26,15 @@ export class UserService {
   }
 
   delete(id: String) {
-    return this.httpClient.delete(`${UriConstant.UserUri}?id=${id}`);
+    return this.httpClient.delete(`${this.uriConstant.UserUri}?id=${id}`);
   }
 
   update(user: User) {
-    return this.httpClient.patch(UriConstant.UserUri, user);
+    return this.httpClient.patch(this.uriConstant.UserUri, user);
   }
 
   add(user: User) {
-    return this.httpClient.post(UriConstant.UserUri, user);
+    return this.httpClient.post(this.uriConstant.UserUri, user);
   }
 
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -34,13 +35,14 @@ namespace Convience.Jwtauthentication
                     ValidateLifetime = true
                 };
 
-                option.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = (context) =>
-                    {
-                        return Task.CompletedTask;
-                    }
-                };
+                //option.Events = new JwtBearerEvents
+                //{
+                //    OnAuthenticationFailed = (context) =>
+                //    {
+                //        context.Response.StatusCode = 401;
+                //        return context.Response.WriteAsync("authentication failed.");
+                //    }
+                //};
             });
 
             return services;

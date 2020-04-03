@@ -1,17 +1,35 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
 export class UriConstant {
 
-    static readonly BaseUri: string = 'https://localhost:44356/api';
+    BaseUri: string = '';
 
-    static readonly LoginUri: string = `${UriConstant.BaseUri}/login`;
+    constructor(private httpclient: HttpClient) {
+        //this.init();
+    }
 
-    static readonly ModifySelfPasswordUri: string = `${UriConstant.BaseUri}/password`;
+    init() {
+        return new Promise<void>((resolve, reject) => {
+            const jsonFile = `assets/config/config.json`;
+            this.httpclient.get(jsonFile).toPromise().then(data => {
+                this.BaseUri = data["apiUrl"];
+                resolve();
+            });
+        });
+    }
 
-    static readonly RoleUri: string = `${UriConstant.BaseUri}/role`;
+    get LoginUri(): string { return `${this.BaseUri}/login` };
 
-    static readonly UserUri: string = `${UriConstant.BaseUri}/user`;
+    get ModifySelfPasswordUri(): string { return `${this.BaseUri}/password` };
 
-    static readonly MenuUri: string = `${UriConstant.BaseUri}/menu`;
+    get RoleUri(): string { return `${this.BaseUri}/role` };
 
-    static readonly TenantUri: string = `${UriConstant.BaseUri}/tenant`;
+    get UserUri(): string { return `${this.BaseUri}/user` };
+
+    get MenuUri(): string { return `${this.BaseUri}/menu` };
+
+    get TenantUri(): string { return `${this.BaseUri}/tenant` };
 
 }

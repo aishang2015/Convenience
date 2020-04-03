@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { Chart, registerShape } from '@antv/g2';
@@ -9,13 +9,14 @@ import { RangePoint } from '@antv/g2/lib/interface';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
-
-
+export class DashboardComponent implements OnInit, AfterViewInit {
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
     this.initGraph1();
     this.initGraph2();
     this.initGraph3();
@@ -28,7 +29,6 @@ export class DashboardComponent implements OnInit {
       { genre: 'Sports', sold: 275 },
       { genre: 'Strategy', sold: 115 },
       { genre: 'Action', sold: 120 },
-      { genre: 'Shooter', sold: 350 },
       { genre: 'Other', sold: 150 },
     ];
 

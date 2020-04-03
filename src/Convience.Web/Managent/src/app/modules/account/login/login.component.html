@@ -1,6 +1,6 @@
 <div class="container">
     <nz-card style="margin: 0;">
-        <h1>登录系统</h1>
+        <h1>Convience</h1>
         <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
             <nz-form-item>
                 <nz-form-control nzErrorTip="请输入您的用户名!">
@@ -18,12 +18,12 @@
             </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
-                    <label nz-checkbox formControlName="remember">
+                    <!-- <label nz-checkbox formControlName="remember">
                         <span>记住我</span>
                     </label>
-                    <a class="login-form-forgot" class="login-form-forgot">忘记密码</a>
+                    <a class="login-form-forgot" class="login-form-forgot">忘记密码</a> -->
                     <button nz-button class="login-form-button" [nzType]="'primary'" [nzLoading]="isLoading">登录</button>
-                    <a>现在注册!</a>
+                    <!-- <a>现在注册!</a> -->
                 </nz-form-control>
             </nz-form-item>
         </form>

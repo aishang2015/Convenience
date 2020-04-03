@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class LayoutComponent implements OnInit {
 
   breadcrumbInfo: string[] = ['仪表盘'];
-
+  isCollapsed;
   name;
   avatar;
 

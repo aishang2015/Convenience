@@ -8,14 +8,15 @@ import { Tenant } from 'src/app/modules/saas-manage/model/tenant';
 })
 export class TenantService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+    private uriConstant: UriConstant) { }
 
   getTenant(id) {
-    return this.httpClient.get(`${UriConstant.TenantUri}?id=${id}`);
+    return this.httpClient.get(`${this.uriConstant.TenantUri}?id=${id}`);
   }
 
   getTenants(page, size, name, dataBaseType, sortKey, isDesc) {
-    var uri = `${UriConstant.TenantUri}/list?page=${page}&&size=${size}`;
+    var uri = `${this.uriConstant.TenantUri}/list?page=${page}&&size=${size}`;
     uri += name ? `&&name=${name}` : '';
     uri += dataBaseType || dataBaseType == 0 ? `&&dataBaseType=${dataBaseType}` : '';
     uri += sortKey ? `&&sortKey=${sortKey}` : '';
@@ -24,14 +25,14 @@ export class TenantService {
   }
 
   delete(id: String) {
-    return this.httpClient.delete(`${UriConstant.TenantUri}?id=${id}`);
+    return this.httpClient.delete(`${this.uriConstant.TenantUri}?id=${id}`);
   }
 
   update(tenant: Tenant) {
-    return this.httpClient.patch(UriConstant.TenantUri, tenant);
+    return this.httpClient.patch(this.uriConstant.TenantUri, tenant);
   }
 
   add(tenant: Tenant) {
-    return this.httpClient.post(UriConstant.TenantUri, tenant);
+    return this.httpClient.post(this.uriConstant.TenantUri, tenant);
   }
 }
