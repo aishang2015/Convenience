@@ -38,8 +38,8 @@ namespace Convience.ManagentApi
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddServices()
-                .AddAutoMapper()
-                .AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
+                .AddAutoMapper();
+                //.AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +58,7 @@ namespace Convience.ManagentApi
 
             app.UseAuthentication();
 
-            app.UseHFDashBoard();
+            //app.UseHFDashBoard();
 
             app.UseRouting();
 
