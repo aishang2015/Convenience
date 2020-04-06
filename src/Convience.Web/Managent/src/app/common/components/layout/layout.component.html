@@ -32,7 +32,7 @@
     <nz-layout>
         <nz-sider nzWidth="200px" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
-                <li nz-menu-item nzMatchRouter>
+                <li nz-menu-item nzMatchRouter *operate="'dashaboard'">
                     <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
                         <i nz-icon nzType="dot-chart"></i>仪表盘</a>
                 </li>
@@ -49,9 +49,9 @@
                                 <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>
                 </li>
-                <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理">
+                <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理" *operate="'saasmanage'">
                     <ul>
-                        <li nz-menu-item nzMatchRouter>
+                        <li nz-menu-item nzMatchRouter *operate="'tenantManage'">
                             <a [routerLink]="[ '/saas/tenant' ]" (click)="setBreadcrumb('SAAS管理','租户管理')">
                                 <i nz-icon [nzType]="'user'"></i>租户管理</a></li>
                     </ul>

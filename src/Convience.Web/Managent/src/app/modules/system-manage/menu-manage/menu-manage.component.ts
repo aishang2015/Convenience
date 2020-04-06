@@ -136,7 +136,7 @@ export class MenuManageComponent implements OnInit {
   remove(id: string) {
     this.modalService.confirm({
       nzTitle: '是否删除该菜单?',
-      nzContent: null,
+      nzContent: '删除菜单会导致相关用户的权限无法使用，请谨慎操作！',
       nzOnOk: () =>
         this.menuService.delete(id).subscribe(result => {
           this.initNodes();

@@ -201,7 +201,7 @@ namespace Convience.Repository
                              where roleIds.Contains(role.Id.ToString())
                              select role.Name;
 
-            var result = await _userManager.AddToRolesAsync(user, roleaArray);
+            var result = await _userManager.AddToRolesAsync(user, roleaArray.ToArray());
             return result.Succeeded;
         }
     }

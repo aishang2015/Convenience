@@ -88,7 +88,7 @@ namespace Convience.Service.SystemManage
                 Expression<Func<SystemUser, bool>> where = ExpressionExtension.TrueExpression<SystemUser>()
                     .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                     .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
-                    .AndIfHaveValue(query.PhoneNumber, u => u.UserName.Contains(query.PhoneNumber));
+                    .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
 
                 var users = _userRepository.GetUsers(where, query.Page, query.Size);
                 return _mapper.Map<SystemUser[], IEnumerable<UserResult>>(users.ToArray());
@@ -212,6 +212,7 @@ namespace Convience.Service.SystemManage
                 catch (Exception)
                 {
                     await trans.RollbackAsync();
+                    return "用户更新失败，请练习管理员！";
                 }
             }
             return string.Empty;

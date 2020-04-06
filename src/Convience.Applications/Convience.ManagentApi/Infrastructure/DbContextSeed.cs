@@ -33,6 +33,7 @@ namespace Convience.ManagentApi.Infrastructure
             userManager.CreateAsync(user, "admin").Wait();
             userManager.AddToRoleAsync(user, "超级管理员").Wait();
 
+            dbContext.Database.ExecuteSqlRaw("TRUNCATE \"Menu\"");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (16, '系统管理', 'systemmanage', NULL, 1, NULL, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (17, '用户管理', 'userManage', 'userList,roleNameList', 1, NULL, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (18, '角色管理', 'roleManage', 'roleList,menuList	', 1, NULL, 2)");
@@ -46,7 +47,14 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (26, '添加按钮', 'addMenuBtn', 'menuAdd', 2, NULL, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (27, '更新按钮', 'updateMenuBtn', 'menuUpdate', 2, NULL, 2)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (28, '删除按钮', 'deleteMenuBtn', 'menuDelete', 2, NULL, 3)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (1,  'SAAS管理', 'saasmanage',NULL,1,NULL,2)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (2,  '租户管理', 'tenantManage','tenantList',1,NULL,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (4,  '更新按钮', 'updateTenantBtn','tenantGet,tenantUpdate',2,NULL,2)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (3,  '添加按钮', 'addTenantBtn','tenantAdd',2,NULL,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (5,  '删除按钮', 'deleteTenantBtn','tenantDelete',2,NULL,3)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (8,  '仪表盘',   'dashaboard',NULL,1,NULL,0)");
 
+            dbContext.Database.ExecuteSqlRaw("TRUNCATE \"MenuTree\"");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (25, 16, 16, 0)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (26, 16, 17, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (27, 17, 17, 0)");
@@ -81,6 +89,19 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (56, 16, 28, 2)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (57, 19, 28, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (58, 28, 28, 0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (1,1,1,0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (2,1,2,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (3,2,2,0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (4,1,3,2)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (5,2,3,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (6,3,3,0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (7,1,4,2)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (8,2,4,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (9,4,4,0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (10,1,5,2)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (11,2,5,1)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (12,5,5,0)");
+            dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (18,8,8,0)");
 
         }
     }

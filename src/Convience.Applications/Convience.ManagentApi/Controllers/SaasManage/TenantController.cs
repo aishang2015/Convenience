@@ -1,4 +1,5 @@
-﻿using Convience.Model.Models.SaasManage;
+﻿using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.Model.Models.SaasManage;
 using Convience.Service.SaasManage;
 
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
         }
 
         [HttpGet("list")]
+        [Permission("tenantList")]
         public IActionResult Get([FromQuery]TenantQuery query)
         {
             return Ok(new
@@ -30,6 +32,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
         }
 
         [HttpGet]
+        [Permission("tenantGet")]
         public async Task<IActionResult> GetDetail([FromQuery]Guid id)
         {
             var result = await _tenantService.Get(id);
@@ -37,6 +40,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
         }
 
         [HttpPost]
+        [Permission("tenantAdd")]
         public async Task<IActionResult> Add([FromBody]TenantViewModel model)
         {
             await _tenantService.AddAsync(model);
@@ -44,6 +48,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
         }
 
         [HttpPatch]
+        [Permission("tenantUpdate")]
         public async Task<IActionResult> Update([FromBody]TenantViewModel model)
         {
             await _tenantService.UpdateAsync(model);
@@ -51,6 +56,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
         }
 
         [HttpDelete]
+        [Permission("tenantDelete")]
         public async Task<IActionResult> Delete([FromQuery]Guid id)
         {
             await _tenantService.RemoveAsync(id);
