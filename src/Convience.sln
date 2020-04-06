@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.MessageQueue", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.MediatRs", "Convience.FrameWork\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj", "{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.Background", "Convience.FrameWork\Convience.Taskscheduling\Convience.Background\Convience.Background.csproj", "{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +159,10 @@ Global
 		{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAFC0F5F-0818-40DA-A37D-CFD6439AB885}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +196,7 @@ Global
 		{0C1854B8-302C-486D-96AC-03914952C6E3} = {259BDEF8-1D7D-44BE-B9EB-F48511353BD5}
 		{8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 		{AAFC0F5F-0818-40DA-A37D-CFD6439AB885} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
+		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A} = {53B8A136-289D-4861-87C9-00078E217FE6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}
