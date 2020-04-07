@@ -20,19 +20,37 @@ namespace Convience.ManagentApi.Infrastructure
                 Name = "超级管理员",
                 Remark = "系统超级管理员,不可删除修改"
             }).Wait();
-            var user = new SystemUser
-            {
-                UserName = $"admin",
-                Name = "管管",
-                Sex = Sex.Male,
-                Avatar = "1",
-                PhoneNumber = "15800001111",
-                IsActive = true,
-                CreatedTime = DateTime.Now
-            };
-            userManager.CreateAsync(user, "admin").Wait();
-            userManager.AddToRoleAsync(user, "超级管理员").Wait();
 
+            InitUsers(userManager);
+            InitMenuTree(dbContext);
+        }
+
+        public static void InitUsers(UserManager<SystemUser> userManager)
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                var u = userManager.FindByNameAsync($"admin{i}").Result;
+                if (u != null)
+                {
+                    userManager.DeleteAsync(u).Wait();
+                }
+                var user = new SystemUser
+                {
+                    UserName = $"admin{i}",
+                    Name = $"管理员{i}",
+                    Sex = Sex.Male,
+                    Avatar = i.ToString(),
+                    PhoneNumber = $"1580000111{i}",
+                    IsActive = true,
+                    CreatedTime = DateTime.Now
+                };
+                userManager.CreateAsync(user, $"admin{i}").Wait();
+                userManager.AddToRoleAsync(user, "超级管理员").Wait();
+            }
+        }
+
+        public static void InitMenuTree(SystemIdentityDbContext dbContext)
+        {
             dbContext.Database.ExecuteSqlRaw("TRUNCATE \"Menu\"");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (16, '系统管理', 'systemmanage', NULL, 1, NULL, 1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"Menu\" VALUES (17, '用户管理', 'userManage', 'userList,roleNameList', 1, NULL, 1)");
@@ -102,7 +120,6 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (11,2,5,1)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (12,5,5,0)");
             dbContext.Database.ExecuteSqlRaw("INSERT INTO \"MenuTree\" VALUES (18,8,8,0)");
-
         }
     }
 }

@@ -1,4 +1,5 @@
 
+using Convience.Background;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.ManagentApi.Infrastructure;
@@ -42,7 +43,9 @@ namespace Convience.ManagentApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                }).ConfigureLogging(logging =>
+                })
+                .ConfigureHostedServices<InitDataJob, InitDataService>()
+                .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Trace);
