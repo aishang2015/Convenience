@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UriConstant } from '../constants/uri-constant';
+import { UriConstant } from '../core/constants/uri-constant';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd';

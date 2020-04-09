@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UriConstant } from '../constants/uri-constant';
+import { UriConstant } from '../core/constants/uri-constant';
 import { Tenant } from 'src/app/modules/saas-manage/model/tenant';
 
 @Injectable({

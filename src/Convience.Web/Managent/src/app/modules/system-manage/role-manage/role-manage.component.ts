@@ -2,9 +2,9 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from '../model/role';
 import { NzModalService, NzModalRef, NzMessageService, NzTreeNodeOptions, NzTreeSelectComponent } from 'ng-zorro-antd';
-import { RoleService } from 'src/app/common/services/role.service';
+import { RoleService } from 'src/app/services/role.service';
 import { Menu } from '../model/menu';
-import { MenuService } from 'src/app/common/services/menu.service';
+import { MenuService } from 'src/app/services/menu.service';
 
 @Component({
   selector: 'app-role-manage',

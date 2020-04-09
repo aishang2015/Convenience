@@ -31,14 +31,14 @@
       text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
     }
     body {
-      background: darkgray;
+      background: white;
       margin: 0;
       padding: 0;
     }
   
     @keyframes dots {
       50% {
-        transform: translateY(-.4rem);
+        transform: translateY(-.8rem);
       }
       100% {
         transform: translateY(0);
@@ -46,17 +46,20 @@
     }
   
     .d {
-      animation: dots 1.5s ease-out infinite;
+      animation: dots 0.9s ease-out infinite;
+      color: red;
     }
     .d-2 {
-      animation-delay: .5s;
+      animation-delay: .3s;
+      color: green;
     }
     .d-3 {
-      animation-delay: 1s;
+      animation-delay: 0.6s;
+      color: blue;
     }
     </style>
   
-    加载中<span class="d">.</span><span class="d d-2">.</span><span class="d d-3">.</span>
+    <span class="d">■</span><span class="d d-2">■</span><span class="d d-3">■</span>
   </app-root>
 </body>
 </html>

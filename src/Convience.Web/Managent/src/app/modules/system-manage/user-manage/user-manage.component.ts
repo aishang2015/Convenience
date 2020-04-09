@@ -1,9 +1,9 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../model/user';
-import { UserService } from 'src/app/common/services/user.service';
+import { UserService } from 'src/app/services/user.service';
 import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
-import { RoleService } from 'src/app/common/services/role.service';
+import { RoleService } from 'src/app/services/role.service';
 import { Role } from '../model/role';
 
 @Component({

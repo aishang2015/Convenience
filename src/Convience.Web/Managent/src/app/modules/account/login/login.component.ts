@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AccountService } from 'src/app/common/services/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import { error } from 'protractor';
 
 @Component({

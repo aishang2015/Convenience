@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NzTreeNodeOptions, NzFormatEmitEvent, NzModalRef, NzModalService, NzTreeNode, NzMessageService } from 'ng-zorro-antd';
 import { Menu } from '../model/menu';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MenuService } from 'src/app/common/services/menu.service';
+import { MenuService } from 'src/app/services/menu.service';
 
 @Component({
   selector: 'app-menu-manage',

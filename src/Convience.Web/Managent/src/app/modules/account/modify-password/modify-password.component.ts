@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, ValidationErrors, FormControl } from '@angular/forms';
-import { AccountService } from 'src/app/common/services/account.service';
+import { AccountService } from 'src/app/services/account.service';
 import { NzMessageService } from 'ng-zorro-antd';
 import { StorageService } from 'src/app/core/services/storage.service';
 

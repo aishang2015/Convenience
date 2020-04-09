@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UriConstant } from '../constants/uri-constant';
+import { UriConstant } from '../core/constants/uri-constant';
 import { url } from 'inspector';
 import { User } from 'src/app/modules/system-manage/model/user';
 
