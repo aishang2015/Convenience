@@ -8,6 +8,16 @@ namespace Convience.Entity.Entity
     [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class MenuTree
     {
+        public MenuTree() { }
+
+        public MenuTree(int id, int ancestor, int descendant, int length)
+        {
+            Id = id;
+            Ancestor = ancestor;
+            Descendant = descendant;
+            Length = length;
+        }
+
         public int Id { get; set; }
 
         public int Ancestor { get; set; }

@@ -8,6 +8,20 @@ namespace Convience.Entity.Entity
     [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class Menu
     {
+        public Menu() { }
+
+        public Menu(int id, string name, string identification,
+            string permission, int type, string route, int sort)
+        {
+            Id = id;
+            Name = name;
+            Identification = identification;
+            Permission = permission;
+            Type = (MenuType)type;
+            Route = route;
+            Sort = sort;
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
