@@ -1,9 +1,7 @@
 ﻿using Convience.EntityFrameWork.Infrastructure;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Convience.EntityFrameWork.Saas
 {

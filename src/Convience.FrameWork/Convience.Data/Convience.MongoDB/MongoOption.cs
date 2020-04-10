@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Convience.MongoDB
+﻿namespace Convience.MongoDB
 {
     public class MongoOption
     {

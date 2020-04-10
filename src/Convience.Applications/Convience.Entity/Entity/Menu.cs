@@ -1,6 +1,7 @@
 ﻿
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
+
 using System.ComponentModel;
 
 namespace Convience.Entity.Entity

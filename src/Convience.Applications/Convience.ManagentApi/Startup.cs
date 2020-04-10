@@ -3,12 +3,12 @@ using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Fluentvalidation;
-using Convience.Hangfire;
 using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +39,7 @@ namespace Convience.ManagentApi
                 .AddSwashbuckle()
                 .AddServices()
                 .AddAutoMapper();
-                //.AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
+            //.AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

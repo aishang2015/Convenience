@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+
 using MongoDB.Driver;
+
 using System.Collections.Concurrent;
 
 namespace Convience.MongoDB
