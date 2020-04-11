@@ -1,8 +1,11 @@
 ﻿
 using Convience.Entity.Data;
 using Convience.Jwtauthentication;
+using Convience.Model.Models.AccountViewModels;
 using Convience.Repository;
-
+using Convience.Util.helpers;
+using EasyCaching.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -12,11 +15,16 @@ namespace Convience.Service.Account
     {
         private readonly IUserRepository _userRepository;
 
+        private readonly IEasyCachingProvider _cachingProvider;
+
         private readonly IJwtFactory _jwtFactory;
 
-        public AccountService(IUserRepository userRepository, IJwtFactory jwtFactory)
+        public AccountService(IUserRepository userRepository,
+            IEasyCachingProvider cachingProvider,
+            IJwtFactory jwtFactory)
         {
             _userRepository = userRepository;
+            _cachingProvider = cachingProvider;
             _jwtFactory = jwtFactory;
         }
 
@@ -66,6 +74,19 @@ namespace Convience.Service.Account
             }
             return false;
 
+        }
+
+        public async Task<CaptchaResult> GetCaptcha()
+        {
+            var randomValue = CaptchaHelper.GetValidateCode(5);
+            var imageData = CaptchaHelper.CreateBase64Image(randomValue);
+            var key = Guid.NewGuid().ToString();
+            await _cachingProvider.SetAsync(key, randomValue, TimeSpan.FromMinutes(10));
+            return new CaptchaResult
+            {
+                CaptchaKey = key,
+                CaptchaData = imageData
+            };
         }
     }
 }

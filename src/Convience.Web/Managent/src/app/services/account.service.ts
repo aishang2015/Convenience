@@ -22,5 +22,9 @@ export class AccountService {
     return this.httpClient.post(this.uriConstant.ModifySelfPasswordUri, { "OldPassword": oldPassword, "NewPassword": newPassword });
   }
 
+  getCaptcha(){
+    return this.httpClient.get(this.uriConstant.CaptchaUri);
+  }
+
 
 }

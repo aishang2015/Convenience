@@ -1,4 +1,5 @@
 using Convience.Automapper;
+using Convience.Easycaching;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 
 namespace Convience.ManagentApi
 {
@@ -40,7 +42,8 @@ namespace Convience.ManagentApi
                 .AddSwashbuckle()
                 .AddServices()
                 .AddAutoMapper()
-                .AddPostgreSQLHangFire(Configuration.GetConnectionString("PostgreSQL"));
+                .AddHangFire(Configuration)
+                .AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,6 +108,21 @@ namespace Convience.ManagentApi
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
+            return services;
+        }
+
+        public static IServiceCollection AddMemoryCache(this IServiceCollection services)
+        {
+            var configs = new List<(CacheType, string, string, int)>() {
+                (CacheType.InMemory,"defaultMemoryCache",null,0)
+            };
+            services.AddEasyCaching(configs);
+            return services;
+        }
+
+        public static IServiceCollection AddHangFire(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddPostgreSQLHangFire(configuration.GetConnectionString("PostgreSQL"));
             return services;
         }
     }

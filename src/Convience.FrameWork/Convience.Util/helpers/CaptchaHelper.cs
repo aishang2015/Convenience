@@ -12,13 +12,11 @@ namespace Convience.Util.helpers
         'a','b','c','d','e','f','j','h','i','g','k','l','m','n','o','p','q','r','s','t','u','v',
         'w','x','y','z'};
 
-        private static int _length = 4;
-
         /// <summary>
         /// 生成随机字符串
         /// </summary>
         /// <returns>随机字符串</returns>
-        public static string GetValidateCode()
+        public static string GetValidateCode(int length = 4)
         {
             // 产生的随机字符串
             var result = string.Empty;
@@ -26,14 +24,11 @@ namespace Convience.Util.helpers
             // 字符集 todo配置到文件
             char[] chars = _characters;
 
-            // 生成的字符串长度 todo配置到文件
-            var codeCharCount = _length;
-
             // 生成字节数组,利用BitConvert方法把字节数组转换为整数
             byte[] buffer = Guid.NewGuid().ToByteArray();
             var iRoot = BitConverter.ToInt32(buffer, 0);
             var random = new Random(iRoot);
-            for (int i = 0; i < codeCharCount; i++)
+            for (int i = 0; i < length; i++)
             {
                 var index = random.Next(0, chars.Length);
                 result += chars[index];
@@ -47,7 +42,7 @@ namespace Convience.Util.helpers
         /// </summary>
         /// <param name="randomCode">随机字符串</param>
         /// <returns>图片流</returns>
-        public static byte[] CreateImageStream(string randomCode)
+        public static string CreateBase64Image(string randomCode)
         {
             // 生成的字符串长度
             var codeCharCount = randomCode.Length;
@@ -71,7 +66,7 @@ namespace Convience.Util.helpers
             {
                 // 生成随机颜色和随机字体
                 var fontColor = fontColors[random.Next(0, fontColors.Length)];
-                var font = new Font(fontFamilies[random.Next(0, fontFamilies.Length)], random.Next(12, 16));
+                var font = new Font(fontFamilies[random.Next(0, fontFamilies.Length)], random.Next(18, 22));
 
                 // 生成随机角度
                 int x = 30 * i + random.Next(0, 15);
@@ -83,14 +78,15 @@ namespace Convience.Util.helpers
 
                 // 以文字中心点进行旋转画板的角度
                 Matrix matrix = graph.Transform;
-                matrix.RotateAt(angle, new PointF(x + sf.Width / 2, y + sf.Height / 2));
+                matrix.RotateAt(angle, new PointF(30 * i + 15, 15));
                 graph.Transform = matrix;
 
                 // 绘制
-                graph.DrawString(randomCode[i].ToString(), font, new SolidBrush(fontColor), new PointF(x, y));
+                graph.DrawString(randomCode[i].ToString(), font, new SolidBrush(fontColor),
+                    new PointF(30 * i + 15 - sf.Width / 2, 15 - sf.Height / 2));
 
                 // 恢复画板角度
-                matrix.RotateAt(-angle, new PointF(x + sf.Width / 2, y + sf.Height / 2));
+                matrix.RotateAt(-angle, new PointF(30 * i + 15, 15));
                 graph.Transform = matrix;
             }
 
@@ -111,7 +107,7 @@ namespace Convience.Util.helpers
             // 保存文件到流中
             var stream = new MemoryStream();
             image.Save(stream, ImageFormat.Png);
-            return stream.ToArray();
+            return Convert.ToBase64String(stream.ToArray());
         }
     }
 }

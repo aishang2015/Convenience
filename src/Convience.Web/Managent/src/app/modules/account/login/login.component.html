@@ -16,6 +16,12 @@
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
+            
+            <nz-form-item>
+                <nz-form-control>
+                    <img [src]="captcha" (click)="refreshCaptcha()">
+                </nz-form-control>
+            </nz-form-item>
             <nz-form-item>
                 <nz-form-control>
                     <!-- <label nz-checkbox formControlName="remember">

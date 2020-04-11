@@ -1,11 +1,13 @@
 ﻿using Convience.Entity.Data;
-
+using Convience.Model.Models.AccountViewModels;
 using System.Threading.Tasks;
 
 namespace Convience.Service.Account
 {
     public interface IAccountService
     {
+        public Task<CaptchaResult> GetCaptcha();
+
         public Task<bool> IsStopUsing(string userName);
 
         public Task<(bool, string, SystemUser)> ValidateCredentials(string userName, string password);

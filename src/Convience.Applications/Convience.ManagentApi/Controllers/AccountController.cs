@@ -5,7 +5,7 @@ using Convience.ManagentApi.Infrastructure;
 using Convience.Model.Models.AccountViewModels;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
-
+using Convience.Util.helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +31,13 @@ namespace Convience.ManagentApi.Controllers
             _loginService = loginService;
             _menuService = menuService;
             _roleService = roleService;
+        }
+
+        [HttpGet("captcha")]
+        public async Task<IActionResult> GetCaptcha()
+        {
+            var result = await _loginService.GetCaptcha();
+            return Ok(result);
         }
 
         [HttpPost("login")]

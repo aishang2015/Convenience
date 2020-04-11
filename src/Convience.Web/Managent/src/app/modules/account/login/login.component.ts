@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountService } from 'src/app/services/account.service';
 import { error } from 'protractor';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,8 @@ import { error } from 'protractor';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+
+  captcha: SafeUrl = '';
 
   validateForm: FormGroup;
 
@@ -20,13 +23,23 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private accountService: AccountService,
     private storage: StorageService,
-    private router: Router) { }
+    private router: Router,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]],
       remember: [true]
+    });
+    this.refreshCaptcha();
+  }
+
+  refreshCaptcha() {
+    this.accountService.getCaptcha().subscribe(result => {
+
+      this.captcha = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
+        + result['captchaData']);
     });
   }
 

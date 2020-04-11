@@ -22,6 +22,8 @@ export class UriConstant {
 
     get LoginUri(): string { return `${this.BaseUri}/login` };
 
+    get CaptchaUri(): string { return `${this.BaseUri}/captcha` };
+
     get ModifySelfPasswordUri(): string { return `${this.BaseUri}/password` };
 
     get RoleUri(): string { return `${this.BaseUri}/role` };
