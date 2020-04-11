@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,22 @@ namespace Convience.Hangfire
                     UsePageLocksOnDequeue = true,
                     DisableGlobalLocks = true
                 }));
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
+
+            return services;
+        }
+
+        public static IServiceCollection AddPostgreSQLHangFire(this IServiceCollection services,
+            string connectionString)
+        {
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UsePostgreSqlStorage(connectionString));
 
             // Add the processing server as IHostedService
             services.AddHangfireServer();

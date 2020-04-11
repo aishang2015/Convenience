@@ -3,6 +3,7 @@ using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Fluentvalidation;
+using Convience.Hangfire;
 using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
@@ -38,8 +39,8 @@ namespace Convience.ManagentApi
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddServices()
-                .AddAutoMapper();
-            //.AddSqlServerHangFire(Configuration.GetConnectionString("HangFireSqlServer"));
+                .AddAutoMapper()
+                .AddPostgreSQLHangFire(Configuration.GetConnectionString("PostgreSQL"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +59,7 @@ namespace Convience.ManagentApi
 
             app.UseAuthentication();
 
-            //app.UseHFDashBoard();
+            app.UseHFDashBoard();
 
             app.UseRouting();
 

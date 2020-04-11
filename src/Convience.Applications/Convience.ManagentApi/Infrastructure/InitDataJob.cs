@@ -19,7 +19,7 @@ namespace Convience.ManagentApi.Infrastructure
             var scope = scopeFactory.CreateScope();
             _userManager = scope.ServiceProvider.GetRequiredService<UserManager<SystemUser>>();
             _systemIdentityDbContext = scope.ServiceProvider.GetRequiredService<SystemIdentityDbContext>();
-            Hours = 12;
+            Hours = 6;
             Seconds = 0;
         }
 
