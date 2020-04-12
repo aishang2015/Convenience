@@ -19,6 +19,8 @@ export class LoginComponent implements OnInit {
 
   isLoading: boolean = false;
 
+  private captchaKey = '';
+
   constructor(
     private fb: FormBuilder,
     private accountService: AccountService,
@@ -30,6 +32,7 @@ export class LoginComponent implements OnInit {
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]],
+      captchaValue: [null, [Validators.required]],
       remember: [true]
     });
     this.refreshCaptcha();
@@ -38,6 +41,7 @@ export class LoginComponent implements OnInit {
   refreshCaptcha() {
     this.accountService.getCaptcha().subscribe(result => {
 
+      this.captchaKey = result['captchaKey'];
       this.captcha = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
         + result['captchaData']);
     });
@@ -50,7 +54,11 @@ export class LoginComponent implements OnInit {
     }
     if (this.validateForm.valid) {
       this.isLoading = true;
-      this.accountService.login(this.validateForm.controls['userName'].value, this.validateForm.controls['password'].value)
+      this.accountService.login(
+        this.validateForm.controls['userName'].value,
+        this.validateForm.controls['password'].value,
+        this.captchaKey,
+        this.validateForm.controls['captchaValue'].value)
         .subscribe(
           result => {
             this.storage.userToken = result["token"];
@@ -61,6 +69,9 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/dashboard']);
           },
           error => {
+            this.refreshCaptcha();
+            this.validateForm.controls['password'].reset();
+            this.validateForm.controls['captchaValue'].reset();
             this.isLoading = false;
           }
         );

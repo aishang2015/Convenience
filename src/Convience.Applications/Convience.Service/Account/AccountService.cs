@@ -81,12 +81,22 @@ namespace Convience.Service.Account
             var randomValue = CaptchaHelper.GetValidateCode(5);
             var imageData = CaptchaHelper.CreateBase64Image(randomValue);
             var key = Guid.NewGuid().ToString();
-            await _cachingProvider.SetAsync(key, randomValue, TimeSpan.FromMinutes(10));
+            await _cachingProvider.SetAsync(key, randomValue, TimeSpan.FromMinutes(2));
             return new CaptchaResult
             {
                 CaptchaKey = key,
                 CaptchaData = imageData
             };
+        }
+
+        public async Task<string> ValidateCaptcha(string captchaKey, string captchaValue)
+        {
+            var value = await _cachingProvider.GetAsync(captchaKey, typeof(string));
+            if (!string.IsNullOrEmpty(value?.ToString()))
+            {
+                return captchaValue == value.ToString() ? string.Empty : "验证码错误！";
+            }
+            return "验证码已过期！";
         }
     }
 }

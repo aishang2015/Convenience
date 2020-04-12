@@ -43,6 +43,13 @@ namespace Convience.ManagentApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            // 验证验证码
+            var validResult = await _loginService.ValidateCaptcha(model.CaptchaKey, model.CaptchaValue);
+            if (!string.IsNullOrEmpty(validResult))
+            {
+                return this.BadRequestResult(validResult);
+            }
+
             // 取得用户信息
             var result = await _loginService.ValidateCredentials(model.UserName, model.Password);
             if (!result.Item1)

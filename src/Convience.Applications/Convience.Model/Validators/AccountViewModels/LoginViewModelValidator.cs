@@ -14,6 +14,9 @@ namespace Convience.Model.Validators.AccountViewModels
             RuleFor(viewmodel => viewmodel.Password).NotNull().NotEmpty()
                 .WithMessage("密码不能为空！");
 
+            RuleFor(viewmodel => viewmodel.CaptchaValue).NotNull().NotEmpty()
+                .WithMessage("验证码不能为空！");
+
         }
     }
 }

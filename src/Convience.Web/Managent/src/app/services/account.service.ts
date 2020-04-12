@@ -14,15 +14,16 @@ export class AccountService {
   constructor(private httpClient: HttpClient,
     private uriConstant: UriConstant) { }
 
-  login(userName, password): Observable<any> {
-    return this.httpClient.post(this.uriConstant.LoginUri, { "UserName": userName, "Password": password });
+  login(userName, password, captchaKey, captchaValue): Observable<any> {
+    return this.httpClient.post(this.uriConstant.LoginUri,
+      { "UserName": userName, "Password": password, "CaptchaKey": captchaKey, "CaptchaValue": captchaValue });
   }
 
   modifyPassword(oldPassword, newPassword) {
     return this.httpClient.post(this.uriConstant.ModifySelfPasswordUri, { "OldPassword": oldPassword, "NewPassword": newPassword });
   }
 
-  getCaptcha(){
+  getCaptcha() {
     return this.httpClient.get(this.uriConstant.CaptchaUri);
   }
 

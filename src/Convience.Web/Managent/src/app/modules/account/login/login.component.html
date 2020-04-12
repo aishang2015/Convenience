@@ -16,10 +16,15 @@
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
-            
+
             <nz-form-item>
-                <nz-form-control>
-                    <img [src]="captcha" (click)="refreshCaptcha()">
+                <nz-form-control nzErrorTip="请输入验证码!">
+                    <nz-input-group nzPrefixIcon="key" style="width:50%;">
+                        <input type="text" nz-input formControlName="captchaValue" placeholder="验证码" />
+                    </nz-input-group>
+                    <div style="width:50%; text-align: center;display: inline-block;">
+                        <img [src]="captcha" (click)="refreshCaptcha()">
+                    </div>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
