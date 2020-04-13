@@ -9,7 +9,7 @@ namespace Convience.EntityFrameWork.Saas
     {
         public string Schema { get; private set; }
 
-        public AppSaasDbContext(DbContextOptions options, ISchemaService schemaService) : base(options)
+        public AppSaasDbContext(DbContextOptions<AppSaasDbContext> options, ISchemaService schemaService) : base(options)
         {
             Schema = schemaService.Schema;
         }
