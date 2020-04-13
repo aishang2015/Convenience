@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Convience.Dependency\Convience.Dependency.csproj" />
     <ProjectReference Include="..\Convience.Filestorage.Abstraction\Convience.Filestorage.Abstraction.csproj" />
   </ItemGroup>
 

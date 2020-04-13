@@ -1,6 +1,7 @@
 ﻿using Convience.Easycaching;
+
 using EasyCaching.Core.Configurations;
-using Microsoft.Extensions.Configuration;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Collections.Generic;

@@ -12,11 +12,11 @@ namespace Convience.Filestorage.Filesystem
 {
     public class FileSystemStore : IFileStore
     {
-        private readonly string _fileSystemPath;
+        private readonly string _fileSystemRootPath;
 
         public FileSystemStore(string fileSystemPath)
         {
-            _fileSystemPath = Path.GetFullPath(fileSystemPath);
+            _fileSystemRootPath = Path.GetFullPath(fileSystemPath);
         }
 
         public Task<IFileStoreEntry> GetFileInfoAsync(string path)
@@ -64,7 +64,7 @@ namespace Convience.Filestorage.Filesystem
                     .Select(f =>
                     {
                         var fileSystemInfo = new PhysicalDirectoryInfo(new DirectoryInfo(f));
-                        var fileRelativePath = f.Substring(_fileSystemPath.Length);
+                        var fileRelativePath = f.Substring(_fileSystemRootPath.Length);
                         var filePath = this.NormalizePath(fileRelativePath);
                         return new FileSystemStoreEntry(filePath, fileSystemInfo);
                     }));
@@ -76,7 +76,7 @@ namespace Convience.Filestorage.Filesystem
                     .Select(f =>
                     {
                         var fileSystemInfo = new PhysicalFileInfo(new FileInfo(f));
-                        var fileRelativePath = f.Substring(_fileSystemPath.Length);
+                        var fileRelativePath = f.Substring(_fileSystemRootPath.Length);
                         var filePath = this.NormalizePath(fileRelativePath);
                         return new FileSystemStoreEntry(filePath, fileSystemInfo);
                     }));
@@ -236,10 +236,10 @@ namespace Convience.Filestorage.Filesystem
         {
             path = this.NormalizePath(path);
 
-            var physicalPath = string.IsNullOrEmpty(path) ? _fileSystemPath : Path.Combine(_fileSystemPath, path);
+            var physicalPath = string.IsNullOrEmpty(path) ? _fileSystemRootPath : Path.Combine(_fileSystemRootPath, path);
 
             // Verify that the resulting path is inside the root file system path.
-            var pathIsAllowed = Path.GetFullPath(physicalPath).StartsWith(_fileSystemPath, StringComparison.OrdinalIgnoreCase);
+            var pathIsAllowed = Path.GetFullPath(physicalPath).StartsWith(_fileSystemRootPath, StringComparison.OrdinalIgnoreCase);
             if (!pathIsAllowed)
             {
                 throw new FileStoreException($"The path '{path}' resolves to a physical path outside the file system store root.");
