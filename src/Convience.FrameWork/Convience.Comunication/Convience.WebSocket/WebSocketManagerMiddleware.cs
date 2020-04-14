@@ -15,6 +15,15 @@ namespace Convience.WebSockets
 
         private IWebSocketDataHandler _webSocketDataHandler;
 
+        public WebSocketManagerMiddleware(RequestDelegate next, 
+            WebSocketConnectionManager webSocketConnectionManager, 
+            IWebSocketDataHandler webSocketDataHandler)
+        {
+            _next = next;
+            _webSocketConnectionManager = webSocketConnectionManager;
+            _webSocketDataHandler = webSocketDataHandler;
+        }
+
         public async Task Invoke(HttpContext context)
         {
             if (context.Request.Path == "/ws")
@@ -34,13 +43,13 @@ namespace Convience.WebSockets
 
         private async Task Listening(WebSocket webSocket)
         {
-            var buffer = new byte[1024 * 4];
+            var buffer = new byte[1024 * 1];
 
             var result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
             while (!result.CloseStatus.HasValue)
             {
                 await _webSocketDataHandler.HandleDataAsync(webSocket, buffer);
-                buffer = new byte[1024 * 4];
+                buffer = new byte[1024 * 1];
                 result = await webSocket.ReceiveAsync(buffer, CancellationToken.None);
             }
 
