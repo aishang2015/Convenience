@@ -34,4 +34,6 @@ export class UriConstant {
 
     get TenantUri(): string { return `${this.BaseUri}/tenant` };
 
+    get DashboardUri(): string { return `${this.BaseUri}/dashboard` };
+
 }

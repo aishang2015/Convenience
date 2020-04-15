@@ -3,6 +3,7 @@ import { StorageService } from 'src/app/core/services/storage.service';
 import { Router } from '@angular/router';
 import { Chart, registerShape } from '@antv/g2';
 import { RangePoint } from '@antv/g2/lib/interface';
+import { DashboardService } from 'src/app/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,9 +12,10 @@ import { RangePoint } from '@antv/g2/lib/interface';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 
-  constructor() { }
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {
+    this.dashboardService.get().toPromise();
   }
 
   ngAfterViewInit(): void {
