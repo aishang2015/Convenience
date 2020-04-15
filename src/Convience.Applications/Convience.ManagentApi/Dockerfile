@@ -5,6 +5,16 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+RUN ln -s /lib/x86_64-linux-gnu/libdl-2.24.so /lib/x86_64-linux-gnu/libdl.so
+
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+	echo " " > /etc/apt/sources.list  && \
+	echo "deb http://mirrors.aliyun.com/debian jessie main" >> /etc/apt/sources.list  && \
+	echo "deb http://mirrors.aliyun.com/debian jessie-updates main" >> /etc/apt/sources.list 
+
+RUN apt-get update
+RUN apt-get install libgdiplus -y && ln -s libgdiplus.so gdiplus.dll
+
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Convience.Applications/Convience.ManagentApi/Convience.ManagentApi.csproj", "Convience.Applications/Convience.ManagentApi/"]
@@ -27,8 +37,10 @@ COPY ["Convience.FrameWork/Convience.Data/Convience.MongoDB/Convience.MongoDB.cs
 COPY ["Convience.FrameWork/Convience.MessageQueue/Convience.MediatR/Convience.MediatRs.csproj", "Convience.FrameWork/Convience.MessageQueue/Convience.MediatR/"]
 COPY ["Convience.FrameWork/Convience.Automapper/Convience.Automapper.csproj", "Convience.FrameWork/Convience.Automapper/"]
 COPY ["Convience.FrameWork/Convience.Caches/Convience.Cache/Convience.Cache.csproj", "Convience.FrameWork/Convience.Caches/Convience.Cache/"]
+COPY ["Convience.FrameWork/Convience.Comunication/Convience.WebSocket/Convience.WebSockets.csproj", "Convience.FrameWork/Convience.Comunication/Convience.WebSocket/"]
 COPY ["Convience.FrameWork/Convience.Data/Convience.EntityFrameWork/Convience.EntityFrameWork.csproj", "Convience.FrameWork/Convience.Data/Convience.EntityFrameWork/"]
 COPY ["Convience.FrameWork/Convience.Comunication/Convience.HttpClients/Convience.HttpClients.csproj", "Convience.FrameWork/Convience.Comunication/Convience.HttpClients/"]
+COPY ["Convience.FrameWork/Convience.MessageQueue/Convience.PostgreSQLCap/Convience.PostgreSQLCap.csproj", "Convience.FrameWork/Convience.MessageQueue/Convience.PostgreSQLCap/"]
 RUN dotnet restore "Convience.Applications/Convience.ManagentApi/Convience.ManagentApi.csproj"
 COPY . .
 WORKDIR "/src/Convience.Applications/Convience.ManagentApi"
