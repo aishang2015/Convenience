@@ -12,7 +12,8 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService) {
+  }
 
   ngOnInit() {
     this.dashboardService.get().toPromise();
@@ -82,7 +83,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           return (originData.value + '').replace(/(\d)(?=(?:\d{3})+$)/g, '$1,');
         },
       });
-    
+
     chart.annotation().text({
       top: true,
       position: ['椅子', 'min'],
@@ -139,7 +140,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
     });
     chart.interaction('element-active');
-    
+
     chart.render();
   }
 
@@ -249,7 +250,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       container: 'c3',
       autoFit: true,
       height: 500,
-      padding: [20, 100, 40,60],
+      padding: [20, 100, 40, 60],
     });
     chart
       .coordinate('rect')
@@ -263,7 +264,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       shared: true,
       itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
     });
-    
+
     const expectView = chart.createView();
     expectView.data(expectData);
     expectView
@@ -292,7 +293,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           animation: 'fade-in'
         }
       });
-    
+
     const actualView = chart.createView();
     actualView.data(actualData);
     actualView
@@ -319,9 +320,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           animation: 'fade-in'
         }
       });
-    
+
     chart.interaction('element-active');
-    
+
     chart.render();
 
   }

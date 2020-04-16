@@ -27,7 +27,7 @@ namespace Convience.ManagentApi.Infrastructure
 
         public static void InitUsers(UserManager<SystemUser> userManager)
         {
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 9; i++)
             {
                 var u = userManager.FindByNameAsync($"admin{i}").Result;
                 if (u != null)
