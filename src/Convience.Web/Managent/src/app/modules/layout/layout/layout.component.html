@@ -34,7 +34,7 @@
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
                 <li nz-menu-item nzMatchRouter *canOperate="'dashaboard'">
                     <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
-                        <i nz-icon nzType="dot-chart"></i>仪表盘</a>
+                        <i nz-icon [nzType]="'dot-chart'"></i><span *ngIf="!isCollapsed">仪表盘</span></a>
                 </li>
                 <li nz-submenu nzIcon="setting" nzTitle="系统管理" *canOperate="'systemmanage'">
                     <ul>
@@ -66,14 +66,17 @@
         </nz-sider>
         <nz-layout class="inner-layout">
             <nz-card [nzSize]="'small'" style="margin-top: 10px;">
-                <div style="color: black;float: left;">
-                    <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-                        (click)="isCollapsed = !isCollapsed"></i>
+                <div style="display:flex;display: -webkit-flex;align-items:center;">
+                    <div style="float: left;">
+                        <button nz-button nzType="link" nzSize="small" (click)="isCollapsed = !isCollapsed">
+                            <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                        </button>
+                    </div>
+                    <div style="float: left;padding:0 10px;color: lightgray;">|</div>
+                    <nz-breadcrumb style="margin:0;float: left;top: 50%;">
+                        <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
+                    </nz-breadcrumb>
                 </div>
-                <div style="float: left;padding:0 10px;color: lightgray;">|</div>
-                <nz-breadcrumb style="margin:0;float: left;">
-                    <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
-                </nz-breadcrumb>
             </nz-card>
             <ng-content></ng-content>
         </nz-layout>
