@@ -15,9 +15,9 @@ namespace Convience.Util.Extension
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                var invokedExpr = Expression.Invoke(expression, andExpression.Parameters.Cast<Expression>());
-                var newExp = Expression.And(andExpression.Body, invokedExpr);
-                return Expression.Lambda<Func<T, bool>>(newExp, andExpression.Parameters);
+                var invokedExpr = Expression.Invoke(andExpression, expression.Parameters.Cast<Expression>());
+                var newExp = Expression.And(expression.Body, invokedExpr);
+                return Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
             }
             else
             {

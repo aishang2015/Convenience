@@ -10,7 +10,7 @@ using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
-
+using Convience.Util.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +55,10 @@ namespace Convience.ManagentApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseMiddleware<CustomExceptionMiddleware>();
             }
 
             app.UseSwashbuckle("backend");
