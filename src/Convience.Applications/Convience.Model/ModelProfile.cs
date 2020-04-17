@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Model.Models.GroupManage;
 using Convience.Model.Models.SaasManage;
 using Convience.Model.Models.SystemManage;
 
@@ -24,6 +25,12 @@ namespace Convience.Model
 
             CreateMap<TenantViewModel, Tenant>();
             CreateMap<Tenant, TenantResult>();
+
+            CreateMap<DepartmentViewModel, Department>();
+            CreateMap<Department, DepartmentResult>();
+
+            CreateMap<PositionViewModel, Position>();
+            CreateMap<Position, PositionResult>();
         }
     }
 }

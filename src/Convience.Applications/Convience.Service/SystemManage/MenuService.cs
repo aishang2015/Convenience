@@ -88,9 +88,8 @@ namespace Convience.Service.SystemManage
             }
             catch (Exception)
             {
-                await _unitOfWork.RollBackAsync();
+                return false;
             }
-            return false;
         }
 
         public IQueryable<MenuResult> GetAllMenu()
@@ -127,9 +126,8 @@ namespace Convience.Service.SystemManage
             }
             catch (Exception)
             {
-                await _unitOfWork.RollBackAsync();
+                return false;
             }
-            return false;
         }
 
         public bool HavePermission(string[] menuIds, string permission)
