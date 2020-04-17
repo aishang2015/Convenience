@@ -19,6 +19,12 @@ namespace Convience.Entity.Data
 
         [NotMapped]
         public string RoleIds { get; set; }
+
+        [NotMapped]
+        public string PositionIds { get; set; }
+
+        [NotMapped]
+        public string DepartmentId { get; set; }
     }
 
     public enum Sex
