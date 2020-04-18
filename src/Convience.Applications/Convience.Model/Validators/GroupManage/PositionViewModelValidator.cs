@@ -1,8 +1,6 @@
 ﻿using Convience.Model.Models.GroupManage;
+
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Convience.Model.Validators.GroupManage
 {

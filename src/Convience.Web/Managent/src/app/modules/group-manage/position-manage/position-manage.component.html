@@ -1,0 +1,82 @@
+<nz-card [nzSize]="'small'" class="mt-10">
+    <div>
+        <button nz-button class="mr-10" (click)="add()" *canOperate="'addPositionBtn'"><i nz-icon
+                nzType="plus"></i>添加职位</button>
+        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync" [nzSpin]="isSpinning"></i>刷新数据</button>
+    </div>
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+            nzBordered="true">
+            <thead>
+                <tr>
+                    <th nzAlign="center" nzWidth="100px">#</th>
+                    <th nzAlign="center">名称</th>
+                    <th nzAlign="center" nzWidth="120px">排序</th>
+                    <th nzAlign="center" nzWidth="120px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data;let i = index;">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">{{ data.name }}</td>
+                    <td nzAlign="center">{{ data.sort }}</td>
+                    <td nzAlign="center">
+                        <button nz-button nzType="default" nzShape="circle" *canOperate="'updatePositionBtn'"
+                            (click)="edit(data.id)" class="mr-10">
+                            <i nz-icon nzType="edit"></i>
+                        </button>
+                        <button nz-button nzType="default" nzShape="circle" (click)="remove(data.id)"
+                            *canOperate="'deletePositionBtn'">
+                            <i nz-icon nzType="delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
+    </div>
+</nz-card>
+
+<ng-template #editTitleTpl>
+    <span>编辑职位</span>
+</ng-template>
+<ng-template #addTitleTpl>
+    <span>创建新职位</span>
+</ng-template>
+<ng-template #contentTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_name'">职位名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
+                <input [attr.id]="'edit_name'" formControlName="name" nz-input autocomplete="off" placeholder="职位名称" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="'请输入排序'">
+                <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input autocomplete="off"
+                    placeholder="排序" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                    <button nz-button nzType="primary" class="mr-10">提交</button>
+                    <button nz-button type="button" (click)="cancel()">取消</button>
+                </nz-form-control>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+<ng-template #errorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        请输入职位名称！
+    </ng-container>
+    <ng-container *ngIf="control.hasError('maxlength')">
+        职位名称长度不能超过15！
+    </ng-container>
+</ng-template>

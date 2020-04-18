@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
+
 using System.ComponentModel;
-using System.Text;
 
 namespace Convience.Entity.Entity
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class Department
     {
         public int Id { get; set; }

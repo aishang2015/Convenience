@@ -1,18 +1,19 @@
-﻿using Convience.Entity.Entity;
-using Convience.Model.Models.GroupManage;
-using System;
+﻿using Convience.Model.Models.GroupManage;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
 {
     public interface IPositionService
     {
+        int Count();
+
         IEnumerable<PositionResult> GetAllPosition();
 
         IEnumerable<PositionResult> GetPositions(PositionQuery query);
+
+        Task<PositionResult> GetPositionAsync(int id);
 
         Task<bool> AddPositionAsync(PositionViewModel model);
 

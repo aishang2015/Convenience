@@ -36,4 +36,6 @@ export class UriConstant {
 
     get DashboardUri(): string { return `${this.BaseUri}/dashboard` };
 
+    get PositiondUri(): string { return `${this.BaseUri}/position` };
+
 }

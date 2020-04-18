@@ -1,6 +1,8 @@
 ﻿using DotNetCore.CAP;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using System;
 
 namespace Convience.CapMQ

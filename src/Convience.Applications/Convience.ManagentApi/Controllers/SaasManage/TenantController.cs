@@ -2,6 +2,7 @@
 using Convience.Model.Models.SaasManage;
 using Convience.Service.SaasManage;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
@@ -11,6 +12,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TenantController : ControllerBase
     {
         private readonly ITenantService _tenantService;

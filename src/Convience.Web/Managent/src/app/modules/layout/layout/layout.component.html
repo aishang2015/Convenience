@@ -49,17 +49,21 @@
                                 <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>
                 </li>
+                <li nz-submenu nzIcon="laptop" nzTitle="组织管理" *canOperate="'groupmanage'">
+                    <ul>
+                        <li nz-menu-item nzMatchRouter *canOperate="'userManage'">
+                            <a (click)="setBreadcrumb('组织管理','部门管理')">
+                                <i nz-icon [nzType]="'user'"></i>部门管理</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'positionManage'">
+                            <a  [routerLink]="[ '/group/position' ]" (click)="setBreadcrumb('组织管理','职位管理')">
+                                <i nz-icon [nzType]="'user'"></i>职位管理</a></li>
+                    </ul>
+                </li>
                 <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理" *canOperate="'saasmanage'">
                     <ul>
                         <li nz-menu-item nzMatchRouter *canOperate="'tenantManage'">
                             <a [routerLink]="[ '/saas/tenant' ]" (click)="setBreadcrumb('SAAS管理','租户管理')">
                                 <i nz-icon [nzType]="'user'"></i>租户管理</a></li>
-                    </ul>
-                </li>
-                <li nz-submenu nzIcon="laptop" nzTitle="组织管理" style="display: none;">
-                    <ul>
-                        <li nz-menu-item>部门管理</li>
-                        <li nz-menu-item>职位管理</li>
                     </ul>
                 </li>
             </ul>
@@ -99,24 +103,21 @@
         <nz-form-item>
             <nz-form-control nzErrorTip="请输入旧密码!">
                 <nz-input-group nzPrefixIcon="lock">
-                    <input type="text" nz-input type="password" formControlName="oldPassword"
-                        placeholder="旧密码" />
+                    <input type="text" nz-input type="password" formControlName="oldPassword" placeholder="旧密码" />
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control nzErrorTip="请输入新密码!">
                 <nz-input-group nzPrefixIcon="lock">
-                    <input type="text" nz-input type="password" formControlName="newPassword"
-                        placeholder="新密码" />
+                    <input type="text" nz-input type="password" formControlName="newPassword" placeholder="新密码" />
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control [nzErrorTip]="confirmPasswordErrorTpl">
                 <nz-input-group nzPrefixIcon="lock">
-                    <input type="text" nz-input type="password" formControlName="confirmPassword"
-                        placeholder="确认密码" />
+                    <input type="text" nz-input type="password" formControlName="confirmPassword" placeholder="确认密码" />
                 </nz-input-group>
                 <ng-template #confirmPasswordErrorTpl let-control>
                     <ng-container *ngIf="control.hasError('notEqual')">
@@ -131,8 +132,7 @@
 
         <nz-form-item>
             <nz-form-control>
-                <button nz-button class="login-form-button" [nzType]="'primary'"
-                    [nzLoading]="isLoading">确认修改</button>
+                <button nz-button class="login-form-button" [nzType]="'primary'" [nzLoading]="isLoading">确认修改</button>
             </nz-form-control>
         </nz-form-item>
     </form>

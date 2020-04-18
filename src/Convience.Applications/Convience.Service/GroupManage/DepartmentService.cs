@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
+
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.GroupManage;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage

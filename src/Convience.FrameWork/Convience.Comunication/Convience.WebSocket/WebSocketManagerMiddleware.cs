@@ -15,8 +15,8 @@ namespace Convience.WebSockets
 
         private IWebSocketDataHandler _webSocketDataHandler;
 
-        public WebSocketManagerMiddleware(RequestDelegate next, 
-            WebSocketConnectionManager webSocketConnectionManager, 
+        public WebSocketManagerMiddleware(RequestDelegate next,
+            WebSocketConnectionManager webSocketConnectionManager,
             IWebSocketDataHandler webSocketDataHandler)
         {
             _next = next;

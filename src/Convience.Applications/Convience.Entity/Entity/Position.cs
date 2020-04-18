@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
 
 namespace Convience.Entity.Entity
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class Position
     {
         public int Id { get; set; }

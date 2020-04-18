@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
+
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.GroupManage;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
@@ -43,6 +44,11 @@ namespace Convience.Service.GroupManage
             }
         }
 
+        public int Count()
+        {
+            return _positionRepository.Get().Count();
+        }
+
         public async Task<bool> DeletePositionAsync(int id)
         {
             try
@@ -63,9 +69,16 @@ namespace Convience.Service.GroupManage
             return _mapper.Map<Position[], IEnumerable<PositionResult>>(positions);
         }
 
+        public async Task<PositionResult> GetPositionAsync(int id)
+        {
+            var entity = await _positionRepository.GetAsync(id);
+            return _mapper.Map<PositionResult>(entity);
+        }
+
         public IEnumerable<PositionResult> GetPositions(PositionQuery query)
         {
-            var positions = _positionRepository.Get(_positionRepository.Get(), query.Page, query.Size).ToArray();
+            var positions = _positionRepository.Get(p => true, p => p.Sort,
+                query.Page, query.Size).ToArray();
             return _mapper.Map<Position[], IEnumerable<PositionResult>>(positions);
         }
 
