@@ -38,4 +38,6 @@ export class UriConstant {
 
     get PositiondUri(): string { return `${this.BaseUri}/position` };
 
+    get DepartmentUri(): string { return `${this.BaseUri}/department` };
+
 }

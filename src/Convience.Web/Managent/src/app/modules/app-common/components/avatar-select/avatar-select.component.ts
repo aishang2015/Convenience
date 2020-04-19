@@ -21,10 +21,10 @@ export class AvatarSelectComponent implements OnInit, ControlValueAccessor {
   @ViewChild('input', { static: true, read: ElementRef })
   inputElementRef: ElementRef;
 
-  @ViewChild('avatarSelectTpl')
+  @ViewChild('avatarSelectTpl', { static: true })
   avatarSelectTpl;
 
-  @ViewChild('avatarFooterTpl')
+  @ViewChild('avatarFooterTpl', { static: true })
   avatarFooterTpl;
 
   modalRef: NzModalRef;

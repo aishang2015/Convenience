@@ -2,5 +2,6 @@
 {
     public class DepartmentResult : DepartmentViewModel
     {
+        public string LeaderName { get; set; }
     }
 }

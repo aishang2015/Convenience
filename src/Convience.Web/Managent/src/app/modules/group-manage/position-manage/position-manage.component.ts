@@ -51,7 +51,7 @@ export class PositionManageComponent implements OnInit {
     });
     this.currentId = null;
     this.modal = this.modalService.create({
-      nzTitle: this.editTitleTpl,
+      nzTitle: this.addTitleTpl,
       nzContent: this.contentTpl,
       nzFooter: null,
       nzMaskClosable: false,

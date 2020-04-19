@@ -4,7 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.GroupManage;
-
+using Convience.Repository;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,17 +17,21 @@ namespace Convience.Service.GroupManage
 
         private readonly IRepository<DepartmentTree> _departmentTreeRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private IMapper _mapper;
 
         public DepartmentService(IRepository<Department> departmentRepository,
             IRepository<DepartmentTree> departmentTreeRepository,
+            IUserRepository userRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
             _departmentRepository = departmentRepository;
             _departmentTreeRepository = departmentTreeRepository;
+            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -92,10 +96,16 @@ namespace Convience.Service.GroupManage
         public IQueryable<DepartmentResult> GetAllDepartment()
         {
             var query = from d in _departmentRepository.Get()
+
                         join dt in _departmentTreeRepository.Get()
                         on new { id = d.Id, len = 1 } equals new { id = dt.Descendant, len = dt.Length }
                         into newdt
                         from dt in newdt.DefaultIfEmpty()
+
+                        join u in _userRepository.AllUser()
+                        on d.LeaderId equals u.Id into newu
+                        from u in newu.DefaultIfEmpty()
+
                         orderby d.Sort
                         select new DepartmentResult
                         {
@@ -103,6 +113,7 @@ namespace Convience.Service.GroupManage
                             UpId = dt.Ancestor.ToString(),
                             Email = d.Email,
                             LeaderId = d.LeaderId,
+                            LeaderName = u.Name,
                             Name = d.Name,
                             Sort = d.Sort,
                             Telephone = d.Telephone

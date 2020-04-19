@@ -52,10 +52,10 @@
                 <li nz-submenu nzIcon="laptop" nzTitle="组织管理" *canOperate="'groupmanage'">
                     <ul>
                         <li nz-menu-item nzMatchRouter *canOperate="'userManage'">
-                            <a (click)="setBreadcrumb('组织管理','部门管理')">
+                            <a [routerLink]="[ '/group/department' ]" (click)="setBreadcrumb('组织管理','部门管理')">
                                 <i nz-icon [nzType]="'user'"></i>部门管理</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'positionManage'">
-                            <a  [routerLink]="[ '/group/position' ]" (click)="setBreadcrumb('组织管理','职位管理')">
+                            <a [routerLink]="[ '/group/position' ]" (click)="setBreadcrumb('组织管理','职位管理')">
                                 <i nz-icon [nzType]="'user'"></i>职位管理</a></li>
                     </ul>
                 </li>

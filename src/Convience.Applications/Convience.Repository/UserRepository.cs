@@ -204,5 +204,10 @@ namespace Convience.Repository
             var result = await _userManager.AddToRolesAsync(user, roleaArray.ToArray());
             return result.Succeeded;
         }
+
+        public IQueryable<SystemUser> AllUser()
+        {
+            return _userManager.Users;
+        }
     }
 }
