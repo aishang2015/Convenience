@@ -49,14 +49,17 @@
                                 <i nz-icon [nzType]="'menu'"></i>菜单管理</a></li>
                     </ul>
                 </li>
-                <li nz-submenu nzIcon="laptop" nzTitle="组织管理" *canOperate="'groupmanage'">
+                <li nz-submenu nzIcon="team" nzTitle="组织管理" *canOperate="'groupmanage'">
                     <ul>
-                        <li nz-menu-item nzMatchRouter *canOperate="'userManage'">
-                            <a [routerLink]="[ '/group/department' ]" (click)="setBreadcrumb('组织管理','部门管理')">
-                                <i nz-icon [nzType]="'user'"></i>部门管理</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'employeeManage'">
+                            <a [routerLink]="[ '/group/employee' ]" (click)="setBreadcrumb('组织管理','员工管理')">
+                                <i nz-icon [nzType]="'reconciliation'"></i>员工管理</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'positionManage'">
                             <a [routerLink]="[ '/group/position' ]" (click)="setBreadcrumb('组织管理','职位管理')">
-                                <i nz-icon [nzType]="'user'"></i>职位管理</a></li>
+                                <i nz-icon [nzType]="'credit-card'"></i>职位管理</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'userManage'">
+                            <a [routerLink]="[ '/group/department' ]" (click)="setBreadcrumb('组织管理','部门管理')">
+                                <i nz-icon [nzType]="'apartment'"></i>部门管理</a></li>
                     </ul>
                 </li>
                 <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理" *canOperate="'saasmanage'">

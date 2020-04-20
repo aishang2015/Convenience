@@ -6,6 +6,7 @@ import { PositionManageComponent } from './position-manage/position-manage.compo
 import { AppCommonModule } from '../app-common/app-common.module';
 import { DepartmentTreeComponent } from './department-tree/department-tree.component';
 import { DepartmentManageComponent } from './department-manage/department-manage.component';
+import { EmployeeComponent } from './employee/employee.component';
 
 
 
@@ -13,7 +14,8 @@ import { DepartmentManageComponent } from './department-manage/department-manage
   declarations: [
     PositionManageComponent,
     DepartmentTreeComponent,
-    DepartmentManageComponent
+    DepartmentManageComponent,
+    EmployeeComponent,
   ],
   imports: [
     CommonModule,
@@ -21,7 +23,7 @@ import { DepartmentManageComponent } from './department-manage/department-manage
     RouterModule.forChild([
       { path: 'position', component: PositionManageComponent, canActivate: [LoginGuard] },
       { path: 'department', component: DepartmentManageComponent, canActivate: [LoginGuard] },
-      { path: 'employee', canActivate: [LoginGuard] },
+      { path: 'employee', component: EmployeeComponent, canActivate: [LoginGuard] },
     ])
   ]
 })

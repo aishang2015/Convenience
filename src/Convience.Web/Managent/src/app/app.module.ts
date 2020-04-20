@@ -17,7 +17,7 @@ export function initializeApp(uriConstant: UriConstant) {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     AppRoutingModule,
