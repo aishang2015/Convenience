@@ -11,6 +11,6 @@ namespace Convience.Service.GroupManage
     {
         IEnumerable<EmployeeResult> GetEmployees(EmployeeQuery query);
 
-        Task<bool> UpdateEmplyee(EmployeeViewModel viewModel);
+        Task<bool> UpdateEmplyeeAsync(EmployeeViewModel viewModel);
     }
 }

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GroupManage\EmployeeService.cs~RFd01e1c4.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Convience.Model\Convience.Model.csproj" />
     <ProjectReference Include="..\Convience.Repository\Convience.Repository.csproj" />
   </ItemGroup>
