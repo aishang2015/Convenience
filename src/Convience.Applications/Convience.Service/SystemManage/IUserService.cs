@@ -1,4 +1,5 @@
-﻿using Convience.Model.Models.SystemManage;
+﻿using Convience.Model.Models;
+using Convience.Model.Models.SystemManage;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace Convience.Service.SystemManage
     public interface IUserService
     {
         public int Count();
+
+        public IEnumerable<DicModel> GetUserDic(string name);
 
         public IEnumerable<UserResult> GetUsers(UserQuery query);
 

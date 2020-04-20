@@ -34,6 +34,13 @@ namespace Convience.ManagentApi.Controllers.SystemManage
             });
         }
 
+        [HttpGet("dic")]
+        [Permission("userDic")]
+        public IActionResult GetUserDic([FromQuery]string name)
+        {
+            return Ok(_userService.GetUserDic(name));
+        }
+
         [HttpGet]
         [Permission("userDetail")]
         public async Task<IActionResult> GetUser([FromQuery]string id)

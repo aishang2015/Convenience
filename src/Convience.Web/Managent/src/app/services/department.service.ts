@@ -10,19 +10,23 @@ export class DepartmentService {
   constructor(private httpClient: HttpClient,
     private uriConstant: UriConstant) { }
 
-  get() {
-    return this.httpClient.get(this.uriConstant.DepartmentUri);
+  get(id) {
+    return this.httpClient.get(`${this.uriConstant.DepartmentUri}?id=${id}`);
+  }
+
+  getAll() {
+    return this.httpClient.get(`${this.uriConstant.DepartmentUri}/all`);
   }
 
   delete(id) {
     return this.httpClient.delete(`${this.uriConstant.DepartmentUri}?id=${id}`);
   }
 
-  update(menu) {
-    return this.httpClient.patch(this.uriConstant.DepartmentUri, menu);
+  update(department) {
+    return this.httpClient.patch(this.uriConstant.DepartmentUri, department);
   }
 
-  add(menu) {
-    return this.httpClient.post(this.uriConstant.DepartmentUri, menu);
+  add(department) {
+    return this.httpClient.post(this.uriConstant.DepartmentUri, department);
   }
 }

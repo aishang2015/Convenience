@@ -4,7 +4,7 @@ export class Department {
     name?: string;
     email?: string;
     telephone?: string;
-    leaderId?: string;
+    leaderId?: number;
     leaderName?: string;
     sort?: number;
 }

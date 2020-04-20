@@ -9,6 +9,8 @@ namespace Convience.Service.GroupManage
     {
         IQueryable<DepartmentResult> GetAllDepartment();
 
+        Task<DepartmentResult> GetDepartmentById(int id);
+
         Task<bool> AddDepartmentAsync(DepartmentViewModel model);
 
         Task<bool> UpdateDepartmentAsync(DepartmentViewModel model);

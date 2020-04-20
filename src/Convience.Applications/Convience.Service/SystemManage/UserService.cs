@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 
 using Convience.Entity.Data;
+using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Repository;
 using Convience.Util.Extension;
@@ -74,6 +75,17 @@ namespace Convience.Service.SystemManage
         {
             var user = await _userRepository.GetUserByIdAsync(Id);
             return _mapper.Map<UserResult>(user);
+        }
+
+        public IEnumerable<DicModel> GetUserDic(string name)
+        {
+            var dic = from user in _userRepository.GetUserDic(name).Take(10)
+                      select new DicModel
+                      {
+                          Key = user.Id.ToString(),
+                          Value = user.Name,
+                      };
+            return dic;
         }
 
         public IEnumerable<UserResult> GetUsers(UserQuery query)

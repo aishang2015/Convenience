@@ -42,6 +42,8 @@ namespace Convience.Repository
 
         public IQueryable<SystemUser> AllUser();
 
+        public IQueryable<SystemUser> GetUserDic(string name);
+
         public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
 
         Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds);

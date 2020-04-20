@@ -11,7 +11,7 @@ import { DepartmentService } from 'src/app/services/department.service';
 export class DepartmentTreeComponent implements OnInit {
 
   @Output()
-  nodeClick = new EventEmitter<Department[]>();
+  selectedNodeChanged = new EventEmitter<Department[]>();
 
   nodes: NzTreeNodeOptions[] = [];
 
@@ -27,26 +27,28 @@ export class DepartmentTreeComponent implements OnInit {
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [{ title: '组织结构', key: null, icon: 'global', expanded: true, children: [] }];
-    this.departmentService.get().subscribe((result: any) => {
+    this.departmentService.getAll().subscribe((result: any) => {
       this.data = result;
       this.makeNodes(null, nodes[0], this.data);
       this.nodes = nodes;
+      let selectedData = this.data.filter(department => department.upId == this.selectedNode?.key);
+      this.selectedNodeChanged.emit(selectedData);
     });
   }
 
-  makeNodes(upId, node, menus: Department[]) {
-    var ms = menus.filter(menu => menu.upId == upId);
-    ms.forEach(menu => {
-      let data = { title: menu.name, key: menu.id, icon: 'appstore', children: [] };
-      this.makeNodes(menu.id, data, menus);
+  makeNodes(upId, node, departments: Department[]) {
+    var ms = departments.filter(department => department.upId == upId);
+    ms.forEach(department => {
+      let data = { title: department.name, key: department.id, icon: 'appstore', children: [] };
+      this.makeNodes(department.id, data, departments);
       node.children.push(data);
     });
   }
 
   treeClick(event: NzFormatEmitEvent) {
     this.selectedNode = event.keys.length > 0 ? event.node : null;
-    let selectedData = this.data.filter(menu => menu.upId == this.selectedNode?.key);
-    this.nodeClick.emit(selectedData);
+    let selectedData = this.data.filter(department => department.upId == this.selectedNode?.key);
+    this.selectedNodeChanged.emit(selectedData);
   }
 
 }

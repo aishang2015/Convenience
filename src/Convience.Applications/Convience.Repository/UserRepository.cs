@@ -209,5 +209,13 @@ namespace Convience.Repository
         {
             return _userManager.Users;
         }
+
+        public IQueryable<SystemUser> GetUserDic(string name)
+        {
+            var result = from user in _userManager.Users
+                         where user.Name.Contains(name)
+                         select user;
+            return result;
+        }
     }
 }

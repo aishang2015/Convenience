@@ -22,8 +22,16 @@ namespace Convience.ManagentApi.Controllers.GroupManage
             _departmentService = departmentService;
         }
 
-        [HttpGet]
-        [Permission("departmentList")]
+        [HttpGet()]
+        [Permission("departmentGet")]
+        public async Task<IActionResult> Get([FromQuery]int id)
+        {
+            var result = await _departmentService.GetDepartmentById(id);
+            return Ok(result);
+        }
+
+        [HttpGet("all")]
+        [Permission("allDepartment")]
         public IActionResult Get()
         {
             return Ok(_departmentService.GetAllDepartment());

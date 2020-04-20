@@ -17,11 +17,16 @@ export class UserService {
   }
 
   getUsers(page, size, userName, phoneNumber, name, roleid) {
-    var uri = `${this.uriConstant.UserUri}/list?page=${page}&&size=${size}`;
+    let uri = `${this.uriConstant.UserUri}/list?page=${page}&&size=${size}`;
     uri += userName ? `&&userName=${userName}` : '';
     uri += phoneNumber ? `&&phoneNumber=${phoneNumber}` : '';
     uri += name ? `&&name=${name}` : '';
     uri += roleid ? `&&roleid=${roleid}` : '';
+    return this.httpClient.get(uri);
+  }
+
+  getUserDic(name) {
+    let uri = `${this.uriConstant.UserUri}/dic?name=${name}`;
     return this.httpClient.get(uri);
   }
 

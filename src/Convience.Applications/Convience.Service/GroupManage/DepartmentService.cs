@@ -121,6 +121,12 @@ namespace Convience.Service.GroupManage
             return query;
         }
 
+        public async Task<DepartmentResult> GetDepartmentById(int id)
+        {
+            var result =  await _departmentRepository.GetAsync(id);
+            return _mapper.Map<DepartmentResult>(result);
+        }
+
         public async Task<bool> UpdateDepartmentAsync(DepartmentViewModel model)
         {
             try
