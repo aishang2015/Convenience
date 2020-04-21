@@ -102,7 +102,7 @@ namespace Convience.Service.GroupManage
                         into newdt
                         from dt in newdt.DefaultIfEmpty()
 
-                        join u in _userRepository.AllUser()
+                        join u in _userRepository.GetUsers()
                         on d.LeaderId equals u.Id into newu
                         from u in newu.DefaultIfEmpty()
 

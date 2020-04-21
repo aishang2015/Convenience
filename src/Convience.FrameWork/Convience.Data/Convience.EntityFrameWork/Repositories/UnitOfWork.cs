@@ -29,11 +29,13 @@ namespace Convience.EntityFrameWork.Repositories
         public async Task RollBackAsync()
         {
             await _transaction?.RollbackAsync();
+            await _transaction.DisposeAsync();
         }
 
         public async Task CommitAsync()
         {
             await _transaction?.CommitAsync();
+            await _transaction.DisposeAsync();
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Convience.Entity.Data;
-
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,24 +30,20 @@ namespace Convience.Repository
 
         public Task<SystemUser> GetUserByNameAsync(string name);
 
-        Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleId, int page, int size);
-
         public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size);
-
-        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where);
-
-        public IQueryable<SystemUser> GetUsers(int page, int size);
 
         public IQueryable<SystemUser> GetUsers();
 
-        public IQueryable<SystemUser> AllUser();
+        public IQueryable<IdentityUserClaim<int>> GetUserClaims();
 
-        public IQueryable<SystemUser> GetUserDic(string name);
+        public IQueryable<IdentityUserRole<int>> GetUserRoles();
 
         public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
 
         Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds);
 
-        Task<int> GetSuperManagerUserCount();
+        Task<int> GetUserCountInRoleAsync(string roleName);
+
+        Task UpdateUserClaimsAsync(SystemUser user, string claimType, IEnumerable<string> values);
     }
 }

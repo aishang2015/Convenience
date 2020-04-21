@@ -27,10 +27,11 @@ namespace Convience.ManagentApi.Controllers.SystemManage
         [Permission("userList")]
         public IActionResult GetUserList([FromQuery]UserQuery userQuery)
         {
+            var result = _userService.GetUsers(userQuery);
             return Ok(new
             {
-                data = _userService.GetUsers(userQuery),
-                count = _userService.Count()
+                data = result.Item1,
+                count = result.Item2
             });
         }
 

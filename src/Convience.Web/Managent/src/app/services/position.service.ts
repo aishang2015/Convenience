@@ -16,7 +16,7 @@ export class PositionService {
   }
 
   getAll() {
-    var uri = `${this.uriConstant.UserUri}/all`;
+    var uri = `${this.uriConstant.PositiondUri}/all`;
     return this.httpClient.get(uri);
   }
 

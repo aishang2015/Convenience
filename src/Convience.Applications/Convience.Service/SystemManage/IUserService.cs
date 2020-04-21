@@ -8,11 +8,9 @@ namespace Convience.Service.SystemManage
 {
     public interface IUserService
     {
-        public int Count();
-
         public IEnumerable<DicModel> GetUserDic(string name);
 
-        public IEnumerable<UserResult> GetUsers(UserQuery query);
+        public (IEnumerable<UserResult>, int) GetUsers(UserQuery query);
 
         public Task<UserResult> GetUserAsync(string Id);
 

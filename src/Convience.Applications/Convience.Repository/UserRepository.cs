@@ -1,11 +1,12 @@
 ﻿using Convience.Entity.Data;
-
+using Convience.EntityFrameWork.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Convience.Repository
@@ -83,79 +84,29 @@ namespace Convience.Repository
 
         public IQueryable<SystemUser> GetUsers()
         {
-            var users = from u in _systemIdentityDbContext.Users
-                        orderby u.Id descending
-                        let q =
-                             from ur in _systemIdentityDbContext.UserRoles
-                             where ur.UserId == u.Id
-                             join r in _systemIdentityDbContext.Roles on ur.RoleId equals r.Id
-                             select r.Id
-                        select new SystemUser
-                        {
-                            Avatar = u.Avatar,
-                            Name = u.Name,
-                            UserName = u.UserName,
-                            PhoneNumber = u.PhoneNumber,
-                            Id = u.Id,
-                            IsActive = u.IsActive,
-                            Sex = u.Sex,
-                            CreatedTime = u.CreatedTime,
-                            RoleIds = string.Join(',', q.ToArray())
-                        };
-            return users;
+            return _userManager.Users;
         }
 
-        public IQueryable<SystemUser> GetUsers(int page, int size)
+        public IQueryable<IdentityUserClaim<int>> GetUserClaims()
         {
-            var skip = size * (page - 1);
-            return GetUsers().Skip(skip).Take(size);
+            return _systemIdentityDbContext.UserClaims;
         }
 
-        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where)
+        public IQueryable<IdentityUserRole<int>> GetUserRoles()
         {
-            return GetUsers().Where(where);
+            return _systemIdentityDbContext.UserRoles;
         }
+
 
         public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size)
         {
             var skip = size * (page - 1);
-            return GetUsers(where).Skip(skip).Take(size);
+            return GetUsers().Where(where).Skip(skip).Take(size);
         }
 
-        public async Task<List<SystemUser>> GetUsers(string userName, string Name, string phoneNumber, string roleId, int page, int size)
+        public async Task<int> GetUserCountInRoleAsync(string roleName)
         {
-            var role = await _roleManger.FindByIdAsync(roleId);
-            var users = await _userManager.GetUsersInRoleAsync(role.Name);
-            var result = from u in users
-                         where u.UserName.Contains(userName ?? string.Empty)
-                            && u.Name.Contains(Name ?? string.Empty)
-                            && u.PhoneNumber.Contains(phoneNumber ?? string.Empty)
-                         orderby u.Id descending
-                         let q =
-                              from ur in _systemIdentityDbContext.UserRoles
-                              where ur.UserId == u.Id
-                              join r in _systemIdentityDbContext.Roles on ur.RoleId equals r.Id
-                              select r.Id
-                         select new SystemUser
-                         {
-                             Avatar = u.Avatar,
-                             Name = u.Name,
-                             UserName = u.UserName,
-                             PhoneNumber = u.PhoneNumber,
-                             Id = u.Id,
-                             IsActive = u.IsActive,
-                             Sex = u.Sex,
-                             CreatedTime = u.CreatedTime,
-                             RoleIds = string.Join(',', q.ToArray())
-                         };
-
-            var skip = size * (page - 1);
-            return result.Skip(skip).Take(size).ToList();
-        }
-
-        public async Task<int> GetSuperManagerUserCount()
-        {
-            var users = await _userManager.GetUsersInRoleAsync("超级管理员");
+            var users = await _userManager.GetUsersInRoleAsync(roleName);
             return users.Count(user => user.IsActive);
         }
 
@@ -180,6 +131,7 @@ namespace Convience.Repository
         {
             return await _userManager.GetRolesAsync(user);
         }
+
         public async Task<bool> RemoveUserByNameAsync(string name)
         {
             var user = await GetUserByNameAsync(name);
@@ -205,17 +157,17 @@ namespace Convience.Repository
             return result.Succeeded;
         }
 
-        public IQueryable<SystemUser> AllUser()
-        {
-            return _userManager.Users;
-        }
 
-        public IQueryable<SystemUser> GetUserDic(string name)
+        public async Task UpdateUserClaimsAsync(SystemUser user, string claimType, IEnumerable<string> values)
         {
-            var result = from user in _userManager.Users
-                         where user.Name.Contains(name)
-                         select user;
-            return result;
+            var ucs = from uc in _systemIdentityDbContext.UserClaims
+                      where uc.ClaimType == claimType && uc.UserId == user.Id
+                      select new Claim(uc.ClaimType, uc.ClaimValue);
+            await _userManager.RemoveClaimsAsync(user, ucs.ToArray());
+
+            var newucs = from v in values
+                         select new Claim(claimType, v ?? string.Empty);
+            await _userManager.AddClaimsAsync(user, newucs.ToArray());
         }
     }
 }

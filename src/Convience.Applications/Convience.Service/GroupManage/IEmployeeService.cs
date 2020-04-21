@@ -9,7 +9,9 @@ namespace Convience.Service.GroupManage
 {
     public interface IEmployeeService
     {
-        IEnumerable<EmployeeResult> GetEmployees(EmployeeQuery query);
+        EmployeeResult GetEmployeeById(int id);
+
+        (IEnumerable<EmployeeResult>, int) GetEmployees(EmployeeQuery query);
 
         Task<bool> UpdateEmplyeeAsync(EmployeeViewModel viewModel);
     }

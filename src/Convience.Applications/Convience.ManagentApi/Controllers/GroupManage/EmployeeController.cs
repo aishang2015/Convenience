@@ -22,16 +22,28 @@ namespace Convience.ManagentApi.Controllers.GroupManage
             _employeeService = employeeService;
         }
 
+        [HttpGet()]
+        [Permission("employeeGet")]
+        public IActionResult Get(int id)
+        {
+            return Ok(_employeeService.GetEmployeeById(id));
+        }
+
         [HttpGet("list")]
         [Permission("employeeList")]
-        public IActionResult Get(EmployeeQuery employeeQuery)
+        public IActionResult Get([FromQuery]EmployeeQuery employeeQuery)
         {
-            return Ok(_employeeService.GetEmployees(employeeQuery));
+            var result = _employeeService.GetEmployees(employeeQuery);
+            return Ok(new
+            {
+                data = result.Item1,
+                count = result.Item2
+            });
         }
 
         [HttpPatch]
         [Permission("employeeUpdate")]
-        public async Task<IActionResult> Update(EmployeeViewModel viewModel)
+        public async Task<IActionResult> Update([FromBody]EmployeeViewModel viewModel)
         {
             var isSuccess = await _employeeService.UpdateEmplyeeAsync(viewModel);
             if (!isSuccess)
