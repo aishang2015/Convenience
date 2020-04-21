@@ -96,7 +96,7 @@ namespace Convience.Service.SystemManage
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
-            
+
             var userQuery = _userRepository.GetUsers();
             int count;
             if (!string.IsNullOrEmpty(query.RoleId))

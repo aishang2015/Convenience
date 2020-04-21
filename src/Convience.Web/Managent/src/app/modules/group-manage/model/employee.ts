@@ -1,6 +1,5 @@
 export class Employee {
     id?: number;
-    userName: string;
     name: string;
     phoneNumber: string;
     avatar: string;

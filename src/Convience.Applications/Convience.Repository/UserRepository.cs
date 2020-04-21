@@ -1,7 +1,7 @@
 ﻿using Convience.Entity.Data;
-using Convience.EntityFrameWork.Repositories;
-using Microsoft.AspNetCore.Identity;
 
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +87,7 @@ namespace Convience.Repository
             return _userManager.Users;
         }
 
-        public IQueryable<IdentityUserClaim<int>> GetUserClaims()
+        public DbSet<IdentityUserClaim<int>> GetUserClaims()
         {
             return _systemIdentityDbContext.UserClaims;
         }

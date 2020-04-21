@@ -4,10 +4,10 @@ using Convience.Jwtauthentication;
 using Convience.Model.Models.GroupManage;
 using Convience.Repository;
 using Convience.Util.Extension;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
@@ -39,7 +39,6 @@ namespace Convience.Service.GroupManage
                         select new EmployeeResult
                         {
                             Id = u.Id,
-                            UserName = u.UserName,
                             PhoneNumber = u.PhoneNumber,
                             Avatar = u.Avatar,
                             Name = u.Name,
@@ -53,7 +52,6 @@ namespace Convience.Service.GroupManage
         public (IEnumerable<EmployeeResult>, int) GetEmployees(EmployeeQuery query)
         {
             var where = ExpressionExtension.TrueExpression<SystemUser>()
-                .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
             var userQuery = _userRepository.GetUsers().Where(@where);
@@ -87,7 +85,6 @@ namespace Convience.Service.GroupManage
                         select new EmployeeResult
                         {
                             Id = u.Id,
-                            UserName = u.UserName,
                             PhoneNumber = u.PhoneNumber,
                             Avatar = u.Avatar,
                             Name = u.Name,

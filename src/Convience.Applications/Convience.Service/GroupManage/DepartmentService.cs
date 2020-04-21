@@ -3,8 +3,10 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Jwtauthentication;
 using Convience.Model.Models.GroupManage;
 using Convience.Repository;
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -77,18 +79,26 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> DeleteDepartmentAsync(int id)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
+                var claims = _userRepository.GetUserClaims()
+                    .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
+                    c.ClaimValue == id.ToString());
+                _userRepository.GetUserClaims().RemoveRange(claims);
+
                 var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
                     .Select(dt => dt.Descendant);
                 await _departmentRepository.RemoveAsync(d => childId.Contains(d.Id));
                 await _departmentTreeRepository.RemoveAsync(
                     dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
                 await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
                 return true;
             }
             catch (Exception)
             {
+                await _unitOfWork.RollBackAsync();
                 return false;
             }
         }
@@ -123,7 +133,7 @@ namespace Convience.Service.GroupManage
 
         public async Task<DepartmentResult> GetDepartmentById(int id)
         {
-            var result =  await _departmentRepository.GetAsync(id);
+            var result = await _departmentRepository.GetAsync(id);
             return _mapper.Map<DepartmentResult>(result);
         }
 

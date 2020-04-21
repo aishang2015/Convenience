@@ -1,7 +1,8 @@
 <div class="content">
     <div class="tree">
         <nz-card [nzSize]="'small'">
-            <app-department-tree #tree (selectedNodeChanged)="selectedChanged($event)"></app-department-tree>
+            <app-department-tree #tree (nodeChecked)="nodeChecked($event)" (loadData)="loadedData($event)">
+            </app-department-tree>
         </nz-card>
     </div>
     <div class="table">
@@ -46,12 +47,12 @@
                     <thead>
                         <tr>
                             <th nzAlign="center" nzWidth="60px">#</th>
-                            <th nzAlign="center" nzWidth="120px">头像</th>
+                            <th nzAlign="center" nzWidth="60px">头像</th>
                             <th nzAlign="center" nzWidth="120px">姓名</th>
-                            <th nzAlign="center" nzWidth="200px">联系电话</th>
-                            <th nzAlign="center" nzWidth="200px">性别</th>
+                            <th nzAlign="center" nzWidth="120px">联系电话</th>
+                            <th nzAlign="center" nzWidth="60px">性别</th>
                             <th nzAlign="center">职务</th>
-                            <th nzAlign="center" nzWidth="120px">操作</th>
+                            <th nzAlign="center" nzWidth="60px">操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,9 +65,10 @@
                             </td>
                             <td nzAlign="center">{{ data.name }}</td>
                             <td nzAlign="center">{{ data.phoneNumber }}</td>
-                            <td nzAlign="center">{{ data.sex }}</td>
+                            <td nzAlign="center">{{ data.sex | gender }}</td>
                             <td nzAlign="center">
-                                <nz-tag nzColor="success" *ngFor="let item of data.positionIds.split(',')">{{getPositionName(item)}}</nz-tag>
+                                <nz-tag nzColor="success" *ngFor="let item of data.positionIds.split(',')">
+                                    {{getPositionName(item)}}</nz-tag>
                             </td>
                             <td nzAlign="center">
                                 <button nz-button nzType="default" nzShape="circle" *canOperate="'updateDepartmentBtn'"

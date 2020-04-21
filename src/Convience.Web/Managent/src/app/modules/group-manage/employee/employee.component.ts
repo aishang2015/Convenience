@@ -36,6 +36,8 @@ export class EmployeeComponent implements OnInit {
   departmentNode: NzTreeNodeOptions[] = [];
   positionOptions: Position[] = [];
 
+  selectedDepartmentKey: string = '';
+
   constructor(
     private messageService: NzMessageService,
     private modalService: NzModalService,
@@ -55,11 +57,11 @@ export class EmployeeComponent implements OnInit {
     this.refresh();
   }
 
-  refresh(department = '') {
+  refresh() {
     this.employeeService.getEmployees(this.page, this.size,
-      null,
       this.searchForm.value['phoneNumber'],
-      this.searchForm.value['name'], department,
+      this.searchForm.value['name'], 
+      this.selectedDepartmentKey,
       this.searchForm.value['position'])
       .subscribe((result: any) => {
         this.data = result.data;
@@ -72,7 +74,7 @@ export class EmployeeComponent implements OnInit {
       this.currentId = id;
       this.editForm = this.formBuilder.group({
         name: [{ value: result['name'], disabled: true }],
-        department: [result['departmentId']],
+        department: [Number(result['departmentId'])],
         positions: [result['positionIds']?.split(',')]
       });
       this.modal = this.modalService.create({
@@ -95,7 +97,7 @@ export class EmployeeComponent implements OnInit {
     if (this.editForm.valid) {
       let employee = new Employee()
       employee.id = this.currentId;
-      employee.departmentId = this.editForm.value['department'];
+      employee.departmentId = this.editForm.value['department']?.toString();
       employee.positionIds = this.editForm.value['positions'].join(',');
       this.employeeService.updateEmployee(employee).subscribe(result => {
         this.messageService.success("修改成功！");
@@ -126,7 +128,13 @@ export class EmployeeComponent implements OnInit {
     return this.positionOptions.find(p => p.id.toString() == id)?.name;
   }
 
-  selectedChanged(array: Department[]) {
+  nodeChecked(key) {
+    this.selectedDepartmentKey = key;
+    this.refresh();
+  }
+
+  loadedData(nodes) {
+    this.departmentNode = nodes;
   }
 
 

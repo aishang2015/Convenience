@@ -3,8 +3,9 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Jwtauthentication;
 using Convience.Model.Models.GroupManage;
-
+using Convience.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,19 @@ namespace Convience.Service.GroupManage
     {
         private readonly IRepository<Position> _positionRepository;
 
+        private readonly IUserRepository _userRepository;
+
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private readonly IMapper _mapper;
 
         public PositionService(IRepository<Position> positionRepository,
+            IUserRepository userRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
             _positionRepository = positionRepository;
+            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -51,14 +56,22 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> DeletePositionAsync(int id)
         {
+            await _unitOfWork.StartTransactionAsync();
             try
             {
+                var claims = _userRepository.GetUserClaims()
+                    .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
+                    c.ClaimValue == id.ToString());
+                _userRepository.GetUserClaims().RemoveRange(claims);
+
                 await _positionRepository.RemoveAsync(id);
                 await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitAsync();
                 return true;
             }
             catch (Exception)
             {
+                await _unitOfWork.RollBackAsync();
                 return false;
             }
         }

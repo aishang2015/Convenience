@@ -14,10 +14,9 @@ export class EmployeeService {
     return this.httpClient.get(`${this.uriConstant.EmployeeUri}?id=${id}`);
   }
 
-  getEmployees(page, size, userName, phoneNumber, name, departmentId, positionId) {
+  getEmployees(page, size, phoneNumber, name, departmentId, positionId) {
 
     let uri = `${this.uriConstant.EmployeeUri}/list?page=${page}&&size=${size}`;
-    uri += userName ? `&&userName=${userName}` : '';
     uri += phoneNumber ? `&&phoneNumber=${phoneNumber}` : '';
     uri += name ? `&&name=${name}` : '';
     uri += departmentId ? `&&departmentId=${departmentId}` : '';

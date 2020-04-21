@@ -13,6 +13,12 @@ export class DepartmentTreeComponent implements OnInit {
   @Output()
   selectedNodeChanged = new EventEmitter<Department[]>();
 
+  @Output()
+  loadData = new EventEmitter<NzTreeNodeOptions[]>();
+
+  @Output()
+  nodeChecked = new EventEmitter<string>();
+
   nodes: NzTreeNodeOptions[] = [];
 
   data: Department[] = [];
@@ -31,6 +37,8 @@ export class DepartmentTreeComponent implements OnInit {
       this.data = result;
       this.makeNodes(null, nodes[0], this.data);
       this.nodes = nodes;
+      this.loadData.emit(this.nodes);
+
       let selectedData = this.data.filter(department => department.upId == this.selectedNode?.key);
       this.selectedNodeChanged.emit(selectedData);
     });
@@ -49,6 +57,7 @@ export class DepartmentTreeComponent implements OnInit {
     this.selectedNode = event.keys.length > 0 ? event.node : null;
     let selectedData = this.data.filter(department => department.upId == this.selectedNode?.key);
     this.selectedNodeChanged.emit(selectedData);
+    this.nodeChecked.emit(this.selectedNode?.key?.toString());
   }
 
 }
