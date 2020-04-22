@@ -22,8 +22,8 @@ namespace Convience.Background
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await _backgroundJob.DoWork();
                 await Task.Delay(_timeSpan, stoppingToken);
+                await _backgroundJob.DoWork();
             }
         }
 

@@ -62,7 +62,7 @@
                                 <i nz-icon [nzType]="'apartment'"></i>部门管理</a></li>
                     </ul>
                 </li>
-                <li nz-submenu nzIcon="usergroup-add" nzTitle="SAAS管理" *canOperate="'saasmanage'">
+                <li nz-submenu nzIcon="deployment-unit" nzTitle="SAAS管理" *canOperate="'saasmanage'">
                     <ul>
                         <li nz-menu-item nzMatchRouter *canOperate="'tenantManage'">
                             <a [routerLink]="[ '/saas/tenant' ]" (click)="setBreadcrumb('SAAS管理','租户管理')">

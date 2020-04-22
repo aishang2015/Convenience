@@ -8,6 +8,7 @@ namespace Convience.ManagentApi.Controllers
     [Authorize]
     public class DashBoardController : ControllerBase
     {
+        [HttpGet]
         public IActionResult Get()
         {
             return Ok();

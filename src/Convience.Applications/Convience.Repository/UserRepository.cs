@@ -92,7 +92,7 @@ namespace Convience.Repository
             return _systemIdentityDbContext.UserClaims;
         }
 
-        public IQueryable<IdentityUserRole<int>> GetUserRoles()
+        public DbSet<IdentityUserRole<int>> GetUserRoles()
         {
             return _systemIdentityDbContext.UserRoles;
         }

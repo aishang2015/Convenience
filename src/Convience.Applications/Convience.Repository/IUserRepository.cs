@@ -38,7 +38,7 @@ namespace Convience.Repository
 
         public DbSet<IdentityUserClaim<int>> GetUserClaims();
 
-        public IQueryable<IdentityUserRole<int>> GetUserRoles();
+        public DbSet<IdentityUserRole<int>> GetUserRoles();
 
         public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
 

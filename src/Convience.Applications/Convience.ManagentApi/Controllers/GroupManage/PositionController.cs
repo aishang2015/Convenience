@@ -48,7 +48,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
             });
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         [Permission("positionDelete")]
         public async Task<IActionResult> Delete([FromQuery]int id)
         {

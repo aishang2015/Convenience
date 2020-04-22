@@ -2,7 +2,7 @@
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Threading.Tasks;
@@ -11,6 +11,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
