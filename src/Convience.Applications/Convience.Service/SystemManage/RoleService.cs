@@ -143,7 +143,7 @@ namespace Convience.Service.SystemManage
             {
                 try
                 {
-                    var role = await _roleRepository.GetRole(model.Name);
+                    var role = await _roleRepository.GetRoleById(model.Id);
                     _mapper.Map(model, role);
                     var isSuccess = await _roleRepository.UpdateRole(role);
                     if (!isSuccess)
@@ -193,16 +193,6 @@ namespace Convience.Service.SystemManage
         {
             var result = from rc in _systemIdentityDbContext.RoleClaims
                          where rc.ClaimType == claimType && roleIds.Contains(rc.RoleId.ToString())
-                         select rc.ClaimValue;
-            return string.Join(',', result).Split(',');
-        }
-
-
-        public IEnumerable<string> GetRoleClaimValueByName(string[] roleNames, string claimType)
-        {
-            var result = from rc in _systemIdentityDbContext.RoleClaims
-                         join r in _systemIdentityDbContext.Roles on rc.RoleId equals r.Id
-                         where rc.ClaimType == claimType && roleNames.Contains(r.Name)
                          select rc.ClaimValue;
             return string.Join(',', result).Split(',');
         }

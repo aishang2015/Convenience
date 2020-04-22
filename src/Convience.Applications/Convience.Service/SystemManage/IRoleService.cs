@@ -22,7 +22,5 @@ namespace Convience.Service.SystemManage
         int Count();
 
         IEnumerable<string> GetRoleClaimValue(string[] roleIds, string claimType);
-
-        IEnumerable<string> GetRoleClaimValueByName(string[] roleNames, string claimType);
     }
 }
