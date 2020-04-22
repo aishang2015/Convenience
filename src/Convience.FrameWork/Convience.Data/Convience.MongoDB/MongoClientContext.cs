@@ -6,14 +6,14 @@ using System.Collections.Concurrent;
 
 namespace Convience.MongoDB
 {
-    public class MongoClientHelper
+    public class MongoClientContext
     {
         private readonly ConcurrentDictionary<string, MongoClient> ConnectionCache
             = new ConcurrentDictionary<string, MongoClient>();
 
         private readonly string _mongoConnectionString;
 
-        public MongoClientHelper(IOptions<MongoOption> option)
+        public MongoClientContext(IOptions<MongoOption> option)
         {
             _mongoConnectionString = option.Value.MongoHost;
         }

@@ -8,8 +8,8 @@ namespace Convience.MongoDB
         public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<MongoOption>(configuration);
-            services.AddSingleton<MongoClientHelper>();
-            services.AddSingleton<MongoHelper>();
+            services.AddSingleton<MongoClientContext>();
+            services.AddSingleton<MongoRepository>();
             return services;
         }
     }

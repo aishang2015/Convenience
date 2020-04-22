@@ -2,23 +2,27 @@
 
 using MongoDB.Bson;
 using MongoDB.Driver;
-
+using MongoDB.Driver.GridFS;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.MongoDB
 {
-    public class MongoHelper
+    public class MongoRepository
     {
         private IMongoDatabase _dataBase;
 
         private MongoClient _client;
 
-        public MongoHelper(MongoClientHelper clienthelper, IOptions<MongoOption> option)
+        private GridFSBucket _bucket;
+
+        public MongoRepository(MongoClientContext clienthelper, IOptions<MongoOption> option)
         {
             _client = clienthelper.GetMongoClient();
             _dataBase = _client.GetDatabase(option.Value.DefaultDataBase);
+            _bucket = new GridFSBucket(_dataBase);
         }
 
         public void SwitchDataBase(string dataBaseName)
@@ -31,6 +35,70 @@ namespace Convience.MongoDB
             return _dataBase.GetCollection<T>(typeof(T).Name);
         }
 
+        #region GridFS处理
+
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        public async Task<byte[]> GetFileBytes(string id)
+        {
+            return await _bucket.DownloadAsBytesAsync(new ObjectId(id));
+        }
+
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Stream> GetFileStream(string id)
+        {
+            return await _bucket.OpenDownloadStreamAsync(new ObjectId(id));
+        }
+
+        /// <summary>
+        /// 下载文件
+        /// </summary>
+        public async Task<GridFSFileInfo> GetFileById(string id)
+        {
+            var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", new ObjectId(id));
+            return await _bucket.Find(filter).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        public async Task<ObjectId> UploadFile(string fileName, byte[] source)
+        {
+            var id = await _bucket.UploadFromBytesAsync(fileName, source);
+            return id;
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        public async Task<ObjectId> UploadFile(string fileName, Stream source)
+        {
+            var id = await _bucket.UploadFromStreamAsync(fileName, source);
+            return id;
+        }
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        public async Task DeleteFile(string id)
+        {
+            await _bucket.DeleteAsync(new ObjectId(id));
+        }
+
+        /// <summary>
+        /// 重命名文件
+        /// </summary>
+        public async Task RenameFile(string id, string newFilename)
+        {
+            await _bucket.RenameAsync(new ObjectId(id), newFilename);
+        }
+
+        #endregion
 
         #region 添加数据
 
