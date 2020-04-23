@@ -29,7 +29,7 @@ namespace Convience.Service.ContentManage
 
         public async Task<string> MakeDirectoryAsync(string directory)
         {
-            var info = _fileStore.GetFileInfoAsync(directory);
+            var info = await _fileStore.GetFileInfoAsync(directory);
             if (info != null)
             {
                 return "目录已存在！";

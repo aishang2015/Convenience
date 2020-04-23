@@ -20,6 +20,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         [HttpPost]
         public async Task<IActionResult> UploadFile(FileUploadModel fileUploadModel)
         {
+            const formData = new FormData();
             var result = await _fileManageService.UploadAsync(fileUploadModel);
             if (!string.IsNullOrEmpty(result))
             {

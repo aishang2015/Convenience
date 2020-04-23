@@ -42,4 +42,7 @@ export class UriConstant {
 
     get EmployeeUri(): string { return `${this.BaseUri}/employee` };
 
+    get FileUri(): string { return `${this.BaseUri}/file` };
+
+    get FolderUri(): string { return `${this.BaseUri}/folder` };
 }
