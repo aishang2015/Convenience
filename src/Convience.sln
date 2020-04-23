@@ -67,6 +67,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Background", "Con
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.PostgreSQLCap", "Convience.FrameWork\Convience.MessageQueue\Convience.PostgreSQLCap\Convience.PostgreSQLCap.csproj", "{E7D850D3-BD01-4175-9B99-1D273DFAA8D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.Filestorage.MongoDB", "Convience.FrameWork\Convience.Filestorage\Convience.Filestorage.MongoDB\Convience.Filestorage.MongoDB.csproj", "{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -169,6 +171,10 @@ Global
 		{E7D850D3-BD01-4175-9B99-1D273DFAA8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7D850D3-BD01-4175-9B99-1D273DFAA8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7D850D3-BD01-4175-9B99-1D273DFAA8D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -204,6 +210,7 @@ Global
 		{AAFC0F5F-0818-40DA-A37D-CFD6439AB885} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
 		{7BC1BD23-CFD2-4081-9EE1-5F7A198F2F6A} = {53B8A136-289D-4861-87C9-00078E217FE6}
 		{E7D850D3-BD01-4175-9B99-1D273DFAA8D8} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
+		{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE} = {2C278402-21EE-42CE-8B28-64C495DB89CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}

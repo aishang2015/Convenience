@@ -40,7 +40,7 @@ namespace Convience.MongoDB
         /// <summary>
         /// 下载文件
         /// </summary>
-        public async Task<byte[]> GetFileBytes(string id)
+        public async Task<byte[]> GetFileBytesAsync(string id)
         {
             return await _bucket.DownloadAsBytesAsync(new ObjectId(id));
         }
@@ -48,9 +48,17 @@ namespace Convience.MongoDB
         /// <summary>
         /// 下载文件
         /// </summary>
+        public async Task<byte[]> GetFileBytesAsync(ObjectId id)
+        {
+            return await _bucket.DownloadAsBytesAsync(id);
+        }
+
+        /// <summary>
+        /// 下载文件
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Stream> GetFileStream(string id)
+        public async Task<Stream> GetFileStreamAsync(string id)
         {
             return await _bucket.OpenDownloadStreamAsync(new ObjectId(id));
         }
@@ -58,16 +66,35 @@ namespace Convience.MongoDB
         /// <summary>
         /// 下载文件
         /// </summary>
-        public async Task<GridFSFileInfo> GetFileById(string id)
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Stream> GetFileStreamAsync(ObjectId id)
+        {
+            return await _bucket.OpenDownloadStreamAsync(id);
+        }
+
+        /// <summary>
+        /// 取得文件信息
+        /// </summary>
+        public async Task<GridFSFileInfo> GetFileByIdAsync(string id)
         {
             var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", new ObjectId(id));
             return await _bucket.Find(filter).FirstOrDefaultAsync();
         }
 
         /// <summary>
+        /// 取得文件信息
+        /// </summary>
+        public async Task<GridFSFileInfo> GetFileByIdAsync(ObjectId id)
+        {
+            var filter = Builders<GridFSFileInfo>.Filter.Eq("_id", id);
+            return await _bucket.Find(filter).FirstOrDefaultAsync();
+        }
+
+        /// <summary>
         /// 上传文件
         /// </summary>
-        public async Task<ObjectId> UploadFile(string fileName, byte[] source)
+        public async Task<ObjectId> UploadFileAsync(string fileName, byte[] source)
         {
             var id = await _bucket.UploadFromBytesAsync(fileName, source);
             return id;
@@ -76,7 +103,7 @@ namespace Convience.MongoDB
         /// <summary>
         /// 上传文件
         /// </summary>
-        public async Task<ObjectId> UploadFile(string fileName, Stream source)
+        public async Task<ObjectId> UploadFileAsync(string fileName, Stream source)
         {
             var id = await _bucket.UploadFromStreamAsync(fileName, source);
             return id;
@@ -85,7 +112,7 @@ namespace Convience.MongoDB
         /// <summary>
         /// 删除文件
         /// </summary>
-        public async Task DeleteFile(string id)
+        public async Task DeleteFileAsync(string id)
         {
             await _bucket.DeleteAsync(new ObjectId(id));
         }
@@ -93,7 +120,7 @@ namespace Convience.MongoDB
         /// <summary>
         /// 重命名文件
         /// </summary>
-        public async Task RenameFile(string id, string newFilename)
+        public async Task RenameFileAsync(string id, string newFilename)
         {
             await _bucket.RenameAsync(new ObjectId(id), newFilename);
         }

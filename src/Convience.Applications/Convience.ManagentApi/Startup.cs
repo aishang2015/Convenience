@@ -3,6 +3,7 @@ using Convience.Easycaching;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
 using Convience.Jwtauthentication;
@@ -45,7 +46,8 @@ namespace Convience.ManagentApi
                 .AddServices()
                 .AddAutoMapper()
                 .AddHangFire(Configuration)
-                .AddMemoryCache();
+                .AddMemoryCache()
+                .AddMongoDBFileManage(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,6 +131,12 @@ namespace Convience.ManagentApi
         public static IServiceCollection AddHangFire(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddPostgreSQLHangFire(configuration.GetConnectionString("PostgreSQL"));
+            return services;
+        }
+
+        public static IServiceCollection AddMongoDBFileManage(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMongoDBFileStore(configuration.GetSection("MongoDb"));
             return services;
         }
     }
