@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Convience.Model.Models.ContentManage
 {
@@ -7,6 +8,6 @@ namespace Convience.Model.Models.ContentManage
         public string CurrentDirectory { get; set; }
 
         // 上传文件
-        public IFormFile File { get; set; }
+        public IEnumerable<IFormFile> Files { get; set; }
     }
 }

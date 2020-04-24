@@ -6,7 +6,7 @@
 
         public string Directory { get; set; }
 
-        public string Path => Directory.Trim('/') + '/' + FileName;
+        public string Path => Directory != null ? Directory.Trim('/') : string.Empty + '/' + FileName;
 
         public bool IsDirectory => string.IsNullOrWhiteSpace(FileName);
     }

@@ -62,6 +62,13 @@
                                 <i nz-icon [nzType]="'apartment'"></i>部门管理</a></li>
                     </ul>
                 </li>
+                <li nz-submenu nzIcon="book" nzTitle="内容管理" *canOperate="'contentmanage'">
+                    <ul>
+                        <li nz-menu-item nzMatchRouter *canOperate="'fileManage'">
+                            <a [routerLink]="[ '/content/file' ]" (click)="setBreadcrumb('内容管理','文件管理')">
+                                <i nz-icon [nzType]="'file'"></i>文件管理</a></li>
+                    </ul>
+                </li>
                 <li nz-submenu nzIcon="deployment-unit" nzTitle="SAAS管理" *canOperate="'saasmanage'">
                     <ul>
                         <li nz-menu-item nzMatchRouter *canOperate="'tenantManage'">

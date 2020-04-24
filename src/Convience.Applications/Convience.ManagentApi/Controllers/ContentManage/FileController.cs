@@ -18,9 +18,8 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFile(FileUploadModel fileUploadModel)
+        public async Task<IActionResult> UploadFile([FromForm]FileUploadModel fileUploadModel)
         {
-            const formData = new FormData();
             var result = await _fileManageService.UploadAsync(fileUploadModel);
             if (!string.IsNullOrEmpty(result))
             {
@@ -50,8 +49,8 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         [HttpGet]
         public async Task<IActionResult> DownloadFile([FromQuery]FileViewModel viewModel)
         {
-            var result = await _fileManageService.DownloadAsync(viewModel);
-            return Ok(result);
+            var stream = await _fileManageService.DownloadAsync(viewModel);
+            return File(stream, "application/octet-stream", viewModel.FileName);
         }
     }
 }

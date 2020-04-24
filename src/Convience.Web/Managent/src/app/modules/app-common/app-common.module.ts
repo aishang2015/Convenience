@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { NzSelectModule, NzFormModule, NzCardModule, NzRadioModule, NzTableModule, NzTagModule, NzPaginationModule, NzInputModule, NzTreeModule, NzAvatarModule, NzTreeSelectModule, NzButtonModule, NzIconModule, NzModalModule, NzSwitchModule } from 'ng-zorro-antd';
+import { NzSelectModule, NzFormModule, NzCardModule, NzRadioModule, NzTableModule, NzTagModule, NzPaginationModule, NzInputModule, NzTreeModule, NzAvatarModule, NzTreeSelectModule, NzButtonModule, NzIconModule, NzModalModule, NzSwitchModule, NzBreadCrumbModule } from 'ng-zorro-antd';
 import { CommonModule } from '@angular/common';
 import { GenderPipe } from './pipes/gender.pipe';
 import { AvatarSelectComponent } from './components/avatar-select/avatar-select.component';
@@ -43,6 +43,7 @@ import { DbTypePipe } from './pipes/db-type.pipe';
     NzIconModule,
     NzModalModule,
     NzSwitchModule,
+    NzBreadCrumbModule,
 
     // 管道
     GenderPipe,

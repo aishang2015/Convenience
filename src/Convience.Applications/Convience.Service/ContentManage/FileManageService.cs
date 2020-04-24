@@ -63,15 +63,22 @@ namespace Convience.Service.ContentManage
 
         public async Task<string> UploadAsync(FileUploadModel viewModel)
         {
-            var path = viewModel.CurrentDirectory.TrimEnd('/') + '/' + viewModel.File.FileName;
-            var info = _fileStore.GetFileInfoAsync(path);
-            if (info != null)
+            foreach (var file in viewModel.Files)
             {
-                return "文件名冲突！";
+                var path = viewModel.CurrentDirectory?.TrimEnd('/') + '/' + file.FileName;
+                var info = await _fileStore.GetFileInfoAsync(path);
+                if (info != null)
+                {
+                    return "文件名冲突！";
+                }
+                var stream = file.OpenReadStream();
+                var result = await _fileStore.CreateFileFromStreamAsync(path, stream);
+                if (string.IsNullOrEmpty(result))
+                {
+                    return "文件上传失败！";
+                }
             }
-            var stream = viewModel.File.OpenReadStream();
-            var result = await _fileStore.CreateFileFromStreamAsync(path, stream);
-            return string.IsNullOrEmpty(result) ? "文件上传失败！" : string.Empty;
+            return string.Empty;
         }
 
         private async Task<bool> DeleteFileOrDirectory(FileViewModel viewModel)

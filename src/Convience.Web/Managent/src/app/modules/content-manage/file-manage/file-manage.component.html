@@ -1,0 +1,30 @@
+<nz-card [nzSize]="'small'">
+  <button nz-button class="mb-5 mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新文件</button>
+  <button nz-button class="mb-5" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
+</nz-card>
+<nz-card [nzSize]="'small'" class="fullwindow">
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <i nz-icon nzType="home"></i>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngFor="let item of folderList">{{item}}</nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <app-file-icon *ngFor="let fileInfo of fileInfoList" [file]="fileInfo" (dbClick)="dbc($event)"
+    (deleteClick)="delete($event)" (downloadClick)="download($event)"></app-file-icon>
+</nz-card>
+
+
+<ng-template #uploadTitleTpl>
+  <span>上传文件</span>
+</ng-template>
+<ng-template #uploadContentTpl>
+  <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+    <button nz-button><i nz-icon nzType="upload"></i>选择上传文件</button>
+  </nz-upload>
+</ng-template>
+<ng-template #uploadFooterTpl>
+  <button nz-button [nzType]="'primary'" [nzLoading]="uploading" (click)="handleUpload()"
+    [disabled]="fileList.length == 0" style="margin-top: 16px">
+    {{ uploading ? '上传中...' : '开始上传' }}
+  </button>
+</ng-template>

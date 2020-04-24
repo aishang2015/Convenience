@@ -59,9 +59,9 @@ namespace Convience.Filestorage.MongoDB
             return path;
         }
 
-        public async Task<IEnumerable<IFileStoreEntry>> GetDirectoryContentAsync(string path = null, bool includeSubDirectories = false)
+        public async Task<IEnumerable<IFileStoreEntry>> GetDirectoryContentAsync(string path = "", bool includeSubDirectories = false)
         {
-            path = path.TrimEnd('/');
+            path = path != null ? path.TrimEnd('/') : "";
             var filter = Builders<MongoDBFileStoreEntry>.Filter.Where(e => e.DirectoryPath == path);
             var entityList = await _mongoRepository.GetAsync(filter);
             return entityList;
@@ -184,6 +184,7 @@ namespace Convience.Filestorage.MongoDB
             try
             {
                 await _mongoRepository.DeleteFileAsync(fileEntity.FileStoreId);
+                await _mongoRepository.DeleteAsync<MongoDBFileStoreEntry>(fileEntity._id.ToString());
                 return true;
             }
             catch (Exception e)

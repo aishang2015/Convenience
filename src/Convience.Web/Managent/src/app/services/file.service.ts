@@ -12,10 +12,12 @@ export class FileService {
     private uriConstant: UriConstant) { }
 
 
-  upload(directory, file) {
+  upload(directory, fileList) {
     const formData = new FormData();
-    formData.append('currentDirectory', directory);
-    formData.append('file', file);
+    formData.append('currentDirectory', '');
+    fileList.forEach((file: any) => {
+      formData.append('files', file);
+    });
     return this.httpClient.post(this.uriConstant.FileUri, formData);
   }
 
@@ -31,6 +33,6 @@ export class FileService {
 
   download(fileName, directory) {
     let uri = `${this.uriConstant.FileUri}?fileName=${fileName}&&directory=${directory}`;
-    return this.httpClient.get(uri);
+    return this.httpClient.get(uri, { responseType: "blob", });
   }
 }
