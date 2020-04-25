@@ -14,7 +14,7 @@ export class FileService {
 
   upload(directory, fileList) {
     const formData = new FormData();
-    formData.append('currentDirectory', '');
+    formData.append('currentDirectory', directory);
     fileList.forEach((file: any) => {
       formData.append('files', file);
     });

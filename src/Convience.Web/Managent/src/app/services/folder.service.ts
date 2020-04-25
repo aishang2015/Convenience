@@ -11,12 +11,12 @@ export class FolderService {
     private uriConstant: UriConstant) { }
 
 
-  addFolder(directory: string) {
-    return this.httpClient.post(this.uriConstant.FolderUri, { directory: directory });
+  addFolder(directory: string, folderName: string) {
+    return this.httpClient.post(this.uriConstant.FolderUri, { directory: directory, fileName: folderName });
   }
 
-  deleteFolder(directory: string) {
-    return this.httpClient.delete(`${this.uriConstant.FolderUri}?directory=${directory}`)
+  deleteFolder(directory: string, folderName: string) {
+    return this.httpClient.delete(`${this.uriConstant.FolderUri}?directory=${directory}&&fileName=${folderName}`)
   }
 
 }

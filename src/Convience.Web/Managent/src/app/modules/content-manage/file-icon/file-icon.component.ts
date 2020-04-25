@@ -13,7 +13,7 @@ export class FileIconComponent implements OnInit {
   file: FileInfo = new FileInfo();
 
   @Output()
-  dbClick = new EventEmitter<string>();
+  dbClick = new EventEmitter<FileInfo>();
 
   @Output()
   deleteClick = new EventEmitter<FileInfo>();
@@ -41,7 +41,7 @@ export class FileIconComponent implements OnInit {
         this.isFirstClick = true;
       }, clickSpan);
     } else {
-      this.dbClick.emit(this.file.directory);
+      this.dbClick.emit(this.file);
       this.isFirstClick = true;
     }
   }

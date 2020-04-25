@@ -20,7 +20,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         [HttpPost]
         public async Task<IActionResult> MakeDirectory([FromBody]FileViewModel vm)
         {
-            var result = await _fileManageService.MakeDirectoryAsync(vm.Directory);
+            var result = await _fileManageService.MakeDirectoryAsync(vm);
             if (!string.IsNullOrEmpty(result))
             {
                 return this.BadRequestResult(result);
@@ -29,13 +29,9 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteDirectory([FromQuery]string directory)
+        public async Task<IActionResult> DeleteDirectory([FromQuery]FileViewModel vm)
         {
-            var isSuccess = await _fileManageService.DeleteDirectoryAsync(new FileViewModel
-            {
-                FileName = string.Empty,
-                Directory = directory
-            });
+            var isSuccess = await _fileManageService.DeleteDirectoryAsync(vm);
             if (!isSuccess)
             {
                 return this.BadRequestResult("删除失败！");

@@ -19,22 +19,28 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> DeleteFileAsync(FileViewModel viewModel)
         {
-            return await DeleteFileOrDirectory(viewModel);
+            return await _fileStore.TryDeleteFileAsync(viewModel.Path);
         }
 
         public async Task<bool> DeleteDirectoryAsync(FileViewModel viewModel)
         {
-            return await DeleteFileOrDirectory(viewModel);
+            return await _fileStore.TryDeleteDirectoryAsync(viewModel.Path);
         }
 
-        public async Task<string> MakeDirectoryAsync(string directory)
+        public async Task<string> MakeDirectoryAsync(FileViewModel viewModel)
         {
-            var info = await _fileStore.GetFileInfoAsync(directory);
+            var folderName = viewModel.FileName.Trim();
+            if (string.IsNullOrEmpty(folderName))
+            {
+                return "文件夹名不能为空！";
+            }
+            var path = viewModel.Directory.TrimEnd('/') + '/' + viewModel.FileName;
+            var info = await _fileStore.GetFileInfoAsync(path);
             if (info != null)
             {
                 return "目录已存在！";
             }
-            var isSuccess = await _fileStore.TryCreateDirectoryAsync(directory);
+            var isSuccess = await _fileStore.TryCreateDirectoryAsync(path);
             return isSuccess ? string.Empty : "目录创建失败！";
         }
 
@@ -47,7 +53,7 @@ namespace Convience.Service.ContentManage
         {
             var contents = await _fileStore.GetDirectoryContentAsync(query.Directory);
             var result = from content in contents
-                         orderby content.Path
+                         orderby content.IsDirectory descending
                          select new FileResult
                          {
                              FileName = content.Name,
@@ -81,16 +87,5 @@ namespace Convience.Service.ContentManage
             return string.Empty;
         }
 
-        private async Task<bool> DeleteFileOrDirectory(FileViewModel viewModel)
-        {
-            if (viewModel.IsDirectory)
-            {
-                return await _fileStore.TryDeleteDirectoryAsync(viewModel.Path);
-            }
-            else
-            {
-                return await _fileStore.TryDeleteFileAsync(viewModel.Path);
-            }
-        }
     }
 }

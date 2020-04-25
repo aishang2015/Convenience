@@ -1,13 +1,16 @@
 <nz-card [nzSize]="'small'">
   <button nz-button class="mb-5 mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新文件</button>
-  <button nz-button class="mb-5" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
+  <button nz-button class="mb-5 mr-10" (click)="createFolder()"><i nz-icon nzType="folder"></i>创建文件夹</button>
+  <button nz-button class="mb-5 mr-10" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
 </nz-card>
 <nz-card [nzSize]="'small'" class="fullwindow">
-  <nz-breadcrumb>
+  <nz-breadcrumb class="ml-10">
     <nz-breadcrumb-item>
-      <i nz-icon nzType="home"></i>
+      <a (click)="navgiateFolder(-1)"><i nz-icon nzType="home"></i></a>
     </nz-breadcrumb-item>
-    <nz-breadcrumb-item *ngFor="let item of folderList">{{item}}</nz-breadcrumb-item>
+    <nz-breadcrumb-item *ngFor="let item of folderList;let i = index">
+      <a (click)="navgiateFolder(i)">{{item}}</a>
+    </nz-breadcrumb-item>
   </nz-breadcrumb>
   <app-file-icon *ngFor="let fileInfo of fileInfoList" [file]="fileInfo" (dbClick)="dbc($event)"
     (deleteClick)="delete($event)" (downloadClick)="download($event)"></app-file-icon>
@@ -27,4 +30,35 @@
     [disabled]="fileList.length == 0" style="margin-top: 16px">
     {{ uploading ? '上传中...' : '开始上传' }}
   </button>
+</ng-template>
+
+<ng-template #folderContentTpl>
+  <form nz-form [formGroup]="folderForm" (ngSubmit)="submit()">
+    <nz-form-item>
+      <nz-form-label nzRequired="true" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_folderName'">文件夹名称</nz-form-label>
+      <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
+        <input [attr.id]="'edit_folderName'" formControlName="folderName" nz-input autocomplete="off"
+          placeholder="文件夹名称" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" class="mr-10">提交</button>
+          <button nz-button type="button" (click)="cancel()">取消</button>
+        </nz-form-control>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</ng-template>
+<ng-template #errorTpl let-control>
+  <ng-container *ngIf="control.hasError('required')||control.hasError('notEmpty')">
+    请输入文件夹名称！
+  </ng-container>
+  <ng-container *ngIf="control.hasError('maxlength')">
+    文件夹名称长度不能超过15！
+  </ng-container>
+  <ng-container *ngIf="control.hasError('pattern')">
+    文件夹名称包含非法字符！
+  </ng-container>
 </ng-template>

@@ -61,7 +61,6 @@ namespace Convience.Filestorage.MongoDB
 
         public async Task<IEnumerable<IFileStoreEntry>> GetDirectoryContentAsync(string path = "", bool includeSubDirectories = false)
         {
-            path = path != null ? path.TrimEnd('/') : "";
             var filter = Builders<MongoDBFileStoreEntry>.Filter.Where(e => e.DirectoryPath == path);
             var entityList = await _mongoRepository.GetAsync(filter);
             return entityList;
@@ -141,10 +140,13 @@ namespace Convience.Filestorage.MongoDB
             var fileEntity = await GetFileEntityByPath(path);
             if (fileEntity == null)
             {
+                var directoryPathArray = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+                var newArray = directoryPathArray.Take(directoryPathArray.Length - 1);
                 var fileinfo = new MongoDBFileStoreEntry
                 {
                     Path = path.TrimEnd('/'),
-                    DirectoryPath = path.TrimEnd('/'),
+                    DirectoryPath = '/' + string.Join('/', newArray).TrimEnd('/'),
+                    Name = directoryPathArray.Last(),
                     LastModifiedUtc = DateTime.Now,
                     IsDirectory = true
                 };

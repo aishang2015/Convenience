@@ -15,7 +15,7 @@ namespace Convience.Service.ContentManage
 
         public Task<Stream> DownloadAsync(FileViewModel viewModel);
 
-        public Task<string> MakeDirectoryAsync(string directory);
+        public Task<string> MakeDirectoryAsync(FileViewModel viewModel);
 
         public Task<bool> DeleteDirectoryAsync(FileViewModel viewModel);
 
