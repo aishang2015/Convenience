@@ -7,12 +7,14 @@ import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { FileIconComponent } from './file-icon/file-icon.component';
 import { NzUploadModule } from 'ng-zorro-antd';
 import { ColumnManageComponent } from './column-manage/column-manage.component';
+import { ArticleManageComponent } from './article-manage/article-manage.component';
 
 @NgModule({
   declarations: [
     FileManageComponent,
     FileIconComponent,
-    ColumnManageComponent
+    ColumnManageComponent,
+    ArticleManageComponent
   ],
   imports: [
     CommonModule,
@@ -21,6 +23,7 @@ import { ColumnManageComponent } from './column-manage/column-manage.component';
     RouterModule.forChild([
       { path: 'file', component: FileManageComponent, canActivate: [LoginGuard] },
       { path: 'column', component: ColumnManageComponent, canActivate: [LoginGuard] },
+      { path: 'article', component: ArticleManageComponent, canActivate: [LoginGuard] },
 
     ])
   ]

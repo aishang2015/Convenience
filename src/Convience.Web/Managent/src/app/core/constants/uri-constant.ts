@@ -47,4 +47,6 @@ export class UriConstant {
     get FolderUri(): string { return `${this.BaseUri}/folder` };
 
     get ColumnUri(): string { return `${this.BaseUri}/column` };
+
+    get ArticleUri(): string { return `${this.BaseUri}/article` };
 }

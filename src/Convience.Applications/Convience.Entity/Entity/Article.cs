@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
+using System;
 using System.ComponentModel;
 
 namespace Convience.Entity.Entity
@@ -18,20 +19,20 @@ namespace Convience.Entity.Entity
         [Description("栏目ID")]
         public int? ColumnId { get; set; }
 
-        [Description("作者")]
-        public string Author { get; set; }
-
         [Description("出处")]
         public string Source { get; set; }
 
         [Description("排序")]
         public int Sort { get; set; }
 
-        [Description("关键字")]
+        [Description("标签")]
         public string Tags { get; set; }
 
         [Description("内容")]
         public string Content { get; set; }
+
+        [Description("内容")]
+        public DateTime CreateTime { get; set; }
 
     }
 }
