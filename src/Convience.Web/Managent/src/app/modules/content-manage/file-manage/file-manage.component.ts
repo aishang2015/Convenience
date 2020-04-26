@@ -168,4 +168,12 @@ export class FileManageComponent implements OnInit {
     }
     this.refresh();
   }
+
+  back() {
+    if (this.folderList.length >= 1) {
+      this.folderList = this.folderList.slice(0, this.folderList.length - 1);
+      this.currentDirectory = '/' + this.folderList.join('/');
+      this.refresh();
+    }
+  }
 }

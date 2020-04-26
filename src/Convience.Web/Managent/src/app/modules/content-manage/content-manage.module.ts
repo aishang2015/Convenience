@@ -6,18 +6,22 @@ import { RouterModule } from '@angular/router';
 import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { FileIconComponent } from './file-icon/file-icon.component';
 import { NzUploadModule } from 'ng-zorro-antd';
+import { ColumnManageComponent } from './column-manage/column-manage.component';
 
 @NgModule({
   declarations: [
     FileManageComponent,
-    FileIconComponent
+    FileIconComponent,
+    ColumnManageComponent
   ],
   imports: [
     CommonModule,
     AppCommonModule,
     NzUploadModule,
     RouterModule.forChild([
-      { path: 'file', component: FileManageComponent, canActivate: [LoginGuard] }
+      { path: 'file', component: FileManageComponent, canActivate: [LoginGuard] },
+      { path: 'column', component: ColumnManageComponent, canActivate: [LoginGuard] },
+
     ])
   ]
 })

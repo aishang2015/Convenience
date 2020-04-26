@@ -1,0 +1,91 @@
+<div class="content">
+    <div class="tree">
+        <nz-card [nzSize]="'small'">
+            <button nz-button class="mb-10" (click)="initNodes()"><i nz-icon nzType="sync"></i>刷新数据</button>
+            <nz-tree #nzTreeComponent [nzData]="nodes" nzShowIcon="true" (nzClick)="treeClick($event)"
+                [nzExpandedIcon]="mutiExpandedIconTpl">
+                <ng-template #mutiExpandedIconTpl let-node>
+                    <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'caret-down' : 'caret-right'"
+                        style="color: lightgray;"></i>
+                    <i *ngIf="node.origin.isLeaf" nz-icon nzType="file" class="ant-tree-switcher-line-icon"></i>
+                </ng-template>
+            </nz-tree>
+        </nz-card>
+    </div>
+    <div class="columnTable">
+        <nz-card [nzSize]="'small'">
+            <div>
+                <button nz-button class="mr-10" (click)="add()" *canOperate="'addColumnBtn'"><i nz-icon
+                        nzType="plus"></i>添加内容</button>
+            </div>
+            <div class="mt-10">
+                <nz-table #dataTable nzSize="middle" [nzData]="displayData" nzShowPagination="false"
+                    nzFrontPagination="false" nzBordered="true">
+                    <thead>
+                        <tr>
+                            <th nzAlign="center" nzWidth="60px">#</th>
+                            <th nzAlign="center" nzWidth="120px">上级菜单</th>
+                            <th nzAlign="center">名称</th>
+                            <th nzAlign="center" nzWidth="60px">排序</th>
+                            <th nzAlign="center" nzWidth="120px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataTable.data;let i = index">
+                            <td nzAlign="center">{{ i + 1}}</td>
+                            <td nzAlign="center">{{ getUpperColumnName(data.upId) }}</td>
+                            <td nzAlign="center">{{ data.name }}</td>
+                            <td nzAlign="center">{{ data.sort }}</td>
+                            <td nzAlign="center">
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'updateColumnBtn'"
+                                    (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteColumnBtn'"
+                                    (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </nz-card>
+    </div>
+</div>
+
+<ng-template #contentTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">上级栏目</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input formControlName="upColumn" /></nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_columnName'">栏目名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="columnNameErrorTpl">
+                <input [attr.id]="'edit_columnName'" formControlName="name" nz-input placeholder="栏目名称"
+                    autocomplete="off" />
+            </nz-form-control>
+            <ng-template #columnNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入栏目名称！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    栏目名称长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入排序！">
+                <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
