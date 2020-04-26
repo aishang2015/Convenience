@@ -15,10 +15,9 @@
         <nz-form-item class="mb-5">
             <nz-form-label [nzFor]="'columnId'">栏目</nz-form-label>
             <nz-form-control>
-                <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'columnId'"
-                    [formControlName]="'columnId'">
-                    <nz-option *ngFor="let column of columns" [nzValue]="column.id" [nzLabel]="column.name"></nz-option>
-                </nz-select>
+                <nz-tree-select style="width: 150px;" [nzNodes]="nodes" [formControlName]="'columnId'"
+                    nzPlaceHolder="栏目">
+                </nz-tree-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -58,6 +57,7 @@
                     <td nzAlign="center">{{ data.createTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td nzAlign="center">{{ data.sort }}</td>
                     <td nzAlign="center">
+                        <a [routerLink]="[ '/content/article/edit', data.id ]">编辑</a>
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'updateArticleBtn'"
                             (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteArticleBtn'"

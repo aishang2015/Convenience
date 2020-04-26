@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
+import { NzMessageService, NzModalService, NzModalRef, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { Article } from '../model/article';
 import { Column } from '../model/column';
 import { ColumnService } from 'src/app/services/column.service';
 import { ArticleService } from 'src/app/services/article.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-article-manage',
@@ -15,18 +16,14 @@ export class ArticleManageComponent implements OnInit {
 
   data: Article[] = [];
 
-  columns: Column[] = [];
+  nodes: NzTreeNodeOptions[] = [];
 
   size: number = 10;
   page: number = 1;
   total: number = 0;
 
-  currentId?: number = null;
-
   @ViewChild('contentTpl', { static: true })
   contentTpl;
-
-  editForm: FormGroup = new FormGroup({});
 
   searchForm: FormGroup = new FormGroup({});
 
@@ -37,7 +34,8 @@ export class ArticleManageComponent implements OnInit {
     private modalService: NzModalService,
     private formBuilder: FormBuilder,
     private columnService: ColumnService,
-    private articleService: ArticleService) { }
+    private articleService: ArticleService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.searchForm = this.formBuilder.group({
@@ -45,22 +43,33 @@ export class ArticleManageComponent implements OnInit {
       tag: [],
       columnId: []
     });
+    this.initNodes();
     this.refresh();
   }
 
-  initColumns() {
-    this.columnService.getAll().subscribe((result: Column[]) => this.columns = result);
+  initNodes() {
+    let nodes: NzTreeNodeOptions[] = [];
+    this.columnService.getAll().subscribe((result: any) => {
+      this.makeNodes(null, nodes, result);
+      this.nodes = nodes;
+    });
+  }
+
+  makeNodes(upId, nodes, columns: Column[]) {
+    var cs = columns.filter(column => column.upId == upId);
+    cs.forEach(column => {
+      let data = { title: column.name, key: column.id, icon: 'database', children: [] };
+      this.makeNodes(column.id, data.children, columns);
+      nodes.push(data);
+    });
   }
 
   add() {
-    this.currentId = null;
-    this.modal = this.modalService.create({
-      nzTitle: '',
-      nzContent: this.contentTpl,
-      nzFooter: null,
-      nzMaskClosable: false,
-    });
+    this.router.navigate(['/content/article/edit', { id: '' }]);
+  }
 
+  edit(id) {
+    this.router.navigate(['/content/article/edit', { id: id }]);
   }
 
   refresh() {
@@ -73,31 +82,12 @@ export class ArticleManageComponent implements OnInit {
       });
   }
 
-  edit(id) {
-    this.currentId = id;
-
-  }
-
   remove(id) {
     this.modalService.confirm({
       nzTitle: '是否删除该?',
       nzContent: null,
       nzOnOk: () => { },
     });
-  }
-
-  submitEdit() {
-    for (const i in this.editForm.controls) {
-      this.editForm.controls[i].markAsDirty();
-      this.editForm.controls[i].updateValueAndValidity();
-    }
-    if (this.editForm.valid) {
-      if (this.currentId) {
-
-      } else {
-
-      }
-    }
   }
 
   submitSearch() {

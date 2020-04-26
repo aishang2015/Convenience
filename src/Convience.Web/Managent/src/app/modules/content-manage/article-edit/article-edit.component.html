@@ -1,0 +1,72 @@
+<nz-card [nzSize]="'small'">
+    <a nz-button nzType="link" (click)="back()">
+        <i nz-icon nzType="arrow-left" nzTheme="outline"></i>
+    </a>
+</nz-card>
+<nz-card [nzSize]="'small'" class="fullwindow">
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzFor]="'edit_title'">文章标题</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24" [nzErrorTip]="titleErrorTpl">
+                <input [attr.id]="'edit_title'" formControlName="title" nz-input placeholder="文章标题"
+                    autocomplete="off" />
+            </nz-form-control>
+            <ng-template #titleErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入用户名！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    角色名长度不能超过50！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_subTitle'">副标题</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="副标题长度不能超过200！">
+                <input [attr.id]="'edit_subTitle'" formControlName="subTitle" nz-input placeholder="副标题"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_columnId'">栏目</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24">
+                <nz-tree-select [nzNodes]="nodes" [formControlName]="'columnId'" nzPlaceHolder="栏目">
+                </nz-tree-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_source'">来源</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24" [nzErrorTip]="'来源长度不能超过200！'">
+                <input [attr.id]="'edit_source'" formControlName="source" nz-input placeholder="来源"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24">
+                <input [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序" autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_tags'">标签</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24" [nzErrorTip]="'标签长度不能超过200！'">
+                <input [attr.id]="'edit_tags'" formControlName="tags" nz-input placeholder="标签" autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'edit_content'">内容</nz-form-label>
+            <nz-form-control [nzSm]="10" [nzXs]="24">
+                <input [attr.id]="'edit_content'" formControlName="content" nz-input placeholder="内容"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <label style="width: 100px;"></label>
+            <nz-form-control [nzSpan]="10">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
+
+</nz-card>
