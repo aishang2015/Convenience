@@ -49,4 +49,6 @@ export class UriConstant {
     get ColumnUri(): string { return `${this.BaseUri}/column` };
 
     get ArticleUri(): string { return `${this.BaseUri}/article` };
+
+    get SwaggerUri(): string { return `${this.BaseUri}/swagger/index.html` };
 }

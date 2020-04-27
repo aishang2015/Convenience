@@ -82,6 +82,16 @@
                                 <i nz-icon [nzType]="'user'"></i>租户管理</a></li>
                     </ul>
                 </li>
+                <li nz-submenu nzIcon="tool" nzTitle="系统工具" *canOperate="'systemtool'">
+                    <ul>
+                        <li nz-menu-item nzMatchRouter *canOperate="'swagger'">
+                            <a [routerLink]="[ '/tool/swagger' ]" (click)="setBreadcrumb('系统工具','Swagger')">
+                                <i nz-icon [nzType]="'api'"></i>Swagger</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'hangfire'">
+                            <a [routerLink]="[ '/tool/hangfire' ]" (click)="setBreadcrumb('系统工具','Hangfire')">
+                                <i nz-icon [nzType]="'fund-view'"></i>Hangfire</a></li>
+                    </ul>
+                </li>
             </ul>
         </nz-sider>
         <nz-layout class="inner-layout">

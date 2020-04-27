@@ -9,7 +9,8 @@ const routes: Routes = [
   { path: "system", loadChildren: () => import("./modules/system-manage/system-manage.module").then(m => m.SystemManageModule) },
   { path: "group", loadChildren: () => import("./modules/group-manage/group-manage.module").then(m => m.GroupManageModule) },
   { path: "content", loadChildren: () => import("./modules/content-manage/content-manage.module").then(m => m.ContentManageModule) },
-  { path: "saas", loadChildren: () => import("./modules/saas-manage/saas-manage.module").then(m => m.SaasManageModule) }
+  { path: "saas", loadChildren: () => import("./modules/saas-manage/saas-manage.module").then(m => m.SaasManageModule) },
+  { path: "tool", loadChildren: () => import("./modules/system-tool/system-tool.module").then(m => m.SystemToolModule) }
 ];
 
 @NgModule({
