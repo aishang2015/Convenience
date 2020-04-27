@@ -4,7 +4,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ArticleService } from 'src/app/services/article.service';
 import { ColumnService } from 'src/app/services/column.service';
 import { Column } from '../model/column';
-import { NzTreeNodeOptions } from 'ng-zorro-antd';
+import { NzTreeNodeOptions, NzMessageService } from 'ng-zorro-antd';
+import { Article } from '../model/article';
 
 @Component({
   selector: 'app-article-edit',
@@ -21,14 +22,37 @@ export class ArticleEditComponent implements OnInit {
 
   nodes: NzTreeNodeOptions[] = [];
 
+  tinyConfig = {
+    height: 800,
+    language: 'zh_CN',
+    language_url: '../../assets/tinymce/langs/zh_CN.js',
+    plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap quickbars emoticons',
+    imagetools_cors_hosts: ['picsum.photos'],
+    menubar: 'file edit view insert format tools table help',
+    toolbar_mode: 'wrap',
+    toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+
+  };
+
   constructor(private route: ActivatedRoute,
     private router: Router,
     private articleService: ArticleService,
+    private messageService: NzMessageService,
     private columnService: ColumnService,
     private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    let id = this.route.snapshot.paramMap.get('id');
+
+    this.editForm = this.formBuilder.group({
+      title: [null, [Validators.required, Validators.maxLength(50)]],
+      subTitle: [null, [Validators.maxLength(200)]],
+      columnId: [null],
+      source: [null, [Validators.maxLength(200)]],
+      sort: [null, [Validators.required]],
+      tags: [null, [Validators.maxLength(200)]],
+      content: [null]
+    });
+    let id = this.route.snapshot.paramMap.get('id')?.trim();
     this.currentId = id ? Number(id) : null;
     if (this.currentId) {
       this.articleService.get(this.currentId).subscribe((result: any) => {
@@ -37,20 +61,10 @@ export class ArticleEditComponent implements OnInit {
           subTitle: [result['subTitle'], [Validators.maxLength(200)]],
           columnId: [result['columnId']],
           source: [result['source'], [Validators.maxLength(200)]],
-          sort: [result['sort']],
+          sort: [result['sort'], [Validators.required]],
           tags: [result['tags'], [Validators.maxLength(200)]],
           content: [result['content']]
         });
-      });
-    } else {
-      this.editForm = this.formBuilder.group({
-        title: [null, [Validators.required, Validators.maxLength(50)]],
-        subTitle: [null, [Validators.maxLength(200)]],
-        columnId: [null],
-        source: [null, [Validators.maxLength(200)]],
-        sort: [null],
-        tags: [null, [Validators.maxLength(200)]],
-        content: [null]
       });
     }
     this.initNodes();
@@ -62,10 +76,26 @@ export class ArticleEditComponent implements OnInit {
       this.editForm.controls[i].updateValueAndValidity();
     }
     if (this.editForm.valid) {
+      let article = new Article();
+      article.title = this.editForm.value['title'];
+      article.subTitle = this.editForm.value['subTitle'];
+      article.columnId = this.editForm.value['columnId'];
+      article.columnName = this.editForm.value['columnName'];
+      article.source = this.editForm.value['source'];
+      article.sort = this.editForm.value['sort'];
+      article.tags = this.editForm.value['tags'];
+      article.content = this.editForm.value['content'];
       if (this.currentId) {
-
+        article.id = this.currentId;
+        this.articleService.update(article).subscribe(result => {
+          this.messageService.success('文章更新成功！');
+          this.router.navigate(['/content/article']);
+        });
       } else {
-
+        this.articleService.add(article).subscribe(result => {
+          this.messageService.success('文章创建成功！');
+          this.router.navigate(['/content/article']);
+        });
       }
     }
   }

@@ -53,11 +53,13 @@
                     <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                     <td nzAlign="center">{{ data.columnName }}</td>
                     <td nzAlign="center">{{ data.title }}</td>
-                    <td nzAlign="center">{{ data.tags }}</td>
+                    <td nzAlign="center">
+                        <nz-tag style="margin-right: 5px;margin-top: 5px;" nzColor="success"
+                            *ngFor="let item of getTagList(data.tags)">{{item}}</nz-tag>
+                    </td>
                     <td nzAlign="center">{{ data.createTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                     <td nzAlign="center">{{ data.sort }}</td>
                     <td nzAlign="center">
-                        <a [routerLink]="[ '/content/article/edit', data.id ]">编辑</a>
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'updateArticleBtn'"
                             (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteArticleBtn'"

@@ -84,13 +84,19 @@ export class ArticleManageComponent implements OnInit {
 
   remove(id) {
     this.modalService.confirm({
-      nzTitle: '是否删除该?',
+      nzTitle: '是否删除该文章?',
       nzContent: null,
-      nzOnOk: () => { },
+      nzOnOk: () => {
+        this.articleService.delete(id).subscribe(result => {
+          this.messageService.success("删除成功！");
+          this.refresh();
+        })
+      },
     });
   }
 
   submitSearch() {
+    this.refresh();
   }
 
   cancel() {
@@ -104,6 +110,10 @@ export class ArticleManageComponent implements OnInit {
   sizeChange() {
     this.page = 1;
     this.refresh();
+  }
+
+  getTagList(tags: string) {
+    return tags?.split(',').filter(e => e);
   }
 
 }

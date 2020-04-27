@@ -34,7 +34,10 @@ namespace Convience.Model
             CreateMap<Position, PositionResult>();
 
             CreateMap<ColumnViewModel, Column>();
-            CreateMap<Position, ColumnResult>();
+            CreateMap<Column, ColumnResult>();
+
+            CreateMap<ArticleViewModel, Article>();
+            CreateMap<Article, ArticleResult>();
         }
     }
 }

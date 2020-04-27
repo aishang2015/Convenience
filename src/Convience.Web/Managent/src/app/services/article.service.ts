@@ -11,7 +11,7 @@ export class ArticleService {
     private uriConstant: UriConstant) { }
 
   get(id) {
-    return this.httpClient.get(`${this.uriConstant.ArticleUri}/id=${id}`);
+    return this.httpClient.get(`${this.uriConstant.ArticleUri}?id=${id}`);
   }
 
   getList(page, size, title, tag, columnId) {

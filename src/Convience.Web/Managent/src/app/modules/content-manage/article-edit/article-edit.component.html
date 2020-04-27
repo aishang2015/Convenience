@@ -23,7 +23,7 @@
         <nz-form-item>
             <nz-form-label [nzFor]="'edit_subTitle'">副标题</nz-form-label>
             <nz-form-control [nzSm]="10" [nzXs]="24" nzErrorTip="副标题长度不能超过200！">
-                <input [attr.id]="'edit_subTitle'" formControlName="subTitle" nz-input placeholder="副标题"
+                <input [attr.id]="'edit_subTitle'" [formControlName]="'subTitle'" nz-input placeholder="副标题"
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
@@ -43,8 +43,9 @@
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzFor]="'edit_sort'">排序</nz-form-label>
-            <nz-form-control [nzSm]="10" [nzXs]="24">
-                <input [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序" autocomplete="off" />
+            <nz-form-control [nzSm]="10" [nzXs]="24" [nzErrorTip]="'请输入排序！'">
+                <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -55,9 +56,8 @@
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzFor]="'edit_content'">内容</nz-form-label>
-            <nz-form-control [nzSm]="10" [nzXs]="24">
-                <input [attr.id]="'edit_content'" formControlName="content" nz-input placeholder="内容"
-                    autocomplete="off" />
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <editor formControlName="content" [init]="tinyConfig"></editor>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

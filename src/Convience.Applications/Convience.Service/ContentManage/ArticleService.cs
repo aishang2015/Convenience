@@ -38,6 +38,7 @@ namespace Convience.Service.ContentManage
             try
             {
                 var article = _mapper.Map<Article>(model);
+                article.CreateTime = DateTime.Now;
                 await _articleRepository.AddAsync(article);
                 await _unitOfWork.SaveAsync();
                 return true;
@@ -66,11 +67,12 @@ namespace Convience.Service.ContentManage
         {
             Expression<Func<Article, bool>> where = ExpressionExtension.TrueExpression<Article>()
                 .AndIfHaveValue(query.Title, a => a.Title.Contains(query.Title))
-                .AndIfHaveValue(query.Tag, u => u.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries).Contains(query.Tag))
+                .AndIfHaveValue(query.Tag, u => u.Tags.Contains(query.Tag))
                 .AndIfHaveValue(query.ColumnId?.ToString(), u => u.ColumnId == query.ColumnId);
             var articleQuery = from article in _articleRepository.Get().Where(@where)
                                join column in _columnRepository.Get() on article.ColumnId equals column.Id into columnInfo
                                from c in columnInfo.DefaultIfEmpty()
+                               orderby article.CreateTime descending
                                select new ArticleResult
                                {
                                    Id = article.Id,
@@ -85,7 +87,7 @@ namespace Convience.Service.ContentManage
                                    CreateTime = article.CreateTime
                                };
             var skip = query.Size * (query.Page - 1);
-            return (articleQuery.Skip(skip).Take(query.Page), articleQuery.Count());
+            return (articleQuery.Skip(skip).Take(query.Size), articleQuery.Count());
         }
 
         public async Task<ArticleResult> GetByIdAsync(int id)
