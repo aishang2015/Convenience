@@ -90,6 +90,8 @@
         </nz-form-item>
     </form>
     <div *ngIf="currentIndex==1">
+        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" style="height: 400px;">
+        </ngx-monaco-editor>
         <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="backToFirstStep()">返回</button>
         <button class="mt-10 mr-10" nz-button type="button" nzType="primary">确认,下一步</button>
     </div>

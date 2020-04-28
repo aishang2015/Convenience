@@ -3,8 +3,6 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { EntityControl } from '../model/entityControl';
 import { NzMessageService } from 'ng-zorro-antd';
 import { CodeService } from 'src/app/services/code.service';
-import * as monaco from "monaco-editor";
-
 @Component({
   selector: 'app-code-generator',
   templateUrl: './code-generator.component.html',
@@ -19,6 +17,10 @@ export class CodeGeneratorComponent implements OnInit {
   currentIndex = 0;
 
   code = '';
+  editorOptions = { theme: 'vs-dark', language: 'csharp' };
+
+  @ViewChild('editor', { static: true })
+  editor;
 
   constructor(private formBuilder: FormBuilder,
     private messageService: NzMessageService,
@@ -66,7 +68,6 @@ export class CodeGeneratorComponent implements OnInit {
         properties.push({ type: this.editForm.value[control.type], property: this.editForm.value[control.property] })
       });
       this.code = this.codeService.getBackClass(this.editForm.value['entityName'], this.editForm.value['databaseContext'], properties);
-      //monaco.editor.create(this.editor.nativeElement, { value: this.code, language: 'c#' });
     }
   }
 
