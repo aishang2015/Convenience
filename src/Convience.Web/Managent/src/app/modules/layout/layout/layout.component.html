@@ -84,12 +84,18 @@
                 </li>
                 <li nz-submenu nzIcon="tool" nzTitle="系统工具" *canOperate="'systemtool'">
                     <ul>
+                        <li nz-menu-item nzMatchRouter *canOperate="'code'">
+                            <a [routerLink]="[ '/tool/code' ]" (click)="setBreadcrumb('系统工具','代码生成')">
+                                <i nz-icon [nzType]="'fund-view'"></i>代码生成</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'swagger'">
                             <a [routerLink]="[ '/tool/swagger' ]" (click)="setBreadcrumb('系统工具','Swagger')">
                                 <i nz-icon [nzType]="'api'"></i>Swagger</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'hangfire'">
                             <a [routerLink]="[ '/tool/hangfire' ]" (click)="setBreadcrumb('系统工具','Hangfire')">
                                 <i nz-icon [nzType]="'fund-view'"></i>Hangfire</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'cap'">
+                            <a [routerLink]="[ '/tool/cap' ]" (click)="setBreadcrumb('系统工具','CAP')">
+                                <i nz-icon [nzType]="'fund-view'"></i>CAP</a></li>
                     </ul>
                 </li>
             </ul>

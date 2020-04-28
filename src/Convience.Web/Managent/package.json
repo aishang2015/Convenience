@@ -23,6 +23,7 @@
     "@antv/g2": "^4.0.3",
     "@auth0/angular-jwt": "^4.0.0",
     "@tinymce/tinymce-angular": "^3.5.0",
+    "monaco-editor": "^0.20.0",
     "ng-zorro-antd": "^9.0.1",
     "rxjs": "~6.5.4",
     "tinymce": "^5.2.2",

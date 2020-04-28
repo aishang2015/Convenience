@@ -1,0 +1,105 @@
+<nz-card nzSize="small">
+    <nz-steps [nzCurrent]="currentIndex">
+        <nz-step nzTitle="设定属性"></nz-step>
+        <nz-step nzTitle="编辑内容"></nz-step>
+        <nz-step nzTitle="完成下载"></nz-step>
+    </nz-steps>
+</nz-card>
+<nz-card nzSize="small" class="fullwindow">
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()" *ngIf="currentIndex==0">
+        <div nz-row [nzGutter]="24">
+            <div nz-col style="width: 300px;">
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'entity_name'">实体名称</nz-form-label>
+                    <nz-form-control [nzErrorTip]="errorTpl">
+                        <input [attr.id]="'entity_name'" formControlName="entityName" nz-input placeholder="实体名称"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col style="width: 300px;">
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'databasecontext'">数据库上下文</nz-form-label>
+                    <nz-form-control [nzErrorTip]="errorTpl">
+                        <input [attr.id]="'databasecontext'" formControlName="databaseContext" nz-input
+                            placeholder="数据库上下文" autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+        </div>
+        <div class="activeForm">
+            <div nz-row [nzGutter]="24" *ngFor="let control of controls">
+                <div nz-col style="width: 200px;">
+                    <nz-form-item>
+                        <nz-form-label [nzFor]="control.property">属性名</nz-form-label>
+                        <nz-form-control [nzErrorTip]="errorTpl">
+                            <input [attr.id]="control.property" [formControlName]="control.property" nz-input
+                                placeholder="属性名" autocomplete="off" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col style="width: 200px;">
+                    <nz-form-item>
+                        <nz-form-label [nzFor]="control.type">属性类型</nz-form-label>
+                        <nz-form-control [nzErrorTip]="errorTpl">
+                            <nz-select [attr.id]="control.type" [formControlName]="control.type" nzAllowClear="true"
+                                nzPlaceHolder="属性类型">
+                                <nz-option nzValue="guid" nzLabel="guid"></nz-option>
+                                <nz-option nzValue="int" nzLabel="int"></nz-option>
+                                <nz-option nzValue="string" nzLabel="string"></nz-option>
+                                <nz-option nzValue="bool" nzLabel="bool"></nz-option>
+                                <nz-option nzValue="datetime" nzLabel="datetime"></nz-option>
+                            </nz-select>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col style="width: 200px;">
+                    <nz-form-item>
+                        <nz-form-label [nzFor]="control.length">长度</nz-form-label>
+                        <nz-form-control [nzErrorTip]="errorTpl">
+                            <input [attr.id]="control.length" [formControlName]="control.length" nz-input
+                                placeholder="长度" type="number" autocomplete="off" />
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col>
+                    <nz-form-item>
+                        <nz-form-label [nzFor]="control.isRequired">是否必须</nz-form-label>
+                        <nz-form-control [nzErrorTip]="errorTpl">
+                            <nz-switch [attr.id]="control.isRequired" [formControlName]="control.isRequired">
+                            </nz-switch>
+                        </nz-form-control>
+                    </nz-form-item>
+                </div>
+                <div nz-col>
+                    <button nz-button nzType="dashed" nzShape="circle" (click)="removeField(control)"><i nz-icon
+                            nzType="minus"></i></button>
+                </div>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <div nz-col nzSpan="24">
+                    <button nz-button type="button" nzType="dashed" class="add-button" (click)="addField()" nzBlock>
+                        <i nz-icon nzType="plus"></i>
+                        添加属性
+                    </button>
+                </div>
+            </div>
+        </div>
+        <nz-form-item>
+            <button class="mt-10" nz-button nzType="primary">确认,下一步</button>
+        </nz-form-item>
+    </form>
+    <div *ngIf="currentIndex==1">
+        <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="backToFirstStep()">返回</button>
+        <button class="mt-10 mr-10" nz-button type="button" nzType="primary">确认,下一步</button>
+    </div>
+</nz-card>
+
+<ng-template #errorTpl let-control>
+    <ng-container *ngIf="control.hasError('required')">
+        请输入内容！
+    </ng-container>
+    <ng-container *ngIf="control.hasError('pattern')">
+        请输入正确的格式!
+    </ng-container>
+</ng-template>

@@ -9,34 +9,31 @@ namespace Convience.CapMQ
 {
     public static class CapMessageQueueExtension
     {
-        public enum CapMessageQueueType
-        {
-            RabbitMQ,
-            //Kafka,
-            //AzureServiceBus,
-        }
 
-        public static IServiceCollection AddPostgreCap<TDbContext>(this IServiceCollection services,
-            string dbConnectionString,
-            CapMessageQueueType messageQueueType,
-            Action<RabbitMQOptions> configure)
+        public static IServiceCollection AddPostgreRabbitMQCap<TDbContext>(this IServiceCollection services,
+            string dbConnectionString, string mqConnectionString)
             where TDbContext : DbContext
         {
             services.AddCap(o =>
             {
                 o.UseEntityFramework<TDbContext>();
-
                 o.UsePostgreSql(dbConnectionString);
-
-                switch (messageQueueType)
-                {
-                    case CapMessageQueueType.RabbitMQ:
-                        o.UseRabbitMQ(configure);
-                        break;
-                }
-
+                o.UseRabbitMQ(mqConnectionString);
                 o.UseDashboard();
+            });
+            return services;
+        }
 
+        public static IServiceCollection AddPostgreKafkaCap<TDbContext>(this IServiceCollection services,
+            string dbConnectionString, string mqConnectionString)
+            where TDbContext : DbContext
+        {
+            services.AddCap(o =>
+            {
+                o.UseEntityFramework<TDbContext>();
+                o.UsePostgreSql(dbConnectionString);
+                o.UseKafka(mqConnectionString);
+                o.UseDashboard();
             });
             return services;
         }

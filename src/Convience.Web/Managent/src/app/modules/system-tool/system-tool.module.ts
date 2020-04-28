@@ -5,13 +5,19 @@ import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { SwaggerUiComponent } from './swagger-ui/swagger-ui.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { HangfireUIComponent } from './hangfire-ui/hangfire-ui.component';
+import { CapUiComponent } from './cap-ui/cap-ui.component';
+import { CodeGeneratorComponent } from './code-generator/code-generator.component';
+import { NzStepsModule } from 'ng-zorro-antd';
+import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
 
 
 
 @NgModule({
   declarations: [
     SwaggerUiComponent,
-    HangfireUIComponent
+    HangfireUIComponent,
+    CapUiComponent,
+    CodeGeneratorComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +25,10 @@ import { HangfireUIComponent } from './hangfire-ui/hangfire-ui.component';
     RouterModule.forChild([
       { path: 'swagger', component: SwaggerUiComponent, canActivate: [LoginGuard] },
       { path: 'hangfire', component: HangfireUIComponent, canActivate: [LoginGuard] },
-    ])
+      { path: 'cap', component: CapUiComponent, canActivate: [LoginGuard] },
+      { path: 'code', component: CodeGeneratorComponent, canActivate: [LoginGuard] },
+    ]),
+    NzStepsModule
   ]
 })
 export class SystemToolModule { }

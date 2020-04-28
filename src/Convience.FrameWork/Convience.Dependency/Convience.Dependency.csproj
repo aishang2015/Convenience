@@ -7,6 +7,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="3.0.3" />
+    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="3.0.3" />
+    <PackageReference Include="DotNetCore.CAP.Kafka" Version="3.0.3" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="3.0.3" />
     <PackageReference Include="EasyCaching.InMemory" Version="0.8.7" />
     <PackageReference Include="EasyCaching.Redis" Version="0.8.7" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.10" />

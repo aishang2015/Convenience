@@ -1,4 +1,5 @@
 using Convience.Automapper;
+using Convience.CapMQ;
 using Convience.Easycaching;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
@@ -46,6 +47,7 @@ namespace Convience.ManagentApi
                 .AddServices()
                 .AddAutoMapper()
                 .AddHangFire(Configuration)
+                .AddCap(Configuration)
                 .AddMemoryCache()
                 .AddMongoDBFileManage(Configuration);
         }
@@ -137,6 +139,13 @@ namespace Convience.ManagentApi
         public static IServiceCollection AddMongoDBFileManage(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMongoDBFileStore(configuration.GetSection("MongoDb"));
+            return services;
+        }
+
+        public static IServiceCollection AddCap(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddCapMQ<SystemIdentityDbContext>(CapDataBaseType.PostgreSQL, configuration.GetConnectionString("PostgreSQL"),
+                 CapMessageQueryType.RabbitMQ, configuration.GetConnectionString("RabbitMQ"));
             return services;
         }
     }
