@@ -7,7 +7,7 @@ import { AppCommonModule } from '../app-common/app-common.module';
 import { HangfireUIComponent } from './hangfire-ui/hangfire-ui.component';
 import { CapUiComponent } from './cap-ui/cap-ui.component';
 import { CodeGeneratorComponent } from './code-generator/code-generator.component';
-import { NzStepsModule } from 'ng-zorro-antd';
+import { NzStepsModule, NzTabsModule, NzRadioModule, NzResultModule } from 'ng-zorro-antd';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 
 
@@ -29,7 +29,9 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
       { path: 'code', component: CodeGeneratorComponent, canActivate: [LoginGuard] },
     ]),
     NzStepsModule,
-    MonacoEditorModule.forRoot()
+    MonacoEditorModule.forRoot(),
+    NzRadioModule,
+    NzResultModule
   ]
 })
 export class SystemToolModule { }

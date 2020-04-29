@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.PostgreSQLCap", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Filestorage.MongoDB", "Convience.FrameWork\Convience.Filestorage\Convience.Filestorage.MongoDB\Convience.Filestorage.MongoDB.csproj", "{99242B54-0C4D-4B29-83DF-DB10F4C6FDDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.CapMQ", "Convience.FrameWork\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj", "{2B60F058-0536-4966-83B5-3567ABE38B3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.CapMQ", "Convience.FrameWork\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj", "{2B60F058-0536-4966-83B5-3567ABE38B3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

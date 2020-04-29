@@ -90,10 +90,21 @@
         </nz-form-item>
     </form>
     <div *ngIf="currentIndex==1">
-        <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" style="height: 400px;">
+        <nz-radio-group [(ngModel)]="radioValue">
+            <label nz-radio-button [nzValue]="radio.value" *ngFor="let radio of radioList">{{radio.name}}</label>
+        </nz-radio-group>
+        <ngx-monaco-editor class="codeEditor mt-10" [options]="editorOptions"
+            [(ngModel)]="this.code[this.codeKeys[this.radioValue]]" style="height: 400px;">
         </ngx-monaco-editor>
         <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="backToFirstStep()">返回</button>
-        <button class="mt-10 mr-10" nz-button type="button" nzType="primary">确认,下一步</button>
+        <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="toThirdStep()">修改完成,下载文件</button>
+    </div>
+    <div *ngIf="currentIndex==2">
+        <nz-result nzStatus="success" nzTitle="完成!">
+            <div nz-result-extra>
+                <button nz-button (click)="reset()">返回第一步</button>
+            </div>
+        </nz-result>
     </div>
 </nz-card>
 
