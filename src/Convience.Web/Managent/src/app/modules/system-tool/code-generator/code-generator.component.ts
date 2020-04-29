@@ -135,9 +135,14 @@ export class CodeGeneratorComponent implements OnInit {
     });
   }
 
-  reset(){    
+  reset() {
     this.radioValue = 0;
     this.currentIndex = 0;
+    this.controls = [];
+    this.editForm = this.formBuilder.group({
+      entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
+      databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
+    });
   }
 
   backToFirstStep() {
