@@ -71,4 +71,11 @@ services:
       POSTGRES_USER: tester
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: tester
+  myproject-mongo: 
+    container_name: mongoStore
+    image: mongo
+    restart: always
+    ports:
+      - "32768:27017"
+
 
