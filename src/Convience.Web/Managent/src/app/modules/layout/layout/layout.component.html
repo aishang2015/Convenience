@@ -64,10 +64,10 @@
                 </li>
                 <li nz-submenu nzIcon="book" nzTitle="内容管理" *canOperate="'contentmanage'">
                     <ul>
-                        <li nz-menu-item nzMatchRouter *canOperate="'fileManage'">
+                        <li nz-menu-item nzMatchRouter *canOperate="'articleManage'">
                             <a [routerLink]="[ '/content/article' ]" (click)="setBreadcrumb('内容管理','文章管理')">
                                 <i nz-icon [nzType]="'align-left'"></i>文章管理</a></li>
-                        <li nz-menu-item nzMatchRouter *canOperate="'fileManage'">
+                        <li nz-menu-item nzMatchRouter *canOperate="'columnManage'">
                             <a [routerLink]="[ '/content/column' ]" (click)="setBreadcrumb('内容管理','栏目管理')">
                                 <i nz-icon [nzType]="'database'"></i>栏目管理</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'fileManage'">

@@ -5,7 +5,7 @@
         <p>{{file.createTime | date: 'yyyy-MM-dd'}}</p>
     </div>
     <div class="layer">
-        <button *ngIf="!file.isDirectory" class="control" nz-button nzType="primary" nzShape="circle" (click)="download()"><i nz-icon nzType="cloud-download"></i></button>
-        <button class="control" nz-button nzType="primary" nzShape="circle" (click)="delete()"><i nz-icon nzType="delete"></i></button>
+        <ng-container *canOperate="'downloadFileBtn'"><button *ngIf="!file.isDirectory" class="control" nz-button nzType="primary" nzShape="circle" (click)="download()"><i nz-icon nzType="cloud-download"></i></button></ng-container>
+        <button class="control" nz-button nzType="primary" nzShape="circle" (click)="delete()" *canOperate="'deleteFileBtn'" ><i nz-icon nzType="delete"></i></button>
     </div>
 </div>

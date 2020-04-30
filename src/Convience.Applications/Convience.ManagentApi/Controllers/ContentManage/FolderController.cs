@@ -1,4 +1,5 @@
 ﻿using Convience.Fluentvalidation;
+using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpPost]
+        [Permission("fileAdd")]
         public async Task<IActionResult> MakeDirectory([FromBody]FileViewModel vm)
         {
             var result = await _fileManageService.MakeDirectoryAsync(vm);
@@ -31,6 +33,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpDelete]
+        [Permission("fileDelete")]
         public async Task<IActionResult> DeleteDirectory([FromQuery]FileViewModel vm)
         {
             var isSuccess = await _fileManageService.DeleteDirectoryAsync(vm);

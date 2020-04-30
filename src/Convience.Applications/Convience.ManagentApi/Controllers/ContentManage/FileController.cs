@@ -1,4 +1,5 @@
 ﻿using Convience.Fluentvalidation;
+using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 using Microsoft.AspNetCore.Authorization;
@@ -20,6 +21,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpPost]
+        [Permission("fileAdd")]
         public async Task<IActionResult> UploadFile([FromForm]FileUploadModel fileUploadModel)
         {
             var result = await _fileManageService.UploadAsync(fileUploadModel);
@@ -31,6 +33,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpGet("list")]
+        [Permission("fileList")]
         public async Task<IActionResult> GetContent([FromQuery]FileQuery query)
         {
             var result = await _fileManageService.GetContentsAsync(query);
@@ -38,6 +41,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpDelete]
+        [Permission("fileDelete")]
         public async Task<IActionResult> DeleteFile([FromQuery]FileViewModel viewModel)
         {
             var isSuccess = await _fileManageService.DeleteFileAsync(viewModel);
@@ -49,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         }
 
         [HttpGet]
+        [Permission("fileGet")]
         public async Task<IActionResult> DownloadFile([FromQuery]FileViewModel viewModel)
         {
             var stream = await _fileManageService.DownloadAsync(viewModel);

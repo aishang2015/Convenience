@@ -1,7 +1,7 @@
 <nz-card [nzSize]="'small'">
   <button nz-button class="mb-5 mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新文件</button>
-  <button nz-button class="mb-5 mr-10" (click)="createFolder()"><i nz-icon nzType="folder"></i>创建文件夹</button>
-  <button nz-button class="mb-5 mr-10" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
+  <button nz-button class="mb-5 mr-10" *canOperate="'createFolderBtn'" (click)="createFolder()"><i nz-icon nzType="folder"></i>创建文件夹</button>
+  <button nz-button class="mb-5 mr-10" *canOperate="'uploadFileBtn'" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
 </nz-card>
 <nz-card [nzSize]="'small'" class="fullwindow">
   <nz-breadcrumb class="ml-10">

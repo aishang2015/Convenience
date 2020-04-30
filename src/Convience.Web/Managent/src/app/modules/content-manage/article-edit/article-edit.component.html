@@ -42,7 +42,7 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-label nzRequired [nzFor]="'edit_sort'">排序</nz-form-label>
             <nz-form-control [nzSm]="10" [nzXs]="24" [nzErrorTip]="'请输入排序！'">
                 <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序"
                     autocomplete="off" />
