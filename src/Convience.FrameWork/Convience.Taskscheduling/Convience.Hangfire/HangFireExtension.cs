@@ -53,7 +53,11 @@ namespace Convience.Hangfire
 
         public static IApplicationBuilder UseHFDashBoard(this IApplicationBuilder app)
         {
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions()
+            {
+                Authorization = new[] { new AllowAllAuthorizationFilter() },
+                IsReadOnlyFunc = context => true
+            });
 
             //// 创建一个新作业
             //BackgroundJob.Enqueue(() => Console.WriteLine("Fire-and-forget"));
@@ -62,7 +66,7 @@ namespace Convience.Hangfire
             //BackgroundJob.Schedule(() => Console.WriteLine("Delayed"), TimeSpan.FromSeconds(5));
 
             //// 定时任务执行(Recurring jobs)
-            //RecurringJob.AddOrUpdate(() => Console.WriteLine("Minutely Job"), Cron.Minutely);
+            RecurringJob.AddOrUpdate(() => Console.WriteLine("Hangfire is running Minutely."), Cron.Minutely());
 
             //// 延续性任务执行(Continuations)
             //var id = BackgroundJob.Enqueue(() => Console.WriteLine("Hello, "));

@@ -9,9 +9,14 @@ import { UriConstant } from 'src/app/core/constants/uri-constant';
 })
 export class SwaggerUiComponent implements OnInit {
 
-  constructor() { }
+  code;
+
+  constructor(private uriConstant: UriConstant,
+    private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
+    let url = `${this.uriConstant.BaseUri}/swagger/index.html`;
+    this.code = this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 }

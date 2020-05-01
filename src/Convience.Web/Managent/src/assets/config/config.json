@@ -1,3 +1,4 @@
 {
-    "apiUrl": "https://localhost:44356/api"
+    "apiUrl": "https://localhost:44356/api",
+    "baseUrl": "https://localhost:44356"
 }

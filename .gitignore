@@ -8,3 +8,4 @@
 /src/*/*/*/obj
 /src/*/*/*.csproj.user
 /src/*/*/*/*.csproj.user
+/src/config/Logs
