@@ -8,18 +8,19 @@ using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
 using Convience.Jwtauthentication;
+using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
 using Convience.Util.Middleware;
-
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System;
 using System.Collections.Generic;
 
 namespace Convience.ManagentApi
@@ -53,7 +54,7 @@ namespace Convience.ManagentApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             app.UseCors("CorsPolicy");
 
@@ -72,7 +73,7 @@ namespace Convience.ManagentApi
 
             app.UseAuthentication();
 
-            app.UseHFDashBoard();
+            app.UseHangfireDashBoard(serviceProvider);
 
             app.UseRouting();
 
@@ -147,6 +148,18 @@ namespace Convience.ManagentApi
             services.AddCapMQ<SystemIdentityDbContext>(CapDataBaseType.PostgreSQL, configuration.GetConnectionString("PostgreSQL"),
                  CapMessageQueryType.RabbitMQ, configuration.GetConnectionString("RabbitMQ"));
             return services;
+        }
+
+
+        public static IApplicationBuilder UseHangfireDashBoard(this IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
+            GlobalConfiguration.Configuration.UseActivator(new HangFireJobActivator(serviceProvider.GetService<IServiceScopeFactory>()));
+
+            app.UseHFDashBoard();
+            app.UseHFDashBoard("/taskManage");
+
+            RecurringJob.AddOrUpdate<HangfireResetDataJob>("JobIOCA", j => j.Run(), Cron.Minutely);
+            return app;
         }
     }
 }

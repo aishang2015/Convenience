@@ -66,13 +66,20 @@ namespace Convience.Hangfire
             //BackgroundJob.Schedule(() => Console.WriteLine("Delayed"), TimeSpan.FromSeconds(5));
 
             //// 定时任务执行(Recurring jobs)
-            RecurringJob.AddOrUpdate(() => Console.WriteLine("Hangfire is running Minutely."), Cron.Minutely());
+            //RecurringJob.AddOrUpdate(() => Console.WriteLine("Hangfire is running Minutely."), Cron.Minutely());
 
             //// 延续性任务执行(Continuations)
             //var id = BackgroundJob.Enqueue(() => Console.WriteLine("Hello, "));
             //BackgroundJob.ContinueJobWith(id, () => Console.WriteLine("world!"));
 
 
+            return app;
+        }
+
+
+        public static IApplicationBuilder UseHFDashBoard(this IApplicationBuilder app, string path)
+        {
+            app.UseHangfireDashboard(path);
             return app;
         }
     }

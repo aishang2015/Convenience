@@ -16,9 +16,7 @@ export class HangfireUIComponent implements OnInit {
 
   ngOnInit(): void {
     let url = `${this.uriConstant.BaseUri}/hangfire`;
-    console.log(url);
     this.code = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    console.log(this.code);
   }
 
 }

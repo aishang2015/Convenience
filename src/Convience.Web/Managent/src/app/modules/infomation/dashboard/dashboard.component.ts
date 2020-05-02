@@ -12,11 +12,13 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 
+  data = { userCount: 0, roleCount: 0, departmentCount: 0, positionCount: 0 };
+
   constructor(private dashboardService: DashboardService) {
   }
 
   ngOnInit() {
-    this.dashboardService.get().toPromise();
+    this.dashboardService.get().subscribe((result: any) => this.data = result);
   }
 
   ngAfterViewInit(): void {

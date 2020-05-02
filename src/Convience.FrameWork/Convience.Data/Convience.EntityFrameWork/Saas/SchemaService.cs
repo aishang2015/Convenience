@@ -12,7 +12,7 @@ namespace Convience.EntityFrameWork.Saas
         public SchemaService(IHttpContextAccessor httpContextAccessor)
         {
             var path = httpContextAccessor.HttpContext.Request.Path;
-            // todo 解析path，根据path和待定的字典服务取得对应的schema
+            // todo 解析path或者header，根据结果去字典服务取得对应的schema
             Schema = string.Empty;
         }
 

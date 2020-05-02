@@ -44,7 +44,6 @@ namespace Convience.ManagentApi
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .ConfigureHostedServices<InitDataJob, InitDataService>()
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
