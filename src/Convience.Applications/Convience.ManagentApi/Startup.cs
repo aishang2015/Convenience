@@ -158,7 +158,7 @@ namespace Convience.ManagentApi
             app.UseHFDashBoard();
             app.UseHFDashBoard("/taskManage");
 
-            RecurringJob.AddOrUpdate<HangfireResetDataJob>("JobIOCA", j => j.Run(), "* */6 * * *");
+            RecurringJob.AddOrUpdate<HangfireResetDataJob>("JobIOCA", j => j.Run(), Cron.Daily);
             return app;
         }
     }
