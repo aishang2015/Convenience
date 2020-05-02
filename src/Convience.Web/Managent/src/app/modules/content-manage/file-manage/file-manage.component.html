@@ -22,7 +22,8 @@
   <span>上传文件</span>
 </ng-template>
 <ng-template #uploadContentTpl>
-  <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload">
+  <nz-alert  class="mb-10" nzType="warning" nzMessage="文件限制2m以下"></nz-alert>
+  <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" nzSize="2048" nzLimit="4">
     <button nz-button><i nz-icon nzType="upload"></i>选择上传文件</button>
   </nz-upload>
 </ng-template>

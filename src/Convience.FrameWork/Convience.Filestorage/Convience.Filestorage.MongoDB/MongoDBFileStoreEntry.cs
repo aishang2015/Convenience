@@ -14,7 +14,8 @@ namespace Convience.Filestorage.MongoDB
             FileStoreId = gridFSFileInfo.Id.ToString();
             Name = gridFSFileInfo.Filename;
             Path = path;
-            DirectoryPath = Path.Substring(0, Path.Length - Name.Length).TrimEnd('/');
+            DirectoryPath = string.IsNullOrEmpty(Path.Substring(0, Path.Length - Name.Length).TrimEnd('/')) ?
+                "/" : Path.Substring(0, Path.Length - Name.Length).TrimEnd('/');
             Length = gridFSFileInfo.Length;
             LastModifiedUtc = gridFSFileInfo.UploadDateTime;
             IsDirectory = false;
