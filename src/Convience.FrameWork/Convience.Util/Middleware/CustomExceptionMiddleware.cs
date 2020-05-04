@@ -13,8 +13,9 @@ namespace Convience.Util.Middleware
         private readonly ILogger<CustomExceptionMiddleware> _logger;
 
         public CustomExceptionMiddleware(RequestDelegate next,
-            ILogger<CustomExceptionMiddleware> _logger)
+            ILogger<CustomExceptionMiddleware> logger)
         {
+            _logger = logger;
             _next = next;
         }
         public async Task Invoke(HttpContext httpContext)
