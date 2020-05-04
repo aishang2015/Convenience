@@ -36,7 +36,8 @@ namespace Convience.Model
             CreateMap<ColumnViewModel, Column>();
             CreateMap<Column, ColumnResult>();
 
-            CreateMap<ArticleViewModel, Article>();
+            CreateMap<ArticleViewModel, Article>()
+                .ForMember(dest => dest.CreateTime, opt => opt.Ignore());
             CreateMap<Article, ArticleResult>();
         }
     }
