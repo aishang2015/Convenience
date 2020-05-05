@@ -76,5 +76,10 @@ services:
     restart: always
     ports:
       - "32768:27017"
-
-
+#  elk:
+#    container_name: elk
+#    image: sebp/elk
+#    restart: always
+#    ports:
+#      - 9200:9200
+#      - 5044:5044
