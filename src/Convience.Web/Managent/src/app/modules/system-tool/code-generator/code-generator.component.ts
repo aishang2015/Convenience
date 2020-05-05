@@ -111,8 +111,8 @@ export class CodeGeneratorComponent implements OnInit {
 
     this.code.fmodel = this.codeService.getFrontModel(this.editForm.value['entityName'], properties);
     this.code.fservice = this.codeService.getFrontService(this.editForm.value['entityName']);
-    this.code.fhtml = this.codeService.getFrontHtml(this.editForm.value['entityName']);
-    this.code.fts = this.codeService.getFrontTs(this.editForm.value['entityName']);
+    this.code.fhtml = this.codeService.getFrontHtml(this.editForm.value['entityName'], properties);
+    this.code.fts = this.codeService.getFrontTs(this.editForm.value['entityName'], properties);
   }
 
   toThirdStep() {

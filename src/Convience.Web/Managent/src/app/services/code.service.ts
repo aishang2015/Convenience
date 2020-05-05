@@ -394,9 +394,33 @@ export class ${camel}Service {
     return result;
   }
 
-  getFrontHtml(entityName: string) {
+  getFrontHtml(entityName: string, properties: { property; }[]) {
     let camel = this.transfer(entityName);
     let lower = entityName.toLowerCase();
+
+    let ths = '';
+    properties.forEach(element => {
+      ths += `<th nzAlign="center">${element.property}</th>
+                    `;
+    });
+    let tds = '';
+    properties.forEach(element => {
+      tds += `<td nzAlign="center">{{ data.${element.property.toLowerCase()} }}</td>
+                    `;
+    });
+    let items = '';
+    properties.forEach(element => {
+      items += `<nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_${element.property.toLowerCase()}'">${element.property}</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
+                <input [attr.id]="'edit_${element.property.toLowerCase()}'" formControlName="${element.property.toLowerCase()}" nz-input placeholder="${element.property}"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+                     `;
+
+    });
+
     let result = `
 <nz-card [nzSize]="'small'">
     <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
@@ -420,14 +444,14 @@ export class ${camel}Service {
             <thead>
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
-
+                    ${ths}
                     <th nzAlign="center">操作</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let data of dataTable.data;let i = index">
                     <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
-
+                    ${tds}
                     <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'update${camel}Btn'"
                             (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
@@ -447,6 +471,8 @@ export class ${camel}Service {
 <ng-template #contentTpl>
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
 
+
+        ${items}
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">
                 <button nz-button nzType="primary" class="mr-10">提交</button>
@@ -460,9 +486,23 @@ export class ${camel}Service {
     return result;
   }
 
-  getFrontTs(entityName: string) {
+  getFrontTs(entityName: string, properties: { property; }[]) {
     let lower = entityName.toLowerCase();
     let camel = this.transfer(entityName);
+
+    let fs = '';
+    properties.forEach(element => {
+      fs += `${element.property.toLowerCase()}: [result.${element.property.toLowerCase()}, []],
+            `;
+    });
+
+    let efs = '';
+    properties.forEach(element => {
+      efs += `${element.property.toLowerCase()}: [null, []],
+            `;
+    });
+
+
     let result = `
 export class ${camel}Component implements OnInit {
 
@@ -495,6 +535,9 @@ export class ${camel}Component implements OnInit {
 
     add(){
       this.currentId = null;
+      this.editForm = this.formBuilder.group({
+        ${efs}
+      });
       this.modal = this.modalService.create({
         nzTitle: '添加',
         nzContent: this.contentTpl,
@@ -519,7 +562,7 @@ export class ${camel}Component implements OnInit {
         this.${lower}Service.get(id).subscribe((result: any) => {
           this.currentId = result.id;
           this.editForm = this.formBuilder.group({
-            
+            ${fs}
           });
           this.modal = this.modalService.create({
             nzTitle: '编辑',
