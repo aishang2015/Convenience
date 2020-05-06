@@ -51,7 +51,7 @@ export class StorageService {
   set UserRoles(value) {
     localStorage.setItem("userroles", value);
   }
-  
+
   get Avatar() {
     return localStorage.getItem("avatar");
   }
@@ -59,18 +59,26 @@ export class StorageService {
     localStorage.setItem("avatar", value);
   }
 
-  get Identifycation(){
+  get Identifycation() {
     return localStorage.getItem("identifycation");
   }
   set Identifycation(value) {
     localStorage.setItem("identifycation", value);
   }
 
-  get Route(){
+  get Route() {
     return localStorage.getItem("route");
   }
   set Route(value) {
     localStorage.setItem("route", value);
   }
 
+  clearTinymceCache() {
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      if (key.startsWith('tinymce-autosave') || key.startsWith('tinymce-url')) {
+        localStorage.removeItem(key);
+      }
+    }
+  }
 }

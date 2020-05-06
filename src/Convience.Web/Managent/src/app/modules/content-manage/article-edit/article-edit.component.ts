@@ -6,6 +6,7 @@ import { ColumnService } from 'src/app/services/column.service';
 import { Column } from '../model/column';
 import { NzTreeNodeOptions, NzMessageService } from 'ng-zorro-antd';
 import { Article } from '../model/article';
+import { StorageService } from 'src/app/core/services/storage.service';
 
 @Component({
   selector: 'app-article-edit',
@@ -39,10 +40,11 @@ export class ArticleEditComponent implements OnInit {
     private articleService: ArticleService,
     private messageService: NzMessageService,
     private columnService: ColumnService,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private storageService: StorageService) { }
 
   ngOnInit(): void {
-
+    this.storageService.clearTinymceCache();
     this.editForm = this.formBuilder.group({
       title: [null, [Validators.required, Validators.maxLength(50)]],
       subTitle: [null, [Validators.maxLength(200)]],
