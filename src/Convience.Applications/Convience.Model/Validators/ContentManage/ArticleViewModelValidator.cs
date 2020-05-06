@@ -1,4 +1,5 @@
 ﻿using Convience.Model.Models.ContentManage;
+
 using FluentValidation;
 
 namespace Convience.Model.Validators.ContentManage

@@ -1,6 +1,8 @@
 ﻿using Convience.Service.DashBoard;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Controllers

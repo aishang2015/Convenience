@@ -7,6 +7,8 @@ using Convience.Util.helpers;
 
 using EasyCaching.Core;
 
+using Microsoft.Extensions.Options;
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,11 +25,12 @@ namespace Convience.Service.Account
 
         public AccountService(IUserRepository userRepository,
             IEasyCachingProvider cachingProvider,
-            IJwtFactory jwtFactory)
+            IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
+            var option = jwtOptionAccessor.Get(JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme);
             _userRepository = userRepository;
             _cachingProvider = cachingProvider;
-            _jwtFactory = jwtFactory;
+            _jwtFactory = new JwtFactory(option);
         }
 
         public async Task<bool> IsStopUsing(string userName)
