@@ -25,7 +25,7 @@
     "@tinymce/tinymce-angular": "^3.5.0",
     "file-saver": "^2.0.2",
     "jszip": "^3.4.0",
-    "ng-zorro-antd": "^9.0.1",
+    "ng-zorro-antd": "^9.1.0",
     "ngx-monaco-editor": "^9.0.0",
     "rxjs": "~6.5.4",
     "tinymce": "^5.2.2",
