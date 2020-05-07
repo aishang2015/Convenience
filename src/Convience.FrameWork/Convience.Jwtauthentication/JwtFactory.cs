@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-
+﻿
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,9 +9,9 @@ namespace Convience.Jwtauthentication
     {
         private readonly JwtOption _jwtOption;
 
-        public JwtFactory(IOptions<JwtOption> jwtOption)
+        public JwtFactory(JwtOption jwtOption)
         {
-            _jwtOption = jwtOption.Value;
+            _jwtOption = jwtOption;
         }
 
         public string GenerateJwtToken(List<(string, string)> tuples = null)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Convience.CapMQ
+﻿namespace Convience.CapMQ
 {
     public enum CapMessageQueryType
     {

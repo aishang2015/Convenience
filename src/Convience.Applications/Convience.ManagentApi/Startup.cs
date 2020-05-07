@@ -14,12 +14,15 @@ using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
 using Convience.Util.Middleware;
+
 using Hangfire;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using System;
 using System.Collections.Generic;
 
@@ -103,7 +106,7 @@ namespace Convience.ManagentApi
 
         public static IServiceCollection AddJwtBearer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddJwtAuthentication(configuration.GetSection("JwtOption"));
+            services.AddJwtAuthentication(null, configuration.GetSection("JwtOption"));
             services.AddAuthorization();
             return services;
         }

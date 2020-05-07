@@ -1,4 +1,5 @@
 ﻿using Convience.Entity.Entity;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
