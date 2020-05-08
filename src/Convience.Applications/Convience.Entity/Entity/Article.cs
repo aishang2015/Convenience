@@ -3,6 +3,7 @@ using Convience.EntityFrameWork.Infrastructure;
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Convience.Entity.Entity
 {
@@ -32,7 +33,10 @@ namespace Convience.Entity.Entity
         [Description("内容")]
         public string Content { get; set; }
 
-        [Description("内容")]
+        [Description("更新时间")]
+        public DateTime UpdateTime { get; set; }
+
+        [Description("创建时间")]
         public DateTime CreateTime { get; set; }
 
     }

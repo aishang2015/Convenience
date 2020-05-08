@@ -40,7 +40,6 @@ namespace Convience.Service.ContentManage
             try
             {
                 var article = _mapper.Map<Article>(model);
-                article.CreateTime = DateTime.Now;
                 await _articleRepository.AddAsync(article);
                 await _unitOfWork.SaveAsync();
                 return true;
@@ -102,9 +101,8 @@ namespace Convience.Service.ContentManage
         {
             try
             {
-                var entity = await _articleRepository.GetAsync(model.Id);
-                _mapper.Map(model, entity);
-                _articleRepository.Update(entity);
+                var entity = _mapper.Map<Article>(model);
+                _articleRepository.UpdateIgnore(entity, a => a.CreateTime);
                 await _unitOfWork.SaveAsync();
                 return true;
             }

@@ -118,8 +118,7 @@ namespace Convience.Service.SystemManage
         {
             try
             {
-                var menu = await _menuRepository.GetAsync(model.Id);
-                _mapper.Map(model, menu);
+                var menu = _mapper.Map<Menu>(model);
                 _menuRepository.Update(menu);
                 await _unitOfWork.SaveAsync();
                 return true;

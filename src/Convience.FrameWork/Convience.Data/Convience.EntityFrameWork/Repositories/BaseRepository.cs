@@ -109,5 +109,23 @@ namespace Convience.EntityFrameWork.Repositories
         {
             return _context.Database.ExecuteSqlRawAsync(sql);
         }
+
+        public void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        {
+            _context.Attach(entity);
+            foreach (var expression in properties)
+            {
+                _context.Entry(entity).Property(expression).IsModified = true;
+            }
+        }
+
+        public void UpdateIgnore(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        {
+            _context.Entry(entity).State = EntityState.Modified;
+            foreach (var expression in properties)
+            {
+                _context.Entry(entity).Property(expression).IsModified = false;
+            }
+        }
     }
 }

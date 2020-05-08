@@ -119,8 +119,7 @@ namespace Convience.Service.ContentManage
         {
             try
             {
-                var column = await _columnRepository.GetAsync(model.Id);
-                _mapper.Map(model, column);
+                var column = _mapper.Map<Column>(model);
                 _columnRepository.Update(column);
                 await _unitOfWork.SaveAsync();
                 return true;

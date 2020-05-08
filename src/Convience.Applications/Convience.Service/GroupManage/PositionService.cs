@@ -100,8 +100,7 @@ namespace Convience.Service.GroupManage
         {
             try
             {
-                var entity = await _positionRepository.GetAsync(model.Id);
-                _mapper.Map(model, entity);
+                var entity = _mapper.Map<Position>(model);
                 _positionRepository.Update(entity);
                 await _unitOfWork.SaveAsync();
                 return true;

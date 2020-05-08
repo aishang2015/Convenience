@@ -141,8 +141,7 @@ namespace Convience.Service.GroupManage
         {
             try
             {
-                var department = await _departmentRepository.GetAsync(model.Id);
-                _mapper.Map(model, department);
+                var department = _mapper.Map<Department>(model);
                 _departmentRepository.Update(department);
                 await _unitOfWork.SaveAsync();
                 return true;

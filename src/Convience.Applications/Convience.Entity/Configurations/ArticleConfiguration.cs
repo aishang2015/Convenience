@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 
 namespace Convience.Entity.Configurations
 {
@@ -14,6 +15,9 @@ namespace Convience.Entity.Configurations
             builder.Property(a => a.SubTitle).HasMaxLength(200);
             builder.Property(a => a.Source).HasMaxLength(200);
             builder.Property(a => a.Tags).HasMaxLength(200);
+
+            builder.Property(a => a.CreateTime).HasDefaultValue(DateTime.Now);
+            builder.Property(a => a.UpdateTime).HasDefaultValue(DateTime.Now);
         }
     }
 }

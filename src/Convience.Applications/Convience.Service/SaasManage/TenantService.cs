@@ -87,8 +87,7 @@ namespace Convience.Service.SaasManage
 
         public async Task UpdateAsync(TenantViewModel model)
         {
-            var tenant = await _tenantRepository.GetAsync(model.Id);
-            _mapper.Map(model, tenant);
+            var tenant = _mapper.Map<Tenant>(model);
             _tenantRepository.Update(tenant);
             await _unitOfWork.SaveAsync();
         }

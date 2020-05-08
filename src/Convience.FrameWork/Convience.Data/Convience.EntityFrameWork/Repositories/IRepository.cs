@@ -27,6 +27,8 @@ namespace Convience.EntityFrameWork.Repositories
 
         void Update(TEntity entity);
         void UpdateRange(IEnumerable<TEntity> entities);
+        void UpdatePartial(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
+        void UpdateIgnore(TEntity entity, params Expression<Func<TEntity, object>>[] properties);
 
         Task<int> ExecuteSqlAsync(string sql);
     }
