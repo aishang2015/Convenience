@@ -156,6 +156,9 @@
         请输入内容！
     </ng-container>
     <ng-container *ngIf="control.hasError('maxlength')">
-        角色名长度不能超过15！
+        长度不能超过15！
+    </ng-container>
+    <ng-container *ngIf="control.hasError('pattern')">
+        只能包含数字和字母！
     </ng-container>
 </ng-template>

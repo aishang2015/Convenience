@@ -66,8 +66,8 @@ export class TenantManageComponent implements OnInit {
 
   private editTenant(title: TemplateRef<{}>, content: TemplateRef<{}>, tenant: Tenant) {
     this.editForm = this.formBuilder.group({
-      name: [this.editedTenant.name, [Validators.required, Validators.maxLength(15)]],
-      urlPrefix: [this.editedTenant.urlPrefix, [Validators.required, Validators.maxLength(15)]],
+      name: [this.editedTenant.name, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
+      urlPrefix: [this.editedTenant.urlPrefix, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
       dataBaseType: [this.editedTenant.dataBaseType, [Validators.required]],
       connectionString: [this.editedTenant.connectionString, [Validators.required]],
       isActive: [this.editedTenant.isActive],

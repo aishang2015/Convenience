@@ -104,7 +104,7 @@ namespace Convience.Service.SystemManage
                 var roleid = int.Parse(query.RoleId);
                 userQuery = from u in userQuery
                             join ur in _userRepository.GetUserRoles() on u.Id equals ur.UserId
-                            join r in _roleRepository.GetRoles() on ur.RoleId equals roleid
+                            where ur.RoleId == roleid
                             select u;
             }
 

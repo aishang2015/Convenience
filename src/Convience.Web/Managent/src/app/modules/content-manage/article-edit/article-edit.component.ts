@@ -23,6 +23,8 @@ export class ArticleEditComponent implements OnInit {
 
   nodes: NzTreeNodeOptions[] = [];
 
+  isLoading: boolean = false;
+
   tinyConfig = {
     height: 800,
     language: 'zh_CN',
@@ -78,6 +80,7 @@ export class ArticleEditComponent implements OnInit {
       this.editForm.controls[i].updateValueAndValidity();
     }
     if (this.editForm.valid) {
+      this.isLoading = true;
       let article = new Article();
       article.title = this.editForm.value['title'];
       article.subTitle = this.editForm.value['subTitle'];

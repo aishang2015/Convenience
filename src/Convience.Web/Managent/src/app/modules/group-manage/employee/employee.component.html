@@ -25,9 +25,9 @@
                     </nz-form-item>
 
                     <nz-form-item>
-                        <nz-form-label [nzSm]="6" [nzXs]="24">职务</nz-form-label>
+                        <nz-form-label [nzSm]="6" [nzXs]="24">职位</nz-form-label>
                         <nz-form-control [nzSm]="14" [nzXs]="24">
-                            <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'"
+                            <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择职位" [attr.id]="'roleid'"
                                 formControlName="position">
                                 <nz-option *ngFor="let role of positionOptions" [nzValue]="role.id"
                                     [nzLabel]="role.name"></nz-option>
