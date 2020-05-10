@@ -1,0 +1,146 @@
+<div class="content">
+    <div class="tree">
+        <nz-card [nzSize]="'small'">
+            <div>
+                <button nz-button class="mr-10" (click)="addDicType()" *canOperate="'addDicTypeBtn'"><i nz-icon
+                        nzType="plus"></i>添加类型</button>
+            </div>
+            <nz-list>
+                <nz-list-item *ngFor="let item of dicTypes">
+                    <ul nz-list-item-actions>
+                        <nz-list-item-action>
+                            <a class="ml-5" (click)="viewDicData(item)"><i nz-icon nzType="ordered-list"></i></a>
+                            <a class="ml-5" (click)="editDicType(item.id)"><i nz-icon nzType="edit"></i></a>
+                            <a class="ml-5" (click)="removeDicType(item.id)"><i nz-icon nzType="delete"></i></a>
+                        </nz-list-item-action>
+                    </ul>
+                    {{ item.name }} ( {{item.code}} )
+                </nz-list-item>
+            </nz-list>
+        </nz-card>
+    </div>
+    <div class="table">
+        <nz-card [nzSize]="'small'">
+            <div>
+                <ng-container *ngIf="selectedDicType">
+                    <button nz-button class="mr-10" (click)="addDicData()" *canOperate="'addDepartmentBtn'"><i nz-icon
+                            nzType="plus"></i>添加数据</button>
+                </ng-container>
+            </div>
+            <div class="mt-10">
+                <nz-table #dataTable nzSize="middle" [nzData]="dicDatas" nzShowPagination="false"
+                    [nzTitle]="tableHeader" nzFrontPagination="false" nzBordered="true">
+                    <thead>
+                        <tr>
+                            <th nzAlign="center" nzWidth="60px">#</th>
+                            <th nzAlign="center">名称</th>
+                            <th nzAlign="center" nzWidth="120px">排序</th>
+                            <th nzAlign="center" nzWidth="120px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataTable.data;let i = index">
+                            <td nzAlign="center">{{ i + 1}}</td>
+                            <td nzAlign="center">{{ data.name }}</td>
+                            <td nzAlign="center">{{ data.sort }}</td>
+                            <td nzAlign="center">
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'updateDicDataBtn'"
+                                    (click)="editDicData(data.id)" class="mr-10">
+                                    <i nz-icon nzType="edit"></i>
+                                </button>
+                                <button nz-button nzType="default" nzShape="circle" (click)="removeDicData(data.id)"
+                                    *canOperate="'deleteDicDataBtn'">
+                                    <i nz-icon nzType="delete"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </nz-card>
+    </div>
+</div>
+
+<ng-template #dicTypeTpl>
+    <form nz-form [formGroup]="editDicTypeForm" (ngSubmit)="submitDicTypeEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_Code'">代码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicType_Code_ErrorTpl">
+                <input [attr.id]="'dicType_Code'" formControlName="code" nz-input placeholder="代码" autocomplete="off" />
+            </nz-form-control>
+            <ng-template #dicType_Code_ErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入字典分类代码！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    字典分类代码长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_Name'">名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicType_Name_ErrorTpl">
+                <input [attr.id]="'dicType_Name'" formControlName="name" nz-input placeholder="名称" autocomplete="off" />
+            </nz-form-control>
+            <ng-template #dicType_Name_ErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入字典分类名称！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    字典分类名称长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入排序！">
+                <input type="number" [attr.id]="'dicType_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+
+
+<ng-template #dicDataTpl>
+    <form nz-form [formGroup]="editDicDataForm" (ngSubmit)="submitDicDataEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicData_Name'">名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicData_Name_ErrorTpl">
+                <input [attr.id]="'dicData_Name'" formControlName="name" nz-input placeholder="名称" autocomplete="off" />
+            </nz-form-control>
+            <ng-template #dicData_Name_ErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入字典数据名称！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    字典数据名称长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入排序！">
+                <input type="number" [attr.id]="'dicType_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>

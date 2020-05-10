@@ -3,7 +3,6 @@ using Convience.EntityFrameWork.Infrastructure;
 
 using System;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Convience.Entity.Entity
 {

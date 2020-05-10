@@ -51,4 +51,8 @@ export class UriConstant {
     get ColumnUri(): string { return `${this.ApiUri}/column` };
 
     get ArticleUri(): string { return `${this.ApiUri}/article` };
+
+    get DicDataUri(): string { return `${this.ApiUri}/dicData` };
+
+    get DicTypeUri(): string { return `${this.ApiUri}/dicType` };
 }

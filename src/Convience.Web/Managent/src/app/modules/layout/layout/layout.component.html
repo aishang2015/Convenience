@@ -73,6 +73,9 @@
                         <li nz-menu-item nzMatchRouter *canOperate="'fileManage'">
                             <a [routerLink]="[ '/content/file' ]" (click)="setBreadcrumb('内容管理','文件管理')">
                                 <i nz-icon [nzType]="'file'"></i>文件管理</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'dicManage'">
+                            <a [routerLink]="[ '/content/dic' ]" (click)="setBreadcrumb('内容管理','字典管理')">
+                                <i nz-icon [nzType]="'align-left'"></i>字典管理</a></li>
                     </ul>
                 </li>
                 <li nz-submenu nzIcon="deployment-unit" nzTitle="SAAS管理" *canOperate="'saasmanage'">

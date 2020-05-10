@@ -38,6 +38,12 @@ namespace Convience.Model
 
             CreateMap<ArticleViewModel, Article>();
             CreateMap<Article, ArticleResult>();
+
+            CreateMap<DicTypeViewModel, DicType>();
+            CreateMap<DicType, DicTypeResult>();
+
+            CreateMap<DicDataViewModel, DicData>();
+            CreateMap<DicData, DicDataResult>();
         }
     }
 }
