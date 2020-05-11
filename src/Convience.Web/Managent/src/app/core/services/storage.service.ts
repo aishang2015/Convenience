@@ -26,6 +26,12 @@ export class StorageService {
     return localStorage.getItem('userTokenExpiration');
   }
 
+  get IsTokenExpire() {
+    let now = new Date();
+    let expire = new Date(this.tokenExpiration);
+    return now > expire;
+  }
+
   get userName() {
     return localStorage.getItem("username");
   }
