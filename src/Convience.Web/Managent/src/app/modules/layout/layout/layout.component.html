@@ -1,14 +1,8 @@
-<nz-layout class="fullscreen">
+<nz-layout style="min-height: 100vh;">
     <nz-header>
         <div class="logo">
             <label>Convience</label>
         </div>
-        <!-- <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
-            <li nz-menu-item>nav 1</li>
-            <li nz-menu-item>nav 2</li>
-            <li nz-menu-item>nav 3</li>
-        </ul> -->
-
         <div class="user">
             <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
                 <nz-badge nzDot>
@@ -30,7 +24,7 @@
         </div>
     </nz-header>
     <nz-layout>
-        <nz-sider nzWidth="200px" nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
                 <li nz-menu-item nzMatchRouter *canOperate="'dashaboard'">
                     <a [routerLink]="[ '/dashboard' ]" (click)="setBreadcrumb('仪表盘')">
@@ -104,7 +98,7 @@
             </ul>
         </nz-sider>
         <nz-layout class="inner-layout">
-            <nz-card [nzSize]="'small'" style="margin-top: 10px;">
+            <nz-card [nzSize]="'small'">
                 <div style="display:flex;display: -webkit-flex;align-items:center;">
                     <div style="float: left;">
                         <button nz-button nzType="link" nzSize="small" (click)="isCollapsed = !isCollapsed">
@@ -117,7 +111,9 @@
                     </nz-breadcrumb>
                 </div>
             </nz-card>
-            <ng-content></ng-content>
+            <div class="fullWindow">
+                <ng-content></ng-content>
+            </div>
         </nz-layout>
     </nz-layout>
 </nz-layout>

@@ -1,26 +1,26 @@
 <nz-card [nzSize]="'small'">
     <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'userName'">用户名</nz-form-label>
             <nz-form-control>
                 <input nz-input placeholder="用户名" [formControlName]="'userName'" [attr.id]="'userName'"
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'phoneNumber'">电话号码</nz-form-label>
             <nz-form-control>
                 <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'"
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
             <nz-form-control>
                 <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'" autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'roleid'">角色</nz-form-label>
             <nz-form-control>
                 <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'"
@@ -37,7 +37,7 @@
     </form>
 </nz-card>
 
-<nz-card [nzSize]="'small'" class="fullwindow">
+<nz-card [nzSize]="'small'" class="full-double">
     <div>
         <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)" *canOperate="'adduserbtn'"><i
                 nz-icon nzType="plus"></i>添加用户</button>

@@ -1,9 +1,11 @@
 <nz-card [nzSize]="'small'">
-  <button nz-button class="mb-5 mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新文件</button>
-  <button nz-button class="mb-5 mr-10" *canOperate="'createFolderBtn'" (click)="createFolder()"><i nz-icon nzType="folder"></i>创建文件夹</button>
-  <button nz-button class="mb-5 mr-10" *canOperate="'uploadFileBtn'" (click)="upload()"><i nz-icon nzType="upload"></i>上传文件</button>
+  <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新文件</button>
+  <button nz-button class="mr-10" *canOperate="'createFolderBtn'" (click)="createFolder()"><i nz-icon
+      nzType="folder"></i>创建文件夹</button>
+  <button nz-button class="mr-10" *canOperate="'uploadFileBtn'" (click)="upload()"><i nz-icon
+      nzType="upload"></i>上传文件</button>
 </nz-card>
-<nz-card [nzSize]="'small'" class="fullwindow">
+<nz-card [nzSize]="'small'" class="full-double">
   <nz-breadcrumb class="ml-10">
     <a class="mr-10" (click)="back()"><i nz-icon nzType="arrow-left"></i></a>
     <nz-breadcrumb-item>
@@ -22,7 +24,7 @@
   <span>上传文件</span>
 </ng-template>
 <ng-template #uploadContentTpl>
-  <nz-alert  class="mb-10" nzType="warning" nzMessage="文件限制2m以下"></nz-alert>
+  <nz-alert class="mb-10" nzType="warning" nzMessage="文件限制2m以下"></nz-alert>
   <nz-upload [(nzFileList)]="fileList" [nzBeforeUpload]="beforeUpload" nzSize="2048" nzLimit="4">
     <button nz-button><i nz-icon nzType="upload"></i>选择上传文件</button>
   </nz-upload>

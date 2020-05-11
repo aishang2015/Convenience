@@ -1,5 +1,5 @@
 <div class="content">
-    <div class="tree">
+    <div class="left">
         <nz-card [nzSize]="'small'">
             <button nz-button class="mb-10" (click)="initNodes()"><i nz-icon nzType="sync"></i>刷新数据</button>
             <nz-tree #nzTreeComponent [nzData]="nodes" nzShowIcon="true" (nzClick)="treeClick($event)"
@@ -12,7 +12,7 @@
             </nz-tree>
         </nz-card>
     </div>
-    <div class="menuTable">
+    <div class="right">
         <nz-card [nzSize]="'small'">
             <div>
                 <button nz-button class="mr-10" (click)="add(addMenuTitleTpl,menuContentTpl)"

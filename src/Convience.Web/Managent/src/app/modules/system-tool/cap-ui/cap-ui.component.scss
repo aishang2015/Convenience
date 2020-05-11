@@ -1,6 +1,8 @@
-.fullwindow {
-    min-height: calc(100vh - 175px);
-    iframe{
-        min-height: calc(100vh - 205px);
+.full {
+    min-height: 100%;
+    iframe {
+        margin-top: 10px;
+        height: calc(100vh - 152px);
+        width: 100%;
     }
 }

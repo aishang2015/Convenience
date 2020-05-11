@@ -3,8 +3,10 @@ nz-header {
     width: 200px;
     float: left;
     margin: 0 20px;
-    label{
-      line-height: 64px;color: white;font-size: 2em;
+    label {
+      line-height: 64px;
+      color: white;
+      font-size: 2em;
     }
   }
 
@@ -31,28 +33,33 @@ nz-header {
 
 .sider-menu {
   height: 100%;
-  border-right: 0;
+  //   border-right: 0;
+}
+
+.fullWindow {
+  // min-height: calc(100vh - 142px);
+  height: calc(100% - 70px);
+  min-width: 1200px;
 }
 
 .inner-layout {
-  padding: 0 24px 24px;
+  padding: 0 10px 10px;
   min-width: 800px;
 }
 
-nz-breadcrumb {
-  margin: 16px 0;
-}
-
-nz-content {
-  background: #fff;
-  padding: 24px;
-}
-
 nz-sider {
-  overflow: hidden;
-  height: auto;
+  width: 200px;
 }
 
-.fullscreen {
-  min-height: 100%;
-}
+// nz-breadcrumb {
+//   margin: 16px 0;
+// }
+
+// nz-content {
+//   background: #fff;
+//   padding: 24px;
+// }
+
+// .fullscreen {
+//   min-height: 100%;
+// }

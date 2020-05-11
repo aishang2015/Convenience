@@ -1,18 +1,18 @@
 <nz-card [nzSize]="'small'">
     <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'title'">标题</nz-form-label>
             <nz-form-control>
                 <input nz-input placeholder="标题" [formControlName]="'title'" [attr.id]="'title'" autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'tag'">标签</nz-form-label>
             <nz-form-control>
                 <input nz-input placeholder="标签" [formControlName]="'tag'" [attr.id]="'tag'" autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item class="mb-5">
+        <nz-form-item>
             <nz-form-label [nzFor]="'columnId'">栏目</nz-form-label>
             <nz-form-control>
                 <nz-tree-select style="width: 150px;" [nzNodes]="nodes" [formControlName]="'columnId'"
@@ -28,7 +28,7 @@
     </form>
 </nz-card>
 
-<nz-card [nzSize]="'small'" class="fullwindow">
+<nz-card [nzSize]="'small'" class="full-double">
     <div>
         <button nz-button class="mr-10" (click)="add()" *canOperate="'addArticleBtn'">
             <i nz-icon nzType="plus"></i>添加文章</button>

@@ -1,5 +1,5 @@
 <div class="content">
-    <div class="tree">
+    <div class="left">
         <nz-card [nzSize]="'small'">
             <div>
                 <button nz-button class="mr-10" (click)="addDicType()" *canOperate="'addDicTypeBtn'"><i nz-icon
@@ -19,7 +19,7 @@
             </nz-list>
         </nz-card>
     </div>
-    <div class="table">
+    <div class="right">
         <nz-card [nzSize]="'small'">
             <div>
                 <ng-container *ngIf="selectedDicType">

@@ -37,3 +37,38 @@ body {
   -khtml-user-select: none; /*早期浏览器*/
   user-select: none;
 }
+
+.content {
+  position: relative;
+  height: 100%;
+  .left {
+    position: absolute;
+    width: 300px;
+    height: 100%;
+    nz-card {
+      overflow: auto;
+      margin-top: 0;
+      height: 100%;
+    }
+  }
+  .right {
+    margin-left: 310px;
+    height: 100%;
+    nz-card {
+      overflow: auto;
+      height: 100%;
+    }
+  }
+}
+
+.full-triple {
+  min-height: calc(100% - 136px);
+}
+
+.full-double {
+  min-height: calc(100% - 71px);
+}
+
+.full-single {
+  min-height: 100%;
+}

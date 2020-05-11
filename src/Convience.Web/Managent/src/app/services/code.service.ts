@@ -432,7 +432,7 @@ export class ${camel}Service {
     </form>
 </nz-card>
 
-<nz-card [nzSize]="'small'" class="fullwindow">
+<nz-card [nzSize]="'small'">
     <div>
         <button nz-button class="mr-10" (click)="add()" *canOperate="'add${camel}Btn'">
             <i nz-icon nzType="plus"></i>添加</button>

@@ -1,11 +1,11 @@
 <div class="content">
-    <div class="tree">
+    <div class="left">
         <nz-card [nzSize]="'small'">
             <app-department-tree #tree (nodeChecked)="nodeChecked($event)" (loadData)="loadedData($event)">
             </app-department-tree>
         </nz-card>
     </div>
-    <div class="table">
+    <div class="right">
         <nz-card [nzSize]="'small'">
             <div>
                 <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
