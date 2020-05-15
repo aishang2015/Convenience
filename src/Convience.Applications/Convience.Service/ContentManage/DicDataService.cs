@@ -3,8 +3,9 @@ using AutoMapper;
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Model.Models;
 using Convience.Model.Models.ContentManage;
-
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,17 @@ namespace Convience.Service.ContentManage
 {
     public class DicDataService : IDicDataService
     {
+        private readonly IRepository<DicType> _dictypeRepository;
+
         private readonly IRepository<DicData> _dicdataRepository;
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public DicDataService(IRepository<DicData> dicdataRepository,
+        public DicDataService(
+            IRepository<DicType> _dictypeRepository,
+            IRepository<DicData> dicdataRepository,
           IUnitOfWork<SystemIdentityDbContext> unitOfWork,
           IMapper mapper)
         {
@@ -40,6 +45,17 @@ namespace Convience.Service.ContentManage
             var result = _dicdataRepository.Get(dicData => dicData.DicTypeId == dicTypeId)
                 .OrderBy(dicdata => dicdata.Sort);
             return _mapper.Map<IQueryable<DicData>, IEnumerable<DicDataResult>>(result);
+        }
+
+        public IEnumerable<DicModel> GetDicDataDic(string dicTypeCode)
+        {
+            var dictype = _dictypeRepository.Get().Where(dicType => dicType.Code == dicTypeCode)
+                .Include(dicType => dicType.DicDatas).FirstOrDefault();
+            return dictype.DicDatas.Select(dicData => new DicModel
+            {
+                Key = dicData.Id.ToString(),
+                Value = dicData.Name
+            });
         }
 
         public async Task<bool> AddDicDataAsync(DicDataViewModel model)

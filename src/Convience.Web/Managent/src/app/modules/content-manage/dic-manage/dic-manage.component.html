@@ -10,11 +10,11 @@
                     <ul nz-list-item-actions>
                         <nz-list-item-action>
                             <a class="ml-5" (click)="viewDicData(item)"><i nz-icon nzType="ordered-list"></i></a>
-                            <a class="ml-5" (click)="editDicType(item.id)"><i nz-icon nzType="edit"></i></a>
-                            <a class="ml-5" (click)="removeDicType(item.id)"><i nz-icon nzType="delete"></i></a>
+                            <a class="ml-5" (click)="editDicType(item.id)" *canOperate="'updateDicTypeBtn'"><i nz-icon nzType="edit"></i></a>
+                            <a class="ml-5" (click)="removeDicType(item.id)" *canOperate="'deleteDicTypeBtn'"><i nz-icon nzType="delete"></i></a>
                         </nz-list-item-action>
                     </ul>
-                    {{ item.name }} ( {{item.code}} )
+                    <span>{{ item.name }} - {{item.code}}  <span style="color: gray;">( {{item.sort}} )</span></span>
                 </nz-list-item>
             </nz-list>
         </nz-card>
@@ -23,7 +23,7 @@
         <nz-card [nzSize]="'small'">
             <div>
                 <ng-container *ngIf="selectedDicType">
-                    <button nz-button class="mr-10" (click)="addDicData()" *canOperate="'addDepartmentBtn'"><i nz-icon
+                    <button nz-button class="mr-10" (click)="addDicData()" *canOperate="'addDicDataBtn'"><i nz-icon
                             nzType="plus"></i>添加数据</button>
                 </ng-container>
             </div>
@@ -64,20 +64,6 @@
 <ng-template #dicTypeTpl>
     <form nz-form [formGroup]="editDicTypeForm" (ngSubmit)="submitDicTypeEdit()">
         <nz-form-item>
-            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_Code'">代码</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicType_Code_ErrorTpl">
-                <input [attr.id]="'dicType_Code'" formControlName="code" nz-input placeholder="代码" autocomplete="off" />
-            </nz-form-control>
-            <ng-template #dicType_Code_ErrorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">
-                    请输入字典分类代码！
-                </ng-container>
-                <ng-container *ngIf="control.hasError('maxlength')">
-                    字典分类代码长度不能超过15！
-                </ng-container>
-            </ng-template>
-        </nz-form-item>
-        <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_Name'">名称</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicType_Name_ErrorTpl">
                 <input [attr.id]="'dicType_Name'" formControlName="name" nz-input placeholder="名称" autocomplete="off" />
@@ -88,6 +74,20 @@
                 </ng-container>
                 <ng-container *ngIf="control.hasError('maxlength')">
                     字典分类名称长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'dicType_Code'">代码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="dicType_Code_ErrorTpl">
+                <input [attr.id]="'dicType_Code'" formControlName="code" nz-input placeholder="代码" autocomplete="off" />
+            </nz-form-control>
+            <ng-template #dicType_Code_ErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入字典分类代码！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    字典分类代码长度不能超过15！
                 </ng-container>
             </ng-template>
         </nz-form-item>

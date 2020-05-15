@@ -96,6 +96,11 @@ export class DicManageComponent implements OnInit {
         this.dictypeService.delete(id).subscribe(result => {
           this.messageService.success("删除成功！");
           this.initDataTypes();
+          if(id == this.selectedDicType?.id){
+            this.dicDatas.splice(0,this.dicDatas.length);
+            this.tableHeader = null;
+            this.selectedDicType = null;
+          }
         });
       },
     });

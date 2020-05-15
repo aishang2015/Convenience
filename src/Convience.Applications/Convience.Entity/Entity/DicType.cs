@@ -16,6 +16,6 @@ namespace Convience.Entity.Entity
 
         public int Sort { get; set; }
 
-        public List<DicType> DicTypes { get; set; }
+        public List<DicData> DicDatas { get; set; }
     }
 }
