@@ -2,10 +2,16 @@
 /src/*/*/.vscode
 /src/*/*/dist
 /src/.vs
+/src/*/.vs
+/src/*/*/.vs
+/src/*/*/*/.vs
 /src/*/*/bin
 /src/*/*/obj
 /src/*/*/*/bin
 /src/*/*/*/obj
+/src/*/*/*/*/bin
+/src/*/*/*/*/obj
 /src/*/*/*.csproj.user
 /src/*/*/*/*.csproj.user
+/src/*/*/*/*/*.csproj.user
 /src/config/Logs

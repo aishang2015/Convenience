@@ -1,0 +1,9 @@
+ {
+  "ConnectionStrings": {
+    "Sqlite": "Data Source=test.db"
+  },
+  "Uri": {
+    "ApiUri": "https://localhost:44356/api",
+    "BaseUri": "https://localhost:44356"
+  }
+}

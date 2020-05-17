@@ -1,0 +1,134 @@
+﻿<Window
+    x:Class="Convience.WPFClient.Windows.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Convience.WPFClient.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Convience.WPFClient.ViewModels"
+    x:Name="Current"
+    Title="MainWindow"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="13"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowState="Maximized"
+    Closed="AppClose"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <converters:IsVisibilityConverter x:Key="IsVisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Height="80"
+            Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Margin="40,0,0,0"
+                VerticalAlignment="Center"
+                Style="{StaticResource MaterialDesignHeadline4TextBlock}">
+                Convience
+            </TextBlock>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Image x:Name="AvatarImage"
+                    Width="47"
+                    Height="47"
+                    Source="pack://application:,,,/Assets/avatars/1.png"/>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    MouseEnter="TextBlock_MouseEnter"
+                    Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                    Text="{Binding LoginInfo.Name}"/>
+                <Popup
+                    Name="pop1"
+                    Placement="Bottom"
+                    StaysOpen="False">
+                    <StackPanel Width="100" Background="{DynamicResource MaterialDesignCardBackground}">
+                        <ListBox SelectionChanged="ListSelect" x:Name="ControlList">
+                            <TextBlock>
+                                个人信息
+                            </TextBlock>
+                            <TextBlock>
+                                修改密码
+                            </TextBlock>
+                            <TextBlock MouseDown="Logout">
+                                注销
+                            </TextBlock>
+                        </ListBox>
+                    </StackPanel>
+                </Popup>
+                <StackPanel Width="20" />
+                <!--<Button
+                    Width="37"
+                    Height="37"
+                    Command="{Binding CloseApplicationCommand}"
+                    CommandParameter="{Binding ElementName=Current}"
+                    Style="{DynamicResource MaterialDesignToolForegroundButton}">
+                    <materialDesign:PackIcon
+                        Width="30"
+                        Height="30"
+                        Kind="Close" />
+                </Button>-->
+            </StackPanel>
+        </Grid>
+
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="{DynamicResource MaterialDesignCardBackground}">
+            <ScrollViewer
+                Grid.Row="1"
+                Grid.Column="0"
+                Padding="0,1,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto">
+
+                <TreeView ItemsSource="{Binding MenuCategories}">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type vm:MenuCategory}" ItemsSource="{Binding Menus}">
+                            <TextBlock
+                                Margin="3,2"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding Name}" />
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type vm:Menu}">
+                            <TextBlock
+                                Margin="3,2"
+                                Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                                Text="{Binding Name}" />
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </ScrollViewer>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="1">
+            <StackPanel >
+            <materialDesign:Card Grid.Column="0" Background="{DynamicResource MaterialDesignCardBackground}"  
+                                 Padding="8" Margin="10" Height="50">
+                <TextBlock FontSize="16" VerticalAlignment="Center" Padding="10,0,0,0">仪表盘</TextBlock>
+            </materialDesign:Card>
+            <Frame Source="/Windows/Pages/DashBoardPage.xaml" NavigationUIVisibility="Hidden"/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
