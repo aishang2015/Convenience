@@ -5,7 +5,7 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Convience.Util.Middleware
+namespace Convience.Util.Middlewares
 {
     public class CustomExceptionMiddleware
     {

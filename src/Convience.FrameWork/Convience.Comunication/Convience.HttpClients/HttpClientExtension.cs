@@ -1,20 +1,32 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Newtonsoft.Json;
+
+using System;
+using System.Net.Http;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Convience.HttpClients
 {
     public static class HttpClientExtension
     {
-        public static IServiceCollection AddHttpClients(this IServiceCollection services)
+        public static async Task<T> Get<T>(this HttpResponseMessage httpResponseMessage)
         {
-            services.AddHttpClient();
-            return services;
+            string result = await httpResponseMessage.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(result);
         }
 
-        public static IServiceCollection AddHttpClients<T>(this IServiceCollection services)
-            where T : AbstractHttpClient
+        public static void Handle(this HttpResponseMessage httpResponseMessage,
+            [Optional]Action<HttpResponseMessage> successAction,
+            [Optional]Action<HttpResponseMessage> failAction)
         {
-            services.AddHttpClient<T>();
-            return services;
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                successAction(httpResponseMessage);
+            }
+            else
+            {
+                failAction(httpResponseMessage);
+            }
         }
     }
 }

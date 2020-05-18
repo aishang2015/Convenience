@@ -1,5 +1,4 @@
-﻿using Convience.Util.helpers;
-
+﻿using Convience.Util.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 using System;

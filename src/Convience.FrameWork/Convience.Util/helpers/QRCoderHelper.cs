@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Convience.Util.helpers
+namespace Convience.Util.Helpers
 {
     public static class QRCoderHelper
     {

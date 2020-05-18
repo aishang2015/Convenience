@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace backend.Controllers
 {
@@ -31,6 +32,10 @@ namespace backend.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            HttpClient httpClient = new HttpClient();
+            var result = httpClient.GetAsync("https://localhost:44356/api/captcha").Result;
+            Console.WriteLine(result.Content);
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {

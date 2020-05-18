@@ -13,8 +13,7 @@ using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
-using Convience.Util.Middleware;
-
+using Convience.Util.Middlewares;
 using Hangfire;
 
 using Microsoft.AspNetCore.Builder;

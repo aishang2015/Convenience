@@ -3,8 +3,7 @@ using Convience.Entity.Data;
 using Convience.Jwtauthentication;
 using Convience.Model.Models.AccountViewModels;
 using Convience.Repository;
-using Convience.Util.helpers;
-
+using Convience.Util.Helpers;
 using EasyCaching.Core;
 
 using Microsoft.Extensions.Options;

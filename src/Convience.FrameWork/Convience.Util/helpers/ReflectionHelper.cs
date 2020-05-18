@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace Convience.Util.helpers
+namespace Convience.Util.Helpers
 {
     public static class ReflectionHelper
     {

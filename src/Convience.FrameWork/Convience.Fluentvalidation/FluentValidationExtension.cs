@@ -1,6 +1,5 @@
 ﻿using Convience.Fluentvalidation;
-using Convience.Util.helpers;
-
+using Convience.Util.Helpers;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
