@@ -9,8 +9,8 @@
   - 代码生成器直接生成所有前端component，service，后端控制器，服务等全部代码。
   - 任务计划可选用netcore自有的Background Task或者Hangfire
   - 缓存使用EasyCaching，统一不同缓存系统接口
-  - 使用NG-ZORRO实现前端大部分功能（真的很好用）
-  - 支持websocket，HttpClient
+  - 使用NG-ZORRO实现前端大部分功能
+  - 添加了wpf的客户端。
 
 - 实验环境（docker）：config文件夹为容器映射本地配置文件，基本不需要修改。本机：docker-compose up -d。远程主机：修改config/config.json的地址为主机地址，然后用docker-compose构建。
 
