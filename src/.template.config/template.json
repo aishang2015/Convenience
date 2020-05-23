@@ -1,0 +1,13 @@
+{
+  "author": "aishang2015",
+  "classifications": [ "Web/WebAPI" ], 
+  "name": "Convience", 
+  "identity": "TplDemoTemplate",
+  "shortName": "convience",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "Convience",
+  "preferNameDirectory": true,
+}

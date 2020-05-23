@@ -17,3 +17,5 @@
 - 示例：http://172.81.254.197/
 
   用户名admin1~admin9，密码相同。任务计划定时重置菜单和用户数据。使用docker部署在1核2g1m服务器上
+  
+- 创建api项目脚手架:首先暂时删除Convience.Client和Convience.Web目录，然后cd到src目录执行[dotnet new -i .]，这样就创建了一个convience名称的模板。然后在任意空目录执行[dotnet new convience -n 项目名]，这样就创建了新的工程，所有的convience都被成功替换。
