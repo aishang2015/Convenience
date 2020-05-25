@@ -36,6 +36,36 @@ namespace Convience.MongoDB
             return _dataBase.GetCollection<T>(typeof(T).Name);
         }
 
+        #region 索引操作
+
+        /// <summary>
+        /// 添加索引
+        /// </summary>
+        public async Task AddIndex<T>(FieldDefinition<T> field)
+        {
+            var indexOptions = new CreateIndexOptions();
+            var indexKeys = Builders<T>.IndexKeys.Ascending(field);
+            var indexModel = new CreateIndexModel<T>(indexKeys, indexOptions);
+            await GetCollection<T>().Indexes.CreateOneAsync(indexModel);
+        }
+
+        /// <summary>
+        /// 添加索引
+        /// </summary>
+        public async Task AddIndex<T>(IEnumerable<FieldDefinition<T>> fields)
+        {
+            var indexModels = new List<CreateIndexModel<T>>();
+            foreach (var field in fields)
+            {
+                var indexOptions = new CreateIndexOptions();
+                var indexKeys = Builders<T>.IndexKeys.Ascending(field);
+                indexModels.Add(new CreateIndexModel<T>(indexKeys, indexOptions));
+            }
+            await GetCollection<T>().Indexes.CreateManyAsync(indexModels);
+        }
+
+        #endregion
+
         #region GridFS处理
 
         /// <summary>
