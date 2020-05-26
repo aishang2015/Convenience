@@ -1,5 +1,5 @@
 ﻿using QRCoder;
-
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,7 +8,7 @@ namespace Convience.Util.Helpers
 {
     public static class QRCoderHelper
     {
-        public static byte[] GetPTQRCode(string url, int pixel, string logoPath = null)
+        public static string GetPTQRCode(string url, int pixel, string logoPath = null)
         {
             QRCodeGenerator generator = new QRCodeGenerator();
 
@@ -28,7 +28,7 @@ namespace Convience.Util.Helpers
 
             MemoryStream ms = new MemoryStream();
             qrImage.Save(ms, ImageFormat.Jpeg);
-            return ms.ToArray();
+            return Convert.ToBase64String(ms.ToArray());
         }
     }
 }
