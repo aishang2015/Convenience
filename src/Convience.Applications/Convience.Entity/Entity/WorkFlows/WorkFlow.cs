@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
+using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Convience.Entity.Entity.WorkFlows
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class WorkFlow
     {
         public int Id { get; set; }
+
+        public int WorkFlowGroupId { get; set; }
 
         public string Name { get; set; }
 
@@ -22,7 +26,7 @@ namespace Convience.Entity.Entity.WorkFlows
 
         #region
 
-        public List<WorkFlowLink> WorkFlowRoutes { get; set; }
+        public List<WorkFlowLink> WorkFlowLinks { get; set; }
 
         public List<WorkFlowNode> WorkFlowNodes { get; set; }
 

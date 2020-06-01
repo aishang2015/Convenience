@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
 
 namespace Convience.Entity.Entity.WorkFlows
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class WorkFlowNode
     {
         public int Id { get; set; }
 
         public string Name { get; set; }
 
-        public NodeType NodeType { get; set; }
+        // 节点类型
+        public NodeTypeEnum NodeType { get; set; }
 
         // DomId
         public string ElementId { get; set; }
@@ -20,7 +20,7 @@ namespace Convience.Entity.Entity.WorkFlows
 
         public int Left { get; set; }
 
-        public HandleMode HandleMode { get; set; }
+        public HandleModeEnum HandleMode { get; set; }
 
         // 处理人ID
         public string Handlers { get; set; }
@@ -40,7 +40,7 @@ namespace Convience.Entity.Entity.WorkFlows
         #endregion
     }
 
-    public enum NodeType
+    public enum NodeTypeEnum
     {
         StartNode = 0,
         WorkNode = 1,
@@ -50,7 +50,7 @@ namespace Convience.Entity.Entity.WorkFlows
     /// <summary>
     /// 办理模式
     /// </summary>
-    public enum HandleMode
+    public enum HandleModeEnum
     {
         Personnel = 1, // 指定人员模式
         Position = 2, // 指定职位模式

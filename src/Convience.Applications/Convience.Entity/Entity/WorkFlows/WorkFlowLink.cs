@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
 
 namespace Convience.Entity.Entity.WorkFlows
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class WorkFlowLink
     {
         public int Id { get; set; }

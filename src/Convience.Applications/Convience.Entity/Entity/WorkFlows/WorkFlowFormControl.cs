@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Convience.Entity.Data;
+using Convience.EntityFrameWork.Infrastructure;
 
 namespace Convience.Entity.Entity.WorkFlows
 {
+    [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class WorkFlowFormControl
     {
         public int Id { get; set; }
@@ -11,9 +11,15 @@ namespace Convience.Entity.Entity.WorkFlows
         public string Name { get; set; }
 
         // 控件类型
-        public ControlType ControlType { get; set; }
+        public ControlTypeEnum ControlType { get; set; }
 
         #region 控件属性
+
+        // 控件位置
+        public int Top { get; set; }
+
+        // 控件位置
+        public int Left { get; set; }
 
         // 宽度
         public int Width { get; set; }
@@ -49,7 +55,7 @@ namespace Convience.Entity.Entity.WorkFlows
 
     }
 
-    public enum ControlType
+    public enum ControlTypeEnum
     {
         Label = 1,
         TextBox = 2,
