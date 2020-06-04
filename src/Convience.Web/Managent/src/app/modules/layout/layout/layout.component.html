@@ -56,6 +56,16 @@
                                 <i nz-icon [nzType]="'apartment'"></i>部门管理</a></li>
                     </ul>
                 </li>
+                <li nz-submenu nzIcon="team" nzTitle="工作流" *canOperate="'workflow'">
+                    <ul>
+                        <li nz-menu-item nzMatchRouter *canOperate="'myWorkflow'">
+                            <a [routerLink]="[ '/workflow/myFlow' ]" (click)="setBreadcrumb('工作流','我的工作流')">
+                                <i nz-icon [nzType]="'credit-card'"></i>我的工作流</a></li>
+                        <li nz-menu-item nzMatchRouter *canOperate="'workflowManage'">
+                            <a [routerLink]="[ '/workflow/workflowManage' ]" (click)="setBreadcrumb('工作流','工作流管理')">
+                                <i nz-icon [nzType]="'reconciliation'"></i>工作流管理</a></li>
+                    </ul>
+                </li>
                 <li nz-submenu nzIcon="book" nzTitle="内容管理" *canOperate="'contentmanage'">
                     <ul>
                         <li nz-menu-item nzMatchRouter *canOperate="'articleManage'">
