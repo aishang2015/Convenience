@@ -33,9 +33,9 @@
         position: relative;
         overflow: auto;
         height: 100%;
-        background-image: linear-gradient(90deg, rgba(180, 180, 180, 0.15) 10%, rgba(0, 0, 0, 0) 10%),
-            linear-gradient(rgba(180, 180, 180, 0.15) 0%, rgba(0, 0, 0, 0) 0%);
-        background-size: 20px;
+        background-image: linear-gradient(90deg, rgba(0, 255, 213, 0.25) 10%, rgba(0, 0, 0, 0) 10%),
+            linear-gradient(rgba(0, 255, 213, 0.25) 10%, rgba(0, 0, 0, 0) 10%);
+        background-size: 20px 20px;
     }
 }
 
@@ -46,7 +46,7 @@
 }
 
 .node {
-    width: 230px;
+    width: 200px;
     height: 50px;
     text-align: center;
     position: absolute;
@@ -66,9 +66,47 @@
         width: calc(100% - 50px);
         height: 50px;
         line-height: 50px;
-        font-size: 20px;
+        font-size: 16px;
         background-color: lightslategray;
         vertical-align: middle;
         cursor: move;
     }
 }
+
+.sborder {
+    display: none;
+    .lborder {
+        height: 50px;
+        width: 2px;
+        top: 0px;
+        left: 0px;
+        background-color: black;
+        position: absolute;
+    }
+    .rborder {
+        height: 50px;
+        width: 2px;
+        top: 0px;
+        left: 199px;
+        background-color: black;
+        position: absolute;
+    }
+    .tborder {
+        height: 2px;
+        width: 200px;
+        top: 0px;
+        left: 0px;
+        background-color: black;
+        position: absolute;
+    }
+    .bborder {
+        height: 2px;
+        width: 200px;
+        top: 49px;
+        left: 0px;
+        background-color: black;
+        position: absolute;
+    }
+}
+
+

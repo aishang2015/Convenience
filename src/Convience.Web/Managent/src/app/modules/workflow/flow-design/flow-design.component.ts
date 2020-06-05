@@ -1,5 +1,6 @@
 import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import * as jp from 'jsplumb';
+import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 
 @Component({
   selector: 'app-flow-design',
@@ -12,12 +13,16 @@ export class FlowDesignComponent implements OnInit {
   @ViewChild('flowContainer', { static: true })
   private _flowContainer: ElementRef;
 
-  @ViewChild('start', { static: true })
-  private _startIcon: ElementRef;
-  @ViewChild('work', { static: true })
-  private _workIcon: ElementRef;
-  @ViewChild('end', { static: true })
-  private _endIcon: ElementRef;
+  @ViewChild('lborder', { static: true })
+  private _lborder: ElementRef;
+  @ViewChild('tborder', { static: true })
+  private _tborder: ElementRef;
+  @ViewChild('rborder', { static: true })
+  private _rborder: ElementRef;
+  @ViewChild('bborder', { static: true })
+  private _bborder: ElementRef;
+  @ViewChild('selectedBorder', { static: true })
+  private _sborder: ElementRef;
 
   private _jsPlumb = jp.jsPlumb;
   private _jsPlumbInstance;
@@ -41,14 +46,17 @@ export class FlowDesignComponent implements OnInit {
     { key: 'end', name: '结束节点', icon: 'stop' }
   ];
 
-  private _nodeIndex: number = 1;
-
+  // 拖拽的节点类型key
   private _draggedKey;
+
+  // 点击选中的节点
+  private _checkedNodeId = null;
 
   constructor(
     private _renderer: Renderer2) { }
 
   ngOnInit(): void {
+    this.listenKeyboard();
     this.initGraph();
   }
 
@@ -68,32 +76,47 @@ export class FlowDesignComponent implements OnInit {
   }
 
   addStartNode(x, y) {
-    this.addNode(x, y, 'node', "开始节点", this._startIcon);
+    this.addNode(x, y, "开始节点");
   }
 
   addWorkNode(x, y) {
-    this.addNode(x, y, 'node', "工作节点", this._workIcon);
+    this.addNode(x, y, "工作节点");
   }
 
   addEndNode(x, y) {
-    this.addNode(x, y, 'node', "结束节点", this._endIcon);
+    this.addNode(x, y, "结束节点");
   }
 
 
-  addNode(x, y, style, title, icon) {
-    let id = `nodeIndex${this._nodeIndex++}`;
+  addNode(x, y, title) {
+    let id = `nodeIndex${this.randomKey()}`;
 
     // 节点
     let node = this._renderer.createElement('div');
     this._renderer.setStyle(node, 'top', `${y}px`);
     this._renderer.setStyle(node, 'left', `${x}px`);
-    this._renderer.addClass(node, style);
+    this._renderer.addClass(node, 'node');
     this._renderer.setAttribute(node, 'id', id);
 
-    // 拼接元素
+    // 设置节点事件
+    this._renderer.listen(node, 'click', event => {
+
+      if (this._checkedNodeId != node.id) {
+        this._checkedNodeId = node.id
+
+        // 绑定四个元素作为border的目的是为了以后修改为调整大小的瞄点
+        this._renderer.setStyle(this._sborder.nativeElement, 'display', 'block');
+        this._renderer.appendChild(node, this._sborder.nativeElement);
+      } else {
+        this._checkedNodeId = null;
+        this._renderer.setStyle(this._sborder.nativeElement, 'display', 'none');
+      }
+    });
+
+    // 拼接节点到流程图
     this._renderer.appendChild(this._flowContainer.nativeElement, node);
-    
-    // 图标区域
+
+    // 设置节点连线区域
     let iconArea = this._renderer.createElement('div');
     this._renderer.addClass(iconArea, 'connectable');
     // let newEl = icon.nativeElement.cloneNode(true);
@@ -101,15 +124,14 @@ export class FlowDesignComponent implements OnInit {
     // this._renderer.appendChild(iconArea, newEl);
     this._renderer.appendChild(node, iconArea);
 
-    // 拖拽区域
+    // 设置节点拖拽区域
     let draggableArea = this._renderer.createElement('div');
     this._renderer.addClass(draggableArea, 'draggable');
-    // 拖拽区域文字
     let titleEl = this._renderer.createText(title);
     this._renderer.appendChild(draggableArea, titleEl);
     this._renderer.appendChild(node, draggableArea);
 
-    // 配置拖拽
+    // 设施元素在流程图中可拖拽
     this._jsPlumbInstance.draggable(node, {
       filter: '.draggable',
       filterExclude: false
@@ -151,17 +173,35 @@ export class FlowDesignComponent implements OnInit {
 
   dropZone(event) {
     event.preventDefault();
+    let x = event.offsetX - 100;
+    let y = event.offsetY - 25;
     switch (this._draggedKey) {
       case 'start':
-        this.addStartNode(event.offsetX - 50, event.offsetY - 50);
+        this.addStartNode(x, y);
         break;
       case 'work':
-        this.addWorkNode(event.offsetX - 50, event.offsetY - 50);
+        this.addWorkNode(x, y);
         break;
       case 'end':
-        this.addEndNode(event.offsetX - 50, event.offsetY - 50);
+        this.addEndNode(x, y);
         break;
     }
+  }
+
+  randomKey(): number {
+    return Date.parse(new Date().toString()) + Math.floor(Math.random() * Math.floor(999));
+  }
+
+  listenKeyboard() {
+    fromEvent(window, 'keydown').subscribe((event: any) => {
+      event.preventDefault();
+      if (this._checkedNodeId) {
+        let element = this._renderer.selectRootElement(`#${this._checkedNodeId}`);
+        if (event.key == 'ArrowDown') {
+          element.style.top = element.style.top - 1;
+        }
+      }
+    });
   }
 
 }

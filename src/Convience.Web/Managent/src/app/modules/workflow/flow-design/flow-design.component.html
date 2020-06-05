@@ -16,7 +16,10 @@
     </div>
     <div id="flowContainer" #flowContainer (drop)="dropZone($event)" (dragover)="onDragOver($event)">
     </div>
-    <i nz-icon nzType="play-circle" nzTheme="outline" style="font-size: 40px;display:none;" #start></i>
-    <i nz-icon nzType="check-circle" nzTheme="outline" style="font-size: 40px;display:none;" #work></i>
-    <i nz-icon nzType="stop" nzTheme="outline" style="font-size: 40px;display:none;" #end></i>
+    <div #selectedBorder class="sborder">
+        <div #lborder class="lborder"></div>
+        <div #tborder class="tborder"></div>
+        <div #rborder class="rborder"></div>
+        <div #bborder class="bborder"></div>
+    </div>
 </div>
