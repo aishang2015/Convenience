@@ -1,0 +1,42 @@
+#edit-area {
+    position: relative;
+    height: 100%;
+    #tool-container {
+        position: absolute;
+        width: 300px;
+        height: 100%;
+        nz-card {
+            margin-top: 0px;
+            overflow: auto;
+            height: 100%;
+        }
+        .control {
+            padding: 10px;
+            border: 1px solid grey;
+            width: 90%;
+            position: relative;
+        }
+    }
+    #form-Container {
+        margin-left: 310px;
+        height: 100%;
+        nz-card {
+            overflow: auto;
+            height: 100%;
+        }
+        #form-area {
+            width: 595px;
+            height: 842px;
+            margin: auto;
+            background-color: wheat;
+            position: relative;
+        }
+    }
+}
+
+.formElement {
+    color: black;
+    display: inline-block;
+    position: absolute;
+    opacity:0;
+}

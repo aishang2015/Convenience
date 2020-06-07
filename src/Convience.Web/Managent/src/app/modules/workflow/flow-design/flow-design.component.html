@@ -2,7 +2,6 @@
     <div id="tool-bar">
         <nz-card>
             <h2>节点类型</h2>
-
             <div nz-row [nzGutter]="8">
                 <div nz-col [nzSpan]="8" *ngFor="let node of nodes">
                     <div class="tool-box" draggable="true" (dragover)="onDragOver($event)"

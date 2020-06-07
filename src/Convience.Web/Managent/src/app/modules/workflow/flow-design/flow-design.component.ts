@@ -13,16 +13,11 @@ export class FlowDesignComponent implements OnInit {
   @ViewChild('flowContainer', { static: true })
   private _flowContainer: ElementRef;
 
-  @ViewChild('lborder', { static: true })
-  private _lborder: ElementRef;
-  @ViewChild('tborder', { static: true })
-  private _tborder: ElementRef;
-  @ViewChild('rborder', { static: true })
-  private _rborder: ElementRef;
-  @ViewChild('bborder', { static: true })
-  private _bborder: ElementRef;
   @ViewChild('selectedBorder', { static: true })
   private _sborder: ElementRef;
+
+  // 节点数据
+  private _nodeList = [];
 
   private _jsPlumb = jp.jsPlumb;
   private _jsPlumbInstance;
@@ -50,7 +45,7 @@ export class FlowDesignComponent implements OnInit {
   private _draggedKey;
 
   // 点击选中的节点
-  private _checkedNodeId = null;
+  private _checkedNode = null;
 
   constructor(
     private _renderer: Renderer2) { }
@@ -99,21 +94,16 @@ export class FlowDesignComponent implements OnInit {
     this._renderer.setAttribute(node, 'id', id);
 
     // 设置节点事件
-    this._renderer.listen(node, 'click', event => {
+    this._renderer.listen(node, 'mousedown', event => {
+      this._checkedNode = node;
 
-      if (this._checkedNodeId != node.id) {
-        this._checkedNodeId = node.id
-
-        // 绑定四个元素作为border的目的是为了以后修改为调整大小的瞄点
-        this._renderer.setStyle(this._sborder.nativeElement, 'display', 'block');
-        this._renderer.appendChild(node, this._sborder.nativeElement);
-      } else {
-        this._checkedNodeId = null;
-        this._renderer.setStyle(this._sborder.nativeElement, 'display', 'none');
-      }
+      // 绑定四个元素作为border的目的是为了以后修改为调整大小的瞄点
+      this._renderer.setStyle(this._sborder.nativeElement, 'display', 'block');
+      this._renderer.appendChild(node, this._sborder.nativeElement);
     });
 
     // 拼接节点到流程图
+    this._nodeList.push(node);
     this._renderer.appendChild(this._flowContainer.nativeElement, node);
 
     // 设置节点连线区域
@@ -173,8 +163,11 @@ export class FlowDesignComponent implements OnInit {
 
   dropZone(event) {
     event.preventDefault();
-    let x = event.offsetX - 100;
-    let y = event.offsetY - 25;
+
+    // 取得offsetx时，如果有子元素会冒泡，将子元素的offset设置
+    let rect = event.currentTarget.getBoundingClientRect();
+    let x = event.clientX - rect.left - 100;
+    let y = event.clientY - rect.top - 25;
     switch (this._draggedKey) {
       case 'start':
         this.addStartNode(x, y);
@@ -194,11 +187,27 @@ export class FlowDesignComponent implements OnInit {
 
   listenKeyboard() {
     fromEvent(window, 'keydown').subscribe((event: any) => {
-      event.preventDefault();
-      if (this._checkedNodeId) {
-        let element = this._renderer.selectRootElement(`#${this._checkedNodeId}`);
-        if (event.key == 'ArrowDown') {
-          element.style.top = element.style.top - 1;
+      if (this._checkedNode) {
+        // if (event.key == 'ArrowDown') {
+        //   event.preventDefault();
+        //   let distance = Number.parseInt(this._checkedNode.style.top.substring(0, this._checkedNode.style.top.length - 2));
+        //   this._renderer.setStyle(this._checkedNode, 'top', `${distance + 3}px`);
+        // } else if (event.key == 'ArrowUp') {
+        //   event.preventDefault();
+        //   let distance = Number.parseInt(this._checkedNode.style.top.substring(0, this._checkedNode.style.top.length - 2));
+        //   this._renderer.setStyle(this._checkedNode, 'top', `${distance - 3}px`);
+        // } else if (event.key == 'ArrowLeft') {
+        //   event.preventDefault();
+        //   let distance = Number.parseInt(this._checkedNode.style.left.substring(0, this._checkedNode.style.left.length - 2));
+        //   this._renderer.setStyle(this._checkedNode, 'left', `${distance - 3}px`);
+        // } else if (event.key == 'ArrowRight') {
+        //   event.preventDefault();
+        //   let distance = Number.parseInt(this._checkedNode.style.left.substring(0, this._checkedNode.style.left.length - 2));
+        //   this._renderer.setStyle(this._checkedNode, 'left', `${distance + 3}px`);
+        // }  
+        
+        if (event.key == 'Delete') {
+          this._jsPlumbInstance.remove(this._checkedNode);
         }
       }
     });

@@ -8,6 +8,12 @@ import { AppCommonModule } from '../app-common/app-common.module';
 import { RouterModule } from '@angular/router';
 import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { registerLocaleData } from '@angular/common';
+import zh from '@angular/common/locales/zh';
+registerLocaleData(zh);
 
 
 
@@ -27,7 +33,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       { path: 'workflowManage', component: WorkflowManageComponent, canActivate: [LoginGuard] },
       { path: 'myFlow', component: MyFlowComponent, canActivate: [LoginGuard] },
     ]),
-    DragDropModule
+    DragDropModule,
+    NzDatePickerModule,
+    NzInputNumberModule,
+    NzTimePickerModule
   ]
 })
 export class WorkflowModule { }
