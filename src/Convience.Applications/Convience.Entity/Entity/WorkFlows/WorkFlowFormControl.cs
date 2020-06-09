@@ -15,6 +15,8 @@ namespace Convience.Entity.Entity.WorkFlows
 
         #region 控件属性
 
+        public string DomId { get; set; }
+
         // 控件位置
         public int Top { get; set; }
 
@@ -24,14 +26,17 @@ namespace Convience.Entity.Entity.WorkFlows
         // 宽度
         public int Width { get; set; }
 
+        // 字体大小
+        public int FontSize { get; set; }
+
+        // 内容，针对label
+        public string Content { get; set; }
+
         // 行数，针对textarea
         public int? Line { get; set; }
 
         // 选项，针对select
         public string Options { get; set; }
-
-        // 字体大小
-        public int? FontSize { get; set; }
 
         #endregion
 
@@ -42,6 +47,9 @@ namespace Convience.Entity.Entity.WorkFlows
 
         // 正则验证
         public string Parttern { get; set; }
+
+        // 最大输入长度
+        public string MaxLength { get; set; }
 
         #endregion
 

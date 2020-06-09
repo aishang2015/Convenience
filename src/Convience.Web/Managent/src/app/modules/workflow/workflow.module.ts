@@ -13,6 +13,8 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzDividerModule } from 'ng-zorro-antd';
 registerLocaleData(zh);
 
 
@@ -36,7 +38,9 @@ registerLocaleData(zh);
     DragDropModule,
     NzDatePickerModule,
     NzInputNumberModule,
-    NzTimePickerModule
+    NzTimePickerModule,
+    NzSwitchModule,
+    NzDividerModule
   ]
 })
 export class WorkflowModule { }
