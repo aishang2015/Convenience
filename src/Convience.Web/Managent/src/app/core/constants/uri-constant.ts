@@ -55,4 +55,8 @@ export class UriConstant {
     get DicDataUri(): string { return `${this.ApiUri}/dicData` };
 
     get DicTypeUri(): string { return `${this.ApiUri}/dicType` };
+
+    get WorkFlowGroupUri(): string { return `${this.ApiUri}/workflowGroup` };
+
+    get WorkFlowUri(): string { return `${this.ApiUri}/workflow` };
 }

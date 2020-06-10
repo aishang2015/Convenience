@@ -2,10 +2,12 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.WorkFlows;
 using Convience.Model.Models.ContentManage;
 using Convience.Model.Models.GroupManage;
 using Convience.Model.Models.SaasManage;
 using Convience.Model.Models.SystemManage;
+using Convience.Model.Models.WorkFlowManage;
 
 namespace Convience.Model
 {
@@ -44,6 +46,12 @@ namespace Convience.Model
 
             CreateMap<DicDataViewModel, DicData>();
             CreateMap<DicData, DicDataResult>();
+
+            CreateMap<WorkFlowGroupViewModel, WorkFlowGroup>();
+            CreateMap<WorkFlowGroup, WorkFlowGroupResult>();
+
+            CreateMap<WorkFlowViewModel, WorkFlow>();
+            CreateMap<WorkFlow, WorkFlowResult>();
         }
     }
 }

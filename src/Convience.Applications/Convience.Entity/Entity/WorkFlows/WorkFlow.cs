@@ -24,6 +24,9 @@ namespace Convience.Entity.Entity.WorkFlows
 
         public string UpdatedUser { get; set; }
 
+        // 是否发布
+        public bool IsPublish { get; set; }
+
         #region
 
         public List<WorkFlowLink> WorkFlowLinks { get; set; }

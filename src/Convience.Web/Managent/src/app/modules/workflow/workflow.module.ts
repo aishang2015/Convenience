@@ -15,6 +15,7 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzDividerModule } from 'ng-zorro-antd';
+import { WorkflowGroupTreeComponent } from './workflow-group-tree/workflow-group-tree.component';
 registerLocaleData(zh);
 
 
@@ -24,7 +25,8 @@ registerLocaleData(zh);
     FormDesignComponent,
     FlowDesignComponent,
     MyFlowComponent,
-    WorkflowManageComponent
+    WorkflowManageComponent,
+    WorkflowGroupTreeComponent,
   ],
   imports: [
     CommonModule,

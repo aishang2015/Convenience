@@ -1,4 +1,155 @@
-<p>workflow-manage works!</p>
+<div class="content">
+    <div class="left">
+        <nz-card [nzSize]="'small'">
+            <nz-button-group class="mb-10">
+                <button nz-button (click)="addWorkFlowGroup()">添加分类</button>
+                <button nz-button (click)="updateWorkFlowGroup()"
+                    *ngIf="this.workflowGroupTree.selectedNode?.key">修改分类</button>
+                <button nz-button (click)="deleteWorkFlowGroup()"
+                    *ngIf="this.workflowGroupTree.selectedNode?.key">删除分类</button>
+            </nz-button-group>
+            <app-workflow-group-tree #tree (nodeChecked)="nodeChecked($event)">
+            </app-workflow-group-tree>
+        </nz-card>
+    </div>
+    <div class="right">
+        <nz-card [nzSize]="'small'">
+            <div>
+                <button nz-button class="mr-10" (click)="add()" *canOperate="'addWorkFlowBtn'">
+                    <i nz-icon nzType="plus"></i>创建工作流</button>
+                <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+            </div>
+            <div class="mt-10">
+                <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+                    nzBordered="true">
+                    <thead>
+                        <tr>
+                            <th nzAlign="center" nzWidth="50px">#</th>
+                            <th nzAlign="center" nzWidth="120px">名称</th>
+                            <th nzAlign="center">描述</th>
+                            <th nzAlign="center" nzWidth="180px">发布状态</th>
+                            <th nzAlign="center" nzWidth="180px">创建时间</th>
+                            <th nzAlign="center" nzWidth="140px">创建人员</th>
+                            <th nzAlign="center" nzWidth="180px">修改时间</th>
+                            <th nzAlign="center" nzWidth="140px">修改人员</th>
+                            <th nzAlign="center" nzWidth="180px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataTable.data;let i = index">
+                            <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                            <td nzAlign="center">{{ data.name }}</td>
+                            <td nzAlign="center">{{ data.describe }}</td>
+                            <td nzAlign="center">{{ data.isPublish?'已发布':'未发布' }}</td>
+                            <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td nzAlign="center">{{ data.createdUser }}</td>
+                            <td nzAlign="center">{{ data.updatedTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td nzAlign="center">{{ data.updatedUser }}</td>
+                            <td nzAlign="center">
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'updateWorkflowBtn'"
+                                    (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteWorkflowBtn'"
+                                    (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+            <div class="mt-10">
+                <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+                    nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()">
+                </nz-pagination>
+            </div>
+        </nz-card>
+    </div>
+</div>
 
-<a [routerLink]="['/workflow/flowDesign']" routerLinkActive="router-link-active" >workflow design</a><div></div>
-<a [routerLink]="['/workflow/formDesign']" routerLinkActive="router-link-active" >form design</a>
+<ng-template #workflowGroupEditTpl>
+    <form nz-form [formGroup]="workflowGroupEditForm" (ngSubmit)="submitWorkflowGroupEdit()">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">上级类别</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input formControlName="upWorkFlowGroup" /></nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_workFlowGroupName'">类别名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="workFlowGroupNameErrorTpl">
+                <input [attr.id]="'edit_workFlowGroupName'" formControlName="name" nz-input placeholder="类别名称"
+                    autocomplete="off" />
+            </nz-form-control>
+            <ng-template #workFlowGroupNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入名称！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入排序！">
+                <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+<ng-template #workflowEditTpl>
+    <form nz-form [formGroup]="workflowEditForm" (ngSubmit)="submitWorkflowEdit()">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">所属类别</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <input nz-input formControlName="workFlowGroup" /></nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_workFlowName'">名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="workFlowNameErrorTpl">
+                <input [attr.id]="'edit_workFlowName'" formControlName="name" nz-input placeholder="工作流名称"
+                    autocomplete=" off" />
+            </nz-form-control>
+            <ng-template #workFlowNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入内容！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_workFlowDescribe'">描述</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="workFlowDescribeErrorTpl">
+                <input [attr.id]="'edit_workFlowDescribe'" formControlName="describe" nz-input placeholder="工作流描述"
+                    autocomplete=" off" />
+            </nz-form-control>
+            <ng-template #workFlowDescribeErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入内容！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    长度不能超过30！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+<a [routerLink]="['/workflow/flowDesign']" routerLinkActive="router-link-active">workflow design</a>
+<div></div>
+<a [routerLink]="['/workflow/formDesign']" routerLinkActive="router-link-active">form design</a>
