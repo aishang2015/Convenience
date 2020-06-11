@@ -6,6 +6,7 @@ import { WorkflowGroupService } from 'src/app/services/workflowgroup.service';
 import { WorkFlowGroup } from '../model/workflowGroup';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { WorkFlow } from '../model/workflow';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-workflow-manage',
@@ -54,7 +55,8 @@ export class WorkflowManageComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _messageService: NzMessageService,
     private _workflowGroupService: WorkflowGroupService,
-    private _workflowService: WorkflowService) { }
+    private _workflowService: WorkflowService,
+    private _router: Router) { }
 
   ngOnInit(): void {
   }
@@ -62,12 +64,14 @@ export class WorkflowManageComponent implements OnInit {
   //#region workflow操作
 
   refresh() {
-    this._workflowService.getList(this.page, this.size, this.checkedWorkflowGroupId).subscribe(
-      (result: any) => {
-        this.data = result.data;
-        this.total = result.count;
-      }
-    )
+    if (this.checkedWorkflowGroupId) {
+      this._workflowService.getList(this.page, this.size, this.checkedWorkflowGroupId).subscribe(
+        (result: any) => {
+          this.data = result.data;
+          this.total = result.count;
+        }
+      )
+    }
   }
 
   add() {
@@ -139,6 +143,14 @@ export class WorkflowManageComponent implements OnInit {
         });
       }
     }
+  }
+
+  editFlow(id, name) {
+    this._router.navigate(['/workflow/flowDesign', { id: id, name: name }]);
+  }
+
+  editForm(id, name) {
+    this._router.navigate(['/workflow/formDesign', { id: id, name: name }]);
   }
 
   pageChange() {

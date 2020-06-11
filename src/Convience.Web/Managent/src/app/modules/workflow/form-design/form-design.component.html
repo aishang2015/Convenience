@@ -36,6 +36,7 @@
     <div id="form-Container">
         <nz-card>
             <div id="form-tool-bar">
+                <label>当前工作流：{{workflowName}}</label>
                 <div style="display: inline-block;">
                     <nz-form-label style="width: 80px;display: inline-block;">页面高</nz-form-label>
                     <nz-form-control style="width: 100px;display: inline-block;">
@@ -76,6 +77,10 @@
                         </nz-option>
                     </nz-select>
                 </div>
+                <nz-button-group class="ml-10">
+                    <button nz-button (click)="back()">返回</button>
+                    <button nz-button (click)="save()">保存</button>
+                </nz-button-group>
             </div>
             <div id="form-area" #formArea (drop)="dropZone($event)" (dragover)="onDragOver($event)">
             </div>

@@ -52,6 +52,16 @@ namespace Convience.Model
 
             CreateMap<WorkFlowViewModel, WorkFlow>();
             CreateMap<WorkFlow, WorkFlowResult>();
+
+            CreateMap<FormViewModel, WorkFlowForm>();
+            CreateMap<WorkFlowForm, FormResult>();
+            CreateMap<FormControlViewModel, WorkFlowFormControl>();
+            CreateMap<WorkFlowFormControl, FormControlResult>();
+
+            CreateMap<WorkFlowLinkViewModel, WorkFlowLink>();
+            CreateMap<WorkFlowLink, WorkFlowLinkResult>();
+            CreateMap<WorkFlowNodeViewModel, WorkFlowNode>();
+            CreateMap<WorkFlowNode, WorkFlowNodeResult>();
         }
     }
 }

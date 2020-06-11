@@ -2,6 +2,7 @@ import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/co
 import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs';
 import { WorkFlowFormControl, ControlTypeEnum } from '../model/workFlowFormControl';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-form-design',
@@ -58,12 +59,21 @@ export class FormDesignComponent implements OnInit {
   formWidth = 595;
   formBackground = 'black';
 
-  constructor(private _renderer: Renderer2) { }
+  // 工作流ID
+  private _workflowId = null;
+  workflowName = null;
+
+  constructor(private _renderer: Renderer2,
+    private _route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+    this._workflowId = this._route.snapshot.paramMap.get('id')?.trim();
+    this.workflowName = this._route.snapshot.paramMap.get('name')?.trim();
+
     this.initGraph();
     this.listenKeyboard();
-    this.initFormAreaClick()
+    this.initFormAreaClick();
 
     for (let i = 1; i <= 32; i++) {
       this.fontsize.push(i * 2);
@@ -172,6 +182,7 @@ export class FormDesignComponent implements OnInit {
     y = y - eleRect.height / 2;
 
     this._renderer.setAttribute(newEle, 'id', id);
+    this._renderer.setStyle(newEle, 'z-index', '0');
     this._renderer.setStyle(newEle, 'opacity', '1');
     this._renderer.setStyle(newEle, 'top', `${y}px`);
     this._renderer.setStyle(newEle, 'left', `${x}px`);
@@ -282,6 +293,14 @@ export class FormDesignComponent implements OnInit {
         this.leftChanged((this.formWidth - rrect.width));
         break;
     }
+  }
+
+  back() {
+    history.go(-1);
+  }
+
+  save() {
+
   }
 
   formatterPiex = (value: number) => {

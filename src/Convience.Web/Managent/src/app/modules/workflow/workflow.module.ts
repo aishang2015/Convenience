@@ -16,6 +16,7 @@ import zh from '@angular/common/locales/zh';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzDividerModule } from 'ng-zorro-antd';
 import { WorkflowGroupTreeComponent } from './workflow-group-tree/workflow-group-tree.component';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 registerLocaleData(zh);
 
 
@@ -42,7 +43,8 @@ registerLocaleData(zh);
     NzInputNumberModule,
     NzTimePickerModule,
     NzSwitchModule,
-    NzDividerModule
+    NzDividerModule,
+    NzToolTipModule
   ]
 })
 export class WorkflowModule { }

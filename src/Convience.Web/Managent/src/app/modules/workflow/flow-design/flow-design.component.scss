@@ -1,7 +1,7 @@
 #editArea {
     margin-top: 10px;
     position: relative;
-    height: 100%;
+    height: calc(100% - 66px);
     #tool-bar {
         position: absolute;
         width: 300px;
@@ -28,13 +28,13 @@
     }
     #flowContainer {
         border: 1px solid lightgray;
-        background-color: lightgrey;
+        background-color: black;
         margin-left: 310px;
         position: relative;
         overflow: auto;
         height: 100%;
-        background-image: linear-gradient(90deg, rgba(0, 255, 213, 0.25) 10%, rgba(0, 0, 0, 0) 10%),
-            linear-gradient(rgba(0, 255, 213, 0.25) 10%, rgba(0, 0, 0, 0) 10%);
+        background-image: linear-gradient(90deg, rgba(0, 255, 213, 0.05) 10%, rgba(0, 0, 0, 0) 10%),
+            linear-gradient(rgba(0, 255, 213, 0.05) 10%, rgba(0, 0, 0, 0) 10%);
         background-size: 20px 20px;
     }
 }
@@ -80,7 +80,7 @@
         width: 2px;
         top: 0px;
         left: 0px;
-        background-color: black;
+        background-color: wheat;
         position: absolute;
     }
     .rborder {
@@ -88,7 +88,7 @@
         width: 2px;
         top: 0px;
         left: 199px;
-        background-color: black;
+        background-color: wheat;
         position: absolute;
     }
     .tborder {
@@ -96,7 +96,7 @@
         width: 200px;
         top: 0px;
         left: 0px;
-        background-color: black;
+        background-color: wheat;
         position: absolute;
     }
     .bborder {
@@ -104,9 +104,7 @@
         width: 200px;
         top: 49px;
         left: 0px;
-        background-color: black;
+        background-color: wheat;
         position: absolute;
     }
 }
-
-

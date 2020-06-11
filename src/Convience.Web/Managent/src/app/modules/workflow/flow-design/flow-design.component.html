@@ -1,7 +1,14 @@
+<nz-card nzSize="small">
+    <label style="float: right;line-height: 32px;margin-right: 10px;">当前工作流：{{workflowName}}</label>
+    <nz-button-group>
+        <button nz-button (click)="back()">返回</button>
+        <button nz-button (click)="save()">保存</button>
+    </nz-button-group>
+</nz-card>
 <div id="editArea">
     <div id="tool-bar">
         <nz-card>
-            <h2>节点类型</h2>
+            <h2>节点</h2>
             <div nz-row [nzGutter]="8">
                 <div nz-col [nzSpan]="8" *ngFor="let node of nodes">
                     <div class="tool-box" draggable="true" (dragover)="onDragOver($event)"

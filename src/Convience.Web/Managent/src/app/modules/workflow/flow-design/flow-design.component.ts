@@ -1,6 +1,7 @@
 import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-flow-design',
@@ -47,10 +48,19 @@ export class FlowDesignComponent implements OnInit {
   // 点击选中的节点
   private _checkedNode = null;
 
+  // 工作流ID
+  private _workflowId = null;
+  workflowName = null;
+
   constructor(
-    private _renderer: Renderer2) { }
+    private _renderer: Renderer2,
+    private _route: ActivatedRoute, ) { }
 
   ngOnInit(): void {
+
+    this._workflowId = this._route.snapshot.paramMap.get('id')?.trim();
+    this.workflowName = this._route.snapshot.paramMap.get('name')?.trim();
+
     this.listenKeyboard();
     this.initGraph();
   }
@@ -152,6 +162,14 @@ export class FlowDesignComponent implements OnInit {
   //  return false;
   //}
 
+  back() {
+    history.go(-1);
+  }
+
+  save() {
+
+  }
+
   onDragStart(event, key) {
     //event.target.style.background = 'red';
     this._draggedKey = key;
@@ -205,7 +223,7 @@ export class FlowDesignComponent implements OnInit {
         //   let distance = Number.parseInt(this._checkedNode.style.left.substring(0, this._checkedNode.style.left.length - 2));
         //   this._renderer.setStyle(this._checkedNode, 'left', `${distance + 3}px`);
         // }  
-        
+
         if (event.key == 'Delete') {
           this._jsPlumbInstance.remove(this._checkedNode);
         }
