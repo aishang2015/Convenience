@@ -41,7 +41,7 @@ namespace Convience.Service.WorkFlowManage
 
         public WorkFlowFormResult GetWorkFlowForm(int workflowId)
         {
-            var form = _formRepository.Get(f => f.WorkFlowId == workflowId);
+            var form = _formRepository.Get(f => f.WorkFlowId == workflowId).FirstOrDefault();
             var formControls = _formControlRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
             return new WorkFlowFormResult
             {
@@ -54,14 +54,20 @@ namespace Convience.Service.WorkFlowManage
         {
             try
             {
+                viewModel.FormViewModel.WorkFlowId = viewModel.WorkFlowId;
+                foreach (var control in viewModel.FormControlViewModels)
+                {
+                    control.WorkFlowId = viewModel.WorkFlowId;
+                }
+
                 await _formRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
                 await _formRepository.AddAsync(_mapper.Map<WorkFlowForm>(viewModel.FormViewModel));
                 await _formControlRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
-                await _formControlRepository.AddAsync(_mapper.Map<WorkFlowFormControl>(viewModel.FormControlViewModels));
+                await _formControlRepository.AddAsync(_mapper.Map<List<WorkFlowFormControl>>(viewModel.FormControlViewModels));
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }

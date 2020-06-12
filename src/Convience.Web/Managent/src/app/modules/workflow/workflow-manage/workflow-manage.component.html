@@ -15,8 +15,10 @@
     <div class="right">
         <nz-card [nzSize]="'small'">
             <div>
-                <button nz-button class="mr-10" (click)="add()" *canOperate="'addWorkFlowBtn'">
-                    <i nz-icon nzType="plus"></i>创建工作流</button>
+                <ng-container *ngIf="checkedWorkflowGroupId">
+                    <button nz-button class="mr-10" (click)="add()" *canOperate="'addWorkFlowBtn'">
+                        <i nz-icon nzType="plus"></i>创建工作流</button>
+                </ng-container>
                 <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
             </div>
             <div class="mt-10">

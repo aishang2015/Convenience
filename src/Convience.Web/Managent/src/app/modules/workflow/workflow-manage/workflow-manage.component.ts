@@ -168,8 +168,8 @@ export class WorkflowManageComponent implements OnInit {
   //#region  workflowgroup 操作
 
   nodeChecked(event) {
+    this.checkedWorkflowGroupId = event;
     if (event) {
-      this.checkedWorkflowGroupId = event;
       this.refresh();
     }
   }

@@ -3,6 +3,9 @@ import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs';
 import { WorkFlowFormControl, ControlTypeEnum } from '../model/workFlowFormControl';
 import { ActivatedRoute } from '@angular/router';
+import { WorkflowFormService } from 'src/app/services/workflow-form.service';
+import { WorkFlowForm } from '../model/workflowForm';
+import { NzMessageService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-form-design',
@@ -36,8 +39,11 @@ export class FormDesignComponent implements OnInit {
   // 节点数据
   private _nodeDataList: WorkFlowFormControl[] = [];
 
+  // 表单设计数据
+  formData: WorkFlowForm = new WorkFlowForm();
+
   // 选中节点的数据
-  checkedNodeData = null;
+  checkedNodeData: WorkFlowFormControl = null;
 
   private _jsPlumb = jp.jsPlumb;
   private _jsPlumbInstance;
@@ -54,17 +60,14 @@ export class FormDesignComponent implements OnInit {
   // 编辑select的选项
   inputOption = null;
 
-  // 表单区域大小
-  formHeight = 842;
-  formWidth = 595;
-  formBackground = 'black';
-
   // 工作流ID
   private _workflowId = null;
   workflowName = null;
 
   constructor(private _renderer: Renderer2,
-    private _route: ActivatedRoute) { }
+    private _route: ActivatedRoute,
+    private _formService: WorkflowFormService,
+    private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
 
@@ -72,13 +75,13 @@ export class FormDesignComponent implements OnInit {
     this.workflowName = this._route.snapshot.paramMap.get('name')?.trim();
 
     this.initGraph();
-    this.listenKeyboard();
+    this.initKeyboardListening();
     this.initFormAreaClick();
+    this.initData();
 
     for (let i = 1; i <= 32; i++) {
       this.fontsize.push(i * 2);
     }
-
   }
 
   // 初始化流程图
@@ -89,8 +92,8 @@ export class FormDesignComponent implements OnInit {
     });
   }
 
-  // 选中元素的键盘事件
-  listenKeyboard() {
+  // 键盘事件
+  initKeyboardListening() {
     fromEvent(window, 'keydown').subscribe((event: any) => {
       if (this.checkedNode) {
         if (event.key == 'ArrowDown') {
@@ -119,10 +122,16 @@ export class FormDesignComponent implements OnInit {
           this.checkedNode = null;
         }
       }
+
+      if (event.ctrlKey && event.key == 's') {
+        event.preventDefault();
+        this.save();
+      }
+
     });
   }
 
-  // 初始化点击
+  // 初始化流程图区域点击
   initFormAreaClick() {
     this._renderer.listen(this._formArea.nativeElement, 'mousedown', event => {
       this.checkedNode = null;
@@ -130,6 +139,100 @@ export class FormDesignComponent implements OnInit {
       this._renderer.setStyle(this._sborder.nativeElement, 'display', 'none');
     });
   }
+
+  initData() {
+    this._formService.get(this._workflowId).subscribe((result: any) => {
+      this.formData = result.formResult;
+      this._nodeDataList = result.formControlResults;
+      if (!this.formData) {
+        this.formData = new WorkFlowForm();
+        this.formData.width = 842;
+        this.formData.height = 595;
+        this.formData.background = 'black';
+      }
+
+      // 初始化表单区域状态
+      this._renderer.setStyle(this._formArea.nativeElement, 'height', `${this.formData.height}px`);
+      this._renderer.setStyle(this._formArea.nativeElement, 'width', `${this.formData.width}px`);
+      this._renderer.setStyle(this._formArea.nativeElement, 'background-color', this.formData.background);
+
+      if (!this._nodeDataList) {
+        this._nodeDataList = new Array<WorkFlowFormControl>();
+      }
+
+      // 初始化各个元素状态
+      this._nodeDataList.forEach(nodeData => {
+        this.initNode(nodeData);
+      });
+    });
+  }
+
+  // 根据数据绘制节点
+  initNode(node: WorkFlowFormControl) {
+
+    let id = node.domId;
+
+    let ele;
+
+    switch (node.controlType) {
+      case 1:
+        ele = this._label;
+        ele.nativeElement.firstChild.innerText = node.content;
+        break;
+      case 2:
+        ele = this._input;
+        break;
+      case 3:
+        ele = this._select;
+        break;
+      case 4:
+        ele = this._numberInput;
+        break;
+      case 5:
+        ele = this._datePicker;
+        break;
+      case 6:
+        ele = this._timePicker;
+        break;
+      case 7:
+        ele = this._multiLineInput;
+        this._renderer.setAttribute(ele.nativeElement.firstChild, 'rows', `${node.line}`);
+        break;
+    }
+
+    let newEle = ele.nativeElement.cloneNode(true);
+
+    this._renderer.setAttribute(newEle, 'id', id);
+    this._renderer.setStyle(newEle, 'z-index', '0');
+    this._renderer.setStyle(newEle, 'opacity', '1');
+    this._renderer.setStyle(newEle, 'top', `${node.top}px`);
+    this._renderer.setStyle(newEle, 'left', `${node.left}px`);
+    this._renderer.setStyle(newEle, 'font-size', `${node.fontSize}px`);
+
+    // 设置节点事件
+    this._renderer.listen(newEle, 'mousedown', event => {
+      this.checkedNode = newEle;
+
+      this.checkedNodeData = this._nodeDataList.find(data => data.domId == newEle.id);
+      this.checkedNodeData.optionList = this.checkedNodeData.options ? this.checkedNodeData.options.split(',') : [];
+
+      let rect = newEle.getBoundingClientRect();
+      this._renderer.setStyle(this._sborder.nativeElement, 'width', `${rect.width}px`);
+      this._renderer.setStyle(this._sborder.nativeElement, 'height', `${rect.height}px`);
+      this._renderer.setStyle(this._sborder.nativeElement, 'display', 'block');
+      this._renderer.appendChild(newEle, this._sborder.nativeElement);
+    });
+
+    this._renderer.appendChild(this._formArea.nativeElement, newEle);
+    this._jsPlumbInstance.draggable(newEle, {
+      containment: true,
+      drag: (event) => {
+        this.checkedNodeData.top = Number.parseInt(event.el.style.top.replace('px', ''));
+        this.checkedNodeData.left = Number.parseInt(event.el.style.left.replace('px', ''));
+      }
+    });
+  }
+
 
   onDragStart(event, key) {
     this._draggedKey = key;
@@ -139,6 +242,7 @@ export class FormDesignComponent implements OnInit {
     event.preventDefault();
   }
 
+  // drop事件
   dropZone(event) {
     event.preventDefault();
     let rect = event.currentTarget.getBoundingClientRect();
@@ -191,8 +295,11 @@ export class FormDesignComponent implements OnInit {
     this._renderer.listen(newEle, 'mousedown', event => {
       this.checkedNode = newEle;
 
+      // 把选项数据分割成list
       this.checkedNodeData = this._nodeDataList.find(data => data.domId == newEle.id);
+      this.checkedNodeData.optionList = this.checkedNodeData.options ? this.checkedNodeData.options.split(',') : [];
 
+      // 点击选中的效果
       let rect = newEle.getBoundingClientRect();
       this._renderer.setStyle(this._sborder.nativeElement, 'width', `${rect.width}px`);
       this._renderer.setStyle(this._sborder.nativeElement, 'height', `${rect.height}px`);
@@ -227,8 +334,8 @@ export class FormDesignComponent implements OnInit {
   }
 
   reloadFormSize(event) {
-    this.formWidth = 595;
-    this.formHeight = 842;
+    this.formData.width = 595;
+    this.formData.height = 842;
     this._renderer.setStyle(this._formArea.nativeElement, 'width', `${595}px`);
     this._renderer.setStyle(this._formArea.nativeElement, 'height', `${842}px`);
   }
@@ -283,14 +390,17 @@ export class FormDesignComponent implements OnInit {
     switch (flg) {
       case 'left':
         this.leftChanged(0);
+        this.checkedNodeData.left = 0;
         break;
       case 'middle':
         let rect = this.checkedNode.getBoundingClientRect();
-        this.leftChanged((this.formWidth - rect.width) / 2);
+        this.leftChanged((this.formData.width - rect.width) / 2);
+        this.checkedNodeData.left = (this.formData.width - rect.width) / 2;
         break;
       case 'right':
         let rrect = this.checkedNode.getBoundingClientRect();
-        this.leftChanged((this.formWidth - rrect.width));
+        this.leftChanged((this.formData.width - rrect.width));
+        this.checkedNodeData.left = this.formData.width - rrect.width;
         break;
     }
   }
@@ -301,6 +411,16 @@ export class FormDesignComponent implements OnInit {
 
   save() {
 
+    // 把选项list拼接成string
+    this._nodeDataList.forEach(data => {
+      data.options = data.optionList?.join(',');
+    });
+
+    this._formService.addOrUpdate({
+      workFlowId: Number.parseInt(this._workflowId),
+      formViewModel: this.formData,
+      formControlViewModels: this._nodeDataList
+    }).subscribe(result => this._messageService.success('保存成功！'));
   }
 
   formatterPiex = (value: number) => {

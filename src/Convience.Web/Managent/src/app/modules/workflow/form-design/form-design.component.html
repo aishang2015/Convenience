@@ -40,15 +40,15 @@
                 <div style="display: inline-block;">
                     <nz-form-label style="width: 80px;display: inline-block;">页面高</nz-form-label>
                     <nz-form-control style="width: 100px;display: inline-block;">
-                        <nz-input-number style="width: 100%;" [(ngModel)]="formHeight" [nzFormatter]="formatterPiex"
+                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.height" [nzFormatter]="formatterPiex"
                             [nzParser]="parserPiex" (ngModelChange)="formHeightChanged($event)">
                         </nz-input-number>
                     </nz-form-control>
                 </div>
                 <div style="display: inline-block;">
-                    <nz-form-label style="width: 80px;display: inline-block;">页面高</nz-form-label>
+                    <nz-form-label style="width: 80px;display: inline-block;">页面宽</nz-form-label>
                     <nz-form-control style="width: 100px;display: inline-block;">
-                        <nz-input-number style="width: 100%;" [(ngModel)]="formWidth" [nzFormatter]="formatterPiex"
+                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.width" [nzFormatter]="formatterPiex"
                             [nzParser]="parserPiex" (ngModelChange)="formWidthChanged($event)">
                         </nz-input-number>
                     </nz-form-control>
@@ -58,7 +58,7 @@
                             nzType="redo"></i></button>
                 </div>
                 <div style="display: inline-block;margin-left: 20px;">
-                    <nz-select [(ngModel)]="formBackground" style="width: 100px;"
+                    <nz-select [(ngModel)]="formData.background" style="width: 100px;"
                         (ngModelChange)="formBackGroundChanged($event)">
                         <nz-option nzCustomContent nzLabel="纯黑" nzValue="black">
                             <div style="height: 20px;background-color: black;"></div>

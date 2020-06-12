@@ -59,4 +59,8 @@ export class UriConstant {
     get WorkFlowGroupUri(): string { return `${this.ApiUri}/workflowGroup` };
 
     get WorkFlowUri(): string { return `${this.ApiUri}/workflow` };
+
+    get WorkFlowFlowUri(): string { return `${this.ApiUri}/workflowFlow` };
+
+    get WorkFlowFormUri(): string { return `${this.ApiUri}/workflowForm` };
 }

@@ -49,7 +49,7 @@ namespace Convience.Model.Models.WorkFlowManage
 
         public string Parttern { get; set; }
 
-        public string MaxLength { get; set; }
+        public int? MaxLength { get; set; }
     }
 
     public class FormControlResult : FormControlViewModel { }

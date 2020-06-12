@@ -11,6 +11,7 @@ export class WorkFlowFormControl {
     content?: string;
     line?: number;
     optionList?: string[];
+    options:string;
 
     isRequired?: boolean;
     parttern?: string;

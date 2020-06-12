@@ -49,7 +49,7 @@ namespace Convience.Entity.Entity.WorkFlows
         public string Parttern { get; set; }
 
         // 最大输入长度
-        public string MaxLength { get; set; }
+        public int? MaxLength { get; set; }
 
         #endregion
 
