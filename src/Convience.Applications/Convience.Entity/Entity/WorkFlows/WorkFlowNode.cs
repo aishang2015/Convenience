@@ -14,7 +14,7 @@ namespace Convience.Entity.Entity.WorkFlows
         public NodeTypeEnum NodeType { get; set; }
 
         // DomId
-        public string ElementId { get; set; }
+        public string DomId { get; set; }
 
         public int Top { get; set; }
 

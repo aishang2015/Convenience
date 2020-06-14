@@ -9,9 +9,9 @@ namespace Convience.Model.Models.WorkFlowManage
 
         public int WorkFlowId { get; set; }
 
-        public int SourceId { get; set; }
+        public string SourceId { get; set; }
 
-        public int TargetId { get; set; }
+        public string TargetId { get; set; }
 
         public string Connection { get; set; }
     }
@@ -28,7 +28,7 @@ namespace Convience.Model.Models.WorkFlowManage
 
         public NodeTypeEnum NodeType { get; set; }
 
-        public string ElementId { get; set; }
+        public string DomId { get; set; }
 
         public int Top { get; set; }
 

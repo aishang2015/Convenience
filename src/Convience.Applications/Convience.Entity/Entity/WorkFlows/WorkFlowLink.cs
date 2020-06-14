@@ -8,9 +8,9 @@ namespace Convience.Entity.Entity.WorkFlows
     {
         public int Id { get; set; }
 
-        public int SourceId { get; set; }
+        public string SourceId { get; set; }
 
-        public int TargetId { get; set; }
+        public string TargetId { get; set; }
 
         public string Connection { get; set; }
 

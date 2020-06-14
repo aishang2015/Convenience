@@ -2,6 +2,11 @@ import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/co
 import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 import { ActivatedRoute } from '@angular/router';
+import { WorkflowNode } from '../model/workflowNode';
+import { WorkflowLink } from '../model/workflowLink';
+import { WorkflowFlowService } from 'src/app/services/workflow-flow.service';
+import { NzMessageService } from 'ng-zorro-antd';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-flow-design',
@@ -18,21 +23,22 @@ export class FlowDesignComponent implements OnInit {
   private _sborder: ElementRef;
 
   // 节点数据
-  private _nodeList = [];
+  private _nodeDataList: WorkflowNode[] = [];
+  private _linkDataList: WorkflowLink[] = [];
 
   private _jsPlumb = jp.jsPlumb;
   private _jsPlumbInstance;
-  private _endpointOption = {
-    maxConnections: 5,
+  private _endpointOption: jp.EndpointOptions = {
+    maxConnections: 10,
     reattachConnections: true,
     type: 'Dot',
     connector: 'Flowchart',
     isSource: true,
     isTarget: true,
-    paintStyle: { fill: 'transparent', stroke: 'transparent', radius: 5, strokeWidth: 1 },
+    paintStyle: { fill: 'transparent', stroke: 'transparent', strokeWidth: 1 },
     hoverPaintStyle: { fill: 'rgba(95, 158, 160, 1)', stroke: 'rgba(95, 158, 160, 1)', strokeWidth: 2 },
     connectorStyle: { stroke: 'rgba(102, 96, 255, 0.9)', strokeWidth: 3 },
-    connectorHoverStyle: { strokeWidth: 4, cursor: 'pointer' },
+    connectorHoverStyle: { strokeWidth: 4 },
     connectorOverlays: [["PlainArrow", { location: 1 }]],
   };
 
@@ -54,7 +60,9 @@ export class FlowDesignComponent implements OnInit {
 
   constructor(
     private _renderer: Renderer2,
-    private _route: ActivatedRoute, ) { }
+    private _route: ActivatedRoute,
+    private _flowService: WorkflowFlowService,
+    private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
 
@@ -63,6 +71,7 @@ export class FlowDesignComponent implements OnInit {
 
     this.listenKeyboard();
     this.initGraph();
+    this.initData();
   }
 
   // 初始化流程图
@@ -80,21 +89,106 @@ export class FlowDesignComponent implements OnInit {
     });
   }
 
-  addStartNode(x, y) {
-    this.addNode(x, y, "开始节点");
+  // 监听键盘
+  listenKeyboard() {
+    fromEvent(window, 'keydown').subscribe((event: any) => {
+      if (this._checkedNode) {
+        if (event.key == 'Delete') {
+          this._jsPlumbInstance.remove(this._checkedNode);
+          this._nodeDataList = this._nodeDataList.filter(d => d.domId != this._checkedNode.id);
+        }
+      }
+    });
   }
 
-  addWorkNode(x, y) {
-    this.addNode(x, y, "工作节点");
+  // 初始化数据
+  initData() {
+    this._flowService.get(this._workflowId).subscribe((result: any) => {
+      this._nodeDataList = result.workFlowNodeResults ? result.workFlowNodeResults : [];
+      this._linkDataList = result.workFlowLinkResults ? result.workFlowLinkResults : [];
+
+      this._nodeDataList.forEach(nodeData => {
+
+        switch (nodeData.nodeType) {
+          case 0:
+            this.addStartNode(nodeData.domId, nodeData.left, nodeData.top, nodeData.name);
+            break;
+          case 1:
+            this.addWorkNode(nodeData.domId, nodeData.left, nodeData.top, nodeData.name);
+            break;
+          case 99:
+            this.addEndNode(nodeData.domId, nodeData.left, nodeData.top, nodeData.name);
+            break;
+        }
+
+      });
+      this._linkDataList.forEach(linkData => {
+        this._jsPlumbInstance.connect({
+          source: linkData.sourceId,
+          target: linkData.targetId,
+          anchor: 'Continuous'
+        });
+      });
+    });
   }
 
-  addEndNode(x, y) {
-    this.addNode(x, y, "结束节点");
+
+  addStartNode(id, x, y, title = "开始节点") {
+
+    this.addNode(id, x, y, title);
+
+    this._endpointOption.maxConnections = 1;
+    this._endpointOption.isSource = true;
+    this._endpointOption.isTarget = false;
+
+    // 配置源
+    this._jsPlumbInstance.makeSource(id, {
+      anchor: 'Continuous',
+      allowLoopback: false,
+      filter: (event, element) => {
+        return event.target.classList.contains('connectable');
+      }
+    }, this._endpointOption);
+  }
+
+  addWorkNode(id, x, y, title = '工作节点') {
+
+    this.addNode(id, x, y, title);
+
+    this._endpointOption.maxConnections = 10;
+    this._endpointOption.isSource = true;
+    this._endpointOption.isTarget = true;
+
+    // 配置源
+    this._jsPlumbInstance.makeSource(id, {
+      anchor: 'Continuous',
+      allowLoopback: false,
+      filter: (event, element) => {
+        return event.target.classList.contains('connectable');
+      }
+    }, this._endpointOption);
+  }
+
+  addEndNode(id, x, y, title = '结束节点') {
+
+    this.addNode(id, x, y, title);
+
+    this._endpointOption.maxConnections = 1;
+    this._endpointOption.isSource = false;
+    this._endpointOption.isTarget = true;
+
+    // 配置源
+    this._jsPlumbInstance.makeTarget(id, {
+      anchor: 'Continuous',
+      allowLoopback: false,
+      filter: (event, element) => {
+        return event.target.classList.contains('connectable');
+      }
+    }, this._endpointOption);
   }
 
 
-  addNode(x, y, title) {
-    let id = `nodeIndex${this.randomKey()}`;
+  addNode(id, x, y, title) {
 
     // 节点
     let node = this._renderer.createElement('div');
@@ -113,7 +207,6 @@ export class FlowDesignComponent implements OnInit {
     });
 
     // 拼接节点到流程图
-    this._nodeList.push(node);
     this._renderer.appendChild(this._flowContainer.nativeElement, node);
 
     // 设置节点连线区域
@@ -136,16 +229,6 @@ export class FlowDesignComponent implements OnInit {
       filter: '.draggable',
       filterExclude: false
     });
-
-    // 配置源
-    this._jsPlumbInstance.makeSource(id, {
-      anchor: 'Continuous',
-      allowLoopback: false,
-      filter: (event, element) => {
-        return event.target.classList.contains('connectable');
-      }
-    }, this._endpointOption);
-
   }
 
   // cdk的drag和drop
@@ -167,6 +250,20 @@ export class FlowDesignComponent implements OnInit {
   }
 
   save() {
+    this._jsPlumbInstance.getAllConnections().forEach(element => {
+      this._linkDataList.push({
+        sourceId: element.sourceId,
+        targetId: element.targetId,
+      })
+    });
+
+    this._flowService.addOrUpdate({
+      workFlowId: Number.parseInt(this._workflowId),
+      workFlowLinkViewModels: this._linkDataList,
+      workFlowNodeViewModels: this._nodeDataList
+    }).subscribe(result => {
+      this._messageService.success('修改成功！');
+    })
 
   }
 
@@ -186,49 +283,46 @@ export class FlowDesignComponent implements OnInit {
     let rect = event.currentTarget.getBoundingClientRect();
     let x = event.clientX - rect.left - 100;
     let y = event.clientY - rect.top - 25;
+    let id = `node${this.randomKey()}`;
+
+    // 保存节点数据
+    let nodeData = new WorkflowNode();
+
     switch (this._draggedKey) {
       case 'start':
-        this.addStartNode(x, y);
+        if (this._nodeDataList.find(d => d.nodeType == 0)) {
+          this._messageService.error('已经有一个开始节点了！');
+        } else {
+          this.addStartNode(id, x, y);
+          nodeData.name = '开始节点';
+          nodeData.nodeType = 0;
+        }
         break;
       case 'work':
-        this.addWorkNode(x, y);
+        this.addWorkNode(id, x, y);
+        nodeData.name = '工作节点';
+        nodeData.nodeType = 1;
         break;
       case 'end':
-        this.addEndNode(x, y);
+        if (this._nodeDataList.find(d => d.nodeType == 99)) {
+          this._messageService.error('已经有一个开始节点了！');
+        } else {
+          this.addEndNode(id, x, y);
+          nodeData.name = '结束节点';
+          nodeData.nodeType = 99;
+        }
         break;
     }
+
+    nodeData.domId = id;
+    nodeData.top = y;
+    nodeData.left = x;
+    this._nodeDataList.push(nodeData);
   }
 
   randomKey(): number {
     return Date.parse(new Date().toString()) + Math.floor(Math.random() * Math.floor(999));
   }
 
-  listenKeyboard() {
-    fromEvent(window, 'keydown').subscribe((event: any) => {
-      if (this._checkedNode) {
-        // if (event.key == 'ArrowDown') {
-        //   event.preventDefault();
-        //   let distance = Number.parseInt(this._checkedNode.style.top.substring(0, this._checkedNode.style.top.length - 2));
-        //   this._renderer.setStyle(this._checkedNode, 'top', `${distance + 3}px`);
-        // } else if (event.key == 'ArrowUp') {
-        //   event.preventDefault();
-        //   let distance = Number.parseInt(this._checkedNode.style.top.substring(0, this._checkedNode.style.top.length - 2));
-        //   this._renderer.setStyle(this._checkedNode, 'top', `${distance - 3}px`);
-        // } else if (event.key == 'ArrowLeft') {
-        //   event.preventDefault();
-        //   let distance = Number.parseInt(this._checkedNode.style.left.substring(0, this._checkedNode.style.left.length - 2));
-        //   this._renderer.setStyle(this._checkedNode, 'left', `${distance - 3}px`);
-        // } else if (event.key == 'ArrowRight') {
-        //   event.preventDefault();
-        //   let distance = Number.parseInt(this._checkedNode.style.left.substring(0, this._checkedNode.style.left.length - 2));
-        //   this._renderer.setStyle(this._checkedNode, 'left', `${distance + 3}px`);
-        // }  
-
-        if (event.key == 'Delete') {
-          this._jsPlumbInstance.remove(this._checkedNode);
-        }
-      }
-    });
-  }
 
 }
