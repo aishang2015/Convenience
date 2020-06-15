@@ -69,6 +69,9 @@
         font-size: 16px;
         background-color: lightslategray;
         vertical-align: middle;
+        word-break: keep-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
         cursor: move;
     }
 }

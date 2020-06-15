@@ -59,10 +59,10 @@
                                 <button nz-button nzTooltipTitle="修改工作流" nzTooltipPlacement="top" nz-tooltip
                                     nzType="default" nzShape="circle" *canOperate="'updateWorkflowBtn'"
                                     (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
-                                <button nz-button nzTooltipTitle="修改表单" nzTooltipPlacement="top" nz-tooltip
+                                <button nz-button nzTooltipTitle="删除工作流" nzTooltipPlacement="top" nz-tooltip
                                     nzType="default" nzShape="circle" *canOperate="'deleteWorkflowBtn'"
                                     (click)="remove(data.id)" class="mr-10"><i nz-icon
-                                        nzType="mac-command"></i></button>
+                                        nzType="delete"></i></button>
                             </td>
                         </tr>
                     </tbody>
@@ -162,7 +162,3 @@
         </nz-form-item>
     </form>
 </ng-template>
-
-<a [routerLink]="['/workflow/flowDesign']" routerLinkActive="router-link-active">workflow design</a>
-<div></div>
-<a [routerLink]="['/workflow/formDesign']" routerLinkActive="router-link-active">form design</a>

@@ -29,3 +29,103 @@
         <div #bborder class="bborder"></div>
     </div>
 </div>
+
+<ng-template #nodeEditTpl>
+    <form nz-form [formGroup]="workflowNodeEditForm" (ngSubmit)="submitWorkflowNodeEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_workNodeName'">名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="workFlowNameErrorTpl">
+                <input [attr.id]="'edit_workNodeName'" formControlName="name" nz-input placeholder="节点名称"
+                    autocomplete=" off" />
+            </nz-form-control>
+            <ng-template #workFlowNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入内容！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    长度不能超过15！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_handleMode'">处理模式</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="handleModeErrorTpl">
+                <nz-select formControlName="handleMode" [attr.id]="'edit_handleMode'">
+                    <nz-option [nzValue]="1" nzLabel="指定人员处理当前节点"></nz-option>
+                    <nz-option [nzValue]="2" nzLabel="指定职位处理当前节点"></nz-option>
+                    <nz-option [nzValue]="3" nzLabel="指定部门负责人处理当前节点"></nz-option>
+                    <nz-option [nzValue]="4" nzLabel="指定发起人部门负责人处理当前节点"></nz-option>
+                    <!-- <nz-option nzValue="5" nzLabel="指定发起人上级部门负责人处理当前节点"></nz-option> -->
+                </nz-select>
+            </nz-form-control>
+            <ng-template #handleModeErrorTpl let-control>
+                <ng-container>
+                    请选择内容！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item *ngIf="workflowNodeEditForm.value['handleMode']==1">
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_handlers'">办理人</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="handlersErrorTpl">
+                <nz-select nzMode="multiple" nzPlaceHolder="指定人员" nzAllowClear nzShowSearch formControlName="handlers"
+                    nzServerSearch (nzOnSearch)="onSearchUser($event)" [attr.id]="'edit_handlers'">
+                    <ng-container *ngFor="let u of userList">
+                        <nz-option *ngIf="!isLoading" [nzValue]="u.key" [nzLabel]="u.value"></nz-option>
+                    </ng-container>
+                    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                        <i nz-icon nzType="loading" class="loading-icon"></i> 加载中...
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+            <ng-template #handlersErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请选择人员！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item *ngIf="workflowNodeEditForm.value['handleMode']==2">
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_position'">职位</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="positionErrorTpl">
+                <nz-select nzPlaceHolder="指定职位" nzAllowClear nzShowSearch formControlName="position" nzServerSearch
+                    (nzOnSearch)="onSearchPosition($event)" [attr.id]="'edit_position'">
+                    <ng-container *ngFor="let p of positionList">
+                        <nz-option *ngIf="!isLoading" [nzValue]="p.key" [nzLabel]="p.value"></nz-option>
+                    </ng-container>
+                    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                        <i nz-icon nzType="loading" class="loading-icon"></i> 加载中...
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+            <ng-template #positionErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请选择内容！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item *ngIf="workflowNodeEditForm.value['handleMode']==3">
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_department'">部门负责人</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="departmentErrorTpl">
+                <nz-select nzPlaceHolder="指定部门负责人" nzAllowClear nzShowSearch formControlName="department" nzServerSearch
+                    (nzOnSearch)="onSearchDepartment($event)" [attr.id]="'edit_department'">
+                    <ng-container *ngFor="let d of departmentList">
+                        <nz-option *ngIf="!isLoading" [nzValue]="d.key" [nzLabel]="d.value"></nz-option>
+                    </ng-container>
+                    <nz-option *ngIf="isLoading" nzDisabled nzCustomContent>
+                        <i nz-icon nzType="loading" class="loading-icon"></i> 加载中...
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+            <ng-template #departmentErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请选择内容！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>

@@ -4,6 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
 using Convience.Repository;
 
@@ -87,6 +88,18 @@ namespace Convience.Service.GroupManage
         {
             var entity = await _positionRepository.GetAsync(id);
             return _mapper.Map<PositionResult>(entity);
+        }
+
+        public IEnumerable<DicModel> GetPositionDic(string name)
+        {
+            var dic = from position in _positionRepository.Get()
+                      where position.Name.Contains(name)
+                      select new DicModel
+                      {
+                          Key = position.Id.ToString(),
+                          Value = position.Name,
+                      };
+            return dic.Take(10);
         }
 
         public IEnumerable<PositionResult> GetPositions(PositionQuery query)

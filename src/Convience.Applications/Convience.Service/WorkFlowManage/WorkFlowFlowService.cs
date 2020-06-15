@@ -20,12 +20,14 @@ namespace Convience.Service.WorkFlowManage
     {
         WorkFlowFlowResult GetWorkFlowFlow(int workflowId);
 
-        Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel);
+        Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel, string userName);
     }
 
     public class WorkFlowFlowService : IWorkFlowFlowService
     {
         private readonly ILogger<WorkFlowFlowService> _logger;
+
+        private readonly IRepository<WorkFlow> _workflowRepository;
 
         private readonly IRepository<WorkFlowLink> _linkRepository;
 
@@ -36,19 +38,21 @@ namespace Convience.Service.WorkFlowManage
         private IMapper _mapper;
 
         public WorkFlowFlowService(ILogger<WorkFlowFlowService> logger,
+            IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
             _logger = logger;
+            _workflowRepository = workflowRepository;
             _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel)
+        public async Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel, string userName)
         {
             try
             {
@@ -60,6 +64,9 @@ namespace Convience.Service.WorkFlowManage
                 {
                     node.WorkFlowId = viewModel.WorkFlowId;
                 }
+                var workflow = await _workflowRepository.GetAsync(viewModel.WorkFlowId);
+                workflow.UpdatedTime = DateTime.Now;
+                workflow.UpdatedUser = userName;
 
                 await _linkRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
                 await _linkRepository.AddAsync(_mapper.Map<IEnumerable<WorkFlowLink>>(viewModel.WorkFlowLinkViewModels));

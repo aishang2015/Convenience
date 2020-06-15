@@ -29,4 +29,9 @@ export class DepartmentService {
   add(department) {
     return this.httpClient.post(this.uriConstant.DepartmentUri, department);
   }
+
+  getDic(name) {
+    let uri = `${this.uriConstant.DepartmentUri}/dic?name=${name}`;
+    return this.httpClient.get(uri);
+  }
 }

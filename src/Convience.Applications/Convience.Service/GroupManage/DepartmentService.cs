@@ -4,10 +4,12 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
 using Convience.Repository;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -135,6 +137,18 @@ namespace Convience.Service.GroupManage
         {
             var result = await _departmentRepository.GetAsync(id);
             return _mapper.Map<DepartmentResult>(result);
+        }
+
+        public IEnumerable<DicModel> GetDepartmentDic(string name)
+        {
+            var dic = from department in _departmentRepository.Get()
+                      where department.Name.Contains(name)
+                      select new DicModel
+                      {
+                          Key = department.Id.ToString(),
+                          Value = department.Name,
+                      };
+            return dic.Take(10);
         }
 
         public async Task<bool> UpdateDepartmentAsync(DepartmentViewModel model)

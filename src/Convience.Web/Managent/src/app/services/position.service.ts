@@ -35,4 +35,9 @@ export class PositionService {
   add(position) {
     return this.httpClient.post(this.uriConstant.PositiondUri, position);
   }
+
+  getDic(name) {
+    let uri = `${this.uriConstant.PositiondUri}/dic?name=${name}`;
+    return this.httpClient.get(uri);
+  }
 }

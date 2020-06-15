@@ -5,8 +5,14 @@ import { ActivatedRoute } from '@angular/router';
 import { WorkflowNode } from '../model/workflowNode';
 import { WorkflowLink } from '../model/workflowLink';
 import { WorkflowFlowService } from 'src/app/services/workflow-flow.service';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { ThrowStmt } from '@angular/compiler';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { debounce, debounceTime, switchMap } from 'rxjs/operators';
+import { UserService } from 'src/app/services/user.service';
+import { PositionService } from 'src/app/services/position.service';
+import { DepartmentService } from 'src/app/services/department.service';
 
 @Component({
   selector: 'app-flow-design',
@@ -21,6 +27,13 @@ export class FlowDesignComponent implements OnInit {
 
   @ViewChild('selectedBorder', { static: true })
   private _sborder: ElementRef;
+
+  // 节点编辑
+  @ViewChild('nodeEditTpl', { static: true })
+  private _nodeEditTpl;
+
+  // 编辑节点表单
+  workflowNodeEditForm: FormGroup = new FormGroup({});
 
   // 节点数据
   private _nodeDataList: WorkflowNode[] = [];
@@ -58,11 +71,34 @@ export class FlowDesignComponent implements OnInit {
   private _workflowId = null;
   workflowName = null;
 
+  // 加载中
+  isLoading = false;
+
+  // 用户
+  userSearchChange$ = new BehaviorSubject('');
+  userList = [];
+
+  // 用户
+  positionSearchChange$ = new BehaviorSubject('');
+  positionList = [];
+
+  // 用户
+  departmentSearchChange$ = new BehaviorSubject('');
+  departmentList = [];
+
+  // 模态框
+  nzModal: NzModalRef;
+
   constructor(
     private _renderer: Renderer2,
     private _route: ActivatedRoute,
     private _flowService: WorkflowFlowService,
-    private _messageService: NzMessageService) { }
+    private _messageService: NzMessageService,
+    private _formBuilder: FormBuilder,
+    private _userService: UserService,
+    private _positionService: PositionService,
+    private _departmentService: DepartmentService,
+    private _modalServce: NzModalService) { }
 
   ngOnInit(): void {
 
@@ -72,6 +108,26 @@ export class FlowDesignComponent implements OnInit {
     this.listenKeyboard();
     this.initGraph();
     this.initData();
+
+    // 初始化搜索事件
+    this.userSearchChange$.asObservable().pipe(debounceTime(500)).subscribe(value => {
+      this._userService.getUserDic(value).subscribe((result: any) => {
+        this.userList = result;
+        this.isLoading = false;
+      });
+    });
+    this.positionSearchChange$.asObservable().pipe(debounceTime(500)).subscribe(value => {
+      this._positionService.getDic(value).subscribe((result: any) => {
+        this.positionList = result;
+        this.isLoading = false;
+      });
+    });
+    this.departmentSearchChange$.asObservable().pipe(debounceTime(500)).subscribe(value => {
+      this._departmentService.getDic(value).subscribe((result: any) => {
+        this.departmentList = result;
+        this.isLoading = false;
+      });
+    });
   }
 
   // 初始化流程图
@@ -153,7 +209,7 @@ export class FlowDesignComponent implements OnInit {
 
   addWorkNode(id, x, y, title = '工作节点') {
 
-    this.addNode(id, x, y, title);
+    this.addNode(id, x, y, title, true);
 
     this._endpointOption.maxConnections = 10;
     this._endpointOption.isSource = true;
@@ -161,6 +217,15 @@ export class FlowDesignComponent implements OnInit {
 
     // 配置源
     this._jsPlumbInstance.makeSource(id, {
+      anchor: 'Continuous',
+      allowLoopback: false,
+      filter: (event, element) => {
+        return event.target.classList.contains('connectable');
+      }
+    }, this._endpointOption);
+
+    // 配置目标
+    this._jsPlumbInstance.makeTarget(id, {
       anchor: 'Continuous',
       allowLoopback: false,
       filter: (event, element) => {
@@ -188,7 +253,7 @@ export class FlowDesignComponent implements OnInit {
   }
 
 
-  addNode(id, x, y, title) {
+  addNode(id, x, y, title, hasDblClickEvent = false) {
 
     // 节点
     let node = this._renderer.createElement('div');
@@ -205,6 +270,49 @@ export class FlowDesignComponent implements OnInit {
       this._renderer.setStyle(this._sborder.nativeElement, 'display', 'block');
       this._renderer.appendChild(node, this._sborder.nativeElement);
     });
+
+    // 双击编辑节点事件
+    if (hasDblClickEvent) {
+      this._renderer.listen(node, 'dblclick', event => {
+        let data = this._nodeDataList.find(d => d.domId == node.id);
+
+        if (data) {
+          let idArray = [];
+          if (data.handlers) {
+            this.userList = [];
+            data.handlers?.split(',').forEach(id => {
+              idArray.push(Number.parseInt(id));
+            })
+            this.initUserSelectData(idArray);
+          }
+
+          if (data.position) {
+            this.positionList = [];
+            this.initPositionSelectData(data.position);
+          }
+
+          if (data.department) {
+            this.departmentList = [];
+            this.initDepartmentSelectData(data.department);
+          }
+
+          this.workflowNodeEditForm = this._formBuilder.group({
+            id: data.domId,
+            name: [data.name, [Validators.required, Validators.maxLength(15)]],
+            handleMode: [data.handleMode, [Validators.required, Validators.pattern('^[12345]$')]],
+            handlers: [idArray, [Validators.required]],
+            position: [Number.parseInt(data.position), [Validators.required]],
+            department: [Number.parseInt(data.department), [Validators.required]]
+          });
+          this.nzModal = this._modalServce.create({
+            nzTitle: '编辑节点信息',
+            nzContent: this._nodeEditTpl,
+            nzFooter: null,
+            nzMaskClosable: false,
+          });
+        }
+      });
+    }
 
     // 拼接节点到流程图
     this._renderer.appendChild(this._flowContainer.nativeElement, node);
@@ -250,6 +358,7 @@ export class FlowDesignComponent implements OnInit {
   }
 
   save() {
+    this._linkDataList = [];
     this._jsPlumbInstance.getAllConnections().forEach(element => {
       this._linkDataList.push({
         sourceId: element.sourceId,
@@ -318,6 +427,108 @@ export class FlowDesignComponent implements OnInit {
     nodeData.top = y;
     nodeData.left = x;
     this._nodeDataList.push(nodeData);
+  }
+
+  // 键入用户关键字搜索
+  onSearchUser(value: string): void {
+    if (value) {
+      this.isLoading = true;
+      this.userSearchChange$.next(value);
+    }
+  }
+
+  // 键入职位关键字搜索
+  onSearchPosition(value: string): void {
+    if (value) {
+      this.isLoading = true;
+      this.positionSearchChange$.next(value);
+    }
+  }
+
+  // 键入职位关键字搜索
+  onSearchDepartment(value: string): void {
+    if (value) {
+      this.isLoading = true;
+      this.departmentSearchChange$.next(value);
+    }
+  }
+
+  // 提交节点编辑结果
+  submitWorkflowNodeEdit() {
+
+    this.workflowNodeEditForm.controls['name'].markAsDirty();
+    this.workflowNodeEditForm.controls['name'].updateValueAndValidity();
+
+    this.workflowNodeEditForm.controls['handleMode'].markAsDirty();
+    this.workflowNodeEditForm.controls['handleMode'].updateValueAndValidity();
+
+    let validResult = false;
+    if (this.workflowNodeEditForm.value['handleMode'] == 1) {
+      this.workflowNodeEditForm.controls['handlers'].markAsDirty();
+      this.workflowNodeEditForm.controls['handlers'].updateValueAndValidity();
+      validResult = this.workflowNodeEditForm.controls['name'].valid &&
+        this.workflowNodeEditForm.controls['handleMode'].valid &&
+        this.workflowNodeEditForm.controls['handlers'].valid;
+    } else if (this.workflowNodeEditForm.value['handleMode'] == 2) {
+      this.workflowNodeEditForm.controls['position'].markAsDirty();
+      this.workflowNodeEditForm.controls['position'].updateValueAndValidity();
+      validResult = this.workflowNodeEditForm.controls['name'].valid &&
+        this.workflowNodeEditForm.controls['handleMode'].valid &&
+        this.workflowNodeEditForm.controls['position'].valid;
+    } else if (this.workflowNodeEditForm.value['handleMode'] == 3) {
+      this.workflowNodeEditForm.controls['department'].markAsDirty();
+      this.workflowNodeEditForm.controls['department'].updateValueAndValidity();
+      validResult = this.workflowNodeEditForm.controls['name'].valid &&
+        this.workflowNodeEditForm.controls['handleMode'].valid &&
+        this.workflowNodeEditForm.controls['department'].valid;
+    }
+
+    if (validResult) {
+      let data = this._nodeDataList.find(d => d.domId == this.workflowNodeEditForm.value['id']);
+      data.name = this.workflowNodeEditForm.value['name'];
+      data.handleMode = this.workflowNodeEditForm.value['handleMode'];
+      data.handlers = this.workflowNodeEditForm.value['handlers']?.join(',');
+      data.position = this.workflowNodeEditForm.value['position'];
+      data.department = this.workflowNodeEditForm.value['department'];
+      this._checkedNode.childNodes[1].innerText = data.name;
+      this.nzModal.close();
+    }
+  }
+
+  initUserSelectData(handlers) {
+    handlers.forEach(handler => {
+      this._userService.getUser(handler).subscribe((result: any) => {
+
+        this.userList.push({
+          key: result.id,
+          value: result.name
+        });
+      });
+    });
+  }
+
+  initPositionSelectData(id) {
+    this._positionService.getPosition(id).subscribe((result: any) => {
+      this.positionList.push({
+        key: result.id,
+        value: result.name
+      });
+    });
+  }
+
+  initDepartmentSelectData(id) {
+    this._departmentService.get(id).subscribe((result: any) => {
+      this.departmentList.push({
+        key: result.id,
+        value: result.name
+      });
+    });
+  }
+
+
+
+  cancel() {
+    this.nzModal.close();
   }
 
   randomKey(): number {

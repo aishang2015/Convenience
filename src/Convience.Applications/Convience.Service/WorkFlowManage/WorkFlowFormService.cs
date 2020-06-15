@@ -14,11 +14,13 @@ namespace Convience.Service.WorkFlowManage
     {
         WorkFlowFormResult GetWorkFlowForm(int workflowId);
 
-        Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel);
+        Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel, string userName);
     }
 
     public class WorkFlowFormService : IWorkFlowFormService
     {
+        private readonly IRepository<WorkFlow> _workflowRepository;
+
         private readonly IRepository<WorkFlowForm> _formRepository;
 
         private readonly IRepository<WorkFlowFormControl> _formControlRepository;
@@ -28,11 +30,13 @@ namespace Convience.Service.WorkFlowManage
         private IMapper _mapper;
 
         public WorkFlowFormService(
+            IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowForm> formRepository,
             IRepository<WorkFlowFormControl> formControlRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _workflowRepository = workflowRepository;
             _formRepository = formRepository;
             _formControlRepository = formControlRepository;
             _unitOfWork = unitOfWork;
@@ -50,7 +54,7 @@ namespace Convience.Service.WorkFlowManage
             };
         }
 
-        public async Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel)
+        public async Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel, string userName)
         {
             try
             {
@@ -59,6 +63,10 @@ namespace Convience.Service.WorkFlowManage
                 {
                     control.WorkFlowId = viewModel.WorkFlowId;
                 }
+
+                var workflow = await _workflowRepository.GetAsync(viewModel.WorkFlowId);
+                workflow.UpdatedTime = DateTime.Now;
+                workflow.UpdatedUser = userName;
 
                 await _formRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
                 await _formRepository.AddAsync(_mapper.Map<WorkFlowForm>(viewModel.FormViewModel));

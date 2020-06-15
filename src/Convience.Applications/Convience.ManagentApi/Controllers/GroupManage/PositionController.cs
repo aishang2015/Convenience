@@ -30,6 +30,13 @@ namespace Convience.ManagentApi.Controllers.GroupManage
             return Ok(result);
         }
 
+        [HttpGet("dic")]
+        [Permission("positionDic")]
+        public IActionResult GetPositionDic([FromQuery]string name)
+        {
+            return Ok(_positionService.GetPositionDic(name));
+        }
+
         [HttpGet("all")]
         [Permission("allPosition")]
         public IActionResult GetAllPosition()

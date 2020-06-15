@@ -17,6 +17,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzDividerModule } from 'ng-zorro-antd';
 import { WorkflowGroupTreeComponent } from './workflow-group-tree/workflow-group-tree.component';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { HandleWorkFlowComponent } from './handle-work-flow/handle-work-flow.component';
 registerLocaleData(zh);
 
 
@@ -28,6 +29,7 @@ registerLocaleData(zh);
     MyFlowComponent,
     WorkflowManageComponent,
     WorkflowGroupTreeComponent,
+    HandleWorkFlowComponent,
   ],
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ registerLocaleData(zh);
       { path: 'formDesign', component: FormDesignComponent, canActivate: [LoginGuard] },
       { path: 'workflowManage', component: WorkflowManageComponent, canActivate: [LoginGuard] },
       { path: 'myFlow', component: MyFlowComponent, canActivate: [LoginGuard] },
+      { path: 'handledFlow', component: HandleWorkFlowComponent, canActivate: [LoginGuard] },
     ]),
     DragDropModule,
     NzDatePickerModule,

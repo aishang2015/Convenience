@@ -72,5 +72,12 @@ namespace Convience.ManagentApi.Controllers.GroupManage
             }
             return Ok();
         }
+
+        [HttpGet("dic")]
+        [Permission("departmentDic")]
+        public IActionResult GetDepartmentDic([FromQuery]string name)
+        {
+            return Ok(_departmentService.GetDepartmentDic(name));
+        }
     }
 }

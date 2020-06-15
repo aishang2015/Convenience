@@ -1,4 +1,5 @@
-﻿using Convience.Model.Models.GroupManage;
+﻿using Convience.Model.Models;
+using Convience.Model.Models.GroupManage;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,5 +21,7 @@ namespace Convience.Service.GroupManage
         Task<bool> UpdatePositionAsync(PositionViewModel model);
 
         Task<bool> DeletePositionAsync(int id);
+
+        public IEnumerable<DicModel> GetPositionDic(string name);
     }
 }
