@@ -32,6 +32,7 @@
 
 <ng-template #nodeEditTpl>
     <form nz-form [formGroup]="workflowNodeEditForm" (ngSubmit)="submitWorkflowNodeEdit()">
+        <h2>基本信息</h2>
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_workNodeName'">名称</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="workFlowNameErrorTpl">
@@ -47,6 +48,7 @@
                 </ng-container>
             </ng-template>
         </nz-form-item>
+        <h2>办理信息</h2>
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_handleMode'">处理模式</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="handleModeErrorTpl">
@@ -120,6 +122,26 @@
                     请选择内容！
                 </ng-container>
             </ng-template>
+        </nz-form-item>
+        <h2>转出条件</h2>
+
+        <nz-form-item *ngFor="let connection of connections">
+            <nz-form-label [nzSm]="6" [nzFor]="'edit_department'">{{connection.targetId}}</nz-form-label>
+            <nz-form-control [nzSm]="6">
+                <input nz-input [formControlName]="connection.targetId">
+            </nz-form-control>
+            <nz-form-control [nzSm]="6">
+                <nz-select nz-input [formControlName]="connection.targetId">
+                    <nz-option [nzValue]="1" nzLabel="等于"></nz-option>
+                    <nz-option [nzValue]="2" nzLabel="大于"></nz-option>
+                    <nz-option [nzValue]="3" nzLabel="小于"></nz-option>
+                    <nz-option [nzValue]="4" nzLabel="大于等于"></nz-option>
+                    <nz-option [nzValue]="5" nzLabel="小于等于"></nz-option>
+                </nz-select>
+            </nz-form-control>
+            <nz-form-control [nzSm]="6">
+                <input nz-input [formControlName]="connection.targetId">
+            </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">

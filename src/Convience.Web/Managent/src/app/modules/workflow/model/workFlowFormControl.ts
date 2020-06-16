@@ -1,6 +1,7 @@
 export class WorkFlowFormControl {
     id?: string;
 
+    name?:string;
     domId?: string;
     controlType?: ControlTypeEnum;
     top?: number;

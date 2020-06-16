@@ -7,7 +7,7 @@ import { WorkflowLink } from '../model/workflowLink';
 import { WorkflowFlowService } from 'src/app/services/workflow-flow.service';
 import { NzMessageService, NzModalRef, NzModalService } from 'ng-zorro-antd';
 import { ThrowStmt } from '@angular/compiler';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { debounce, debounceTime, switchMap } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
@@ -34,6 +34,7 @@ export class FlowDesignComponent implements OnInit {
 
   // 编辑节点表单
   workflowNodeEditForm: FormGroup = new FormGroup({});
+  connections = [];
 
   // 节点数据
   private _nodeDataList: WorkflowNode[] = [];
@@ -238,7 +239,7 @@ export class FlowDesignComponent implements OnInit {
 
     this.addNode(id, x, y, title);
 
-    this._endpointOption.maxConnections = 1;
+    this._endpointOption.maxConnections = 100;
     this._endpointOption.isSource = false;
     this._endpointOption.isTarget = true;
 
@@ -296,6 +297,10 @@ export class FlowDesignComponent implements OnInit {
             this.initDepartmentSelectData(data.department);
           }
 
+          this.connections = this._jsPlumbInstance.getAllConnections().filter(element => {
+            return element.sourceId == node.id;
+          });
+
           this.workflowNodeEditForm = this._formBuilder.group({
             id: data.domId,
             name: [data.name, [Validators.required, Validators.maxLength(15)]],
@@ -304,11 +309,17 @@ export class FlowDesignComponent implements OnInit {
             position: [Number.parseInt(data.position), [Validators.required]],
             department: [Number.parseInt(data.department), [Validators.required]]
           });
+
+          this.connections.forEach(connection => {
+            this.workflowNodeEditForm.addControl(connection.targetId, new FormControl(null))
+          });
+
           this.nzModal = this._modalServce.create({
             nzTitle: '编辑节点信息',
             nzContent: this._nodeEditTpl,
             nzFooter: null,
             nzMaskClosable: false,
+            nzWidth: 800
           });
         }
       });
@@ -335,7 +346,12 @@ export class FlowDesignComponent implements OnInit {
     // 设施元素在流程图中可拖拽
     this._jsPlumbInstance.draggable(node, {
       filter: '.draggable',
-      filterExclude: false
+      filterExclude: false,
+      drag: (event) => {
+        let data = this._nodeDataList.find(d => d.domId == this._checkedNode.id);
+        data.top = Number.parseInt(event.el.style.top);
+        data.left = Number.parseInt(event.el.style.left);
+      }
     });
   }
 
@@ -481,6 +497,9 @@ export class FlowDesignComponent implements OnInit {
       validResult = this.workflowNodeEditForm.controls['name'].valid &&
         this.workflowNodeEditForm.controls['handleMode'].valid &&
         this.workflowNodeEditForm.controls['department'].valid;
+    } else if (this.workflowNodeEditForm.value['handleMode'] == 4) {
+      validResult = this.workflowNodeEditForm.controls['name'].valid &&
+        this.workflowNodeEditForm.controls['handleMode'].valid
     }
 
     if (validResult) {

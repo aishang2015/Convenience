@@ -40,8 +40,9 @@
                 <div style="display: inline-block;">
                     <nz-form-label style="width: 80px;display: inline-block;">页面高</nz-form-label>
                     <nz-form-control style="width: 100px;display: inline-block;">
-                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.height" [nzFormatter]="formatterPiex"
-                            [nzParser]="parserPiex" (ngModelChange)="formHeightChanged($event)">
+                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.height"
+                            [nzFormatter]="formatterPiex" [nzParser]="parserPiex"
+                            (ngModelChange)="formHeightChanged($event)">
                         </nz-input-number>
                     </nz-form-control>
                 </div>
@@ -91,7 +92,13 @@
             <h2>属性</h2>
             <div *ngIf="checkedNode">
                 <h3 class="ml-10">通用</h3>
-                <div nz-row>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">控件名称</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input [(ngModel)]="checkedNodeData.name" style="width: 100%;">
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
                     <nz-form-label [nzSm]="8" [nzXs]="24">字号</nz-form-label>
                     <nz-form-control [nzSm]="16" [nzXs]="24">
                         <nz-select [(ngModel)]="checkedNodeData.fontSize" style="width: 100%;"
