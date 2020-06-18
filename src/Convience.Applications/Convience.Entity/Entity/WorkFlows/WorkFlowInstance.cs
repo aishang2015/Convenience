@@ -10,13 +10,19 @@ namespace Convience.Entity.Entity.WorkFlows
     {
         public int Id { get; set; }
 
+        public string WorkFlowName { get; set; }
+
         public WorkFlowInstanceStateEnum WorkFlowInstanceState { get; set; }
+
+        // 当前节点id
+        public int CurrentNodeId { get; set; }
 
         public DateTime CreatedTime { get; set; }
 
-        public string CreatedUserId { get; set; }
+        public string CreatedUserAccount { get; set; }
 
         public string CreatedUserName { get; set; }
+
 
         #region
 

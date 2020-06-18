@@ -57,7 +57,8 @@ namespace Convience.Service.Account
                     var pairs = new List<(string, string)>
                     {
                         (CustomClaimTypes.UserName,user.UserName),
-                        (CustomClaimTypes.UserRoleIds,user.RoleIds)
+                        (CustomClaimTypes.UserRoleIds,user.RoleIds),
+                        (CustomClaimTypes.Name,user.Name)
                     };
                     return (true, _jwtFactory.GenerateJwtToken(pairs), user);
                 }

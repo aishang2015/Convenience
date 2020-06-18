@@ -24,11 +24,12 @@ namespace Convience.Service.ContentManage
         private readonly IMapper _mapper;
 
         public DicDataService(
-            IRepository<DicType> _dictypeRepository,
+            IRepository<DicType> dictypeRepository,
             IRepository<DicData> dicdataRepository,
-          IUnitOfWork<SystemIdentityDbContext> unitOfWork,
-          IMapper mapper)
+            IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IMapper mapper)
         {
+            _dictypeRepository = dictypeRepository;
             _dicdataRepository = dicdataRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;

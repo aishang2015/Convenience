@@ -7,6 +7,12 @@ namespace Convience.ManagentApi.Infrastructure
 {
     public static class ClaimsPrincipalExtension
     {
+        public static string GetName(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.Name)
+                ?.Value ?? string.Empty;
+        }
+
         public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
         {
             return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserName)

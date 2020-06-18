@@ -192,6 +192,8 @@ export class WorkflowManageComponent implements OnInit {
     let id = this.workflowGroupTree.selectedNode?.key?.toString();
     this._workflowGroupService.get(id).subscribe((result: any) => {
 
+      this.editingWorkflowGroupId = id;
+
       this.workflowGroupEditForm = this._formBuilder.group({
         upWorkFlowGroup: [{ value: result.upId, disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],

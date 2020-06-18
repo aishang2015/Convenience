@@ -1,8 +1,9 @@
 export class WorkflowInstance {
     id?: number;
+    workFlowName?: string;
     workFlowInstanceState?: number;
-    workFlowId?: number;
-    workFlowName?: number;
+    currentNodeId?: number;
     createdTime?: Date;
+    createdUserAccount?: string;
     createdUserName?: string;
 }

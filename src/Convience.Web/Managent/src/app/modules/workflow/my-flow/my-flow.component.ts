@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd';
+import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { WorkflowInstance } from '../model/workflowInstance';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { WorkFlow } from '../model/workflow';
+import { WorkflowInstanceService } from 'src/app/services/workflow-instance.service';
 
 @Component({
   selector: 'app-my-flow',
@@ -32,9 +33,12 @@ export class MyFlowComponent implements OnInit {
 
   constructor(
     private _modalService: NzModalService,
-    private _workflowService: WorkflowService) { }
+    private _messageService: NzMessageService,
+    private _workflowService: WorkflowService,
+    private _workflowInstanceService: WorkflowInstanceService) { }
 
   ngOnInit(): void {
+    this.refresh();
   }
 
   add() {
@@ -48,12 +52,19 @@ export class MyFlowComponent implements OnInit {
   }
 
   refresh() {
+    this._workflowInstanceService.getInstances(this.page, this.size)
+      .subscribe((result: any) => {
+        this.data = result.data;
+        this.total = result.count;
+      });
   }
 
-  edit(id) {
+  // 查看内容
+  viewForm(id) {
   }
 
-  remove(id) {
+  // 查看流程
+  viewflow(id) {
   }
 
   cancel() {
@@ -101,7 +112,30 @@ export class MyFlowComponent implements OnInit {
   }
 
   startFlow(workflowId) {
-    this._nzModal.close();
+    this._workflowInstanceService.createInstance(workflowId).subscribe(result => {
+      this._messageService.success('发起成功');
+      this._nzModal.close();
+      this.refresh();
+    });
+  }
+
+  getState(state) {
+    let result;
+    switch (state) {
+      case 1:
+        result = '未提交';
+        break;
+      case 2:
+        result = '流转中';
+        break;
+      case 3:
+        result = '退回';
+        break;
+      default:
+        result = '结束';
+        break;
+    }
+    return result;
   }
 
 }

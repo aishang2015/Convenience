@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
+using System;
 
 namespace Convience.Entity.Entity.WorkFlows
 {
@@ -14,11 +15,23 @@ namespace Convience.Entity.Entity.WorkFlows
         // 节点id
         public int NodeId { get; set; }
 
+        // 节点id
+        public string NodeName { get; set; }
+
         // 处置人
         public string HandlePeople { get; set; }
 
-        // 处置情况
+        // 是否通过
+        public bool IsPass { get; set; }
+
+        // 处置评论
+        public string HandleComment { get; set; }
+
+        // 处理情况
         public string HandleInfo { get; set; }
+
+        // 处理时间
+        public DateTime HandleTime { get; set; }
 
         #region
 
