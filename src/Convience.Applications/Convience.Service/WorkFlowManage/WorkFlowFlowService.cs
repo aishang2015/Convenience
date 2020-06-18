@@ -33,6 +33,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IRepository<WorkFlowNode> _nodeRepository;
 
+        private readonly IRepository<WorkFlowCondition> _conditionRepository;
+
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private IMapper _mapper;
@@ -41,6 +43,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
+            IRepository<WorkFlowCondition> conditionRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
@@ -48,6 +51,7 @@ namespace Convience.Service.WorkFlowManage
             _workflowRepository = workflowRepository;
             _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
+            _conditionRepository = conditionRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -64,6 +68,10 @@ namespace Convience.Service.WorkFlowManage
                 {
                     node.WorkFlowId = viewModel.WorkFlowId;
                 }
+                foreach (var condition in viewModel.WorkFlowConditionViewModels)
+                {
+                    condition.WorkFlowId = viewModel.WorkFlowId;
+                }
                 var workflow = await _workflowRepository.GetAsync(viewModel.WorkFlowId);
                 workflow.UpdatedTime = DateTime.Now;
                 workflow.UpdatedUser = userName;
@@ -72,6 +80,8 @@ namespace Convience.Service.WorkFlowManage
                 await _linkRepository.AddAsync(_mapper.Map<IEnumerable<WorkFlowLink>>(viewModel.WorkFlowLinkViewModels));
                 await _nodeRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
                 await _nodeRepository.AddAsync(_mapper.Map<IEnumerable<WorkFlowNode>>(viewModel.WorkFlowNodeViewModels));
+                await _conditionRepository.RemoveAsync(f => f.WorkFlowId == viewModel.WorkFlowId);
+                await _conditionRepository.AddAsync(_mapper.Map<IEnumerable<WorkFlowCondition>>(viewModel.WorkFlowConditionViewModels));
                 await _unitOfWork.SaveAsync();
                 return true;
             }
@@ -86,10 +96,12 @@ namespace Convience.Service.WorkFlowManage
         {
             var links = _linkRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
             var nodes = _nodeRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
+            var conditions = _conditionRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
             return new WorkFlowFlowResult
             {
                 WorkFlowLinkResults = _mapper.Map<IEnumerable<WorkFlowLinkResult>>(links),
-                WorkFlowNodeResults = _mapper.Map<IEnumerable<WorkFlowNodeResult>>(nodes)
+                WorkFlowNodeResults = _mapper.Map<IEnumerable<WorkFlowNodeResult>>(nodes),
+                WorkFlowConditionResults = _mapper.Map<IEnumerable<WorkFlowConditionResult>>(conditions)
             };
         }
     }

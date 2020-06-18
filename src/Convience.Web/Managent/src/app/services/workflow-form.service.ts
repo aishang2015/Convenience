@@ -17,4 +17,8 @@ export class WorkflowFormService {
   addOrUpdate(data) {
     return this.httpClient.post(this.uriConstant.WorkFlowFormUri, data);
   }
+
+  getControlDic(id) {
+    return this.httpClient.get(`${this.uriConstant.WorkFlowFormUri}/dic?workflowId=${id}`);
+  }
 }

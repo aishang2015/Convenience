@@ -34,9 +34,16 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             var isSuccess = await _workFlowFormService.AddOrUpdateWorkFlowForm(viewModel, HttpContext.User.GetUserName());
             if (!isSuccess)
             {
-                return this.BadRequestResult("操作失败!");
+                return this.BadRequestResult("保存失败!");
             }
             return Ok();
+        }
+
+        [HttpGet("dic")]
+        [Permission("workflowFormControlDic")]
+        public IActionResult GetWorkFlowFormControlDic([FromQuery]int WorkFlowId)
+        {
+            return Ok(_workFlowFormService.GetWorkFlowFormControlDic(WorkFlowId));
         }
     }
 }

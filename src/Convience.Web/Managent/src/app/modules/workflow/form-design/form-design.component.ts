@@ -119,6 +119,7 @@ export class FormDesignComponent implements OnInit {
         }
         if (event.key == 'Delete') {
           this._jsPlumbInstance.remove(this.checkedNode);
+          this._nodeDataList = this._nodeDataList.filter(data => data.domId != this.checkedNode.id);
           this.checkedNode = null;
         }
       }
@@ -161,6 +162,9 @@ export class FormDesignComponent implements OnInit {
       }
 
       // 初始化各个元素状态
+      for (let node of this._formArea.nativeElement.childNodes) {
+        this._renderer.removeChild(this._formArea.nativeElement, node);
+      }
       this._nodeDataList.forEach(nodeData => {
         this.initNode(nodeData);
       });
@@ -420,7 +424,10 @@ export class FormDesignComponent implements OnInit {
       workFlowId: Number.parseInt(this._workflowId),
       formViewModel: this.formData,
       formControlViewModels: this._nodeDataList
-    }).subscribe(result => this._messageService.success('保存成功！'));
+    }).subscribe(result => {
+      this._messageService.success('保存成功！');
+      this.initData();
+    });
   }
 
   formatterPiex = (value: number) => {

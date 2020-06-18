@@ -13,6 +13,9 @@ import { debounce, debounceTime, switchMap } from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { PositionService } from 'src/app/services/position.service';
 import { DepartmentService } from 'src/app/services/department.service';
+import { WorkflowFormService } from 'src/app/services/workflow-form.service';
+import { WorkflowNodeCondition } from '../model/workflowNodeCondition';
+import { connect } from 'http2';
 
 @Component({
   selector: 'app-flow-design',
@@ -35,10 +38,12 @@ export class FlowDesignComponent implements OnInit {
   // 编辑节点表单
   workflowNodeEditForm: FormGroup = new FormGroup({});
   connections = [];
+  connectionFormControls: { [key: string]: any[]; } = {};
 
   // 节点数据
   private _nodeDataList: WorkflowNode[] = [];
   private _linkDataList: WorkflowLink[] = [];
+  private _conditionDataList: WorkflowNodeCondition[] = [];
 
   private _jsPlumb = jp.jsPlumb;
   private _jsPlumbInstance;
@@ -90,9 +95,13 @@ export class FlowDesignComponent implements OnInit {
   // 模态框
   nzModal: NzModalRef;
 
+  // 表单选项
+  formControlList = [];
+
   constructor(
     private _renderer: Renderer2,
     private _route: ActivatedRoute,
+    private _formService: WorkflowFormService,
     private _flowService: WorkflowFlowService,
     private _messageService: NzMessageService,
     private _formBuilder: FormBuilder,
@@ -129,6 +138,11 @@ export class FlowDesignComponent implements OnInit {
         this.isLoading = false;
       });
     });
+
+    // 初始化表单选项
+    this._formService.getControlDic(this._workflowId).subscribe((result: any) => {
+      this.formControlList = result;
+    });
   }
 
   // 初始化流程图
@@ -163,6 +177,7 @@ export class FlowDesignComponent implements OnInit {
     this._flowService.get(this._workflowId).subscribe((result: any) => {
       this._nodeDataList = result.workFlowNodeResults ? result.workFlowNodeResults : [];
       this._linkDataList = result.workFlowLinkResults ? result.workFlowLinkResults : [];
+      this._conditionDataList = result.workFlowConditionResults ? result.workFlowConditionResults : [];
 
       this._nodeDataList.forEach(nodeData => {
 
@@ -301,6 +316,7 @@ export class FlowDesignComponent implements OnInit {
             return element.sourceId == node.id;
           });
 
+          // 构建表单成员
           this.workflowNodeEditForm = this._formBuilder.group({
             id: data.domId,
             name: [data.name, [Validators.required, Validators.maxLength(15)]],
@@ -310,8 +326,16 @@ export class FlowDesignComponent implements OnInit {
             department: [Number.parseInt(data.department), [Validators.required]]
           });
 
+          // 构建条件列表
+          this.connectionFormControls = {};
           this.connections.forEach(connection => {
-            this.workflowNodeEditForm.addControl(connection.targetId, new FormControl(null))
+            this.connectionFormControls[connection.targetId] = [];
+            let conditions = this._conditionDataList.filter(data => data.sourceId == node.id && data.targetId == connection.targetId);
+            conditions.forEach(condition => {
+
+              // 添加表单项并赋值
+              this.addFormControl(connection.targetId, condition.formControlId, condition.compareMode, condition.compareValue);
+            });
           });
 
           this.nzModal = this._modalServce.create({
@@ -355,6 +379,31 @@ export class FlowDesignComponent implements OnInit {
     });
   }
 
+  // 添加一组条件
+  addFormControl(targetId, formControlIdValue = null, compareModeValue = null, compareValueValue = null) {
+    let formControlId = `formControlId${this.randomKey()}`;
+    let compareMode = `compareMode${this.randomKey()}`;
+    let compareValue = `compareValue${this.randomKey()}`;
+    this.connectionFormControls[targetId].push({
+      formControlId: formControlId,
+      compareMode: compareMode,
+      compareValue: compareValue,
+    });
+    this.workflowNodeEditForm.addControl(formControlId, new FormControl(formControlIdValue?.toString()));
+    this.workflowNodeEditForm.addControl(compareMode, new FormControl(compareModeValue));
+    this.workflowNodeEditForm.addControl(compareValue, new FormControl(compareValueValue));
+  }
+
+  // 删除一组条件
+  removeFormControl(targetId, formControlId) {
+    let controlInfo = this.connectionFormControls[targetId].find(o => o.formControlId == formControlId);
+    this.workflowNodeEditForm.removeControl(controlInfo.formControlId);
+    this.workflowNodeEditForm.removeControl(controlInfo.compareModel);
+    this.workflowNodeEditForm.removeControl(controlInfo.compareValue);
+    this.connectionFormControls[targetId] = this.connectionFormControls[targetId].filter(o => o.formControlId != formControlId);
+  }
+
+
   // cdk的drag和drop
   // drop(event) {
   //   console.log(event);
@@ -373,6 +422,7 @@ export class FlowDesignComponent implements OnInit {
     history.go(-1);
   }
 
+  // 保存流程图
   save() {
     this._linkDataList = [];
     this._jsPlumbInstance.getAllConnections().forEach(element => {
@@ -385,7 +435,8 @@ export class FlowDesignComponent implements OnInit {
     this._flowService.addOrUpdate({
       workFlowId: Number.parseInt(this._workflowId),
       workFlowLinkViewModels: this._linkDataList,
-      workFlowNodeViewModels: this._nodeDataList
+      workFlowNodeViewModels: this._nodeDataList,
+      workFlowConditionViewModels: this._conditionDataList,
     }).subscribe(result => {
       this._messageService.success('修改成功！');
     })
@@ -503,6 +554,8 @@ export class FlowDesignComponent implements OnInit {
     }
 
     if (validResult) {
+
+      // 基本信息，办理信息
       let data = this._nodeDataList.find(d => d.domId == this.workflowNodeEditForm.value['id']);
       data.name = this.workflowNodeEditForm.value['name'];
       data.handleMode = this.workflowNodeEditForm.value['handleMode'];
@@ -510,6 +563,28 @@ export class FlowDesignComponent implements OnInit {
       data.position = this.workflowNodeEditForm.value['position'];
       data.department = this.workflowNodeEditForm.value['department'];
       this._checkedNode.childNodes[1].innerText = data.name;
+
+      // 转出条件
+      for (let key in this.connectionFormControls) {
+        let data = this.connectionFormControls[key];
+
+        // 清理当前节点的指向key节点的所有条件，在下边重新添加
+        this._conditionDataList = this._conditionDataList.filter(data => !(data.sourceId == this._checkedNode.id && data.targetId == key));
+        data.forEach(element => {
+          let formControlId = this.workflowNodeEditForm.value[element.formControlId];
+          let compareMode = this.workflowNodeEditForm.value[element.compareMode];
+          let compareValue = this.workflowNodeEditForm.value[element.compareValue];
+          if (formControlId && compareMode && compareValue) {
+            let condition = new WorkflowNodeCondition();
+            condition.sourceId = this._checkedNode.id;
+            condition.targetId = key;
+            condition.formControlId = formControlId;
+            condition.compareMode = compareMode;
+            condition.compareValue = compareValue;
+            this._conditionDataList.push(condition);
+          }
+        });
+      }
       this.nzModal.close();
     }
   }
@@ -544,7 +619,9 @@ export class FlowDesignComponent implements OnInit {
     });
   }
 
-
+  getNodeName(id) {
+    return this._nodeDataList.find(data => data.domId == id).name;
+  }
 
   cancel() {
     this.nzModal.close();

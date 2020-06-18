@@ -33,6 +33,8 @@ namespace Convience.Entity.Entity.WorkFlows
 
         public List<WorkFlowNode> WorkFlowNodes { get; set; }
 
+        public List<WorkFlowCondition> WorkFlowConditions { get; set; }
+
         public WorkFlowForm WorkFlowForm { get; set; }
 
         public List<WorkFlowFormControl> WorkFlowFormControls { get; set; }

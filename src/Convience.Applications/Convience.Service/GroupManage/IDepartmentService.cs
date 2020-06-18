@@ -18,6 +18,6 @@ namespace Convience.Service.GroupManage
 
         Task<bool> DeleteDepartmentAsync(int id);
 
-        public IEnumerable<DicModel> GetDepartmentDic(string name);
+        IEnumerable<DicModel> GetDepartmentDic(string name);
     }
 }

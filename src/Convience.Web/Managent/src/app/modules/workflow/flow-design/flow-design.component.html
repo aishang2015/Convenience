@@ -125,24 +125,49 @@
         </nz-form-item>
         <h2>转出条件</h2>
 
-        <nz-form-item *ngFor="let connection of connections">
-            <nz-form-label [nzSm]="6" [nzFor]="'edit_department'">{{connection.targetId}}</nz-form-label>
-            <nz-form-control [nzSm]="6">
-                <input nz-input [formControlName]="connection.targetId">
-            </nz-form-control>
-            <nz-form-control [nzSm]="6">
-                <nz-select nz-input [formControlName]="connection.targetId">
-                    <nz-option [nzValue]="1" nzLabel="等于"></nz-option>
-                    <nz-option [nzValue]="2" nzLabel="大于"></nz-option>
-                    <nz-option [nzValue]="3" nzLabel="小于"></nz-option>
-                    <nz-option [nzValue]="4" nzLabel="大于等于"></nz-option>
-                    <nz-option [nzValue]="5" nzLabel="小于等于"></nz-option>
-                </nz-select>
-            </nz-form-control>
-            <nz-form-control [nzSm]="6">
-                <input nz-input [formControlName]="connection.targetId">
-            </nz-form-control>
-        </nz-form-item>
+        <ng-container *ngFor="let connection of connections">
+            <nz-form-item>
+                <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_department'">
+                    转入[{{getNodeName(connection.targetId)}}]
+                </nz-form-label>
+                <nz-form-control [nzSm]="14" [nzXs]="24">
+                    <nz-input-group nzCompact *ngFor="let item of connectionFormControls[connection.targetId]"
+                        class="mt-5">
+                        <nz-select nzPlaceHolder="表单项" nzAllowClear [formControlName]="item.formControlId"
+                            style="width: 30%;">
+                            <ng-container *ngFor="let d of formControlList">
+                                <nz-option [nzValue]="d.key" [nzLabel]="d.value"></nz-option>
+                            </ng-container>
+                        </nz-select>
+                        <nz-select nzPlaceHolder="比较方式" [formControlName]="item.compareMode" style="width: 30%;"
+                            nzAllowClear>
+                            <nz-option [nzValue]="1" nzLabel="等于"></nz-option>
+                            <nz-option [nzValue]="2" nzLabel="大于"></nz-option>
+                            <nz-option [nzValue]="3" nzLabel="小于"></nz-option>
+                            <nz-option [nzValue]="4" nzLabel="大于等于"></nz-option>
+                            <nz-option [nzValue]="5" nzLabel="小于等于"></nz-option>
+                        </nz-select>
+                        <input nz-input [formControlName]="item.compareValue" style="width:30%;">
+                        <button style="width: 10%;" nz-button type="button"
+                            (click)="removeFormControl(connection.targetId,item.formControlId)">
+                            <i nz-icon nzType="minus-circle-o"></i>
+                        </button>
+                    </nz-input-group>
+
+                    <div>
+                        <button nz-button nzType="dashed" type="button" style="width:100%;margin-top: 5px;"
+                            (click)="addFormControl(connection.targetId)">
+                            <i nz-icon nzType="plus"></i>
+                            添加条件
+                        </button>
+                    </div>
+                </nz-form-control>
+
+            </nz-form-item>
+            <nz-form-item>
+            </nz-form-item>
+        </ng-container>
+
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">
                 <button nz-button nzType="primary" class="mr-10">提交</button>

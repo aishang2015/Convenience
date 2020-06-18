@@ -45,6 +45,25 @@ namespace Convience.Model.Models.WorkFlowManage
 
     public class WorkFlowNodeResult : WorkFlowNodeViewModel { }
 
+    public class WorkFlowConditionViewModel
+    {
+        public int? Id { get; set; }
+
+        public int WorkFlowId { get; set; }
+
+        public string SourceId { get; set; }
+
+        public string TargetId { get; set; }
+
+        public int FormControlId { get; set; }
+
+        public CompareModeEnum CompareMode { get; set; }
+
+        public string CompareValue { get; set; }
+    }
+
+    public class WorkFlowConditionResult : WorkFlowConditionViewModel { }
+
     public class WorkFlowFlowViewModel
     {
         public int WorkFlowId { get; set; }
@@ -52,6 +71,8 @@ namespace Convience.Model.Models.WorkFlowManage
         public IEnumerable<WorkFlowLinkViewModel> WorkFlowLinkViewModels { get; set; }
 
         public IEnumerable<WorkFlowNodeViewModel> WorkFlowNodeViewModels { get; set; }
+
+        public IEnumerable<WorkFlowConditionViewModel> WorkFlowConditionViewModels { get; set; }
     }
 
     public class WorkFlowFlowResult
@@ -59,5 +80,7 @@ namespace Convience.Model.Models.WorkFlowManage
         public IEnumerable<WorkFlowLinkResult> WorkFlowLinkResults { get; set; }
 
         public IEnumerable<WorkFlowNodeResult> WorkFlowNodeResults { get; set; }
+
+        public IEnumerable<WorkFlowConditionResult> WorkFlowConditionResults { get; set; }
     }
 }
