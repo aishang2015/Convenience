@@ -1,10 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { WorkflowInstance } from '../model/workflowInstance';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import { WorkFlow } from '../model/workflow';
 import { WorkflowInstanceService } from 'src/app/services/workflow-instance.service';
+import { WorkflowFormService } from 'src/app/services/workflow-form.service';
+import { WorkFlowForm } from '../model/workflowForm';
+import { WorkFlowFormControl } from '../model/workFlowFormControl';
+import { WorkflowInstanceValue } from '../model/workflowInstanceValue';
 
 @Component({
   selector: 'app-my-flow',
@@ -19,7 +23,20 @@ export class MyFlowComponent implements OnInit {
   @ViewChild('contentTpl', { static: true })
   wfTypeTpl;
 
+  @ViewChild('formTpl', { static: true })
+  _formTpl;
+
+  // 工作流实例数据
   data: WorkflowInstance[] = [];
+
+  // 表单设计数据
+  private _formData: WorkFlowForm = new WorkFlowForm();
+
+  // 表单控件数据
+  formControlList: WorkFlowFormControl[] = [];
+
+  // 控件值
+  controlValues: { [key: string]: string; } = {};
 
   page: number = 1;
   size: number = 10;
@@ -31,10 +48,14 @@ export class MyFlowComponent implements OnInit {
 
   _nzModal: NzModalRef;
 
+  _checkedData: WorkflowInstance;
+
   constructor(
+    private _renderer: Renderer2,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
     private _workflowService: WorkflowService,
+    private _formService: WorkflowFormService,
     private _workflowInstanceService: WorkflowInstanceService) { }
 
   ngOnInit(): void {
@@ -60,11 +81,41 @@ export class MyFlowComponent implements OnInit {
   }
 
   // 查看内容
-  viewForm(id) {
+  viewForm(data) {
+    this._checkedData = data;
+    this._formService.get(data.workFlowId).subscribe((result: any) => {
+      this._formData = result.formResult;
+      this.formControlList = result.formControlResults;
+
+      // 初始化表单区域状态
+      //this._renderer.setStyle(this._formArea.nativeElement, 'height', `${this._formData.height}px`);
+      //this._renderer.setStyle(this._formArea.nativeElement, 'width', `${this._formData.width}px`);
+      //this._renderer.setStyle(this._formArea.nativeElement, 'background-color', this._formData.background);
+
+      this.controlValues = {};
+      this._workflowInstanceService.getControlValue(data.id).subscribe((result: any) => {
+        result.forEach(element => {
+          this.controlValues[element.formControlId] = element.value;
+        });
+      });
+
+      this._nzModal = this._modalService.create({
+        nzTitle: '编辑内容',
+        nzContent: this._formTpl,
+        nzFooter: null,
+        nzMaskClosable: false,
+        nzWidth: document.body.clientWidth * 0.8
+      });
+
+      let ele = document.getElementById('form-area');
+      this._renderer.setStyle(ele, 'height', `${this._formData.height}px`);
+      this._renderer.setStyle(ele, 'width', `${this._formData.width}px`);
+      this._renderer.setStyle(ele, 'background-color', this._formData.background);
+    });
   }
 
   // 查看流程
-  viewflow(id) {
+  viewflow(data) {
   }
 
   cancel() {
@@ -117,6 +168,28 @@ export class MyFlowComponent implements OnInit {
       this._nzModal.close();
       this.refresh();
     });
+  }
+
+  saveData() {
+    let values: WorkflowInstanceValue[] = [];
+    for (let key in this.controlValues) {
+      values.push({
+        formControlId: key,
+        value: this.controlValues[key]
+      });
+    }
+    this._workflowInstanceService.saveControlValues({
+      workFlowInstanceId: this._checkedData.id,
+      values: values
+    }).subscribe(result => {
+      this._messageService.success('保存成功');
+      this.controlValues = {};
+      this._nzModal.close();
+    });
+  }
+
+  getPx(dis) {
+    return `${dis}px`;
   }
 
   getState(state) {

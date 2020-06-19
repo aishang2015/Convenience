@@ -211,6 +211,10 @@ export class FormDesignComponent implements OnInit {
     this._renderer.setStyle(newEle, 'opacity', '1');
     this._renderer.setStyle(newEle, 'top', `${node.top}px`);
     this._renderer.setStyle(newEle, 'left', `${node.left}px`);
+    if (node.controlType != 1) {
+      this._renderer.setStyle(newEle.firstChild, 'width', `${node.width}px`);
+      this._renderer.setStyle(newEle, 'width', `${node.width}px`);
+    }
     this._renderer.setStyle(newEle, 'font-size', `${node.fontSize}px`);
 
     // 设置节点事件
@@ -398,8 +402,9 @@ export class FormDesignComponent implements OnInit {
         break;
       case 'middle':
         let rect = this.checkedNode.getBoundingClientRect();
-        this.leftChanged((this.formData.width - rect.width) / 2);
-        this.checkedNodeData.left = (this.formData.width - rect.width) / 2;
+        let left = Math.round((this.formData.width - rect.width) / 2);
+        this.leftChanged(left);
+        this.checkedNodeData.left = left;
         break;
       case 'right':
         let rrect = this.checkedNode.getBoundingClientRect();

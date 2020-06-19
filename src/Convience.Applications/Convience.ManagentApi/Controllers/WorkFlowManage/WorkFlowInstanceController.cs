@@ -22,12 +22,15 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             _workFlowInstanceService = workFlowInstanceService;
         }
 
+        /// <summary>
+        /// 创建工作流
+        /// </summary>
         [HttpPost]
         [Permission("workFlowInstancePost")]
         public async Task<IActionResult> CreateWorkFlowInstance([FromBody]WorkFlowInstanceViewModel vm)
         {
-             var isSuccess = await _workFlowInstanceService
-                .CreateWorkFlowInstance(vm.WorkFlowId, User.GetUserName(), User.GetName());
+            var isSuccess = await _workFlowInstanceService
+               .CreateWorkFlowInstance(vm.WorkFlowId, User.GetUserName(), User.GetName());
             if (!isSuccess)
             {
                 return this.BadRequestResult("创建工作流失败!");
@@ -35,6 +38,9 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             return Ok();
         }
 
+        /// <summary>
+        /// 取得工作流列表
+        /// </summary>
         [HttpGet]
         [Permission("workFlowInstanceGet")]
         public IActionResult GetWorkFlowInstances([FromQuery]PageQuery query)
@@ -45,6 +51,31 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
                 data = result.Item1,
                 count = result.Item2,
             });
+        }
+
+        /// <summary>
+        /// 取得表单值
+        /// </summary>
+        [HttpGet("values")]
+        [Permission("workFlowInstanceValuesGet")]
+        public IActionResult GetWorkFlowInstanceValues([FromQuery]int workFlowInstanceId)
+        {
+            return Ok(_workFlowInstanceService.GetWorkFlowInstance(workFlowInstanceId));
+        }
+
+        /// <summary>
+        /// 保存表单值
+        /// </summary>
+        [HttpPut("values")]
+        [Permission("workFlowInstanceValuesPut")]
+        public async Task<IActionResult> SaveWorkFlowInstanceValues([FromBody]InstanceValuesViewModel vm)
+        {
+            var isSuccess = await _workFlowInstanceService.SaveWorkFlowInstance(vm.WorkFlowInstanceId, vm.Values);
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("创建工作流失败!");
+            }
+            return Ok();
         }
     }
 }

@@ -168,7 +168,8 @@
                 <div nz-row class="mt-10" *ngIf="checkedNodeData.controlType == 3">
                     <nz-form-label [nzSm]="8" [nzXs]="24">选项</nz-form-label>
                     <nz-form-control [nzSm]="16" [nzXs]="24">
-                        <input nz-input (keydown.enter)="optionEnter($event)" [(ngModel)]="inputOption">
+                        <input nz-input (keydown.enter)="optionEnter($event)" [(ngModel)]="inputOption"
+                            nzPlaceHolder="选项">
                     </nz-form-control>
                 </div>
                 <div nz-row class="mt-10 mr-10" *ngIf="checkedNodeData.controlType == 3">

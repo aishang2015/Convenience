@@ -17,4 +17,12 @@ export class WorkflowInstanceService {
   getInstances(page, size) {
     return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}?page=${page}&&size=${size}`);
   }
+
+  getControlValue(id) {
+    return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}/values?workFlowInstanceId=${id}`);
+  }
+
+  saveControlValues(data) {
+    return this.httpClient.put(`${this.uriConstant.WorkFlowInstanceUri}/values`, data);
+  }
 }

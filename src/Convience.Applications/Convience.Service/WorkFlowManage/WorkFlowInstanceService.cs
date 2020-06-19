@@ -21,7 +21,7 @@ namespace Convience.Service.WorkFlowManage
         Task<bool> CreateWorkFlowInstance(int workflowId, string account, string userName);
 
         /// <summary>
-        /// 用户的工作流实例
+        /// 用户发起的工作流实例
         /// </summary>
         (IEnumerable<WorkFlowInstanceResult>, int) GetInstanceList(string account, int page, int size);
 
@@ -31,9 +31,14 @@ namespace Convience.Service.WorkFlowManage
         (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList();
 
         /// <summary>
+        /// 取得工作流内容
+        /// </summary>
+        IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstance(int workFlowInstanceId);
+
+        /// <summary>
         /// 保存工作流内容
         /// </summary>
-        Task SaveWorkFlowInstance(int WorkFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values);
+        Task<bool> SaveWorkFlowInstance(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values);
 
         /// <summary>
         /// 提交，流转
@@ -141,9 +146,36 @@ namespace Convience.Service.WorkFlowManage
             throw new NotImplementedException();
         }
 
-        public Task SaveWorkFlowInstance(int WorkFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values)
+        public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstance(int workFlowInstanceId)
         {
-            throw new NotImplementedException();
+            var result = _instanceValueRepository.Get(v => v.WorkFlowInstanceId == workFlowInstanceId);
+            return _mapper.Map<IEnumerable<WorkFlowInstanceValueResult>>(result);
+        }
+
+        public async Task<bool> SaveWorkFlowInstance(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values)
+        {
+            foreach (var model in values)
+            {
+                model.WorkFlowInstanceId = workFlowInstanceId;
+            }
+
+            try
+            {
+                await _instanceValueRepository.RemoveAsync(v => v.WorkFlowInstanceId == workFlowInstanceId);
+                _mapper.Map<List<WorkFlowInstanceValue>>(values).ForEach(async value =>
+                {
+                    await _instanceValueRepository.AddAsync(value);
+                });
+                await _unitOfWork.SaveAsync();
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
+                return false;
+            }
         }
 
         public Task SubmitWorkFlowInstance(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel)

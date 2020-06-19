@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Entity.WorkFlows;
 using System;
+using System.Collections.Generic;
 
 namespace Convience.Model.Models.WorkFlowManage
 {
@@ -32,6 +33,13 @@ namespace Convience.Model.Models.WorkFlowManage
         public string FormControlId { get; set; }
 
         public string Value { get; set; }
+    }
+
+    public class InstanceValuesViewModel
+    {
+        public int WorkFlowInstanceId { get; set; }
+
+        public IEnumerable<WorkFlowInstanceValueViewModel> Values { get; set; }
     }
 
     public class WorkFlowInstanceValueResult : WorkFlowInstanceValueViewModel { }
