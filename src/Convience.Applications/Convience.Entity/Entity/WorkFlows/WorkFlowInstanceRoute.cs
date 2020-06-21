@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
+
 using System;
 
 namespace Convience.Entity.Entity.WorkFlows
@@ -21,14 +22,14 @@ namespace Convience.Entity.Entity.WorkFlows
         // 处置人
         public string HandlePeople { get; set; }
 
-        // 是否通过
-        public bool IsPass { get; set; }
+        // 处理人id
+        public string HandlePepleId { get; set; }
 
         // 处置评论
         public string HandleComment { get; set; }
 
         // 处理情况
-        public string HandleInfo { get; set; }
+        public HandleStateEnum HandleState { get; set; }
 
         // 处理时间
         public DateTime HandleTime { get; set; }
@@ -40,5 +41,12 @@ namespace Convience.Entity.Entity.WorkFlows
         public WorkFlowInstance WorkFlowInstance { get; set; }
 
         #endregion
+    }
+
+    public enum HandleStateEnum
+    {
+        未处理 = 1,
+        通过 = 2,
+        拒绝 = 3
     }
 }

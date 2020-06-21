@@ -147,8 +147,8 @@ export class FormDesignComponent implements OnInit {
       this._nodeDataList = result.formControlResults;
       if (!this.formData) {
         this.formData = new WorkFlowForm();
-        this.formData.width = 842;
-        this.formData.height = 595;
+        this.formData.width = 595;
+        this.formData.height = 842;
         this.formData.background = 'black';
       }
 
@@ -290,8 +290,8 @@ export class FormDesignComponent implements OnInit {
 
     let eleRect = ele.nativeElement.getBoundingClientRect();
     let newEle = ele.nativeElement.cloneNode(true);
-    x = x - eleRect.width / 2;
-    y = y - eleRect.height / 2;
+    x = Math.floor(x - eleRect.width / 2);
+    y = Math.floor(y - eleRect.height / 2);
 
     this._renderer.setAttribute(newEle, 'id', id);
     this._renderer.setStyle(newEle, 'z-index', '0');
@@ -319,8 +319,8 @@ export class FormDesignComponent implements OnInit {
     this._jsPlumbInstance.draggable(newEle, {
       containment: true,
       drag: (event) => {
-        this.checkedNodeData.top = Number.parseInt(event.el.style.top.replace('px', ''));
-        this.checkedNodeData.left = Number.parseInt(event.el.style.left.replace('px', ''));
+        this.checkedNodeData.top = Math.floor(event.el.style.top.replace('px', ''));
+        this.checkedNodeData.left = Math.floor(event.el.style.left.replace('px', ''));
       }
     });
 

@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
+
 using Convience.Entity.Data;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.WorkFlowManage;
+
 using DnsClient.Internal;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,17 +37,23 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 取得工作流内容
         /// </summary>
-        IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstance(int workFlowInstanceId);
+        IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId);
 
         /// <summary>
         /// 保存工作流内容
         /// </summary>
-        Task<bool> SaveWorkFlowInstance(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values);
+        Task<bool> SaveWorkFlowInstanceValues(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values);
 
         /// <summary>
-        /// 提交，流转
+        /// 提交
         /// </summary>
-        Task SubmitWorkFlowInstance(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel);
+        Task<bool> SubmitWorkFlowInstance(int WorkFlowInstanceId, string account, WorkFlowInstanceHandleViewModel viewModel);
+
+        /// <summary>
+        /// 审核
+        /// </summary>
+        Task ApproveOrDisApproveNode(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel);
+
     }
 
     public class WorkFlowInstanceService : IWorkFlowInstanceService
@@ -51,6 +61,8 @@ namespace Convience.Service.WorkFlowManage
         private readonly ILogger<WorkFlowInstanceService> _logger;
 
         private readonly IRepository<WorkFlow> _workflowRepository;
+
+        private readonly IRepository<WorkFlowLink> _linkRepository;
 
         private readonly IRepository<WorkFlowNode> _nodeRepository;
 
@@ -67,6 +79,7 @@ namespace Convience.Service.WorkFlowManage
         public WorkFlowInstanceService(
             ILogger<WorkFlowInstanceService> logger,
             IRepository<WorkFlow> workflowRepository,
+            IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
             IRepository<WorkFlowInstance> instanceRepository,
             IRepository<WorkFlowInstanceRoute> instanceRouteRepository,
@@ -76,6 +89,7 @@ namespace Convience.Service.WorkFlowManage
         {
             _logger = logger;
             _workflowRepository = workflowRepository;
+            _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
             _instanceRepository = instanceRepository;
             _instanceRouteRepository = instanceRouteRepository;
@@ -111,8 +125,7 @@ namespace Convience.Service.WorkFlowManage
                 NodeId = startNode.Id,
                 NodeName = startNode.Name,
                 HandlePeople = userName,
-                IsPass = true,
-                HandleInfo = "发起工作流",
+                HandleState = HandleStateEnum.未处理,
                 HandleTime = DateTime.Now
             };
 
@@ -146,13 +159,13 @@ namespace Convience.Service.WorkFlowManage
             throw new NotImplementedException();
         }
 
-        public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstance(int workFlowInstanceId)
+        public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId)
         {
             var result = _instanceValueRepository.Get(v => v.WorkFlowInstanceId == workFlowInstanceId);
             return _mapper.Map<IEnumerable<WorkFlowInstanceValueResult>>(result);
         }
 
-        public async Task<bool> SaveWorkFlowInstance(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values)
+        public async Task<bool> SaveWorkFlowInstanceValues(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values)
         {
             foreach (var model in values)
             {
@@ -178,7 +191,60 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public Task SubmitWorkFlowInstance(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel)
+        public async Task<bool> SubmitWorkFlowInstance(int WorkFlowInstanceId, string account, WorkFlowInstanceHandleViewModel viewModel)
+        {
+            var instance = _instanceRepository.Get(i =>
+                i.Id == WorkFlowInstanceId &&
+                i.CreatedUserAccount == account &&
+                i.WorkFlowInstanceState == WorkFlowInstanceStateEnum.NoCommitted).FirstOrDefault();
+            if (instance != null)
+            {
+                try
+                {
+                    instance.WorkFlowInstanceState = WorkFlowInstanceStateEnum.CirCulation;
+
+                    var targetNodes = from n in _nodeRepository.Get(false)
+                                      where (
+                                          from node in _nodeRepository.Get(false)
+                                          join link in _linkRepository.Get(false) on node.DomId equals link.SourceId
+                                          where node.Id == instance.Id
+                                          select link.TargetId).Contains(n.DomId)
+                                      select n;
+
+                    var node = targetNodes.First();
+                    instance.CurrentNodeId = node.Id;
+
+
+                    if (targetNodes.Count() == 1)
+                    {
+
+                        // 添加节点处理记录
+                        var routeInfo = new WorkFlowInstanceRoute
+                        {
+                            NodeId = node.Id,
+                            NodeName = node.Name,
+                            HandlePeople = userName,
+                            HandleState = HandleStateEnum.未处理,
+                            HandleTime = DateTime.Now
+                        };
+
+                    }
+                    else if (targetNodes.Count() > 1)
+                    {
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        public Task ApproveOrDisApproveNode(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel)
         {
             throw new NotImplementedException();
         }

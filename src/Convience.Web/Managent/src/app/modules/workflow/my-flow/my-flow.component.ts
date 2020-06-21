@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2, ElementRef } from '@angular/core';
 import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { WorkflowInstance } from '../model/workflowInstance';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
@@ -9,6 +9,12 @@ import { WorkflowFormService } from 'src/app/services/workflow-form.service';
 import { WorkFlowForm } from '../model/workflowForm';
 import { WorkFlowFormControl } from '../model/workFlowFormControl';
 import { WorkflowInstanceValue } from '../model/workflowInstanceValue';
+import * as jp from 'jsplumb';
+import { WorkflowFlowService } from 'src/app/services/workflow-flow.service';
+import { WorkflowNode } from '../model/workflowNode';
+import { WorkflowLink } from '../model/workflowLink';
+import { interval } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-my-flow',
@@ -26,6 +32,9 @@ export class MyFlowComponent implements OnInit {
   @ViewChild('formTpl', { static: true })
   _formTpl;
 
+  @ViewChild('flowTpl', { static: true })
+  _flowTpl;
+
   // 工作流实例数据
   data: WorkflowInstance[] = [];
 
@@ -34,6 +43,10 @@ export class MyFlowComponent implements OnInit {
 
   // 表单控件数据
   formControlList: WorkFlowFormControl[] = [];
+
+  // 节点数据
+  nodeDataList: WorkflowNode[] = [];
+  linkDataList: WorkflowLink[] = [];
 
   // 控件值
   controlValues: { [key: string]: string; } = {};
@@ -48,14 +61,16 @@ export class MyFlowComponent implements OnInit {
 
   _nzModal: NzModalRef;
 
-  _checkedData: WorkflowInstance;
+  checkedData: WorkflowInstance;
 
   constructor(
+    private _rootElementRef: ElementRef,
     private _renderer: Renderer2,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
     private _workflowService: WorkflowService,
     private _formService: WorkflowFormService,
+    private _flowService: WorkflowFlowService,
     private _workflowInstanceService: WorkflowInstanceService) { }
 
   ngOnInit(): void {
@@ -82,7 +97,7 @@ export class MyFlowComponent implements OnInit {
 
   // 查看内容
   viewForm(data) {
-    this._checkedData = data;
+    this.checkedData = data;
     this._formService.get(data.workFlowId).subscribe((result: any) => {
       this._formData = result.formResult;
       this.formControlList = result.formControlResults;
@@ -116,6 +131,69 @@ export class MyFlowComponent implements OnInit {
 
   // 查看流程
   viewflow(data) {
+
+    this.checkedData = data;
+    this._flowService.get(data.workFlowId).subscribe((result: any) => {
+      this.nodeDataList = result.workFlowNodeResults ? result.workFlowNodeResults : [];
+      this.linkDataList = result.workFlowLinkResults ? result.workFlowLinkResults : [];
+
+      this._modalService.create({
+        nzTitle: '查看流程',
+        nzContent: this._flowTpl,
+        nzFooter: null,
+        nzMaskClosable: false,
+        nzWidth: document.body.clientWidth * 0.8
+      });
+      let ele = document.getElementById('flowContainer');
+      let jsPlumbInstance: any = jp.jsPlumb.getInstance({
+        DragOptions: { cursor: 'move', zIndex: 2000 },
+        Container: 'flowContainer'
+      });
+      let endpointOption: jp.EndpointOptions = {
+        maxConnections: 100,
+        reattachConnections: true,
+        type: 'Dot',
+        connector: 'Flowchart',
+        isSource: true,
+        isTarget: true,
+        paintStyle: { fill: 'transparent', stroke: 'transparent', strokeWidth: 1 },
+        connectorStyle: { stroke: 'rgba(102, 96, 255, 0.9)', strokeWidth: 3 },
+        connectorOverlays: [["PlainArrow", { location: 1 }]],
+      };
+      // this.nodeDataList.forEach(node => {
+      //   jsPlumbInstance.addEndpoint(node.domId, endpointOption);
+      //   jsPlumbInstance.makeTarget(node.domId, {});
+      //   jsPlumbInstance.makeSource(node.domId, {});
+      // });
+
+      setTimeout(() => {
+        this.nodeDataList.forEach(node => {
+
+          jsPlumbInstance.makeSource(node.domId, {
+            anchor: 'Continuous',
+            allowLoopback: false,
+            filter: (event, element) => {
+              return false;
+            }
+          }, endpointOption);
+          jsPlumbInstance.makeTarget(node.domId, {
+            anchor: 'Continuous',
+            allowLoopback: false,
+            filter: (event, element) => {
+              return false;
+            }
+          }, endpointOption);
+        });
+        this.linkDataList.forEach(linkData => {
+          jsPlumbInstance.connect({
+            source: document.getElementById(linkData.sourceId),
+            target: document.getElementById(linkData.targetId),
+          });
+        });
+      }, 400);
+
+    });
+
   }
 
   cancel() {
@@ -179,7 +257,7 @@ export class MyFlowComponent implements OnInit {
       });
     }
     this._workflowInstanceService.saveControlValues({
-      workFlowInstanceId: this._checkedData.id,
+      workFlowInstanceId: this.checkedData.id,
       values: values
     }).subscribe(result => {
       this._messageService.success('保存成功');

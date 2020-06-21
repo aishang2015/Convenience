@@ -1,4 +1,5 @@
 ﻿using Convience.Entity.Entity.WorkFlows;
+
 using System;
 using System.Collections.Generic;
 
@@ -59,11 +60,9 @@ namespace Convience.Model.Models.WorkFlowManage
 
         public string HandlePeople { get; set; }
 
-        public bool IsPass { get; set; }
-
         public string HandleComment { get; set; }
 
-        public string HandleInfo { get; set; }
+        public HandleStateEnum HandleState { get; set; }
 
         public DateTime HandleTime { get; set; }
 

@@ -4,8 +4,10 @@ using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Service.WorkFlowManage;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Controllers.WorkFlowManage
@@ -27,7 +29,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpPost]
         [Permission("workFlowInstancePost")]
-        public async Task<IActionResult> CreateWorkFlowInstance([FromBody]WorkFlowInstanceViewModel vm)
+        public async Task<IActionResult> CreateWorkFlowInstance([FromBody] WorkFlowInstanceViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService
                .CreateWorkFlowInstance(vm.WorkFlowId, User.GetUserName(), User.GetName());
@@ -43,7 +45,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpGet]
         [Permission("workFlowInstanceGet")]
-        public IActionResult GetWorkFlowInstances([FromQuery]PageQuery query)
+        public IActionResult GetWorkFlowInstances([FromQuery] PageQuery query)
         {
             var result = _workFlowInstanceService.GetInstanceList(User.GetUserName(), query.Page, query.Size);
             return Ok(new
@@ -58,9 +60,9 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpGet("values")]
         [Permission("workFlowInstanceValuesGet")]
-        public IActionResult GetWorkFlowInstanceValues([FromQuery]int workFlowInstanceId)
+        public IActionResult GetWorkFlowInstanceValues([FromQuery] int workFlowInstanceId)
         {
-            return Ok(_workFlowInstanceService.GetWorkFlowInstance(workFlowInstanceId));
+            return Ok(_workFlowInstanceService.GetWorkFlowInstanceValues(workFlowInstanceId));
         }
 
         /// <summary>
@@ -68,9 +70,9 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpPut("values")]
         [Permission("workFlowInstanceValuesPut")]
-        public async Task<IActionResult> SaveWorkFlowInstanceValues([FromBody]InstanceValuesViewModel vm)
+        public async Task<IActionResult> SaveWorkFlowInstanceValues([FromBody] InstanceValuesViewModel vm)
         {
-            var isSuccess = await _workFlowInstanceService.SaveWorkFlowInstance(vm.WorkFlowInstanceId, vm.Values);
+            var isSuccess = await _workFlowInstanceService.SaveWorkFlowInstanceValues(vm.WorkFlowInstanceId, vm.Values);
             if (!isSuccess)
             {
                 return this.BadRequestResult("创建工作流失败!");

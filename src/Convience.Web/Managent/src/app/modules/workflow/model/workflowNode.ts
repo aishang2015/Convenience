@@ -1,5 +1,7 @@
 export class WorkflowNode {
 
+    id?:number;
+    
     // StartNode = 0,
     // WorkNode = 1,
     // EndNode = 99,
