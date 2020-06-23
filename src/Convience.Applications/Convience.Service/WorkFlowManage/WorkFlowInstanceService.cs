@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 
 using Convience.Entity.Data;
+using Convience.Entity.Entity;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Jwtauthentication;
 using Convience.Model.Models.WorkFlowManage;
-
+using Convience.Repository;
 using DnsClient.Internal;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 using System;
@@ -32,7 +35,7 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 需要用户处理的的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList();
+        (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList(string account, int page, int size);
 
         /// <summary>
         /// 取得工作流内容
@@ -47,18 +50,22 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 提交
         /// </summary>
-        Task<bool> SubmitWorkFlowInstance(int WorkFlowInstanceId, string account, WorkFlowInstanceHandleViewModel viewModel);
+        Task<bool> SubmitWorkFlowInstance(string account, WorkFlowInstanceHandleViewModel viewModel);
 
         /// <summary>
         /// 审核
         /// </summary>
-        Task ApproveOrDisApproveNode(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel);
+        Task<bool> ApproveOrDisApproveNode(int routeId, string account, WorkFlowInstanceHandleViewModel viewModel);
 
     }
 
     public class WorkFlowInstanceService : IWorkFlowInstanceService
     {
         private readonly ILogger<WorkFlowInstanceService> _logger;
+
+        private readonly IUserRepository _userRepository;
+
+        private readonly IRepository<Department> _departmentRepository;
 
         private readonly IRepository<WorkFlow> _workflowRepository;
 
@@ -72,28 +79,36 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IRepository<WorkFlowInstanceValue> _instanceValueRepository;
 
+        private readonly IRepository<WorkFlowCondition> _conditionRepository;
+
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private readonly IMapper _mapper;
 
         public WorkFlowInstanceService(
             ILogger<WorkFlowInstanceService> logger,
+            IUserRepository userRepository,
+            IRepository<Department> departmentRepository,
             IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
             IRepository<WorkFlowInstance> instanceRepository,
             IRepository<WorkFlowInstanceRoute> instanceRouteRepository,
             IRepository<WorkFlowInstanceValue> instanceValueRepository,
+            IRepository<WorkFlowCondition> conditionRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
             _logger = logger;
+            _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
             _workflowRepository = workflowRepository;
             _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
             _instanceRepository = instanceRepository;
             _instanceRouteRepository = instanceRouteRepository;
             _instanceValueRepository = instanceValueRepository;
+            _conditionRepository = conditionRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -154,9 +169,21 @@ namespace Convience.Service.WorkFlowManage
             return (_mapper.Map<IEnumerable<WorkFlowInstanceResult>>(result.ToArray()), query.Count());
         }
 
-        public (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList()
+        public (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList(string account, int page, int size)
         {
-            throw new NotImplementedException();
+            // 取得用户信息
+            var user = _userRepository.GetUserByNameAsync(account).Result;
+
+            // 根据用户信息查找需要处理的实例
+            var query = from route in _instanceRouteRepository.Get()
+                        join i in _instanceRepository.Get() on route.WorkFlowInstanceId equals i.Id
+                        where route.HandlePepleId == user.Id
+                        select i;
+
+            // 取得结果
+            var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
+            return (_mapper.Map<IEnumerable<WorkFlowInstanceResult>>(result.ToArray()), query.Count());
+
         }
 
         public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId)
@@ -191,48 +218,58 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public async Task<bool> SubmitWorkFlowInstance(int WorkFlowInstanceId, string account, WorkFlowInstanceHandleViewModel viewModel)
+        /// <summary>
+        /// 用户发起工作流进行提交
+        /// </summary>
+        public async Task<bool> SubmitWorkFlowInstance(string account, WorkFlowInstanceHandleViewModel viewModel)
         {
             var instance = _instanceRepository.Get(i =>
-                i.Id == WorkFlowInstanceId &&
+                i.Id == viewModel.WorkFlowInstanceId &&
                 i.CreatedUserAccount == account &&
-                i.WorkFlowInstanceState == WorkFlowInstanceStateEnum.NoCommitted).FirstOrDefault();
+                (i.WorkFlowInstanceState == WorkFlowInstanceStateEnum.NoCommitted ||
+                i.WorkFlowInstanceState == WorkFlowInstanceStateEnum.ReturnBack)).FirstOrDefault();
             if (instance != null)
             {
                 try
                 {
                     instance.WorkFlowInstanceState = WorkFlowInstanceStateEnum.CirCulation;
 
+                    var currentNode = await _nodeRepository.GetAsync(instance.CurrentNodeId);
+
+                    // 目标节点
                     var targetNodes = from n in _nodeRepository.Get(false)
                                       where (
-                                          from node in _nodeRepository.Get(false)
-                                          join link in _linkRepository.Get(false) on node.DomId equals link.SourceId
-                                          where node.Id == instance.Id
+                                          from link in _linkRepository.Get(false)
+                                          where link.SourceId == currentNode.DomId &&
+                                              link.WorkFlowId == instance.WorkFlowId
                                           select link.TargetId).Contains(n.DomId)
                                       select n;
 
+                    // 开始节点只有一个后代节点，因此不用判断直接进入
                     var node = targetNodes.First();
                     instance.CurrentNodeId = node.Id;
 
+                    // 获取处理人员
+                    var users = GetHandleUsers(node, account);
 
-                    if (targetNodes.Count() == 1)
+                    foreach (var user in users.ToList())
                     {
-
                         // 添加节点处理记录
                         var routeInfo = new WorkFlowInstanceRoute
                         {
                             NodeId = node.Id,
                             NodeName = node.Name,
-                            HandlePeople = userName,
+                            HandlePeople = user.Name,
+                            HandlePepleId = user.Id,
                             HandleState = HandleStateEnum.未处理,
-                            HandleTime = DateTime.Now
+                            HandleTime = DateTime.Now,
+                            WorkFlowInstanceId = viewModel.WorkFlowInstanceId
                         };
-
+                        await _instanceRouteRepository.AddAsync(routeInfo);
                     }
-                    else if (targetNodes.Count() > 1)
-                    {
-
-                    }
+                    _instanceRepository.Update(instance);
+                    await _unitOfWork.SaveAsync();
+                    return true;
                 }
                 catch (Exception e)
                 {
@@ -244,9 +281,221 @@ namespace Convience.Service.WorkFlowManage
             return false;
         }
 
-        public Task ApproveOrDisApproveNode(int WorkFlowInstanceId, WorkFlowInstanceHandleViewModel viewModel)
+        /// <summary>
+        /// 人员审核流程
+        /// </summary>
+        public async Task<bool> ApproveOrDisApproveNode(int routeId, string account, WorkFlowInstanceHandleViewModel viewModel)
         {
-            throw new NotImplementedException();
+            // 取得用户信息
+            var user = await _userRepository.GetUserByNameAsync(account);
+
+            var route = _instanceRouteRepository.Get(route => route.Id == routeId &&
+                route.HandlePepleId == user.Id && route.HandleState == HandleStateEnum.未处理)
+                .FirstOrDefault();
+
+            var instance = _instanceRepository.Get(i => i.Id == route.WorkFlowInstanceId)
+                .FirstOrDefault();
+
+            if (route != null && instance != null)
+            {
+                try
+                {
+                    if (viewModel.IsPass)
+                    {
+                        route.HandleState = HandleStateEnum.通过;
+                        route.HandleComment = viewModel.HandleComment;
+
+                        var currentNode = await _nodeRepository.GetAsync(instance.CurrentNodeId);
+
+                        // 目标节点
+                        var targetIds = from link in _linkRepository.Get()
+                                        where link.SourceId == currentNode.DomId &&
+                                            link.WorkFlowId == instance.WorkFlowId
+                                        select link.TargetId;
+
+                        // 判断是否能够进入下一个节点
+                        var haveNext = false;
+
+                        foreach (var targetId in targetIds)
+                        {
+                            // 找出流转到该节点的条件组
+                            var conditions = from c in _conditionRepository.Get()
+                                             where c.WorkFlowId == instance.WorkFlowId &&
+                                                    c.SourceId == currentNode.DomId &&
+                                                    c.TargetId == targetId
+                                             select c;
+
+                            // 比较
+                            var isCompare = true;
+
+                            // 无条件，直接进入
+                            if (conditions.Count() == 0)
+                            {
+                                isCompare = true;
+                                haveNext = true;
+                            }
+                            else
+                            {
+                                // 有条件，判断条件
+                                foreach (var condition in conditions)
+                                {
+                                    // 取得实例中表单的值
+                                    var formValue = (from value in _instanceValueRepository.Get()
+                                                     where value.Id == condition.FormControlId &&
+                                                         value.WorkFlowInstanceId == instance.Id
+                                                     select value.Value).FirstOrDefault();
+
+                                    // 进行and判断
+                                    switch (condition.CompareMode)
+                                    {
+                                        case CompareModeEnum.Equal:
+                                            isCompare = isCompare && (formValue == condition.CompareValue);
+                                            break;
+                                        case CompareModeEnum.EqualOrGreater:
+                                            isCompare = isCompare && (string.Compare(formValue, condition.CompareValue) >= 0);
+                                            break;
+                                        case CompareModeEnum.EqualOrSmaller:
+                                            isCompare = isCompare && (string.Compare(formValue, condition.CompareValue) <= 0);
+                                            break;
+                                        case CompareModeEnum.Greater:
+                                            isCompare = isCompare && (string.Compare(formValue, condition.CompareValue) > 0);
+                                            break;
+                                        case CompareModeEnum.Smaller:
+                                            isCompare = isCompare && (string.Compare(formValue, condition.CompareValue) < 0);
+                                            break;
+                                    }
+
+                                    // 出现条件不满足的情况直接退出判断
+                                    if (!isCompare)
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 条件全部满足则转入到该节点
+                            if (isCompare)
+                            {
+                                haveNext = true;
+                                var nextNode = _nodeRepository.Get(n => n.DomId == targetId).FirstOrDefault();
+
+                                instance.CurrentNodeId = nextNode.Id;
+
+                                // 获取处理人员
+                                var users = GetHandleUsers(nextNode, account);
+
+                                foreach (var u in users.ToList())
+                                {
+                                    // 添加节点处理记录
+                                    var routeInfo = new WorkFlowInstanceRoute
+                                    {
+                                        NodeId = nextNode.Id,
+                                        NodeName = nextNode.Name,
+                                        HandlePeople = u.Name,
+                                        HandlePepleId = u.Id,
+                                        HandleState = HandleStateEnum.未处理,
+                                        HandleTime = DateTime.Now,
+                                        WorkFlowInstanceId = instance.WorkFlowId
+                                    };
+                                    await _instanceRouteRepository.AddAsync(routeInfo);
+                                }
+                                _instanceRepository.Update(instance);
+                                break;
+                            }
+                        }
+
+                        if (!haveNext)
+                        {
+                            // 无法进行,异常结束
+                            instance.WorkFlowInstanceState = WorkFlowInstanceStateEnum.BadEnd;
+                        }
+                    }
+                    else
+                    {
+                        route.HandleState = HandleStateEnum.拒绝;
+                        route.HandleComment = viewModel.HandleComment;
+
+                        // 获取开始节点id
+                        var startNode = await _nodeRepository.Get(n => n.WorkFlowId == instance.WorkFlowId &&
+                            n.NodeType == NodeTypeEnum.StartNode).FirstOrDefaultAsync();
+
+                        instance.CurrentNodeId = startNode.Id;
+                        instance.WorkFlowInstanceState = WorkFlowInstanceStateEnum.ReturnBack;
+                    }
+                    _instanceRouteRepository.Update(route);
+                    _instanceRepository.Update(instance);
+                    await _unitOfWork.SaveAsync();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    return false;
+                }
+
+            }
+
+            return false;
+        }
+
+
+        private List<SystemUser> GetHandleUsers(WorkFlowNode node, string account)
+        {
+            IQueryable<SystemUser> users = null;
+            switch (node.HandleMode)
+            {
+                case HandleModeEnum.Personnel:
+
+                    // 指定人员模式，找出所有人员生成route记录
+                    var userids = node.Handlers.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    users = from u in _userRepository.GetUsers()
+                            where userids.Contains(u.Id.ToString())
+                            select u;
+                    break;
+                case HandleModeEnum.Position:
+
+                    // 指定职位模式，找出当前职位的人员生成route记录
+                    users = from u in _userRepository.GetUsers()
+                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                            where uc.ClaimType == CustomClaimTypes.UserPosition &&
+                                    uc.ClaimValue == node.Position.ToString()
+                            select u;
+                    break;
+                case HandleModeEnum.Leader:
+
+                    // 指定部门负责人模式，找出指定部门的负责人生成route记录
+                    var leaderId = from d in _departmentRepository.Get()
+                                   where d.Id.ToString() == node.Department
+                                   select d.LeaderId;
+
+                    users = from u in _userRepository.GetUsers()
+                            where leaderId.FirstOrDefault() == u.Id
+                            select u;
+
+                    break;
+                case HandleModeEnum.UserLeader:
+
+                    // 指定发起人部门负责人模式，找出流程发起人所在部门的负责人
+                    // 查找用户所在部门
+                    var department = from u in _userRepository.GetUsers()
+                                     join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                                     where u.UserName == account &&
+                                         uc.ClaimType == CustomClaimTypes.UserDepartment
+                                     select uc.ClaimValue;
+
+                    // 根据部门去查找部门负责人
+                    leaderId = from d in _departmentRepository.Get()
+                               where d.Id.ToString() == department.FirstOrDefault()
+                               select d.LeaderId;
+
+                    users = from u in _userRepository.GetUsers()
+                            where leaderId.FirstOrDefault() == u.Id
+                            select u;
+                    break;
+                    //case HandleModeEnum.UpLeader:
+                    //    break;
+            }
+            return users.ToList();
         }
     }
 }

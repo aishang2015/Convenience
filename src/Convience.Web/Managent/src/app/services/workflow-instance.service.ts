@@ -25,4 +25,8 @@ export class WorkflowInstanceService {
   saveControlValues(data) {
     return this.httpClient.put(`${this.uriConstant.WorkFlowInstanceUri}/values`, data);
   }
+
+  submitInstance(data) {
+    return this.httpClient.put(`${this.uriConstant.WorkFlowInstanceUri}`, data);
+  }
 }

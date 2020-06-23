@@ -23,7 +23,7 @@ namespace Convience.Entity.Entity.WorkFlows
         public string HandlePeople { get; set; }
 
         // 处理人id
-        public string HandlePepleId { get; set; }
+        public int HandlePepleId { get; set; }
 
         // 处置评论
         public string HandleComment { get; set; }

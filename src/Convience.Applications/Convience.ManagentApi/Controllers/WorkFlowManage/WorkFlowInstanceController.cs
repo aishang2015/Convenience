@@ -79,5 +79,20 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             }
             return Ok();
         }
+
+        /// <summary>
+        /// 提交工作流开始流转
+        /// </summary>
+        [HttpPut]
+        [Permission("workFlowInstancePut")]
+        public async Task<IActionResult> SubmitWorkFlowInstance(WorkFlowInstanceHandleViewModel vm)
+        {
+            var isSuccess = await _workFlowInstanceService.SubmitWorkFlowInstance(User.GetUserName(), vm);
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("提交工作流失败!");
+            }
+            return Ok();
+        }
     }
 }

@@ -266,6 +266,23 @@ export class MyFlowComponent implements OnInit {
     });
   }
 
+  submitApprove() {
+    this._modalService.confirm({
+      nzTitle: '确认内容无误，是否提交？',
+      nzOnOk: () => {
+        this._workflowInstanceService.submitInstance({
+          workFlowInstanceId: this.checkedData.id,
+          isPass: true,
+        }).subscribe(result => {
+          this._messageService.success('保存成功');
+          this.controlValues = {};
+          this.refresh();
+          this._nzModal.close();
+        });
+      }
+    })
+  }
+
   getPx(dis) {
     return `${dis}px`;
   }
