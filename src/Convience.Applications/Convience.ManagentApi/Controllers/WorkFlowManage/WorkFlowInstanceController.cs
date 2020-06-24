@@ -41,6 +41,22 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         }
 
         /// <summary>
+        /// 删除工作流
+        /// </summary>
+        [HttpDelete]
+        [Permission("workFlowInstanceDelete")]
+        public async Task<IActionResult> DeleteWorkFlowInstance([FromQuery] int id)
+        {
+            var isSuccess = await _workFlowInstanceService.DeleteWorkFlowInstance(id, User.GetUserName());
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("删除工作流失败!");
+            }
+            return Ok();
+        }
+
+
+        /// <summary>
         /// 取得工作流列表
         /// </summary>
         [HttpGet]
@@ -80,11 +96,18 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             return Ok();
         }
 
+        [HttpGet("routes")]
+        [Permission("workFlowInstanceRouteGet")]
+        public IActionResult GetWorkFlowInstanceRoutes([FromQuery] int workFlowInstanceId)
+        {
+            return Ok(_workFlowInstanceService.GetWorkFlowInstanceRoutes(workFlowInstanceId));
+        }
+
         /// <summary>
         /// 提交工作流开始流转
         /// </summary>
         [HttpPut]
-        [Permission("workFlowInstancePut")]
+        [Permission("workFlowInstanceSubmit")]
         public async Task<IActionResult> SubmitWorkFlowInstance(WorkFlowInstanceHandleViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService.SubmitWorkFlowInstance(User.GetUserName(), vm);
@@ -93,6 +116,49 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
                 return this.BadRequestResult("提交工作流失败!");
             }
             return Ok();
+        }
+
+        /// <summary>
+        /// 取消工作流
+        /// </summary>
+        [HttpPatch]
+        [Permission("workFlowInstanceCancel")]
+        public async Task<IActionResult> CancelFlowInstance([FromBody]WorkFlowInstanceHandleViewModel vm)
+        {
+            var isSuccess = await _workFlowInstanceService.CancelFlowInstance(vm.WorkFlowInstanceId, User.GetUserName());
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("取消工作流失败!");
+            }
+            return Ok();
+        }
+
+        /// <summary>
+        /// 取得工作流列表
+        /// </summary>
+        [HttpGet("handle")]
+        [Permission("handledWorkFlowInstanceGet")]
+        public IActionResult GetHandledWorkFlowInstances([FromQuery]PageQuery query)
+        {
+            var result = _workFlowInstanceService.GetHandledInstanceList(User.GetUserName(), query.Page, query.Size);
+            return Ok(new
+            {
+                data = result.Item1,
+                count = result.Item2,
+            });
+        }
+
+        [HttpPost("handle")]
+        [Permission("handleWorkFlowInstancePost")]
+        public async Task<IActionResult> ApproveOrDisApproveNode([FromBody]WorkFlowInstanceHandleViewModel vm)
+        {
+            var isSuccess = await _workFlowInstanceService.ApproveOrDisApproveNode(User.GetUserName(), vm);
+            if (!isSuccess)
+            {
+                return this.BadRequestResult("审批失败!");
+            }
+            return Ok();
+
         }
     }
 }

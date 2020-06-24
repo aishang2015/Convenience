@@ -68,6 +68,7 @@ namespace Convience.Model
             CreateMap<WorkFlowInstance, WorkFlowInstanceResult>();
             CreateMap<WorkFlowInstanceValueViewModel, WorkFlowInstanceValue>();
             CreateMap<WorkFlowInstanceValue, WorkFlowInstanceValueResult>();
+            CreateMap<WorkFlowInstanceRoute, WorkflowinstanceRouteResult>();
         }
     }
 }

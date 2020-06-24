@@ -45,6 +45,26 @@ namespace Convience.Model.Models.WorkFlowManage
 
     public class WorkFlowInstanceValueResult : WorkFlowInstanceValueViewModel { }
 
+
+    public class WorkflowinstanceRouteResult
+    {
+        public int Id { get; set; }
+
+        public int NodeId { get; set; }
+
+        public string NodeName { get; set; }
+
+        public string HandlePeople { get; set; }
+
+        public int HandlePepleId { get; set; }
+
+        public string HandleComment { get; set; }
+
+        public HandleStateEnum HandleState { get; set; }
+
+        public DateTime HandleTime { get; set; }
+    }
+
     public class WorkFlowInstanceHandleViewModel
     {
         public int WorkFlowInstanceId { get; set; }

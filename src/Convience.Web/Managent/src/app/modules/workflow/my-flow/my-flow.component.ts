@@ -248,6 +248,19 @@ export class MyFlowComponent implements OnInit {
     });
   }
 
+  delete(data) {
+    this._modalService.confirm({
+      nzTitle: '是否删除？',
+      nzOnOk: () => {
+        this._workflowInstanceService.deleteInstance(data.id).subscribe(result => {
+          this._messageService.success('删除成功');
+          this.refresh();
+        });
+      }
+    });
+  }
+
+
   saveData() {
     let values: WorkflowInstanceValue[] = [];
     for (let key in this.controlValues) {
@@ -266,19 +279,43 @@ export class MyFlowComponent implements OnInit {
     });
   }
 
+  // 提交审批
   submitApprove() {
     this._modalService.confirm({
       nzTitle: '确认内容无误，是否提交？',
       nzOnOk: () => {
-        this._workflowInstanceService.submitInstance({
+
+        let values: WorkflowInstanceValue[] = [];
+        for (let key in this.controlValues) {
+          values.push({
+            formControlId: key,
+            value: this.controlValues[key]
+          });
+        }
+        this._workflowInstanceService.saveControlValues({
           workFlowInstanceId: this.checkedData.id,
-          isPass: true,
+          values: values
         }).subscribe(result => {
-          this._messageService.success('保存成功');
-          this.controlValues = {};
-          this.refresh();
-          this._nzModal.close();
+          this._workflowInstanceService.submitInstance({
+            workFlowInstanceId: this.checkedData.id,
+            isPass: true,
+          }).subscribe(result => {
+            this._messageService.success('提交成功');
+            this.controlValues = {};
+            this.refresh();
+            this._nzModal.close();
+          });
         });
+      }
+    })
+  }
+
+  // 取消流程
+  cancelWf() {
+    this._modalService.confirm({
+      nzTitle: '确认取消流程？',
+      nzOnOk: () => {
+
       }
     })
   }
@@ -297,10 +334,16 @@ export class MyFlowComponent implements OnInit {
         result = '流转中';
         break;
       case 3:
-        result = '退回';
+        result = '已拒绝';
         break;
-      default:
-        result = '结束';
+      case 4:
+        result = '已结束';
+        break;
+      case 5:
+        result = '无法进行';
+        break;
+      case 6:
+        result = '已取消';
         break;
     }
     return result;

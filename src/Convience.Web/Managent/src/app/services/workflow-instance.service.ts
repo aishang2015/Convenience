@@ -14,6 +14,10 @@ export class WorkflowInstanceService {
     return this.httpClient.post(this.uriConstant.WorkFlowInstanceUri, { WorkFlowId: id });
   }
 
+  deleteInstance(id) {
+    return this.httpClient.delete(`${this.uriConstant.WorkFlowInstanceUri}?id=${id}`);
+  }
+
   getInstances(page, size) {
     return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}?page=${page}&&size=${size}`);
   }
@@ -28,5 +32,13 @@ export class WorkflowInstanceService {
 
   submitInstance(data) {
     return this.httpClient.put(`${this.uriConstant.WorkFlowInstanceUri}`, data);
+  }
+
+  getHandledInstance(page, size) {
+    return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}/handle?page=${page}&&size=${size}`);
+  }
+
+  approveHandledInstance(data) {
+    return this.httpClient.post(`${this.uriConstant.WorkFlowInstanceUri}/handle`, data);
   }
 }

@@ -39,10 +39,11 @@ namespace Convience.Entity.Entity.WorkFlows
 
     public enum WorkFlowInstanceStateEnum
     {
-        NoCommitted = 1,  // 未提交
-        CirCulation = 2, // 流转
-        ReturnBack = 3,   // 打回
-        End = 4,  // 结束
-        BadEnd = 5  // 无法进行
+        NoCommitted = 1,    // 未提交
+        CirCulation = 2,    // 流转
+        ReturnBack = 3,     // 打回
+        End = 4,            // 结束
+        BadEnd = 5,         // 无法进行
+        Cancel = 6          // 取消
     }
 }
