@@ -1,4 +1,4 @@
 export class WorkflowInstanceValue {
-    formControlId?: string;
+    formControlDomId?: string;
     value?: string;
 }

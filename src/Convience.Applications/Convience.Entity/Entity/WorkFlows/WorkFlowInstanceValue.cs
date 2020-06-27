@@ -11,7 +11,7 @@ namespace Convience.Entity.Entity.WorkFlows
     {
         public int Id { get; set; }
 
-        public string FormControlId { get; set; }
+        public string FormControlDomId { get; set; }
 
         public string Value { get; set; }
 

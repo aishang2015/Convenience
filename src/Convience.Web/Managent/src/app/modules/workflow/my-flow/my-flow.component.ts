@@ -15,6 +15,7 @@ import { WorkflowNode } from '../model/workflowNode';
 import { WorkflowLink } from '../model/workflowLink';
 import { interval } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { WorkflowInstanceRoute } from '../model/workflowInstanceRoute';
 
 @Component({
   selector: 'app-my-flow',
@@ -35,6 +36,9 @@ export class MyFlowComponent implements OnInit {
   @ViewChild('flowTpl', { static: true })
   _flowTpl;
 
+  @ViewChild('flowRouteTpl', { static: true })
+  _flowRouteTpl;
+
   // 工作流实例数据
   data: WorkflowInstance[] = [];
 
@@ -47,6 +51,9 @@ export class MyFlowComponent implements OnInit {
   // 节点数据
   nodeDataList: WorkflowNode[] = [];
   linkDataList: WorkflowLink[] = [];
+
+  // 节点处理数据
+  routeDataList: WorkflowInstanceRoute[] = [];
 
   // 控件值
   controlValues: { [key: string]: string; } = {};
@@ -110,7 +117,7 @@ export class MyFlowComponent implements OnInit {
       this.controlValues = {};
       this._workflowInstanceService.getControlValue(data.id).subscribe((result: any) => {
         result.forEach(element => {
-          this.controlValues[element.formControlId] = element.value;
+          this.controlValues[element.formControlDomId] = element.value;
         });
       });
 
@@ -222,7 +229,7 @@ export class MyFlowComponent implements OnInit {
 
   loadWf() {
     if (this.checkedWfTypeId) {
-      this._workflowService.getList(this.wfpage, this.wfsize, this.checkedWfTypeId).subscribe(
+      this._workflowService.getList(this.wfpage, this.wfsize, this.checkedWfTypeId, true).subscribe(
         (result: any) => {
           this.wfdata = result.data;
           this.wftotal = result.count;
@@ -265,7 +272,7 @@ export class MyFlowComponent implements OnInit {
     let values: WorkflowInstanceValue[] = [];
     for (let key in this.controlValues) {
       values.push({
-        formControlId: key,
+        formControlDomId: key,
         value: this.controlValues[key]
       });
     }
@@ -288,7 +295,7 @@ export class MyFlowComponent implements OnInit {
         let values: WorkflowInstanceValue[] = [];
         for (let key in this.controlValues) {
           values.push({
-            formControlId: key,
+            formControlDomId: key,
             value: this.controlValues[key]
           });
         }
@@ -310,14 +317,46 @@ export class MyFlowComponent implements OnInit {
     })
   }
 
+  // 查看流程
+  viewRoutes() {
+    this._workflowInstanceService.getInstanceRoute(this.checkedData.id).subscribe((result: any) => {
+      this.routeDataList = result;
+      this._modalService.create({
+        nzTitle: '处理过程',
+        nzContent: this._flowRouteTpl,
+        nzFooter: null,
+        nzMaskClosable: false,
+        nzWidth: document.body.clientWidth * 0.8
+      });
+    });
+  }
+
   // 取消流程
   cancelWf() {
     this._modalService.confirm({
       nzTitle: '确认取消流程？',
       nzOnOk: () => {
-
+        this._workflowInstanceService.cancelInstance({
+          workFlowInstanceId: this.checkedData.id
+        }).subscribe(result => {
+          this._messageService.success('操作成功！');
+          this.refresh();
+          this._nzModal.close();
+        });
       }
     })
+  }
+
+  print(){
+
+    const printContent = document.getElementById("print-area");
+    const WindowPrt = window.open('', '', '');
+    WindowPrt.document.write(printContent.innerHTML);
+    WindowPrt.document.close();
+
+    WindowPrt.focus();
+    WindowPrt.print();
+    WindowPrt.close();
   }
 
   getPx(dis) {
@@ -347,6 +386,23 @@ export class MyFlowComponent implements OnInit {
         break;
     }
     return result;
+  }
+
+  getHandleState(state) {
+    let result;
+    switch (state) {
+      case 1:
+        result = '未处理';
+        break;
+      case 2:
+        result = '通过';
+        break;
+      case 3:
+        result = '拒绝';
+        break;
+    }
+    return result;
+
   }
 
 }

@@ -19,11 +19,11 @@ namespace Convience.Entity.Entity.WorkFlows
         // 节点id
         public string NodeName { get; set; }
 
-        // 处置人
-        public string HandlePeople { get; set; }
+        // 处置人姓名
+        public string HandlePeopleName { get; set; }
 
-        // 处理人id
-        public int HandlePepleId { get; set; }
+        // 处理人账号
+        public string HandlePepleAccount { get; set; }
 
         // 处置评论
         public string HandleComment { get; set; }

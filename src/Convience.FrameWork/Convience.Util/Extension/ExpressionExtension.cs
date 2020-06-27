@@ -24,5 +24,27 @@ namespace Convience.Util.Extension
                 return expression;
             }
         }
+
+        public static Expression<Func<T, bool>> AndIfHaveValue<T>(this Expression<Func<T, bool>> expression,
+            object value, Expression<Func<T, bool>> andExpression)
+        {
+            if (value != null)
+            {
+                var invokedExpr = Expression.Invoke(andExpression, expression.Parameters.Cast<Expression>());
+                var newExp = Expression.And(expression.Body, invokedExpr);
+                return Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
+            }
+            else
+            {
+                return expression;
+            }
+        }
+
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> expression, Expression<Func<T, bool>> andExpression)
+        {
+            var invokedExpr = Expression.Invoke(andExpression, expression.Parameters.Cast<Expression>());
+            var newExp = Expression.And(expression.Body, invokedExpr);
+            return Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
+        }
     }
 }

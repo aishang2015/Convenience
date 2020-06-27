@@ -3,7 +3,9 @@ using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Service.WorkFlowManage;
+
 using Microsoft.AspNetCore.Mvc;
+
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Controllers.WorkFlowManage
@@ -29,7 +31,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpGet("list")]
         [Permission("workflowList")]
-        public IActionResult Get([FromQuery]WorkFlowQuery workflowQuery)
+        public IActionResult Get([FromQuery] WorkFlowQuery workflowQuery)
         {
             var result = _workflowService.GetWorkFlows(workflowQuery);
             return Ok(new
@@ -55,7 +57,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workflowAdd")]
         public async Task<IActionResult> Add(WorkFlowViewModel workflowViewModel)
         {
-            var isSuccess = await _workflowService.AddWorkFlowAsync(workflowViewModel, User.GetUserName());
+            var isSuccess = await _workflowService.AddWorkFlowAsync(workflowViewModel, User.GetName());
             if (!isSuccess)
             {
                 return this.BadRequestResult("添加失败!");
@@ -71,6 +73,18 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
             if (!isSuccess)
             {
                 return this.BadRequestResult("更新失败!");
+            }
+            return Ok();
+        }
+
+        [HttpPut]
+        [Permission("workflowPut")]
+        public async Task<IActionResult> Publish(WorkFlowViewModel workflowViewModel)
+        {
+            var result = await _workflowService.PublishWorkFlow(workflowViewModel.Id, workflowViewModel.IsPublish);
+            if (!result.Item1)
+            {
+                return this.BadRequestResult(result.Item2);
             }
             return Ok();
         }

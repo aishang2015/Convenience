@@ -29,11 +29,11 @@
                             <th nzAlign="center" nzWidth="50px">#</th>
                             <th nzAlign="center" nzWidth="120px">名称</th>
                             <th nzAlign="center">描述</th>
-                            <th nzAlign="center" nzWidth="180px">发布状态</th>
                             <th nzAlign="center" nzWidth="180px">创建时间</th>
                             <th nzAlign="center" nzWidth="140px">创建人员</th>
                             <th nzAlign="center" nzWidth="180px">修改时间</th>
                             <th nzAlign="center" nzWidth="140px">修改人员</th>
+                            <th nzAlign="center" nzWidth="180px">发布状态</th>
                             <th nzAlign="center" nzWidth="200px">操作</th>
                         </tr>
                     </thead>
@@ -42,11 +42,15 @@
                             <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                             <td nzAlign="center">{{ data.name }}</td>
                             <td nzAlign="center">{{ data.describe }}</td>
-                            <td nzAlign="center">{{ data.isPublish?'已发布':'未发布' }}</td>
                             <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td nzAlign="center">{{ data.createdUser }}</td>
                             <td nzAlign="center">{{ data.updatedTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td nzAlign="center">{{ data.updatedUser }}</td>
+                            <td nzAlign="center">
+                                <nz-switch [(ngModel)]="data.isPublish" [nzControl]="true" nzCheckedChildren="已发布"
+                                    nzUnCheckedChildren="未发布" (click)="isPublishChange(data)">
+                                </nz-switch>
+                            </td>
                             <td nzAlign="center">
                                 <button nz-button nzTooltipTitle="设计表单" nzTooltipPlacement="top" nz-tooltip
                                     nzType="default" nzShape="circle" *canOperate="'editWorkflowFormBtn'"

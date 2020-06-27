@@ -13,6 +13,8 @@ import { WorkflowInstanceService } from 'src/app/services/workflow-instance.serv
 import * as jp from 'jsplumb';
 import { WorkFlow } from '../model/workflow';
 import { WorkflowInstanceValue } from '../model/workflowInstanceValue';
+import { WorkflowInstanceRoute } from '../model/workflowInstanceRoute';
+import { StorageService } from 'src/app/core/services/storage.service';
 
 @Component({
   selector: 'app-handle-work-flow',
@@ -30,6 +32,12 @@ export class HandleWorkFlowComponent implements OnInit {
   @ViewChild('flowTpl', { static: true })
   _flowTpl;
 
+  @ViewChild('commentTpl', { static: true })
+  _commentTpl;
+
+  @ViewChild('flowRouteTpl', { static: true })
+  _flowRouteTpl;
+
   // 工作流实例数据
   data: WorkflowInstance[] = [];
 
@@ -42,6 +50,9 @@ export class HandleWorkFlowComponent implements OnInit {
   // 节点数据
   nodeDataList: WorkflowNode[] = [];
   linkDataList: WorkflowLink[] = [];
+
+  // 节点处理数据
+  routeDataList: WorkflowInstanceRoute[] = [];
 
   // 控件值
   controlValues: { [key: string]: string; } = {};
@@ -62,6 +73,7 @@ export class HandleWorkFlowComponent implements OnInit {
   checkedData: WorkflowInstance;
 
   constructor(
+    private _storageService: StorageService,
     private _renderer: Renderer2,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
@@ -85,6 +97,13 @@ export class HandleWorkFlowComponent implements OnInit {
   // 查看内容
   viewForm(data) {
     this.checkedData = data;
+
+    // 取得当前工作流的处理流程
+    this._workflowInstanceService.getInstanceRoute(this.checkedData.id).subscribe((result: any) => {
+      this.routeDataList = result;
+    });
+
+    // 取得表单以及表单组件的数据,渲染页面
     this._formService.get(data.workFlowId).subscribe((result: any) => {
       this._formData = result.formResult;
       this.formControlList = result.formControlResults;
@@ -97,7 +116,7 @@ export class HandleWorkFlowComponent implements OnInit {
       this.controlValues = {};
       this._workflowInstanceService.getControlValue(data.id).subscribe((result: any) => {
         result.forEach(element => {
-          this.controlValues[element.formControlId] = element.value;
+          this.controlValues[element.formControlDomId] = element.value;
         });
       });
 
@@ -118,8 +137,14 @@ export class HandleWorkFlowComponent implements OnInit {
 
   // 查看流程
   viewflow(data) {
-
     this.checkedData = data;
+
+    // 取得当前工作流的处理流程
+    this._workflowInstanceService.getInstanceRoute(this.checkedData.id).subscribe((result: any) => {
+      this.routeDataList = result;
+    });
+
+    // 取得工作流的节点和链接数据,生成图形
     this._flowService.get(data.workFlowId).subscribe((result: any) => {
       this.nodeDataList = result.workFlowNodeResults ? result.workFlowNodeResults : [];
       this.linkDataList = result.workFlowLinkResults ? result.workFlowLinkResults : [];
@@ -153,6 +178,7 @@ export class HandleWorkFlowComponent implements OnInit {
       //   jsPlumbInstance.makeSource(node.domId, {});
       // });
 
+      // 因为nz的模态框的创建需要时间,因此对dom操作设置了延时
       setTimeout(() => {
         this.nodeDataList.forEach(node => {
 
@@ -181,6 +207,12 @@ export class HandleWorkFlowComponent implements OnInit {
 
     });
 
+  }
+
+  // 是否是当前处理的流程
+  canHandle() {
+    return this.routeDataList.find(data => data.handlePepleAccount == this._storageService.userName &&
+      data.handleState == 1) && this.checkedData.workFlowInstanceState == 2
   }
 
   cancel() {
@@ -232,6 +264,7 @@ export class HandleWorkFlowComponent implements OnInit {
     this.comment = '';
     this._modalService.confirm({
       nzTitle: '是否同意？',
+      nzContent: this._commentTpl,
       nzOnOk: () => {
         this._workflowInstanceService.approveHandledInstance({
           workFlowInstanceId: this.checkedData.id,
@@ -265,6 +298,17 @@ export class HandleWorkFlowComponent implements OnInit {
     });
   }
 
+  // 查看处理流程
+  viewRoutes() {
+    this._modalService.create({
+      nzTitle: '处理过程',
+      nzContent: this._flowRouteTpl,
+      nzFooter: null,
+      nzMaskClosable: false,
+      nzWidth: document.body.clientWidth * 0.8
+    });
+  }
+
   getPx(dis) {
     return `${dis}px`;
   }
@@ -292,6 +336,24 @@ export class HandleWorkFlowComponent implements OnInit {
         break;
     }
     return result;
+  }
+
+
+  getHandleState(state) {
+    let result;
+    switch (state) {
+      case 1:
+        result = '未处理';
+        break;
+      case 2:
+        result = '通过';
+        break;
+      case 3:
+        result = '拒绝';
+        break;
+    }
+    return result;
+
   }
 
 }

@@ -32,6 +32,8 @@ export class FormDesignComponent implements OnInit {
   @ViewChild('multiLineInput', { static: true })
   _multiLineInput;
 
+  isloading = false;
+
   // 选中框
   @ViewChild('selectedBorder', { static: true })
   private _sborder: ElementRef;
@@ -162,6 +164,7 @@ export class FormDesignComponent implements OnInit {
       }
 
       // 初始化各个元素状态
+      this.checkedNode = null;
       for (let node of this._formArea.nativeElement.childNodes) {
         this._renderer.removeChild(this._formArea.nativeElement, node);
       }
@@ -173,6 +176,8 @@ export class FormDesignComponent implements OnInit {
 
   // 根据数据绘制节点
   initNode(node: WorkFlowFormControl) {
+
+    node.optionList = node.options ? node.options.split(',') : [];
 
     let id = node.domId;
 
@@ -222,7 +227,6 @@ export class FormDesignComponent implements OnInit {
       this.checkedNode = newEle;
 
       this.checkedNodeData = this._nodeDataList.find(data => data.domId == newEle.id);
-      this.checkedNodeData.optionList = this.checkedNodeData.options ? this.checkedNodeData.options.split(',') : [];
 
       let rect = newEle.getBoundingClientRect();
       this._renderer.setStyle(this._sborder.nativeElement, 'width', `${rect.width}px`);
@@ -420,10 +424,12 @@ export class FormDesignComponent implements OnInit {
 
   save() {
 
+    this.isloading = true;
+
     // 把选项list拼接成string
-    this._nodeDataList.forEach(data => {
+    for (let data of this._nodeDataList) {
       data.options = data.optionList?.join(',');
-    });
+    }
 
     this._formService.addOrUpdate({
       workFlowId: Number.parseInt(this._workflowId),
@@ -432,6 +438,9 @@ export class FormDesignComponent implements OnInit {
     }).subscribe(result => {
       this._messageService.success('保存成功！');
       this.initData();
+      this.isloading = false;
+    }, error => {
+      this.isloading = false;
     });
   }
 

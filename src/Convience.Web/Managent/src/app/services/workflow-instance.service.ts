@@ -34,11 +34,19 @@ export class WorkflowInstanceService {
     return this.httpClient.put(`${this.uriConstant.WorkFlowInstanceUri}`, data);
   }
 
+  cancelInstance(data) {
+    return this.httpClient.patch(`${this.uriConstant.WorkFlowInstanceUri}`, data);
+  }
+
   getHandledInstance(page, size) {
     return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}/handle?page=${page}&&size=${size}`);
   }
 
   approveHandledInstance(data) {
     return this.httpClient.post(`${this.uriConstant.WorkFlowInstanceUri}/handle`, data);
+  }
+
+  getInstanceRoute(id) {
+    return this.httpClient.get(`${this.uriConstant.WorkFlowInstanceUri}/routes?workFlowInstanceId=${id}`);
   }
 }

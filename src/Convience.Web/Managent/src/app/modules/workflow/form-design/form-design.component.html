@@ -80,7 +80,7 @@
                 </div>
                 <nz-button-group class="ml-10">
                     <button nz-button (click)="back()">返回</button>
-                    <button nz-button (click)="save()">保存</button>
+                    <button nz-button (click)="save()" [nzLoading]="isloading">保存</button>
                 </nz-button-group>
             </div>
             <div id="form-area" #formArea (drop)="dropZone($event)" (dragover)="onDragOver($event)">

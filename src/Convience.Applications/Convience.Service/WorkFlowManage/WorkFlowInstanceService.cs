@@ -7,7 +7,9 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Repository;
+
 using DnsClient.Internal;
+
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -90,6 +92,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IRepository<WorkFlowNode> _nodeRepository;
 
+        private readonly IRepository<WorkFlowFormControl> _controlRepository;
+
         private readonly IRepository<WorkFlowInstance> _instanceRepository;
 
         private readonly IRepository<WorkFlowInstanceRoute> _instanceRouteRepository;
@@ -109,6 +113,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
+            IRepository<WorkFlowFormControl> controlRepository,
             IRepository<WorkFlowInstance> instanceRepository,
             IRepository<WorkFlowInstanceRoute> instanceRouteRepository,
             IRepository<WorkFlowInstanceValue> instanceValueRepository,
@@ -122,6 +127,7 @@ namespace Convience.Service.WorkFlowManage
             _workflowRepository = workflowRepository;
             _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
+            _controlRepository = controlRepository;
             _instanceRepository = instanceRepository;
             _instanceRouteRepository = instanceRouteRepository;
             _instanceValueRepository = instanceValueRepository;
@@ -156,7 +162,8 @@ namespace Convience.Service.WorkFlowManage
             {
                 NodeId = startNode.Id,
                 NodeName = startNode.Name,
-                HandlePeople = userName,
+                HandlePeopleName = userName,
+                HandlePepleAccount = account,
                 HandleState = HandleStateEnum.未处理,
                 HandleTime = DateTime.Now,
             };
@@ -188,16 +195,12 @@ namespace Convience.Service.WorkFlowManage
 
         public (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList(string account, int page, int size)
         {
-            // 取得用户信息
-            var user = _userRepository.GetUserByNameAsync(account).Result;
-
             // 根据用户信息查找需要处理的实例
-            var query = from route in _instanceRouteRepository.Get()
-                        join i in _instanceRepository.Get() on route.WorkFlowInstanceId equals i.Id
-                        where route.HandlePepleId == user.Id &&
-                            route.HandleState == HandleStateEnum.未处理 &&
-                            i.WorkFlowInstanceState == WorkFlowInstanceStateEnum.CirCulation
-                        select i;
+            var query = (from route in _instanceRouteRepository.Get()
+                         join i in _instanceRepository.Get() on route.WorkFlowInstanceId equals i.Id
+                         where route.HandlePepleAccount == account &&
+                         i.WorkFlowInstanceState != WorkFlowInstanceStateEnum.NoCommitted
+                         select i).Distinct();
 
             // 取得结果
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
@@ -207,7 +210,7 @@ namespace Convience.Service.WorkFlowManage
 
         public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId)
         {
-            var result = _instanceValueRepository.Get(v => v.WorkFlowInstanceId == workFlowInstanceId);
+            var result = _instanceValueRepository.Get(v => v.WorkFlowInstanceId == workFlowInstanceId).ToList();
             return _mapper.Map<IEnumerable<WorkFlowInstanceValueResult>>(result);
         }
 
@@ -278,14 +281,22 @@ namespace Convience.Service.WorkFlowManage
                         {
                             NodeId = node.Id,
                             NodeName = node.Name,
-                            HandlePeople = user.Name,
-                            HandlePepleId = user.Id,
+                            HandlePeopleName = user.Name,
+                            HandlePepleAccount = user.UserName,
                             HandleState = HandleStateEnum.未处理,
                             HandleTime = DateTime.Now,
                             WorkFlowInstanceId = viewModel.WorkFlowInstanceId
                         };
                         await _instanceRouteRepository.AddAsync(routeInfo);
                     }
+
+                    var route = _instanceRouteRepository.Get(route =>
+                        route.WorkFlowInstanceId == viewModel.WorkFlowInstanceId &&
+                        route.HandleState == HandleStateEnum.未处理).FirstOrDefault();
+                    route.HandleState = HandleStateEnum.通过;
+                    route.HandleTime = DateTime.Now;
+                    _instanceRouteRepository.Update(route);
+
                     _instanceRepository.Update(instance);
                     await _unitOfWork.SaveAsync();
                     return true;
@@ -332,13 +343,10 @@ namespace Convience.Service.WorkFlowManage
         /// </summary>
         public async Task<bool> ApproveOrDisApproveNode(string account, WorkFlowInstanceHandleViewModel viewModel)
         {
-            // 取得用户信息
-            var user = await _userRepository.GetUserByNameAsync(account);
-
             // 取得当前用户待处理的节点
             var route = _instanceRouteRepository.Get(route =>
                 route.WorkFlowInstanceId == viewModel.WorkFlowInstanceId &&
-                route.HandlePepleId == user.Id &&
+                route.HandlePepleAccount == account &&
                 route.HandleState == HandleStateEnum.未处理).FirstOrDefault();
 
             if (route != null)
@@ -388,11 +396,12 @@ namespace Convience.Service.WorkFlowManage
                                 else
                                 {
                                     // 有条件，判断条件
-                                    foreach (var condition in conditions)
+                                    foreach (var condition in conditions.ToList())
                                     {
                                         // 取得实例中表单的值
                                         var formValue = (from value in _instanceValueRepository.Get()
-                                                         where value.Id == condition.FormControlId &&
+                                                         join control in _controlRepository.Get() on value.FormControlDomId equals control.DomId
+                                                         where control.Id == condition.FormControlId &&
                                                              value.WorkFlowInstanceId == instance.Id
                                                          select value.Value).FirstOrDefault();
 
@@ -441,7 +450,7 @@ namespace Convience.Service.WorkFlowManage
                                         {
                                             NodeId = nextNode.Id,
                                             NodeName = nextNode.Name,
-                                            HandlePeople = "系统",
+                                            HandlePeopleName = "系统",
                                             HandleState = HandleStateEnum.通过,
                                             HandleTime = DateTime.Now,
                                             WorkFlowInstanceId = instance.Id
@@ -461,8 +470,8 @@ namespace Convience.Service.WorkFlowManage
                                             {
                                                 NodeId = nextNode.Id,
                                                 NodeName = nextNode.Name,
-                                                HandlePeople = u.Name,
-                                                HandlePepleId = u.Id,
+                                                HandlePeopleName = u.Name,
+                                                HandlePepleAccount = u.UserName,
                                                 HandleState = HandleStateEnum.未处理,
                                                 HandleTime = DateTime.Now,
                                                 WorkFlowInstanceId = instance.Id

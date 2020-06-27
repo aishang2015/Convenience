@@ -70,7 +70,7 @@
                                 <th nzAlign="center" nzWidth="140px">创建人员</th>
                                 <th nzAlign="center" nzWidth="180px">修改时间</th>
                                 <th nzAlign="center" nzWidth="140px">修改人员</th>
-                                <th nzAlign="center" nzWidth="200px">操作</th>
+                                <th nzAlign="center" nzWidth="100px">操作</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -109,31 +109,35 @@
             <nz-button-group>
                 <button nz-button *ngIf="checkedData.workFlowInstanceState==1" (click)="saveData()">保存内容</button>
                 <button nz-button *ngIf="checkedData.workFlowInstanceState==1" (click)="submitApprove()">提交审批</button>
-                <button nz-button (click)="cancelWf()">取消流程</button>
-                <button nz-button>查看记录</button>
+                <button nz-button *ngIf="checkedData.workFlowInstanceState==1||checkedData.workFlowInstanceState==2"
+                    (click)="cancelWf()">取消流程</button>
+                <button nz-button (click)="print()">打印</button>
             </nz-button-group>
         </div>
-        <div id="form-area" #formArea style="position: relative;margin: auto;">
-            <div *ngFor="let item of formControlList" class="formElement" [style.top]="getPx(item.top)"
-                [style.left]="getPx(item.left)" [ngStyle]="{'width': item.controlType==1 ? 'auto': getPx(item.width)}"
-                [style.height]="getPx(item.height)">
-                <div [ngSwitch]="item.controlType">
-                    <label *ngSwitchCase="1">{{item.content}}</label>
-                    <input nz-input *ngSwitchCase="2" [(ngModel)]="controlValues[item.domId]" />
-                    <nz-select *ngSwitchCase="3" style="width: 100%;text-align: left;"
-                        [(ngModel)]="controlValues[item.domId]">
-                        <nz-option [nzValue]="option" [nzLabel]="option"
-                            *ngFor="let option of item.options?.split(',')">
-                        </nz-option>
-                    </nz-select>
-                    <nz-input-number *ngSwitchCase="4" [(ngModel)]="controlValues[item.domId]"></nz-input-number>
-                    <nz-date-picker *ngSwitchCase="5" nzPlaceHolder="日期选择" [(ngModel)]="controlValues[item.domId]">
-                    </nz-date-picker>
-                    <nz-time-picker *ngSwitchCase="6" nzPlaceHolder="时间选择" [(ngModel)]="controlValues[item.domId]">
-                    </nz-time-picker>
-                    <textarea *ngSwitchDefault [rows]="item.line" nz-input
-                        [(ngModel)]="controlValues[item.domId]"></textarea>
-                    <div class="mask" *ngIf="checkedData.workFlowInstanceState!=1"></div>
+        <div id="print-area">
+            <div id="form-area" #formArea style="position: relative;margin: auto;">
+                <div *ngFor="let item of formControlList" style="position: absolute;display: inline-block;" [style.top]="getPx(item.top)"
+                    [style.left]="getPx(item.left)"
+                    [ngStyle]="{'width': item.controlType==1 ? 'auto': getPx(item.width)}"
+                    [style.height]="getPx(item.height)">
+                    <div [ngSwitch]="item.controlType">
+                        <label *ngSwitchCase="1" [style.fontSize]="getPx(item.fontSize)">{{item.content}}</label>
+                        <input nz-input *ngSwitchCase="2" [(ngModel)]="controlValues[item.domId]" />
+                        <nz-select *ngSwitchCase="3" style="width: 100%;text-align: left;"
+                            [(ngModel)]="controlValues[item.domId]">
+                            <nz-option [nzValue]="option" [nzLabel]="option"
+                                *ngFor="let option of item.options?.split(',')">
+                            </nz-option>
+                        </nz-select>
+                        <nz-input-number *ngSwitchCase="4" [(ngModel)]="controlValues[item.domId]"></nz-input-number>
+                        <nz-date-picker *ngSwitchCase="5" nzPlaceHolder="日期选择" [(ngModel)]="controlValues[item.domId]">
+                        </nz-date-picker>
+                        <nz-time-picker *ngSwitchCase="6" nzPlaceHolder="时间选择" [(ngModel)]="controlValues[item.domId]">
+                        </nz-time-picker>
+                        <textarea *ngSwitchDefault [rows]="item.line" nz-input
+                            [(ngModel)]="controlValues[item.domId]"></textarea>
+                        <div class="mask" *ngIf="checkedData.workFlowInstanceState!=1"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,10 +146,37 @@
 
 <ng-template #flowTpl>
     <div id="flowContainer" style="height: 700px;">
+        <button nz-button (click)="viewRoutes()" style="top: 10px;left: 10px;" nzType="primary">处理记录</button>
         <div [id]="node.domId" class="node" *ngFor="let node of nodeDataList" [style.top]="getPx(node.top)"
             [style.left]="getPx(node.left)">
             <div class="connectable"></div>
             <div class="draggable" [ngClass]="{'currentNode': node.id==checkedData.currentNodeId}">{{node.name}}</div>
         </div>
     </div>
+</ng-template>
+
+<ng-template #flowRouteTpl>
+    <nz-table #routeTable nzSize="middle" [nzData]="routeDataList" nzShowPagination="false" nzFrontPagination="false"
+        nzBordered="true">
+        <thead>
+            <tr>
+                <th nzAlign="center" nzWidth="50px">#</th>
+                <th nzAlign="center" nzWidth="120px">节点</th>
+                <th nzAlign="center" nzWidth="120px">审核人</th>
+                <th nzAlign="center" nzWidth="120px">审核状态</th>
+                <th nzAlign="center">审核评论</th>
+                <th nzAlign="center" nzWidth="200px">处理日期</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of routeTable.data;let i = index">
+                <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                <td nzAlign="center">{{ data.nodeName }}</td>
+                <td nzAlign="center">{{ data.handlePeopleName }}</td>
+                <td nzAlign="center">{{ getHandleState(data.handleState) }}</td>
+                <td nzAlign="center">{{ data.handleComment }}</td>
+                <td nzAlign="center">{{ data.handleTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
 </ng-template>

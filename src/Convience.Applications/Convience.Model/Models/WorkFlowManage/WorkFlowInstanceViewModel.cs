@@ -31,7 +31,7 @@ namespace Convience.Model.Models.WorkFlowManage
     {
         public int WorkFlowInstanceId { get; set; }
 
-        public string FormControlId { get; set; }
+        public string FormControlDomId { get; set; }
 
         public string Value { get; set; }
     }
@@ -54,9 +54,9 @@ namespace Convience.Model.Models.WorkFlowManage
 
         public string NodeName { get; set; }
 
-        public string HandlePeople { get; set; }
+        public string HandlePeopleName { get; set; }
 
-        public int HandlePepleId { get; set; }
+        public string HandlePepleAccount { get; set; }
 
         public string HandleComment { get; set; }
 

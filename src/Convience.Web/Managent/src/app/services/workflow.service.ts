@@ -11,8 +11,9 @@ export class WorkflowService {
     private uriConstant: UriConstant) { }
 
 
-  getList(page, size, groupId) {
+  getList(page, size, groupId, ispublish?) {
     let uri = `${this.uriConstant.WorkFlowUri}/list?page=${page}&&size=${size}&&workFlowGroupId=${groupId}`;
+    if (ispublish) uri = uri + `&&isPublish=${ispublish}`;
     return this.httpClient.get(uri);
   }
 
@@ -30,5 +31,12 @@ export class WorkflowService {
 
   add(workflow) {
     return this.httpClient.post(this.uriConstant.WorkFlowUri, workflow);
+  }
+
+  publish(id, value) {
+    return this.httpClient.put(this.uriConstant.WorkFlowUri, {
+      id: id,
+      isPublish: value,
+    });
   }
 }

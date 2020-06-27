@@ -33,5 +33,7 @@ namespace Convience.Model.Models.WorkFlowManage
         public int Size { get; set; }
 
         public int WorkFlowGroupId { get; set; }
+
+        public bool? IsPublish { get; set; }
     }
 }

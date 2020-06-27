@@ -145,6 +145,12 @@ export class WorkflowManageComponent implements OnInit {
     }
   }
 
+  isPublishChange(data) {
+    this._workflowService.publish(data.id, !data.isPublish).subscribe((result: any) => {
+      data.isPublish = !data.isPublish;
+    });
+  }
+
   editFlow(id, name) {
     this._router.navigate(['/workflow/flowDesign', { id: id, name: name }]);
   }

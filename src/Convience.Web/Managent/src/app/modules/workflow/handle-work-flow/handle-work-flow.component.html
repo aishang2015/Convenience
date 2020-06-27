@@ -46,9 +46,9 @@
     <div style="text-align: center;">
         <div class="mb-10">
             <nz-button-group>
-                <button nz-button (click)="approve()">同意</button>
-                <button nz-button (click)="disApprove()">拒绝</button>
-                <button nz-button>查看记录</button>
+                <button nz-button (click)="approve()" *ngIf="canHandle()">同意</button>
+                <button nz-button (click)="disApprove()" *ngIf="canHandle()">拒绝</button>
+                <button nz-button (click)="viewRoutes()">查看记录</button>
             </nz-button-group>
         </div>
         <div id="form-area" #formArea style="position: relative;margin: auto;">
@@ -80,6 +80,7 @@
 
 <ng-template #flowTpl>
     <div id="flowContainer" style="height: 700px;">
+        <button nz-button (click)="viewRoutes()" style="top: 10px;left: 10px;" nzType="primary">处理记录</button>
         <div [id]="node.domId" class="node" *ngFor="let node of nodeDataList" [style.top]="getPx(node.top)"
             [style.left]="getPx(node.left)">
             <div class="connectable"></div>
@@ -88,7 +89,32 @@
     </div>
 </ng-template>
 
-<ng-template #commentTpe>
-    <h3>意见</h3>
-    <textarea rows="3" [ngModel]="comment"></textarea>
+<ng-template #commentTpl>
+    <textarea rows="3" [(ngModel)]="comment" nz-input></textarea>
+</ng-template>
+
+<ng-template #flowRouteTpl>
+    <nz-table #routeTable nzSize="middle" [nzData]="routeDataList" nzShowPagination="false" nzFrontPagination="false"
+        nzBordered="true">
+        <thead>
+            <tr>
+                <th nzAlign="center" nzWidth="50px">#</th>
+                <th nzAlign="center" nzWidth="120px">节点</th>
+                <th nzAlign="center" nzWidth="120px">审核人</th>
+                <th nzAlign="center" nzWidth="120px">审核状态</th>
+                <th nzAlign="center">审核评论</th>
+                <th nzAlign="center" nzWidth="200px">处理日期</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of routeTable.data;let i = index">
+                <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                <td nzAlign="center">{{ data.nodeName }}</td>
+                <td nzAlign="center">{{ data.handlePeopleName }}</td>
+                <td nzAlign="center">{{ getHandleState(data.handleState) }}</td>
+                <td nzAlign="center">{{ data.handleComment }}</td>
+                <td nzAlign="center">{{ data.handleTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+            </tr>
+        </tbody>
+    </nz-table>
 </ng-template>
