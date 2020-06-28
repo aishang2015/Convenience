@@ -186,7 +186,6 @@ export class FormDesignComponent implements OnInit {
     switch (node.controlType) {
       case 1:
         ele = this._label;
-        ele.nativeElement.firstChild.innerText = node.content;
         break;
       case 2:
         ele = this._input;
@@ -219,6 +218,8 @@ export class FormDesignComponent implements OnInit {
     if (node.controlType != 1) {
       this._renderer.setStyle(newEle.firstChild, 'width', `${node.width}px`);
       this._renderer.setStyle(newEle, 'width', `${node.width}px`);
+    } else {
+      newEle.firstChild.innerText = node.content;
     }
     this._renderer.setStyle(newEle, 'font-size', `${node.fontSize}px`);
 

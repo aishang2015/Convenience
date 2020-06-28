@@ -14,7 +14,7 @@ namespace Convience.Entity.Configurations
             builder.Property(m => m.Id).HasIdentityOptions(startValue: 78);
             builder.Property(m => m.Name).HasMaxLength(15);
             builder.Property(m => m.Identification).HasMaxLength(50);
-            builder.Property(m => m.Permission).HasMaxLength(200);
+            builder.Property(m => m.Permission).HasMaxLength(2000);
             builder.Property(m => m.Route).HasMaxLength(50);
         }
     }

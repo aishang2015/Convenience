@@ -27,7 +27,7 @@
                             <th nzAlign="center" nzWidth="120px">上级菜单</th>
                             <th nzAlign="center" nzWidth="120px">名称</th>
                             <th nzAlign="center" nzWidth="120px">前端标识</th>
-                            <th nzAlign="center" nzWidth="120px">后端权限</th>
+                            <th nzAlign="center" nzWidth="200px">后端权限</th>
                             <th nzAlign="center" nzWidth="60px">类型</th>
                             <th nzAlign="center">路由</th>
                             <th nzAlign="center" nzWidth="60px">排序</th>
@@ -40,7 +40,7 @@
                             <td nzAlign="center">{{ getUpperMenuById(data.upId) }}</td>
                             <td nzAlign="center">{{ data.name }}</td>
                             <td nzAlign="center">{{ data.identification }}</td>
-                            <td nzAlign="center">{{ data.permission }}</td>
+                            <td nzAlign="center" nzBreakWord>{{ data.permission }}</td>
                             <td nzAlign="center">{{ data.type | menuType }}</td>
                             <td nzAlign="center">{{ data.route }}</td>
                             <td nzAlign="center">{{ data.sort }}</td>

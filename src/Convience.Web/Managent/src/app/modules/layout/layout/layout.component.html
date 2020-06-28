@@ -61,7 +61,7 @@
                         <li nz-menu-item nzMatchRouter *canOperate="'myWorkflow'">
                             <a [routerLink]="[ '/workflow/myFlow' ]" (click)="setBreadcrumb('工作流','我创建的')">
                                 <i nz-icon [nzType]="'credit-card'"></i>我创建的</a></li>
-                        <li nz-menu-item nzMatchRouter *canOperate="'myWorkflow'">
+                        <li nz-menu-item nzMatchRouter *canOperate="'handledWorkflow'">
                             <a [routerLink]="[ '/workflow/handledFlow' ]" (click)="setBreadcrumb('工作流','我参与的')">
                                 <i nz-icon [nzType]="'highlight'"></i>我处理的</a></li>
                         <li nz-menu-item nzMatchRouter *canOperate="'workflowManage'">

@@ -16,7 +16,7 @@ namespace Convience.Entity.Entity.WorkFlows
         // 节点id
         public int NodeId { get; set; }
 
-        // 节点id
+        // 节点名称
         public string NodeName { get; set; }
 
         // 处置人姓名

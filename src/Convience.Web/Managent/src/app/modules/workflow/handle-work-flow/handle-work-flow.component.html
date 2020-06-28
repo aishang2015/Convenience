@@ -24,11 +24,11 @@
                     <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
                         <button nz-button nzTooltipTitle="审核流程" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                            nzType="default" nzShape="circle" *canOperate="'viewWorkFlowBtn'" (click)="viewForm(data)"
+                            nzType="default" nzShape="circle" (click)="viewForm(data)"
                             class="mr-10"> <i nz-icon nzType="highlight"></i>
                         </button>
                         <button nz-button nzTooltipTitle="查看流程" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                            nzShape="circle" (click)="viewflow(data)" *canOperate="'viewWorkFlowBtn'">
+                            nzShape="circle" (click)="viewflow(data)">
                             <i nz-icon nzType="fork"></i>
                         </button>
                     </td>
@@ -56,7 +56,7 @@
                 [style.left]="getPx(item.left)" [ngStyle]="{'width': item.controlType==1 ? 'auto': getPx(item.width)}"
                 [style.height]="getPx(item.height)">
                 <div [ngSwitch]="item.controlType">
-                    <label *ngSwitchCase="1">{{item.content}}</label>
+                    <label *ngSwitchCase="1" [style.fontSize]="getPx(item.fontSize)">{{item.content}}</label>
                     <input nz-input *ngSwitchCase="2" [(ngModel)]="controlValues[item.domId]" />
                     <nz-select *ngSwitchCase="3" style="width: 100%;text-align: left;"
                         [(ngModel)]="controlValues[item.domId]">

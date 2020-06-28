@@ -17,8 +17,8 @@ namespace Convience.Model.Validators.SystemManage
             RuleFor(viewmodel => viewmodel.Identification).MaximumLength(50)
                 .WithMessage("前端识别长度不能超过50！");
 
-            RuleFor(viewmodel => viewmodel.Permission).MaximumLength(200)
-                .WithMessage("后端权限长度不能超过200！");
+            RuleFor(viewmodel => viewmodel.Permission).MaximumLength(2000)
+                .WithMessage("后端权限长度不能超过2000！");
 
             RuleFor(viewmodel => viewmodel.Route).MaximumLength(50)
                 .WithMessage("路由长度不能超过50！");

@@ -28,7 +28,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// 创建工作流
         /// </summary>
         [HttpPost]
-        [Permission("workFlowInstancePost")]
+        [Permission("workFlowInstanceAdd")]
         public async Task<IActionResult> CreateWorkFlowInstance([FromBody] WorkFlowInstanceViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService
@@ -60,7 +60,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// 取得工作流列表
         /// </summary>
         [HttpGet]
-        [Permission("workFlowInstanceGet")]
+        [Permission("workFlowInstanceList")]
         public IActionResult GetWorkFlowInstances([FromQuery] PageQuery query)
         {
             var result = _workFlowInstanceService.GetInstanceList(User.GetUserName(), query.Page, query.Size);
@@ -85,7 +85,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// 保存表单值
         /// </summary>
         [HttpPut("values")]
-        [Permission("workFlowInstanceValuesPut")]
+        [Permission("workFlowInstanceValuesUpdate")]
         public async Task<IActionResult> SaveWorkFlowInstanceValues([FromBody] InstanceValuesViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService.SaveWorkFlowInstanceValues(vm.WorkFlowInstanceId, vm.Values);
@@ -97,7 +97,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         }
 
         [HttpGet("routes")]
-        [Permission("workFlowInstanceRouteGet")]
+        [Permission("workFlowInstanceRouteList")]
         public IActionResult GetWorkFlowInstanceRoutes([FromQuery] int workFlowInstanceId)
         {
             return Ok(_workFlowInstanceService.GetWorkFlowInstanceRoutes(workFlowInstanceId));
@@ -137,7 +137,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// 取得工作流列表
         /// </summary>
         [HttpGet("handle")]
-        [Permission("handledWorkFlowInstanceGet")]
+        [Permission("handledWorkFlowInstanceList")]
         public IActionResult GetHandledWorkFlowInstances([FromQuery]PageQuery query)
         {
             var result = _workFlowInstanceService.GetHandledInstanceList(User.GetUserName(), query.Page, query.Size);
@@ -149,7 +149,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         }
 
         [HttpPost("handle")]
-        [Permission("handleWorkFlowInstancePost")]
+        [Permission("handleWorkFlowInstanceApprove")]
         public async Task<IActionResult> ApproveOrDisApproveNode([FromBody]WorkFlowInstanceHandleViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService.ApproveOrDisApproveNode(User.GetUserName(), vm);

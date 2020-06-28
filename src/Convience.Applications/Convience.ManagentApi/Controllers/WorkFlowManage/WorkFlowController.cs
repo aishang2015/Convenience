@@ -78,7 +78,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         }
 
         [HttpPut]
-        [Permission("workflowPut")]
+        [Permission("workflowPublish")]
         public async Task<IActionResult> Publish(WorkFlowViewModel workflowViewModel)
         {
             var result = await _workflowService.PublishWorkFlow(workflowViewModel.Id, workflowViewModel.IsPublish);

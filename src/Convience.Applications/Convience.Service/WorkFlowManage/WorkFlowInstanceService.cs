@@ -199,6 +199,7 @@ namespace Convience.Service.WorkFlowManage
             var query = (from route in _instanceRouteRepository.Get()
                          join i in _instanceRepository.Get() on route.WorkFlowInstanceId equals i.Id
                          where route.HandlePepleAccount == account &&
+                         route.NodeName != "开始节点" &&
                          i.WorkFlowInstanceState != WorkFlowInstanceStateEnum.NoCommitted
                          select i).Distinct();
 

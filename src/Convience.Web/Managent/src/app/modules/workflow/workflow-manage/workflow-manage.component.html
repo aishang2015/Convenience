@@ -16,7 +16,7 @@
         <nz-card [nzSize]="'small'">
             <div>
                 <ng-container *ngIf="checkedWorkflowGroupId">
-                    <button nz-button class="mr-10" (click)="add()" *canOperate="'addWorkFlowBtn'">
+                    <button nz-button class="mr-10" (click)="add()">
                         <i nz-icon nzType="plus"></i>创建工作流</button>
                 </ng-container>
                 <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
@@ -53,19 +53,17 @@
                             </td>
                             <td nzAlign="center">
                                 <button nz-button nzTooltipTitle="设计表单" nzTooltipPlacement="top" nz-tooltip
-                                    nzType="default" nzShape="circle" *canOperate="'editWorkflowFormBtn'"
-                                    (click)="editForm(data.id,data.name)" class="mr-10"><i nz-icon
-                                        nzType="group"></i></button>
+                                    nzType="default" nzShape="circle" (click)="editForm(data.id,data.name)"
+                                    class="mr-10"><i nz-icon nzType="group"></i></button>
                                 <button nz-button nzTooltipTitle="设计流程" nzTooltipPlacement="top" nz-tooltip
-                                    nzType="default" nzShape="circle" *canOperate="'editWorkflowFlowBtn'"
-                                    (click)="editFlow(data.id,data.name)" class="mr-10"><i nz-icon
-                                        nzType="fork"></i></button>
+                                    nzType="default" nzShape="circle" (click)="editFlow(data.id,data.name)"
+                                    class="mr-10"><i nz-icon nzType="fork"></i></button>
                                 <button nz-button nzTooltipTitle="修改工作流" nzTooltipPlacement="top" nz-tooltip
-                                    nzType="default" nzShape="circle" *canOperate="'updateWorkflowBtn'"
-                                    (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                                    nzType="default" nzShape="circle" (click)="edit(data.id)" class="mr-10"><i nz-icon
+                                        nzType="edit"></i></button>
                                 <button nz-button nzTooltipTitle="删除工作流" nzTooltipPlacement="top" nz-tooltip
-                                    nzType="default" nzShape="circle" *canOperate="'deleteWorkflowBtn'"
-                                    (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
+                                    nzType="default" nzShape="circle" (click)="remove(data.id)" class="mr-10"><i nz-icon
+                                        nzType="delete"></i></button>
                             </td>
                         </tr>
                     </tbody>

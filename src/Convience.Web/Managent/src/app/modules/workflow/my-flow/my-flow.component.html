@@ -1,7 +1,6 @@
 <nz-card [nzSize]="'small'" class="mt-10 full-single">
     <div>
-        <button nz-button class="mr-10" (click)="add()" *canOperate="'addWorkFlowBtn'"><i nz-icon
-                nzType="plus"></i>发起工作流</button>
+        <button nz-button class="mr-10" (click)="add()"><i nz-icon nzType="plus"></i>发起工作流</button>
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
     <div class="mt-10">
@@ -24,16 +23,16 @@
                     <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
                         <button nz-button nzTooltipTitle="编辑内容" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                            nzType="default" nzShape="circle" *canOperate="'editInstanceBtn'" (click)="viewForm(data)"
-                            class="mr-10"> <i nz-icon nzType="edit"></i>
+                            nzType="default" nzShape="circle" (click)="viewForm(data)" class="mr-10"> <i nz-icon
+                                nzType="edit"></i>
                         </button>
                         <button nz-button nzTooltipTitle="查看流程" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                            nzShape="circle" (click)="viewflow(data)" *canOperate="'viewWorkflowBtn'" class="mr-10">
+                            nzShape="circle" (click)="viewflow(data)" class="mr-10">
                             <i nz-icon nzType="fork"></i>
                         </button>
                         <ng-container *ngIf="data.workFlowInstanceState!=2">
                             <button nz-button nzTooltipTitle="删除流程" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                                nzShape="circle" (click)="delete(data)" *canOperate="'deleteInstanceBtn'">
+                                nzShape="circle" (click)="delete(data)">
                                 <i nz-icon nzType="delete"></i>
                             </button>
                         </ng-container>
@@ -84,9 +83,8 @@
                                 <td nzAlign="center">{{ data.updatedUser }}</td>
                                 <td nzAlign="center">
                                     <button nz-button nzTooltipTitle="发起流程" nzTooltipPlacement="top" nz-tooltip
-                                        nzType="default" nzShape="circle" *canOperate="'editWorkflowFlowBtn'"
-                                        (click)="startFlow(data.id)" class="mr-10"><i nz-icon
-                                            nzType="send"></i></button>
+                                        nzType="default" nzShape="circle" (click)="startFlow(data.id)" class="mr-10"><i
+                                            nz-icon nzType="send"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -111,13 +109,14 @@
                 <button nz-button *ngIf="checkedData.workFlowInstanceState==1" (click)="submitApprove()">提交审批</button>
                 <button nz-button *ngIf="checkedData.workFlowInstanceState==1||checkedData.workFlowInstanceState==2"
                     (click)="cancelWf()">取消流程</button>
+                <button nz-button (click)="viewRoutes()">查看记录</button>
                 <button nz-button (click)="print()">打印</button>
             </nz-button-group>
         </div>
         <div id="print-area">
             <div id="form-area" #formArea style="position: relative;margin: auto;">
-                <div *ngFor="let item of formControlList" style="position: absolute;display: inline-block;" [style.top]="getPx(item.top)"
-                    [style.left]="getPx(item.left)"
+                <div *ngFor="let item of formControlList" style="position: absolute;display: inline-block;"
+                    [style.top]="getPx(item.top)" [style.left]="getPx(item.left)"
                     [ngStyle]="{'width': item.controlType==1 ? 'auto': getPx(item.width)}"
                     [style.height]="getPx(item.height)">
                     <div [ngSwitch]="item.controlType">
