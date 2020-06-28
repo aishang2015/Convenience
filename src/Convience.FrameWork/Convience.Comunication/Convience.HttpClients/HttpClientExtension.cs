@@ -16,8 +16,8 @@ namespace Convience.HttpClients
         }
 
         public static void Handle(this HttpResponseMessage httpResponseMessage,
-            [Optional]Action<HttpResponseMessage> successAction,
-            [Optional]Action<HttpResponseMessage> failAction)
+            [Optional] Action<HttpResponseMessage> successAction,
+            [Optional] Action<HttpResponseMessage> failAction)
         {
             if (httpResponseMessage.IsSuccessStatusCode)
             {

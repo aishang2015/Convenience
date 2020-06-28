@@ -10,7 +10,6 @@ using Convience.Hangfire;
 using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
-using Convience.Repository;
 using Convience.Service;
 using Convience.Swashbuckle;
 using Convience.Util.Middlewares;
@@ -39,20 +38,24 @@ namespace Convience.ManagentApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var dbConnectionString = Configuration.GetConnectionString("PostgreSQL");
+            var mqConnectionString = Configuration.GetConnectionString("RabbitMQ");
+            var mdbConnectionConfig = Configuration.GetSection("MongoDb");
+
             services.AddControllers().AddNewtonsoftJson()
                 .AddFluentValidation(services);
 
-            services.AddApplicationDbContext(Configuration)
+            services.AddApplicationDbContext(dbConnectionString)
                 .AddJwtBearer(Configuration)
                 .AddPermissionAuthorization()
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddServices()
                 .AddAutoMapper()
-                .AddHangFire(Configuration)
-                .AddCap(Configuration)
+                .AddPostgreHangFire(dbConnectionString)
+                .AddPostgreCap(dbConnectionString, mqConnectionString)
                 .AddMemoryCache()
-                .AddMongoDBFileManage(Configuration);
+                .AddMongoDBFileManage(mdbConnectionConfig);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -90,9 +93,8 @@ namespace Convience.ManagentApi
 
     public static class CustomExtension
     {
-        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, string connectionString)
         {
-            var connectionString = configuration.GetConnectionString("PostgreSQL");
             services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int>
                 (connectionString, DataBaseType.PostgreSQL);
 
@@ -133,22 +135,22 @@ namespace Convience.ManagentApi
             return services;
         }
 
-        public static IServiceCollection AddHangFire(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPostgreHangFire(this IServiceCollection services, string connectionString)
         {
-            services.AddPostgreSQLHangFire(configuration.GetConnectionString("PostgreSQL"));
+            services.AddHF(HangFireDataBaseType.PostgreSQL, connectionString);
             return services;
         }
 
         public static IServiceCollection AddMongoDBFileManage(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddMongoDBFileStore(configuration.GetSection("MongoDb"));
+            services.AddMongoDBFileStore(configuration);
             return services;
         }
 
-        public static IServiceCollection AddCap(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPostgreCap(this IServiceCollection services, string dbConnectionString, string mqConnectionString)
         {
-            services.AddCapMQ<SystemIdentityDbContext>(CapDataBaseType.PostgreSQL, configuration.GetConnectionString("PostgreSQL"),
-                 CapMessageQueryType.RabbitMQ, configuration.GetConnectionString("RabbitMQ"));
+            services.AddCapMQ<SystemIdentityDbContext>(CapDataBaseType.PostgreSQL, dbConnectionString,
+                 CapMessageQueryType.RabbitMQ, mqConnectionString);
             return services;
         }
 

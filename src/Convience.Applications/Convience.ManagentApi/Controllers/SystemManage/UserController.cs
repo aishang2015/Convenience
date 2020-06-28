@@ -25,7 +25,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpGet("list")]
         [Permission("userList")]
-        public IActionResult GetUserList([FromQuery]UserQuery userQuery)
+        public IActionResult GetUserList([FromQuery] UserQueryModel userQuery)
         {
             var result = _userService.GetUsers(userQuery);
             return Ok(new
@@ -37,14 +37,14 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpGet("dic")]
         [Permission("userDic")]
-        public IActionResult GetUserDic([FromQuery]string name)
+        public IActionResult GetUserDic([FromQuery] string name)
         {
             return Ok(_userService.GetUserDic(name));
         }
 
         [HttpGet]
         [Permission("userDetail")]
-        public async Task<IActionResult> GetUser([FromQuery]string id)
+        public async Task<IActionResult> GetUser([FromQuery] string id)
         {
             var user = await _userService.GetUserAsync(id);
             return Ok(user);
@@ -52,7 +52,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPost]
         [Permission("userAdd")]
-        public async Task<IActionResult> AddUser([FromBody]UserViewModel model)
+        public async Task<IActionResult> AddUser([FromBody] UserViewModel model)
         {
             var result = await _userService.AddUserAsync(model);
             if (!string.IsNullOrEmpty(result))
@@ -64,7 +64,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPatch]
         [Permission("userUpdate")]
-        public async Task<IActionResult> UpdateUser([FromBody]UserViewModel model)
+        public async Task<IActionResult> UpdateUser([FromBody] UserViewModel model)
         {
             var result = await _userService.UpdateUserAsync(model);
             if (!string.IsNullOrEmpty(result))
@@ -76,7 +76,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpDelete]
         [Permission("userDelete")]
-        public async Task<IActionResult> RemoveUser([FromQuery]string id)
+        public async Task<IActionResult> RemoveUser([FromQuery] string id)
         {
             var result = await _userService.RemoveUserAsync(id);
             if (!string.IsNullOrEmpty(result))

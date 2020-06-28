@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.MemoryStorage;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
 
@@ -11,6 +12,26 @@ namespace Convience.Hangfire
 {
     public static class HangFireExtension
     {
+
+        public static IServiceCollection AddHF(this IServiceCollection services,
+            HangFireDataBaseType hangFireDataBaseType,
+            string connectionString)
+        {
+            switch (hangFireDataBaseType)
+            {
+                case HangFireDataBaseType.PostgreSQL:
+                    services.AddPostgreSQLHangFire(connectionString);
+                    break;
+                case HangFireDataBaseType.SqlServer:
+                    services.AddSqlServerHangFire(connectionString);
+                    break;
+                case HangFireDataBaseType.InMemory:
+                    services.AddInMemoryHangFire();
+                    break;
+            }
+            return services;
+        }
+
         public static IServiceCollection AddSqlServerHangFire(this IServiceCollection services,
             string connectionString)
         {
@@ -29,7 +50,6 @@ namespace Convience.Hangfire
                     DisableGlobalLocks = true
                 }));
 
-            // Add the processing server as IHostedService
             services.AddHangfireServer();
 
             return services;
@@ -45,7 +65,20 @@ namespace Convience.Hangfire
                 .UseRecommendedSerializerSettings()
                 .UsePostgreSqlStorage(connectionString));
 
-            // Add the processing server as IHostedService
+            services.AddHangfireServer();
+
+            return services;
+        }
+
+        public static IServiceCollection AddInMemoryHangFire(this IServiceCollection services)
+        {
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseMemoryStorage());
+
             services.AddHangfireServer();
 
             return services;

@@ -25,14 +25,14 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpGet()]
         [Permission("roleGet")]
-        public async Task<IActionResult> GetRoles([FromQuery]string id)
+        public async Task<IActionResult> GetRoles([FromQuery] string id)
         {
             return Ok(await _roleService.GetRole(id));
         }
 
         [HttpGet("list")]
         [Permission("roleList")]
-        public IActionResult GetRoles([FromQuery]string name, [FromQuery]int page, [FromQuery]int size)
+        public IActionResult GetRoles([FromQuery] string name, [FromQuery] int page, [FromQuery] int size)
         {
             return Ok(new
             {
@@ -43,7 +43,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpDelete]
         [Permission("roleDelete")]
-        public async Task<IActionResult> DeleteRole([FromQuery]string name)
+        public async Task<IActionResult> DeleteRole([FromQuery] string name)
         {
             var result = await _roleService.RemoveRole(name);
             if (!string.IsNullOrEmpty(result))
@@ -55,7 +55,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPost]
         [Permission("roleAdd")]
-        public async Task<IActionResult> AddRole([FromBody]RoleViewModel viewModel)
+        public async Task<IActionResult> AddRole([FromBody] RoleViewModel viewModel)
         {
             var result = await _roleService.AddRole(viewModel);
             if (!string.IsNullOrEmpty(result))
@@ -67,7 +67,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPatch]
         [Permission("roleUpdate")]
-        public async Task<IActionResult> UpdateRole([FromBody]RoleViewModel viewModel)
+        public async Task<IActionResult> UpdateRole([FromBody] RoleViewModel viewModel)
         {
             var result = await _roleService.Update(viewModel);
             if (!string.IsNullOrEmpty(result))

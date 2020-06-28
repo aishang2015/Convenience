@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Convience.Model\Convience.Model.csproj" />
-    <ProjectReference Include="..\Convience.Repository\Convience.Repository.csproj" />
   </ItemGroup>
 
 </Project>

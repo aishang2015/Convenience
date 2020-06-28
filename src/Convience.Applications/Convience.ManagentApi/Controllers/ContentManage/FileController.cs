@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPost]
         [Permission("fileAdd")]
-        public async Task<IActionResult> UploadFile([FromForm]FileUploadModel fileUploadModel)
+        public async Task<IActionResult> UploadFile([FromForm] FileUploadViewModel fileUploadModel)
         {
             var result = await _fileManageService.UploadAsync(fileUploadModel);
             if (!string.IsNullOrEmpty(result))
@@ -36,7 +36,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpGet("list")]
         [Permission("fileList")]
-        public async Task<IActionResult> GetContent([FromQuery]FileQuery query)
+        public async Task<IActionResult> GetContent([FromQuery] FileQueryModel query)
         {
             var result = await _fileManageService.GetContentsAsync(query);
             return Ok(result);
@@ -44,7 +44,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("fileDelete")]
-        public async Task<IActionResult> DeleteFile([FromQuery]FileViewModel viewModel)
+        public async Task<IActionResult> DeleteFile([FromQuery] FileViewModel viewModel)
         {
             var isSuccess = await _fileManageService.DeleteFileAsync(viewModel);
             if (!isSuccess)
@@ -56,7 +56,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpGet]
         [Permission("fileGet")]
-        public async Task<IActionResult> DownloadFile([FromQuery]FileViewModel viewModel)
+        public async Task<IActionResult> DownloadFile([FromQuery] FileViewModel viewModel)
         {
             var stream = await _fileManageService.DownloadAsync(viewModel);
             return File(stream, "application/octet-stream", viewModel.FileName);

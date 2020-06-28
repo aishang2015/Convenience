@@ -20,7 +20,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpGet()]
         [Permission("workflowGroupGet")]
-        public async Task<IActionResult> Get([FromQuery]int id)
+        public async Task<IActionResult> Get([FromQuery] int id)
         {
             var result = await _workFlowGroupService.GetWorkFlowGroupById(id);
             return Ok(result);

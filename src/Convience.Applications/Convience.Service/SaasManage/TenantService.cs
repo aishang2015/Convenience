@@ -17,6 +17,21 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.SaasManage
 {
+    public interface ITenantService
+    {
+        Task<TenantResultModel> Get(Guid id);
+
+        IEnumerable<TenantResultModel> Get(TenantQueryModel query);
+
+        long Count(TenantQueryModel query);
+
+        Task<Tenant> AddAsync(TenantViewModel model);
+
+        Task UpdateAsync(TenantViewModel model);
+
+        Task RemoveAsync(Guid id);
+    }
+
     public class TenantService : ITenantService
     {
         private readonly IRepository<Tenant> _tenantRepository;
@@ -43,7 +58,7 @@ namespace Convience.Service.SaasManage
             return result;
         }
 
-        public long Count(TenantQuery query)
+        public long Count(TenantQueryModel query)
         {
             Enum.TryParse(typeof(DataBaseType), query.DataBaseType, out object type);
             Expression<Func<Tenant, bool>> where = ExpressionExtension.TrueExpression<Tenant>()
@@ -54,7 +69,7 @@ namespace Convience.Service.SaasManage
             return _tenantRepository.CountAsync(queryExpress).Result;
         }
 
-        public IEnumerable<TenantResult> Get(TenantQuery query)
+        public IEnumerable<TenantResultModel> Get(TenantQueryModel query)
         {
             Enum.TryParse(typeof(DataBaseType), query.DataBaseType, out object type);
             Expression<Func<Tenant, bool>> where = ExpressionExtension.TrueExpression<Tenant>()
@@ -69,14 +84,14 @@ namespace Convience.Service.SaasManage
 
             var result = _tenantRepository.Get(where, order, query.Page, query.Size, query.isDesc, false);
 
-            return result.Count() > 0 ? _mapper.Map<Tenant[], TenantResult[]>(result.ToArray()) :
-                new TenantResult[] { };
+            return result.Count() > 0 ? _mapper.Map<Tenant[], TenantResultModel[]>(result.ToArray()) :
+                new TenantResultModel[] { };
         }
 
-        public async Task<TenantResult> Get(Guid id)
+        public async Task<TenantResultModel> Get(Guid id)
         {
             var tenant = await _tenantRepository.GetAsync(id);
-            return _mapper.Map<TenantResult>(tenant);
+            return _mapper.Map<TenantResultModel>(tenant);
         }
 
         public async Task RemoveAsync(Guid id)

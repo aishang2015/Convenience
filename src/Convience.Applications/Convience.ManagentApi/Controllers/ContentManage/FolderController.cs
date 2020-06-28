@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPost]
         [Permission("fileAdd")]
-        public async Task<IActionResult> MakeDirectory([FromBody]FileViewModel vm)
+        public async Task<IActionResult> MakeDirectory([FromBody] FileViewModel vm)
         {
             var result = await _fileManageService.MakeDirectoryAsync(vm);
             if (!string.IsNullOrEmpty(result))
@@ -36,7 +36,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("fileDelete")]
-        public async Task<IActionResult> DeleteDirectory([FromQuery]FileViewModel vm)
+        public async Task<IActionResult> DeleteDirectory([FromQuery] FileViewModel vm)
         {
             var isSuccess = await _fileManageService.DeleteDirectoryAsync(vm);
             if (!isSuccess)

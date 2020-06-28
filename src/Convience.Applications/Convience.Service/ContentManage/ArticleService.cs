@@ -14,6 +14,20 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.ContentManage
 {
+
+    public interface IArticleService
+    {
+        Task<ArticleResultModel> GetByIdAsync(int id);
+
+        (IEnumerable<ArticleResultModel>, int) GetArticles(ArticleQueryModel query);
+
+        Task<bool> AddArticleAsync(ArticleViewModel model);
+
+        Task<bool> UpdateArticleAsync(ArticleViewModel model);
+
+        Task<bool> DeleteArticleAsync(int id);
+    }
+
     public class ArticleService : IArticleService
     {
         private readonly IRepository<Article> _articleRepository;
@@ -64,7 +78,7 @@ namespace Convience.Service.ContentManage
             }
         }
 
-        public (IEnumerable<ArticleResult>, int) GetArticles(ArticleQuery query)
+        public (IEnumerable<ArticleResultModel>, int) GetArticles(ArticleQueryModel query)
         {
             Expression<Func<Article, bool>> where = ExpressionExtension.TrueExpression<Article>()
                 .AndIfHaveValue(query.Title, a => a.Title.Contains(query.Title))
@@ -74,7 +88,7 @@ namespace Convience.Service.ContentManage
                                join column in _columnRepository.Get() on article.ColumnId equals column.Id into columnInfo
                                from c in columnInfo.DefaultIfEmpty()
                                orderby article.CreateTime descending
-                               select new ArticleResult
+                               select new ArticleResultModel
                                {
                                    Id = article.Id,
                                    Title = article.Title,
@@ -91,10 +105,10 @@ namespace Convience.Service.ContentManage
             return (articleQuery.Skip(skip).Take(query.Size), articleQuery.Count());
         }
 
-        public async Task<ArticleResult> GetByIdAsync(int id)
+        public async Task<ArticleResultModel> GetByIdAsync(int id)
         {
             var article = await _articleRepository.GetAsync(id);
-            return _mapper.Map<ArticleResult>(article);
+            return _mapper.Map<ArticleResultModel>(article);
         }
 
         public async Task<bool> UpdateArticleAsync(ArticleViewModel model)

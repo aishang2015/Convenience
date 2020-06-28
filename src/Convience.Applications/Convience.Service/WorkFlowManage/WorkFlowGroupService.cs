@@ -11,9 +11,9 @@ namespace Convience.Service.WorkFlowManage
 {
     public interface IWorkFlowGroupService
     {
-        IQueryable<WorkFlowGroupResult> GetAllWorkFlowGroup();
+        IQueryable<WorkFlowGroupResultModel> GetAllWorkFlowGroup();
 
-        Task<WorkFlowGroupResult> GetWorkFlowGroupById(int id);
+        Task<WorkFlowGroupResultModel> GetWorkFlowGroupById(int id);
 
         Task<bool> AddWorkFlowGroupAsync(WorkFlowGroupViewModel model);
 
@@ -100,7 +100,7 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public IQueryable<WorkFlowGroupResult> GetAllWorkFlowGroup()
+        public IQueryable<WorkFlowGroupResultModel> GetAllWorkFlowGroup()
         {
             var query = from wfg in _workFlowGroupRepository.Get()
                         join tree in _workFlowGroupTreeRepository.Get()
@@ -108,7 +108,7 @@ namespace Convience.Service.WorkFlowManage
                         into e
                         from rtree in e.DefaultIfEmpty()
                         orderby wfg.Sort
-                        select new WorkFlowGroupResult
+                        select new WorkFlowGroupResultModel
                         {
                             Id = wfg.Id,
                             UpId = rtree.Ancestor.ToString(),
@@ -118,10 +118,10 @@ namespace Convience.Service.WorkFlowManage
             return query;
         }
 
-        public async Task<WorkFlowGroupResult> GetWorkFlowGroupById(int id)
+        public async Task<WorkFlowGroupResultModel> GetWorkFlowGroupById(int id)
         {
             var column = await _workFlowGroupRepository.GetAsync(id);
-            return _mapper.Map<WorkFlowGroupResult>(column);
+            return _mapper.Map<WorkFlowGroupResultModel>(column);
         }
 
         public async Task<bool> UpdateWorkFlowGroupAsync(WorkFlowGroupViewModel model)

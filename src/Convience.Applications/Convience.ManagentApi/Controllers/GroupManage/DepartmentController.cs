@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet()]
         [Permission("departmentGet")]
-        public async Task<IActionResult> Get([FromQuery]int id)
+        public async Task<IActionResult> Get([FromQuery] int id)
         {
             var result = await _departmentService.GetDepartmentById(id);
             return Ok(result);
@@ -75,7 +75,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet("dic")]
         [Permission("departmentDic")]
-        public IActionResult GetDepartmentDic([FromQuery]string name)
+        public IActionResult GetDepartmentDic([FromQuery] string name)
         {
             return Ok(_departmentService.GetDepartmentDic(name));
         }

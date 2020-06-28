@@ -6,7 +6,6 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
-using Convience.Repository;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,21 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
 {
+    public interface IDepartmentService
+    {
+        IQueryable<DepartmentResultModel> GetAllDepartment();
+
+        Task<DepartmentResultModel> GetDepartmentById(int id);
+
+        Task<bool> AddDepartmentAsync(DepartmentViewModel model);
+
+        Task<bool> UpdateDepartmentAsync(DepartmentViewModel model);
+
+        Task<bool> DeleteDepartmentAsync(int id);
+
+        IEnumerable<DicResultModel> GetDepartmentDic(string name);
+    }
+
     public class DepartmentService : IDepartmentService
     {
         private readonly IRepository<Department> _departmentRepository;
@@ -105,7 +119,7 @@ namespace Convience.Service.GroupManage
             }
         }
 
-        public IQueryable<DepartmentResult> GetAllDepartment()
+        public IQueryable<DepartmentResultModel> GetAllDepartment()
         {
             var query = from d in _departmentRepository.Get()
 
@@ -119,7 +133,7 @@ namespace Convience.Service.GroupManage
                         from u in newu.DefaultIfEmpty()
 
                         orderby d.Sort
-                        select new DepartmentResult
+                        select new DepartmentResultModel
                         {
                             Id = d.Id,
                             UpId = dt.Ancestor.ToString(),
@@ -133,17 +147,17 @@ namespace Convience.Service.GroupManage
             return query;
         }
 
-        public async Task<DepartmentResult> GetDepartmentById(int id)
+        public async Task<DepartmentResultModel> GetDepartmentById(int id)
         {
             var result = await _departmentRepository.GetAsync(id);
-            return _mapper.Map<DepartmentResult>(result);
+            return _mapper.Map<DepartmentResultModel>(result);
         }
 
-        public IEnumerable<DicModel> GetDepartmentDic(string name)
+        public IEnumerable<DicResultModel> GetDepartmentDic(string name)
         {
             var dic = from department in _departmentRepository.Get()
                       where department.Name.Contains(name)
-                      select new DicModel
+                      select new DicResultModel
                       {
                           Key = department.Id.ToString(),
                           Value = department.Name,

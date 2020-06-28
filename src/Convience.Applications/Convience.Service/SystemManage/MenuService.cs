@@ -11,6 +11,21 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
 {
+    public interface IMenuService
+    {
+        IQueryable<MenuResultModel> GetAllMenu();
+
+        Task<bool> AddMenuAsync(MenuViewModel model);
+
+        Task<bool> UpdateMenuAsync(MenuViewModel model);
+
+        Task<bool> DeleteMenuAsync(int id);
+
+        bool HavePermission(string[] menuIds, string permission);
+
+        (string, string) GetIdentificationRoutes(string[] menuIds);
+    }
+
     public class MenuService : IMenuService
     {
         private readonly IRepository<Menu> _menuRepository;
@@ -92,7 +107,7 @@ namespace Convience.Service.SystemManage
             }
         }
 
-        public IQueryable<MenuResult> GetAllMenu()
+        public IQueryable<MenuResultModel> GetAllMenu()
         {
             var query = from menu in _menuRepository.Get()
                         join tree in _menuTreeRepository.Get()
@@ -100,7 +115,7 @@ namespace Convience.Service.SystemManage
                         into e
                         from rtree in e.DefaultIfEmpty()
                         orderby menu.Sort
-                        select new MenuResult
+                        select new MenuResultModel
                         {
                             Id = menu.Id,
                             UpId = rtree.Ancestor.ToString(),

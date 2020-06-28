@@ -15,11 +15,11 @@ namespace Convience.Service.WorkFlowManage
 {
     public interface IWorkFlowFormService
     {
-        WorkFlowFormResult GetWorkFlowForm(int workflowId);
+        WorkFlowFormResultModel GetWorkFlowForm(int workflowId);
 
         Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel, string userName);
 
-        IEnumerable<DicModel> GetWorkFlowFormControlDic(int WorkFlowId);
+        IEnumerable<DicResultModel> GetWorkFlowFormControlDic(int WorkFlowId);
     }
 
     public class WorkFlowFormService : IWorkFlowFormService
@@ -52,14 +52,14 @@ namespace Convience.Service.WorkFlowManage
             _mapper = mapper;
         }
 
-        public WorkFlowFormResult GetWorkFlowForm(int workflowId)
+        public WorkFlowFormResultModel GetWorkFlowForm(int workflowId)
         {
             var form = _formRepository.Get(f => f.WorkFlowId == workflowId).FirstOrDefault();
             var formControls = _formControlRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
-            return new WorkFlowFormResult
+            return new WorkFlowFormResultModel
             {
-                FormResult = _mapper.Map<FormResult>(form),
-                FormControlResults = _mapper.Map<IEnumerable<FormControlResult>>(formControls)
+                FormResult = _mapper.Map<FormResultModel>(form),
+                FormControlResults = _mapper.Map<IEnumerable<FormControlResultModel>>(formControls)
             };
         }
 
@@ -91,10 +91,10 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public IEnumerable<DicModel> GetWorkFlowFormControlDic(int WorkFlowId)
+        public IEnumerable<DicResultModel> GetWorkFlowFormControlDic(int WorkFlowId)
         {
             return _formControlRepository.Get().Where(control => control.WorkFlowId == WorkFlowId)
-                .Select(control => new DicModel
+                .Select(control => new DicResultModel
                 {
                     Key = control.Id.ToString(),
                     Value = control.Name,

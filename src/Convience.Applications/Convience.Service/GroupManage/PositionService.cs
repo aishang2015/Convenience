@@ -6,7 +6,6 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
-using Convience.Repository;
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,25 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
 {
+    public interface IPositionService
+    {
+        int Count();
+
+        IEnumerable<PositionResultModel> GetAllPosition();
+
+        IEnumerable<PositionResultModel> GetPositions(PositionQueryModel query);
+
+        Task<PositionResultModel> GetPositionAsync(int id);
+
+        Task<bool> AddPositionAsync(PositionViewModel model);
+
+        Task<bool> UpdatePositionAsync(PositionViewModel model);
+
+        Task<bool> DeletePositionAsync(int id);
+
+        public IEnumerable<DicResultModel> GetPositionDic(string name);
+    }
+
     public class PositionService : IPositionService
     {
         private readonly IRepository<Position> _positionRepository;
@@ -78,23 +96,23 @@ namespace Convience.Service.GroupManage
             }
         }
 
-        public IEnumerable<PositionResult> GetAllPosition()
+        public IEnumerable<PositionResultModel> GetAllPosition()
         {
             var positions = _positionRepository.Get().OrderBy(p => p.Sort).ToArray();
-            return _mapper.Map<Position[], IEnumerable<PositionResult>>(positions);
+            return _mapper.Map<Position[], IEnumerable<PositionResultModel>>(positions);
         }
 
-        public async Task<PositionResult> GetPositionAsync(int id)
+        public async Task<PositionResultModel> GetPositionAsync(int id)
         {
             var entity = await _positionRepository.GetAsync(id);
-            return _mapper.Map<PositionResult>(entity);
+            return _mapper.Map<PositionResultModel>(entity);
         }
 
-        public IEnumerable<DicModel> GetPositionDic(string name)
+        public IEnumerable<DicResultModel> GetPositionDic(string name)
         {
             var dic = from position in _positionRepository.Get()
                       where position.Name.Contains(name)
-                      select new DicModel
+                      select new DicResultModel
                       {
                           Key = position.Id.ToString(),
                           Value = position.Name,
@@ -102,11 +120,11 @@ namespace Convience.Service.GroupManage
             return dic.Take(10);
         }
 
-        public IEnumerable<PositionResult> GetPositions(PositionQuery query)
+        public IEnumerable<PositionResultModel> GetPositions(PositionQueryModel query)
         {
             var positions = _positionRepository.Get(p => true, p => p.Sort,
                 query.Page, query.Size).ToArray();
-            return _mapper.Map<Position[], IEnumerable<PositionResult>>(positions);
+            return _mapper.Map<Position[], IEnumerable<PositionResultModel>>(positions);
         }
 
         public async Task<bool> UpdatePositionAsync(PositionViewModel model)

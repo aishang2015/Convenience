@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Convience.InMemoryCap\Convience.InMemoryCap.csproj" />
     <ProjectReference Include="..\Convience.PostgreSQLCap\Convience.PostgreSQLCap.csproj" />
+    <ProjectReference Include="..\Convience.SqlServerCap\Convience.SqlServerCap.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Convience.Fluentvalidation;
 using Convience.Jwtauthentication;
 using Convience.ManagentApi.Infrastructure;
-using Convience.Model.Models.AccountViewModels;
+using Convience.Model.Models.Account;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
 
@@ -62,7 +62,7 @@ namespace Convience.ManagentApi.Controllers
                 System.StringSplitOptions.RemoveEmptyEntries), CustomClaimTypes.RoleMenus);
 
             var irs = _menuService.GetIdentificationRoutes(menuIds.ToArray());
-            return Ok(new LoginResult
+            return Ok(new LoginResultModel
             {
                 Name = result.Item3.Name,
                 Avatar = result.Item3.Avatar,

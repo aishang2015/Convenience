@@ -18,7 +18,7 @@ namespace Convience.Service.WorkFlowManage
 {
     public interface IWorkFlowFlowService
     {
-        WorkFlowFlowResult GetWorkFlowFlow(int workflowId);
+        WorkFlowFlowResultModel GetWorkFlowFlow(int workflowId);
 
         Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel, string userName);
     }
@@ -92,16 +92,16 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public WorkFlowFlowResult GetWorkFlowFlow(int workflowId)
+        public WorkFlowFlowResultModel GetWorkFlowFlow(int workflowId)
         {
             var links = _linkRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
             var nodes = _nodeRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
             var conditions = _conditionRepository.Get(f => f.WorkFlowId == workflowId).ToArray();
-            return new WorkFlowFlowResult
+            return new WorkFlowFlowResultModel
             {
-                WorkFlowLinkResults = _mapper.Map<IEnumerable<WorkFlowLinkResult>>(links),
-                WorkFlowNodeResults = _mapper.Map<IEnumerable<WorkFlowNodeResult>>(nodes),
-                WorkFlowConditionResults = _mapper.Map<IEnumerable<WorkFlowConditionResult>>(conditions)
+                WorkFlowLinkResults = _mapper.Map<IEnumerable<WorkFlowLinkResultModel>>(links),
+                WorkFlowNodeResults = _mapper.Map<IEnumerable<WorkFlowNodeResultModel>>(nodes),
+                WorkFlowConditionResults = _mapper.Map<IEnumerable<WorkFlowConditionResultModel>>(conditions)
             };
         }
     }

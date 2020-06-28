@@ -31,7 +31,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpGet("list")]
         [Permission("workflowList")]
-        public IActionResult Get([FromQuery] WorkFlowQuery workflowQuery)
+        public IActionResult Get([FromQuery] WorkFlowQueryModel workflowQuery)
         {
             var result = _workflowService.GetWorkFlows(workflowQuery);
             return Ok(new

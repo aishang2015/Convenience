@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpGet("list")]
         [Permission("tenantList")]
-        public IActionResult Get([FromQuery]TenantQuery query)
+        public IActionResult Get([FromQuery] TenantQueryModel query)
         {
             return Ok(new
             {
@@ -35,7 +35,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpGet]
         [Permission("tenantGet")]
-        public async Task<IActionResult> GetDetail([FromQuery]Guid id)
+        public async Task<IActionResult> GetDetail([FromQuery] Guid id)
         {
             var result = await _tenantService.Get(id);
             return Ok(result);
@@ -43,7 +43,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpPost]
         [Permission("tenantAdd")]
-        public async Task<IActionResult> Add([FromBody]TenantViewModel model)
+        public async Task<IActionResult> Add([FromBody] TenantViewModel model)
         {
             await _tenantService.AddAsync(model);
             return Ok();
@@ -51,7 +51,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpPatch]
         [Permission("tenantUpdate")]
-        public async Task<IActionResult> Update([FromBody]TenantViewModel model)
+        public async Task<IActionResult> Update([FromBody] TenantViewModel model)
         {
             await _tenantService.UpdateAsync(model);
             return Ok();
@@ -59,7 +59,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpDelete]
         [Permission("tenantDelete")]
-        public async Task<IActionResult> Delete([FromQuery]Guid id)
+        public async Task<IActionResult> Delete([FromQuery] Guid id)
         {
             await _tenantService.RemoveAsync(id);
             return Ok();

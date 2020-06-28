@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Convience.InMemoryCap;
+using Convience.SqlServerCap;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Convience.CapMQ
@@ -22,6 +24,30 @@ namespace Convience.CapMQ
                             break;
                         case CapMessageQueryType.Kafka:
                             services.AddPostgreKafkaCap<TDbContext>(dbConnectionString, mqConnectionString);
+                            break;
+                    }
+                    break;
+
+                case CapDataBaseType.SqlServer:
+                    switch (mqType)
+                    {
+                        case CapMessageQueryType.RabbitMQ:
+                            services.AddSqlServerRabbitMQCap<TDbContext>(dbConnectionString, mqConnectionString);
+                            break;
+                        case CapMessageQueryType.Kafka:
+                            services.AddSqlServerKafkaCap<TDbContext>(dbConnectionString, mqConnectionString);
+                            break;
+                    }
+                    break;
+
+                case CapDataBaseType.InMemory:
+                    switch (mqType)
+                    {
+                        case CapMessageQueryType.RabbitMQ:
+                            services.AddInmemoryRabbitMQCap(mqConnectionString);
+                            break;
+                        case CapMessageQueryType.Kafka:
+                            services.AddInmemoryKafkaCap(mqConnectionString);
                             break;
                     }
                     break;

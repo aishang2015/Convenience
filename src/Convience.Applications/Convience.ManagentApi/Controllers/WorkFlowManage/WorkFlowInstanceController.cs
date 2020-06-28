@@ -61,7 +61,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpGet]
         [Permission("workFlowInstanceList")]
-        public IActionResult GetWorkFlowInstances([FromQuery] PageQuery query)
+        public IActionResult GetWorkFlowInstances([FromQuery] PageQueryModel query)
         {
             var result = _workFlowInstanceService.GetInstanceList(User.GetUserName(), query.Page, query.Size);
             return Ok(new
@@ -123,7 +123,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpPatch]
         [Permission("workFlowInstanceCancel")]
-        public async Task<IActionResult> CancelFlowInstance([FromBody]WorkFlowInstanceHandleViewModel vm)
+        public async Task<IActionResult> CancelFlowInstance([FromBody] WorkFlowInstanceHandleViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService.CancelFlowInstance(vm.WorkFlowInstanceId, User.GetUserName());
             if (!isSuccess)
@@ -138,7 +138,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         /// </summary>
         [HttpGet("handle")]
         [Permission("handledWorkFlowInstanceList")]
-        public IActionResult GetHandledWorkFlowInstances([FromQuery]PageQuery query)
+        public IActionResult GetHandledWorkFlowInstances([FromQuery] PageQueryModel query)
         {
             var result = _workFlowInstanceService.GetHandledInstanceList(User.GetUserName(), query.Page, query.Size);
             return Ok(new
@@ -150,7 +150,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPost("handle")]
         [Permission("handleWorkFlowInstanceApprove")]
-        public async Task<IActionResult> ApproveOrDisApproveNode([FromBody]WorkFlowInstanceHandleViewModel vm)
+        public async Task<IActionResult> ApproveOrDisApproveNode([FromBody] WorkFlowInstanceHandleViewModel vm)
         {
             var isSuccess = await _workFlowInstanceService.ApproveOrDisApproveNode(User.GetUserName(), vm);
             if (!isSuccess)

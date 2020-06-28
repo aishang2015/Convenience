@@ -20,9 +20,9 @@ namespace Convience.Service.WorkFlowManage
 {
     public interface IWorkFlowService
     {
-        Task<WorkFlowResult> GetByIdAsync(int id);
+        Task<WorkFlowResultModel> GetByIdAsync(int id);
 
-        (IEnumerable<WorkFlowResult>, int) GetWorkFlows(WorkFlowQuery query);
+        (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query);
 
         Task<bool> AddWorkFlowAsync(WorkFlowViewModel model, string userName);
 
@@ -98,13 +98,13 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public async Task<WorkFlowResult> GetByIdAsync(int id)
+        public async Task<WorkFlowResultModel> GetByIdAsync(int id)
         {
             var result = await _workFlowRepository.GetAsync(id);
-            return _mapper.Map<WorkFlowResult>(result);
+            return _mapper.Map<WorkFlowResultModel>(result);
         }
 
-        public (IEnumerable<WorkFlowResult>, int) GetWorkFlows(WorkFlowQuery query)
+        public (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query)
         {
             Expression<Func<WorkFlow, bool>> where = ExpressionExtension.TrueExpression<WorkFlow>()
                 .And(wf => wf.WorkFlowGroupId == query.WorkFlowGroupId)
@@ -114,7 +114,7 @@ namespace Convience.Service.WorkFlowManage
                 .OrderByDescending(w => w.CreatedTime)
                 .Skip((query.Page - 1) * query.Size).Take(query.Size).ToArray();
 
-            return (_mapper.Map<WorkFlow[], IEnumerable<WorkFlowResult>>(workFlowQuery), workFlowQuery.Count());
+            return (_mapper.Map<WorkFlow[], IEnumerable<WorkFlowResultModel>>(workFlowQuery), workFlowQuery.Count());
 
         }
 

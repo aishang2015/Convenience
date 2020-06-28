@@ -32,7 +32,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpGet("list")]
         [Permission("articleList")]
-        public IActionResult Get([FromQuery]ArticleQuery articleQuery)
+        public IActionResult Get([FromQuery] ArticleQueryModel articleQuery)
         {
             var result = _articleService.GetArticles(articleQuery);
             return Ok(new

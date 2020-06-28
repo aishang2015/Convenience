@@ -31,7 +31,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet("list")]
         [Permission("employeeList")]
-        public IActionResult Get([FromQuery]EmployeeQuery employeeQuery)
+        public IActionResult Get([FromQuery] EmployeeQueryModel employeeQuery)
         {
             var result = _employeeService.GetEmployees(employeeQuery);
             return Ok(new
@@ -43,7 +43,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPatch]
         [Permission("employeeUpdate")]
-        public async Task<IActionResult> Update([FromBody]EmployeeViewModel viewModel)
+        public async Task<IActionResult> Update([FromBody] EmployeeViewModel viewModel)
         {
             var isSuccess = await _employeeService.UpdateEmplyeeAsync(viewModel);
             if (!isSuccess)

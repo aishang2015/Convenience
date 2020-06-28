@@ -41,7 +41,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpGet("dic")]
         [Permission("workflowFormControlDic")]
-        public IActionResult GetWorkFlowFormControlDic([FromQuery]int WorkFlowId)
+        public IActionResult GetWorkFlowFormControlDic([FromQuery] int WorkFlowId)
         {
             return Ok(_workFlowFormService.GetWorkFlowFormControlDic(WorkFlowId));
         }

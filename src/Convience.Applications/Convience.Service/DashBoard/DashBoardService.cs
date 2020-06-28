@@ -1,13 +1,18 @@
-﻿using Convience.Entity.Entity;
+﻿using Convience.Entity.Data;
+using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.DashBoard;
-using Convience.Repository;
 
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.Service.DashBoard
 {
+    public interface IDashBoardService
+    {
+        Task<DashBoardResultModel> GetAsync();
+    }
+
     public class DashBoardService : IDashBoardService
     {
         private readonly IUserRepository _userRepository;
@@ -30,9 +35,9 @@ namespace Convience.Service.DashBoard
             _positionRespository = positionRespository;
         }
 
-        public async Task<DashBoardResult> GetAsync()
+        public async Task<DashBoardResultModel> GetAsync()
         {
-            return new DashBoardResult()
+            return new DashBoardResultModel()
             {
                 UserCount = _userRepository.GetUsers().Count(),
                 RoleCount = _roleRepository.GetRoles().Count(),

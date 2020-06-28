@@ -4,7 +4,6 @@ using Convience.Entity.Data;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
-using Convience.Repository;
 using Convience.Util.Extension;
 
 using System;
@@ -15,6 +14,27 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
 {
+    public interface IUserService
+    {
+        public IEnumerable<DicResultModel> GetUserDic(string name);
+
+        public (IEnumerable<UserResultModel>, int) GetUsers(UserQueryModel query);
+
+        public Task<UserResultModel> GetUserAsync(string Id);
+
+        public Task<string> AddUserAsync(UserViewModel model);
+
+        public Task<string> UpdateUserAsync(UserViewModel model);
+
+        public Task<string> RemoveUserAsync(string Id);
+
+        public Task<string> RemoveUserByNameAsync(string Name);
+
+        public Task<bool> SetUserPassword(string userName, string password);
+
+        public Task<bool> ResetUserPassword(string userName, string password);
+    }
+
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
@@ -72,17 +92,17 @@ namespace Convience.Service.SystemManage
             return string.Empty;
         }
 
-        public async Task<UserResult> GetUserAsync(string Id)
+        public async Task<UserResultModel> GetUserAsync(string Id)
         {
             var user = await _userRepository.GetUserByIdAsync(Id);
-            return _mapper.Map<UserResult>(user);
+            return _mapper.Map<UserResultModel>(user);
         }
 
-        public IEnumerable<DicModel> GetUserDic(string name)
+        public IEnumerable<DicResultModel> GetUserDic(string name)
         {
             var dic = from user in _userRepository.GetUsers()
                       where user.Name.Contains(name)
-                      select new DicModel
+                      select new DicResultModel
                       {
                           Key = user.Id.ToString(),
                           Value = user.Name,
@@ -90,7 +110,7 @@ namespace Convience.Service.SystemManage
             return dic.Take(10);
         }
 
-        public (IEnumerable<UserResult>, int) GetUsers(UserQuery query)
+        public (IEnumerable<UserResultModel>, int) GetUsers(UserQueryModel query)
         {
             Expression<Func<SystemUser, bool>> where = ExpressionExtension.TrueExpression<SystemUser>()
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
@@ -130,7 +150,7 @@ namespace Convience.Service.SystemManage
             var skip = query.Size * (query.Page - 1);
             count = userQuery.Where(where).Count();
             var users = userQuery.Where(where).Skip(skip).Take(query.Size).ToArray();
-            return (_mapper.Map<SystemUser[], IEnumerable<UserResult>>(users), count);
+            return (_mapper.Map<SystemUser[], IEnumerable<UserResultModel>>(users), count);
         }
 
         public async Task<string> RemoveUserAsync(string Id)

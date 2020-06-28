@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet()]
         [Permission("positionGet")]
-        public async Task<IActionResult> GetPosition([FromQuery]int id)
+        public async Task<IActionResult> GetPosition([FromQuery] int id)
         {
             var result = await _positionService.GetPositionAsync(id);
             return Ok(result);
@@ -32,7 +32,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet("dic")]
         [Permission("positionDic")]
-        public IActionResult GetPositionDic([FromQuery]string name)
+        public IActionResult GetPositionDic([FromQuery] string name)
         {
             return Ok(_positionService.GetPositionDic(name));
         }
@@ -46,7 +46,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpGet("list")]
         [Permission("positionList")]
-        public IActionResult Get([FromQuery]PositionQuery positionQuery)
+        public IActionResult Get([FromQuery] PositionQueryModel positionQuery)
         {
             return Ok(new
             {
@@ -57,7 +57,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpDelete]
         [Permission("positionDelete")]
-        public async Task<IActionResult> Delete([FromQuery]int id)
+        public async Task<IActionResult> Delete([FromQuery] int id)
         {
             var isSuccess = await _positionService.DeletePositionAsync(id);
             if (!isSuccess)

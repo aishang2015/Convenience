@@ -11,6 +11,19 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.ContentManage
 {
+    public interface IColumnService
+    {
+        Task<ColumnResultModel> GetByIdAsync(int id);
+
+        IQueryable<ColumnResultModel> GetAllColumn();
+
+        Task<bool> AddColumnAsync(ColumnViewModel model);
+
+        Task<bool> UpdateColumnAsync(ColumnViewModel model);
+
+        Task<bool> DeleteColumnAsync(int id);
+    }
+
     public class ColumnService : IColumnService
     {
         private readonly IRepository<Column> _columnRepository;
@@ -91,7 +104,7 @@ namespace Convience.Service.ContentManage
             }
         }
 
-        public IQueryable<ColumnResult> GetAllColumn()
+        public IQueryable<ColumnResultModel> GetAllColumn()
         {
             var query = from column in _columnRepository.Get()
                         join tree in _columnTreeRepository.Get()
@@ -99,7 +112,7 @@ namespace Convience.Service.ContentManage
                         into e
                         from rtree in e.DefaultIfEmpty()
                         orderby column.Sort
-                        select new ColumnResult
+                        select new ColumnResultModel
                         {
                             Id = column.Id,
                             UpId = rtree.Ancestor.ToString(),
@@ -109,10 +122,10 @@ namespace Convience.Service.ContentManage
             return query;
         }
 
-        public async Task<ColumnResult> GetByIdAsync(int id)
+        public async Task<ColumnResultModel> GetByIdAsync(int id)
         {
             var column = await _columnRepository.GetAsync(id);
-            return _mapper.Map<ColumnResult>(column);
+            return _mapper.Map<ColumnResultModel>(column);
         }
 
         public async Task<bool> UpdateColumnAsync(ColumnViewModel model)

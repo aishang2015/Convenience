@@ -5,7 +5,6 @@ using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models.SystemManage;
-using Convience.Repository;
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,26 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
 {
+
+    public interface IRoleService
+    {
+        IEnumerable<RoleResultModel> GetRoles(int page, int size, string name);
+
+        Task<RoleResultModel> GetRole(string id);
+
+        IEnumerable<RoleResultModel> GetRoles();
+
+        Task<string> RemoveRole(string roleName);
+
+        Task<string> AddRole(RoleViewModel model);
+
+        Task<string> Update(RoleViewModel model);
+
+        int Count();
+
+        IEnumerable<string> GetRoleClaimValue(string[] roleIds, string claimType);
+    }
+
     public class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
@@ -87,10 +106,10 @@ namespace Convience.Service.SystemManage
             return _roleRepository.GetRoles().Count();
         }
 
-        public async Task<RoleResult> GetRole(string id)
+        public async Task<RoleResultModel> GetRole(string id)
         {
             var role = await _roleRepository.GetRoleById(id);
-            var roleResult = _mapper.Map<RoleResult>(role);
+            var roleResult = _mapper.Map<RoleResultModel>(role);
             var menus = from roleclaim in _systemIdentityDbContext.RoleClaims
                         where roleclaim.RoleId == role.Id
                             && roleclaim.ClaimType == CustomClaimTypes.RoleMenusFront
@@ -99,18 +118,18 @@ namespace Convience.Service.SystemManage
             return roleResult;
         }
 
-        public IEnumerable<RoleResult> GetRoles(int page, int size, string name)
+        public IEnumerable<RoleResultModel> GetRoles(int page, int size, string name)
         {
             var roles = string.IsNullOrEmpty(name) ?
                 _roleRepository.GetRoles(page, size).ToArray() :
                 _roleRepository.GetRoles(role => role.Name.Contains(name), page, size).ToArray();
-            return _mapper.Map<SystemRole[], IEnumerable<RoleResult>>(roles);
+            return _mapper.Map<SystemRole[], IEnumerable<RoleResultModel>>(roles);
         }
 
-        public IEnumerable<RoleResult> GetRoles()
+        public IEnumerable<RoleResultModel> GetRoles()
         {
             var roles = _roleRepository.GetRoles();
-            return _mapper.Map<SystemRole[], IEnumerable<RoleResult>>(roles.ToArray());
+            return _mapper.Map<SystemRole[], IEnumerable<RoleResultModel>>(roles.ToArray());
         }
 
         public async Task<string> RemoveRole(string roleName)

@@ -2,7 +2,6 @@
 using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models.GroupManage;
-using Convience.Repository;
 using Convience.Util.Extension;
 
 using System;
@@ -12,6 +11,15 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.GroupManage
 {
+    public interface IEmployeeService
+    {
+        EmployeeResultModel GetEmployeeById(int id);
+
+        (IEnumerable<EmployeeResultModel>, int) GetEmployees(EmployeeQueryModel query);
+
+        Task<bool> UpdateEmplyeeAsync(EmployeeViewModel viewModel);
+    }
+
     public class EmployeeService : IEmployeeService
     {
         private readonly IUserRepository _userRepository;
@@ -25,7 +33,7 @@ namespace Convience.Service.GroupManage
             _unitOfWork = unitOfWork;
         }
 
-        public EmployeeResult GetEmployeeById(int id)
+        public EmployeeResultModel GetEmployeeById(int id)
         {
             var users = from u in _userRepository.GetUsers()
                         let pquery = from uc in _userRepository.GetUserClaims()
@@ -36,7 +44,7 @@ namespace Convience.Service.GroupManage
                                      select uc.ClaimValue
                         where u.Id == id
                         orderby u.Id descending
-                        select new EmployeeResult
+                        select new EmployeeResultModel
                         {
                             Id = u.Id,
                             PhoneNumber = u.PhoneNumber,
@@ -49,7 +57,7 @@ namespace Convience.Service.GroupManage
             return users.FirstOrDefault();
         }
 
-        public (IEnumerable<EmployeeResult>, int) GetEmployees(EmployeeQuery query)
+        public (IEnumerable<EmployeeResultModel>, int) GetEmployees(EmployeeQueryModel query)
         {
             var where = ExpressionExtension.TrueExpression<SystemUser>()
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
@@ -82,7 +90,7 @@ namespace Convience.Service.GroupManage
                                      where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment
                                      select uc.ClaimValue
                         orderby u.Id descending
-                        select new EmployeeResult
+                        select new EmployeeResultModel
                         {
                             Id = u.Id,
                             PhoneNumber = u.PhoneNumber,

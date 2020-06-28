@@ -13,6 +13,26 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.ContentManage
 {
+    public interface IDicDataService
+    {
+        Task<DicDataResultModel> GetByIdAsync(int id);
+
+        /// <summary>
+        /// 根据字典类型编码取得对应字典数据
+        /// </summary>
+        /// <param name="dicTypeCode">字典类型编码</param>
+        /// <returns>字典数据</returns>
+        IEnumerable<DicResultModel> GetDicDataDic(string dicTypeCode);
+
+        IEnumerable<DicDataResultModel> GetByDicTypeIdAsync(int dicTypeId);
+
+        Task<bool> AddDicDataAsync(DicDataViewModel model);
+
+        Task<bool> UpdateDicDataAsync(DicDataViewModel model);
+
+        Task<bool> DeleteDicDataAsync(int id);
+    }
+
     public class DicDataService : IDicDataService
     {
         private readonly IRepository<DicType> _dictypeRepository;
@@ -35,24 +55,24 @@ namespace Convience.Service.ContentManage
             _mapper = mapper;
         }
 
-        public async Task<DicDataResult> GetByIdAsync(int id)
+        public async Task<DicDataResultModel> GetByIdAsync(int id)
         {
             var dicdata = await _dicdataRepository.GetAsync(id);
-            return _mapper.Map<DicDataResult>(dicdata);
+            return _mapper.Map<DicDataResultModel>(dicdata);
         }
 
-        public IEnumerable<DicDataResult> GetByDicTypeIdAsync(int dicTypeId)
+        public IEnumerable<DicDataResultModel> GetByDicTypeIdAsync(int dicTypeId)
         {
             var result = _dicdataRepository.Get(dicData => dicData.DicTypeId == dicTypeId)
                 .OrderBy(dicdata => dicdata.Sort);
-            return _mapper.Map<IQueryable<DicData>, IEnumerable<DicDataResult>>(result);
+            return _mapper.Map<IQueryable<DicData>, IEnumerable<DicDataResultModel>>(result);
         }
 
-        public IEnumerable<DicModel> GetDicDataDic(string dicTypeCode)
+        public IEnumerable<DicResultModel> GetDicDataDic(string dicTypeCode)
         {
             var dictype = _dictypeRepository.Get().Where(dicType => dicType.Code == dicTypeCode)
                 .Include(dicType => dicType.DicDatas).FirstOrDefault();
-            return dictype.DicDatas.Select(dicData => new DicModel
+            return dictype.DicDatas.Select(dicData => new DicResultModel
             {
                 Key = dicData.Id.ToString(),
                 Value = dicData.Name

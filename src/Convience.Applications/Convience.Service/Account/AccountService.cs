@@ -1,8 +1,7 @@
 ﻿
 using Convience.Entity.Data;
 using Convience.Jwtauthentication;
-using Convience.Model.Models.AccountViewModels;
-using Convience.Repository;
+using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
 using EasyCaching.Core;
 
@@ -14,6 +13,19 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.Account
 {
+    public interface IAccountService
+    {
+        public Task<CaptchaResultModel> GetCaptcha();
+
+        public Task<string> ValidateCaptcha(string captchaKey, string captchaValue);
+
+        public Task<bool> IsStopUsing(string userName);
+
+        public Task<(bool, string, SystemUser)> ValidateCredentials(string userName, string password);
+
+        public Task<bool> ChangePassword(string userName, string oldPassword, string newPassword);
+    }
+
     public class AccountService : IAccountService
     {
         private readonly IUserRepository _userRepository;
@@ -81,13 +93,13 @@ namespace Convience.Service.Account
 
         }
 
-        public async Task<CaptchaResult> GetCaptcha()
+        public async Task<CaptchaResultModel> GetCaptcha()
         {
             var randomValue = CaptchaHelper.GetValidateCode(5);
             var imageData = CaptchaHelper.CreateBase64Image(randomValue);
             var key = Guid.NewGuid().ToString();
             await _cachingProvider.SetAsync(key, randomValue, TimeSpan.FromMinutes(2));
-            return new CaptchaResult
+            return new CaptchaResultModel
             {
                 CaptchaKey = key,
                 CaptchaData = imageData

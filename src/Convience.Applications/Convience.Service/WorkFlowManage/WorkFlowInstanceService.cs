@@ -6,11 +6,8 @@ using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Jwtauthentication;
 using Convience.Model.Models.WorkFlowManage;
-using Convience.Repository;
 
 using DnsClient.Internal;
-
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -32,24 +29,24 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 用户发起的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResult>, int) GetInstanceList(string account, int page, int size);
+        (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(string account, int page, int size);
 
         /// <summary>
         /// 需要用户处理的的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList(string account, int page, int size);
+        (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(string account, int page, int size);
 
         /// <summary>
         /// 取得工作流内容
         /// </summary>
-        IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId);
+        IEnumerable<WorkFlowInstanceValueResultModel> GetWorkFlowInstanceValues(int workFlowInstanceId);
 
         /// <summary>
         /// 取得工作流处理情况
         /// </summary>
         /// <param name="workFlowInstanceId"></param>
         /// <returns></returns>
-        IEnumerable<WorkflowinstanceRouteResult> GetWorkFlowInstanceRoutes(int workFlowInstanceId);
+        IEnumerable<WorkflowinstanceRouteResultModel> GetWorkFlowInstanceRoutes(int workFlowInstanceId);
 
         /// <summary>
         /// 保存工作流内容
@@ -186,14 +183,14 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public (IEnumerable<WorkFlowInstanceResult>, int) GetInstanceList(string account, int page, int size)
+        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(string account, int page, int size)
         {
             var query = _instanceRepository.Get(i => i.CreatedUserAccount == account);
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
-            return (_mapper.Map<IEnumerable<WorkFlowInstanceResult>>(result.ToArray()), query.Count());
+            return (_mapper.Map<IEnumerable<WorkFlowInstanceResultModel>>(result.ToArray()), query.Count());
         }
 
-        public (IEnumerable<WorkFlowInstanceResult>, int) GetHandledInstanceList(string account, int page, int size)
+        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(string account, int page, int size)
         {
             // 根据用户信息查找需要处理的实例
             var query = (from route in _instanceRouteRepository.Get()
@@ -205,14 +202,14 @@ namespace Convience.Service.WorkFlowManage
 
             // 取得结果
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
-            return (_mapper.Map<IEnumerable<WorkFlowInstanceResult>>(result.ToArray()), query.Count());
+            return (_mapper.Map<IEnumerable<WorkFlowInstanceResultModel>>(result.ToArray()), query.Count());
 
         }
 
-        public IEnumerable<WorkFlowInstanceValueResult> GetWorkFlowInstanceValues(int workFlowInstanceId)
+        public IEnumerable<WorkFlowInstanceValueResultModel> GetWorkFlowInstanceValues(int workFlowInstanceId)
         {
             var result = _instanceValueRepository.Get(v => v.WorkFlowInstanceId == workFlowInstanceId).ToList();
-            return _mapper.Map<IEnumerable<WorkFlowInstanceValueResult>>(result);
+            return _mapper.Map<IEnumerable<WorkFlowInstanceValueResultModel>>(result);
         }
 
         public async Task<bool> SaveWorkFlowInstanceValues(int workFlowInstanceId, IEnumerable<WorkFlowInstanceValueViewModel> values)
@@ -606,9 +603,9 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 取得各个节点情况
         /// </summary>
-        public IEnumerable<WorkflowinstanceRouteResult> GetWorkFlowInstanceRoutes(int workFlowInstanceId)
+        public IEnumerable<WorkflowinstanceRouteResultModel> GetWorkFlowInstanceRoutes(int workFlowInstanceId)
         {
-            return _mapper.Map<IEnumerable<WorkflowinstanceRouteResult>>(
+            return _mapper.Map<IEnumerable<WorkflowinstanceRouteResultModel>>(
                 _instanceRouteRepository.Get(ir => ir.WorkFlowInstanceId == workFlowInstanceId).ToList());
         }
     }

@@ -12,6 +12,23 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.ContentManage
 {
+    public interface IDicTypeService
+    {
+        Task<DicTypeResultModel> GetByIdAsync(int id);
+
+        IEnumerable<DicTypeResultModel> GetDicTypes();
+
+        bool HasSameCode(string code);
+
+        bool HasSameCode(int id, string code);
+
+        Task<bool> AddDicTypeAsync(DicTypeViewModel model);
+
+        Task<bool> UpdateDicTypeAsync(DicTypeViewModel model);
+
+        Task<bool> DeleteDicTypeAsync(int id);
+    }
+
     public class DicTypeService : IDicTypeService
     {
         private readonly IRepository<DicType> _dictypeRepository;
@@ -29,10 +46,10 @@ namespace Convience.Service.ContentManage
             _mapper = mapper;
         }
 
-        public async Task<DicTypeResult> GetByIdAsync(int id)
+        public async Task<DicTypeResultModel> GetByIdAsync(int id)
         {
             var dictype = await _dictypeRepository.GetAsync(id);
-            return _mapper.Map<DicTypeResult>(dictype);
+            return _mapper.Map<DicTypeResultModel>(dictype);
         }
 
         public async Task<bool> AddDicTypeAsync(DicTypeViewModel model)
@@ -79,10 +96,10 @@ namespace Convience.Service.ContentManage
             }
         }
 
-        public IEnumerable<DicTypeResult> GetDicTypes()
+        public IEnumerable<DicTypeResultModel> GetDicTypes()
         {
             var dicTypeQuery = _dictypeRepository.Get().OrderBy(dicType => dicType.Sort);
-            return _mapper.Map<IQueryable<DicType>, IEnumerable<DicTypeResult>>(dicTypeQuery);
+            return _mapper.Map<IQueryable<DicType>, IEnumerable<DicTypeResultModel>>(dicTypeQuery);
         }
 
         public bool HasSameCode(string code)

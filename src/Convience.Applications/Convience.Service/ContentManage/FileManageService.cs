@@ -8,6 +8,22 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.ContentManage
 {
+    public interface IFileManageService
+    {
+        public Task<string> UploadAsync(FileUploadViewModel viewModel);
+
+        public Task<IEnumerable<FileResultModel>> GetContentsAsync(FileQueryModel query);
+
+        public Task<bool> DeleteFileAsync(FileViewModel viewModel);
+
+        public Task<Stream> DownloadAsync(FileViewModel viewModel);
+
+        public Task<string> MakeDirectoryAsync(FileViewModel viewModel);
+
+        public Task<bool> DeleteDirectoryAsync(FileViewModel viewModel);
+
+    }
+
     public class FileManageService : IFileManageService
     {
 
@@ -50,12 +66,12 @@ namespace Convience.Service.ContentManage
             return await _fileStore.GetFileStreamAsync(viewModel.Path);
         }
 
-        public async Task<IEnumerable<FileResult>> GetContentsAsync(FileQuery query)
+        public async Task<IEnumerable<FileResultModel>> GetContentsAsync(FileQueryModel query)
         {
             var contents = await _fileStore.GetDirectoryContentAsync(query.Directory);
             var result = from content in contents
                          orderby content.IsDirectory descending
-                         select new FileResult
+                         select new FileResultModel
                          {
                              FileName = content.Name,
                              Directory = content.DirectoryPath,
@@ -68,7 +84,7 @@ namespace Convience.Service.ContentManage
             return result.Skip(skip).Take(query.Size);
         }
 
-        public async Task<string> UploadAsync(FileUploadModel viewModel)
+        public async Task<string> UploadAsync(FileUploadViewModel viewModel)
         {
             foreach (var file in viewModel.Files)
             {
