@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Convience.Jwtauthentication
+namespace Convience.JwtAuthentication
 {
     public static class JwtExtension
     {

@@ -4,10 +4,9 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.Model.Models.WorkFlowManage;
 
-using DnsClient.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;

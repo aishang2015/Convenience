@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 
-namespace Convience.Jwtauthentication.AuthorizeAttributes
+namespace Convience.JwtAuthentication.AuthorizeAttributes
 {
     public class MemberAuthorizeAttribute : AuthorizeAttribute
     {

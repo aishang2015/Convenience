@@ -7,11 +7,11 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
-using Convience.Service;
 using Convience.Swashbuckle;
+using Convience.Util.Extension;
 using Convience.Util.Middlewares;
 using Hangfire;
 
@@ -50,12 +50,12 @@ namespace Convience.ManagentApi
                 .AddPermissionAuthorization()
                 .AddCorsPolicy()
                 .AddSwashbuckle()
-                .AddServices()
                 .AddAutoMapper()
                 .AddPostgreHangFire(dbConnectionString)
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
                 .AddMemoryCache()
-                .AddMongoDBFileManage(mdbConnectionConfig);
+                .AddMongoDBFileManage(mdbConnectionConfig)
+                .AddServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,6 +138,12 @@ namespace Convience.ManagentApi
         public static IServiceCollection AddPostgreHangFire(this IServiceCollection services, string connectionString)
         {
             services.AddHF(HangFireDataBaseType.PostgreSQL, connectionString);
+            return services;
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddScopedBatch(t => t.Name.EndsWith("Service") && t.IsInterface);
             return services;
         }
 

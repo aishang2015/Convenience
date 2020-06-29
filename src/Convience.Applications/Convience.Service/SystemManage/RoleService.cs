@@ -3,7 +3,7 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.Model.Models.SystemManage;
 
 using System;

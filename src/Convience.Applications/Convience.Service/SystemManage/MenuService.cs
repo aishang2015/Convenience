@@ -4,7 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.SystemManage;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +28,8 @@ namespace Convience.Service.SystemManage
 
     public class MenuService : IMenuService
     {
+        private readonly ILogger<MenuService> _logger;
+
         private readonly IRepository<Menu> _menuRepository;
 
         private readonly IRepository<MenuTree> _menuTreeRepository;
@@ -36,12 +38,14 @@ namespace Convience.Service.SystemManage
 
         private IMapper _mapper;
 
-
-        public MenuService(IRepository<Menu> menuRepository,
+        public MenuService(
+            ILogger<MenuService> logger,
+            IRepository<Menu> menuRepository,
             IRepository<MenuTree> menuTreeRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _logger = logger;
             _menuRepository = menuRepository;
             _menuTreeRepository = menuTreeRepository;
             _unitOfWork = unitOfWork;
@@ -83,8 +87,10 @@ namespace Convience.Service.SystemManage
                 await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
             }
             return false;
@@ -101,8 +107,10 @@ namespace Convience.Service.SystemManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -138,8 +146,10 @@ namespace Convience.Service.SystemManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

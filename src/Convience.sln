@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Util", "Convience
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Dependency", "Convience.FrameWork\Convience.Dependency\Convience.Dependency.csproj", "{2857DB29-DB19-4DCA-9F24-518B316EFE8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Jwtauthentication", "Convience.FrameWork\Convience.Jwtauthentication\Convience.Jwtauthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.JwtAuthentication", "Convience.FrameWork\Convience.Jwtauthentication\Convience.JwtAuthentication.csproj", "{61CCDE66-1638-49E0-BCB4-A15396BCC2EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Convience.Taskscheduling", "Convience.Taskscheduling", "{53B8A136-289D-4861-87C9-00078E217FE6}"
 EndProject

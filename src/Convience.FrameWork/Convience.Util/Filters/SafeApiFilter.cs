@@ -1,5 +1,4 @@
 ﻿using Convience.Util.Helpers;
-using DnsClient.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;

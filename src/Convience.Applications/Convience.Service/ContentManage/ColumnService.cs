@@ -4,7 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.ContentManage;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +26,8 @@ namespace Convience.Service.ContentManage
 
     public class ColumnService : IColumnService
     {
+        private readonly ILogger<ColumnService> _logger;
+
         private readonly IRepository<Column> _columnRepository;
 
         private readonly IRepository<ColumnTree> _columnTreeRepository;
@@ -34,11 +36,14 @@ namespace Convience.Service.ContentManage
 
         private readonly IMapper _mapper;
 
-        public ColumnService(IRepository<Column> columnRepository,
+        public ColumnService(
+            ILogger<ColumnService> logger,
+            IRepository<Column> columnRepository,
             IRepository<ColumnTree> columnTreeRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _logger = logger;
             _columnRepository = columnRepository;
             _columnTreeRepository = columnTreeRepository;
             _unitOfWork = unitOfWork;
@@ -80,8 +85,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
             }
             return false;
@@ -98,8 +105,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -137,8 +146,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

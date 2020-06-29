@@ -17,7 +17,7 @@
     <ProjectReference Include="..\Convience.Filestorage\Convience.Filestorage.Filesystem\Convience.Filestorage.Filesystem.csproj" />
     <ProjectReference Include="..\Convience.Filestorage\Convience.Filestorage.MongoDB\Convience.Filestorage.MongoDB.csproj" />
     <ProjectReference Include="..\Convience.Fluentvalidation\Convience.Fluentvalidation.csproj" />
-    <ProjectReference Include="..\Convience.Jwtauthentication\Convience.Jwtauthentication.csproj" />
+    <ProjectReference Include="..\Convience.Jwtauthentication\Convience.JwtAuthentication.csproj" />
     <ProjectReference Include="..\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj" />
     <ProjectReference Include="..\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj" />
     <ProjectReference Include="..\Convience.Swashbuckle\Convience.Swashbuckle.csproj" />

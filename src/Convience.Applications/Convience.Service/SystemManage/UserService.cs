@@ -5,7 +5,7 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +37,8 @@ namespace Convience.Service.SystemManage
 
     public class UserService : IUserService
     {
+        private readonly ILogger<UserService> _logger;
+
         private readonly IUserRepository _userRepository;
 
         private readonly IRoleRepository _roleRepository;
@@ -46,11 +48,13 @@ namespace Convience.Service.SystemManage
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         public UserService(
+            ILogger<UserService> logger,
             IUserRepository userRepository,
             IRoleRepository roleRepository,
             IMapper mapper,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork)
         {
+            _logger = logger;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
             _mapper = mapper;
@@ -84,8 +88,10 @@ namespace Convience.Service.SystemManage
                 }
                 await _unitOfWork.CommitAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
             }
 
@@ -172,8 +178,10 @@ namespace Convience.Service.SystemManage
                 }
                 await _unitOfWork.CommitAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
             }
             return string.Empty;
@@ -198,8 +206,10 @@ namespace Convience.Service.SystemManage
                 }
                 await _unitOfWork.CommitAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
             }
 
@@ -265,8 +275,10 @@ namespace Convience.Service.SystemManage
                     await _unitOfWork.CommitAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
                 return "用户更新失败，请练习管理员！";
             }

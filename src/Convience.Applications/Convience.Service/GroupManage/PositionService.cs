@@ -3,10 +3,10 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +35,8 @@ namespace Convience.Service.GroupManage
 
     public class PositionService : IPositionService
     {
+        private readonly ILogger<PositionService> _logger;
+
         private readonly IRepository<Position> _positionRepository;
 
         private readonly IUserRepository _userRepository;
@@ -43,11 +45,14 @@ namespace Convience.Service.GroupManage
 
         private readonly IMapper _mapper;
 
-        public PositionService(IRepository<Position> positionRepository,
+        public PositionService(
+            ILogger<PositionService> logger,
+            IRepository<Position> positionRepository,
             IUserRepository userRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _logger = logger;
             _positionRepository = positionRepository;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
@@ -63,8 +68,10 @@ namespace Convience.Service.GroupManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -89,8 +96,10 @@ namespace Convience.Service.GroupManage
                 await _unitOfWork.CommitAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 await _unitOfWork.RollBackAsync();
                 return false;
             }
@@ -136,8 +145,10 @@ namespace Convience.Service.GroupManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

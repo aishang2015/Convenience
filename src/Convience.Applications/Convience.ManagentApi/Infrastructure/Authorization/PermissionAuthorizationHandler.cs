@@ -1,4 +1,4 @@
-﻿using Convience.Jwtauthentication;
+﻿using Convience.JwtAuthentication;
 using Convience.Service.SystemManage;
 
 using Microsoft.AspNetCore.Authorization;

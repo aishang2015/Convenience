@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace Convience.Jwtauthentication
+namespace Convience.JwtAuthentication
 {
     public class JwtOption
     {

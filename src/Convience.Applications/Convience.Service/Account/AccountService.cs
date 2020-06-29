@@ -1,6 +1,6 @@
 ﻿
 using Convience.Entity.Data;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
 using EasyCaching.Core;

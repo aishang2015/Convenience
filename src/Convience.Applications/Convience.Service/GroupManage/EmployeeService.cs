@@ -1,9 +1,9 @@
 ﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Repositories;
-using Convience.Jwtauthentication;
+using Convience.JwtAuthentication;
 using Convience.Model.Models.GroupManage;
 using Convience.Util.Extension;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,13 +22,18 @@ namespace Convience.Service.GroupManage
 
     public class EmployeeService : IEmployeeService
     {
+        private readonly ILogger<EmployeeService> _logger;
+
         private readonly IUserRepository _userRepository;
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
-        public EmployeeService(IUserRepository userRepository,
+        public EmployeeService(
+            ILogger<EmployeeService> logger,
+            IUserRepository userRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork)
         {
+            _logger = logger;
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
@@ -120,8 +125,10 @@ namespace Convience.Service.GroupManage
 
                     await _unitOfWork.CommitAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
                     await _unitOfWork.RollBackAsync();
                     return false;
                 }

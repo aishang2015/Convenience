@@ -6,6 +6,7 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.ContentManage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace Convience.Service.ContentManage
 
     public class DicDataService : IDicDataService
     {
+        private readonly ILogger<DicDataService> _logger;
+
         private readonly IRepository<DicType> _dictypeRepository;
 
         private readonly IRepository<DicData> _dicdataRepository;
@@ -44,11 +47,13 @@ namespace Convience.Service.ContentManage
         private readonly IMapper _mapper;
 
         public DicDataService(
+            ILogger<DicDataService> logger,
             IRepository<DicType> dictypeRepository,
             IRepository<DicData> dicdataRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _logger = logger;
             _dictypeRepository = dictypeRepository;
             _dicdataRepository = dicdataRepository;
             _unitOfWork = unitOfWork;
@@ -88,8 +93,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -102,8 +109,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -117,8 +126,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

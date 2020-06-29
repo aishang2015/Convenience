@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Convience.Jwtauthentication
+namespace Convience.JwtAuthentication
 {
     public interface IJwtFactory
     {

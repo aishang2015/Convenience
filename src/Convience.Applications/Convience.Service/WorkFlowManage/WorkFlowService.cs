@@ -6,8 +6,6 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Util.Extension;
 
-using DnsClient.Internal;
-
 using Microsoft.Extensions.Logging;
 
 using System;
@@ -48,7 +46,8 @@ namespace Convience.Service.WorkFlowManage
 
         private IMapper _mapper;
 
-        public WorkFlowService(ILogger<WorkFlowService> logger,
+        public WorkFlowService(
+            ILogger<WorkFlowService> logger,
             IRepository<WorkFlow> workFlowRepository,
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
@@ -78,8 +77,10 @@ namespace Convience.Service.WorkFlowManage
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -92,8 +93,10 @@ namespace Convience.Service.WorkFlowManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -193,8 +196,10 @@ namespace Convience.Service.WorkFlowManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

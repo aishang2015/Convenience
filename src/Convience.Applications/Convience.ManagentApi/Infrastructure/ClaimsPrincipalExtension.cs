@@ -1,5 +1,4 @@
-﻿using Convience.Jwtauthentication;
-
+﻿using Convience.JwtAuthentication;
 using System.Linq;
 using System.Security.Claims;
 

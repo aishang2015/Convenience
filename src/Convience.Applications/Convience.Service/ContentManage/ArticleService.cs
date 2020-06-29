@@ -5,7 +5,7 @@ using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.ContentManage;
 using Convience.Util.Extension;
-
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +30,8 @@ namespace Convience.Service.ContentManage
 
     public class ArticleService : IArticleService
     {
+        private readonly ILogger<ArticleService> _logger;
+
         private readonly IRepository<Article> _articleRepository;
 
         private readonly IRepository<Column> _columnRepository;
@@ -38,11 +40,14 @@ namespace Convience.Service.ContentManage
 
         private readonly IMapper _mapper;
 
-        public ArticleService(IRepository<Article> articleRepository,
+        public ArticleService(
+            ILogger<ArticleService> logger,
+            IRepository<Article> articleRepository,
             IRepository<Column> columnRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
+            _logger = logger;
             _articleRepository = articleRepository;
             _columnRepository = columnRepository;
             _unitOfWork = unitOfWork;
@@ -58,8 +63,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -72,8 +79,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }
@@ -120,8 +129,10 @@ namespace Convience.Service.ContentManage
                 await _unitOfWork.SaveAsync();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError(e.Message);
+                _logger.LogError(e.StackTrace);
                 return false;
             }
         }

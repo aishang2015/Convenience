@@ -1,9 +1,8 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Convience.Jwtauthentication
+namespace Convience.JwtAuthentication
 {
     public class JwtFactory : IJwtFactory
     {
