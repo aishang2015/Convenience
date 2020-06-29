@@ -1,0 +1,160 @@
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { EntityControl } from '../model/entityControl';
+import { NzMessageService } from 'ng-zorro-antd';
+import { CodeService } from 'src/app/business/code.service';
+import { saveAs } from 'file-saver';
+import * as JSZip from 'jszip';
+
+@Component({
+  selector: 'app-code-generator',
+  templateUrl: './code-generator.component.html',
+  styleUrls: ['./code-generator.component.scss']
+})
+export class CodeGeneratorComponent implements OnInit {
+
+  editForm: FormGroup;
+
+  controls: EntityControl[] = [];
+
+  currentIndex = 0;
+
+  radioValue = 0;
+
+  radioList: { name: string; value: number; }[] = [];
+
+  // code: {
+  //   bentity?: string; 
+  //   bconfig?: string; 
+  //   bms?: string; 
+  //   bvmv?: string; 
+  //   bqv?: string;
+  //   bservice?: string; 
+  //   bcontroller?: string; 
+  //   fmodel?: string; 
+  //   fservice?: string; 
+  //   fhtml?: string; 
+  //   fts?: string;
+  // } = {};
+  // codeKeys: string[] = ['bentity', 'bconfig', 'bms', 'bvmv', 'bqv', 'bservice', 'bcontroller',
+  //   'fmodel', 'fservice', 'fhtml', 'fts'];
+  code: string[] = [];
+
+  fileNameList: string[] = [];
+
+  editorOptions = { theme: 'vs-dark', language: 'csharp' };
+
+  editCode = '';
+
+  constructor(private formBuilder: FormBuilder,
+    private messageService: NzMessageService,
+    private codeService: CodeService) { }
+
+  ngOnInit(): void {
+    this.editForm = this.formBuilder.group({
+      entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
+      databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
+    });
+  }
+
+  removeField(control) {
+    const index = this.controls.indexOf(control);
+    this.controls.splice(index, 1);
+    this.editForm.removeControl(control.property);
+    this.editForm.removeControl(control.type);
+    this.editForm.removeControl(control.length);
+    this.editForm.removeControl(control.isRequired);
+  }
+
+  addField() {
+    const id = this.controls.length == 0 ? 1 : this.controls[this.controls.length - 1].id + 1;
+    const newControl = new EntityControl(id, `property${id}`, `type${id}`, `length${id}`, `isRequired${id}`);
+    this.controls.push(newControl);
+    this.editForm.addControl(newControl.property, new FormControl(null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]));
+    this.editForm.addControl(newControl.type, new FormControl(null, [Validators.required]));
+    this.editForm.addControl(newControl.length, new FormControl(null));
+    this.editForm.addControl(newControl.isRequired, new FormControl(null));
+  }
+
+  submitEdit() {
+    for (const i in this.editForm.controls) {
+      this.editForm.controls[i].markAsDirty();
+      this.editForm.controls[i].updateValueAndValidity();
+    }
+    if (this.editForm.valid) {
+      if (this.controls.length == 0) {
+        this.messageService.error("至少要有一个字段!");
+        return;
+      }
+      this.makeCodes();
+    }
+  }
+
+  makeCodes() {
+
+    this.fileNameList = this.codeService.getFileNameList(this.editForm.value['entityName']);
+    this.radioList = [];
+    this.fileNameList.forEach(element => {
+      this.radioList.push({ name: element, value: this.radioList.length });
+    });
+
+    this.currentIndex = 1;
+    let properties = [];
+    this.controls.forEach(control => {
+      properties.push({
+        type: this.editForm.value[control.type],
+        property: this.editForm.value[control.property],
+        isRequired: this.editForm.value[control.isRequired],
+        length: this.editForm.value[control.length]
+      })
+    });
+
+    this.code[0] = this.codeService.getBackEntity(this.editForm.value['entityName'], this.editForm.value['databaseContext'], properties);
+    this.code[1] = this.codeService.getBackEntityConfig(this.editForm.value['entityName'], properties);
+    this.code[2] = this.codeService.getBackModels(this.editForm.value['entityName'], properties);
+    this.code[3] = this.codeService.getBackViewModelValidator(this.editForm.value['entityName'], properties);
+    this.code[4] = this.codeService.getBackQueryValidator(this.editForm.value['entityName']);
+    this.code[5] = this.codeService.getBackService(this.editForm.value['entityName'], this.editForm.value['databaseContext']);
+    this.code[6] = this.codeService.getBackController(this.editForm.value['entityName']);
+
+    this.code[7] = this.codeService.getFrontModel(this.editForm.value['entityName'], properties);
+    this.code[8] = this.codeService.getFrontService(this.editForm.value['entityName']);
+    this.code[9] = this.codeService.getFrontHtml(this.editForm.value['entityName'], properties);
+    this.code[10] = this.codeService.getFrontTs(this.editForm.value['entityName'], properties);
+  }
+
+  toThirdStep() {
+    this.generateFile();
+    this.currentIndex = 2;
+  }
+
+
+  generateFile() {
+    let zip = new JSZip();
+
+    for (let index in this.fileNameList) {
+      let content = this.code[index];
+      zip.file(this.fileNameList[index], content);
+    }
+
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+      saveAs(content, "code.zip");
+    });
+  }
+
+  reset() {
+    this.radioValue = 0;
+    this.currentIndex = 0;
+    this.controls = [];
+    this.editForm = this.formBuilder.group({
+      entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
+      databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
+    });
+  }
+
+  backToFirstStep() {
+    this.radioValue = 0;
+    this.currentIndex = 0;
+  }
+
+}

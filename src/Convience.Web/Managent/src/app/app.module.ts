@@ -4,14 +4,14 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { UriConfig } from './configs/uri-config';
+import { AuthHeaderInterceptor } from './inceptors/auth-header-inceptor';
+import { CacheInterceptor } from './inceptors/cache-inceptor';
+import { ErrorHandlerInterceptor } from './inceptors/error-handler-inceptor';
+import { LayoutModule } from './pages/layout/layout.module';
 
-import { AuthHeaderInterceptor } from './core/inceptors/auth-header-inceptor';
-import { CacheInterceptor } from './core/inceptors/cache-inceptor';
-import { ErrorHandlerInterceptor } from './core/inceptors/error-handler-inceptor';
-import { UriConstant } from './core/constants/uri-constant';
-import { LayoutModule } from './modules/layout/layout.module';
 
-export function initializeApp(uriConstant: UriConstant) {
+export function initializeApp(uriConstant: UriConfig) {
   return () => uriConstant.init();
 }
 
@@ -34,8 +34,8 @@ export function initializeApp(uriConstant: UriConstant) {
     { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlerInterceptor, multi: true },
 
     // 在uriconstant被输入容器之前，执行指定的promise，程序会阻塞直到promise resolve
-    UriConstant,
-    { provide: APP_INITIALIZER, useFactory: initializeApp, deps: [UriConstant], multi: true }
+    UriConfig,
+    { provide: APP_INITIALIZER, useFactory: initializeApp, deps: [UriConfig], multi: true }
   ]
 })
 export class AppModule { }
