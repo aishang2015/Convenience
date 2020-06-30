@@ -149,7 +149,7 @@ export class FlowDesignComponent implements OnInit {
     // 创建实例
     this._jsPlumbInstance = this._jsPlumb.getInstance({
       DragOptions: { cursor: 'move', zIndex: 2000 },
-      Container: 'flowContainer'
+      Container: 'flow-container'
     });
 
     // 绑定点击

@@ -30,15 +30,15 @@ export class ArticleManageComponent implements OnInit {
   modal: NzModalRef;
 
   constructor(
-    private messageService: NzMessageService,
-    private modalService: NzModalService,
-    private formBuilder: FormBuilder,
-    private columnService: ColumnService,
-    private articleService: ArticleService,
-    private router: Router) { }
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder,
+    private _columnService: ColumnService,
+    private _articleService: ArticleService,
+    private _router: Router) { }
 
   ngOnInit(): void {
-    this.searchForm = this.formBuilder.group({
+    this.searchForm = this._formBuilder.group({
       title: [],
       tag: [],
       columnId: []
@@ -49,7 +49,7 @@ export class ArticleManageComponent implements OnInit {
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [];
-    this.columnService.getAll().subscribe((result: any) => {
+    this._columnService.getAll().subscribe((result: any) => {
       this.makeNodes(null, nodes, result);
       this.nodes = nodes;
     });
@@ -65,15 +65,15 @@ export class ArticleManageComponent implements OnInit {
   }
 
   add() {
-    this.router.navigate(['/content/article/edit', { id: '' }]);
+    this._router.navigate(['/content/article/edit', { id: '' }]);
   }
 
   edit(id) {
-    this.router.navigate(['/content/article/edit', { id: id }]);
+    this._router.navigate(['/content/article/edit', { id: id }]);
   }
 
   refresh() {
-    this.articleService.getList(this.page, this.size,
+    this._articleService.getList(this.page, this.size,
       this.searchForm.value['title'], this.searchForm.value['tag'],
       this.searchForm.value['columnId'])
       .subscribe(result => {
@@ -83,12 +83,12 @@ export class ArticleManageComponent implements OnInit {
   }
 
   remove(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该文章?',
       nzContent: null,
       nzOnOk: () => {
-        this.articleService.delete(id).subscribe(result => {
-          this.messageService.success("删除成功！");
+        this._articleService.delete(id).subscribe(result => {
+          this._messageService.success("删除成功！");
           this.refresh();
         })
       },

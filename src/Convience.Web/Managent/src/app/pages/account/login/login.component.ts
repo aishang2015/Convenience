@@ -21,14 +21,14 @@ export class LoginComponent implements OnInit {
   private captchaKey = '';
 
   constructor(
-    private fb: FormBuilder,
-    private accountService: AccountService,
-    private storage: StorageService,
-    private router: Router,
-    private sanitizer: DomSanitizer) { }
+    private _formBuilder: FormBuilder,
+    private _accountService: AccountService,
+    private _storageService: StorageService,
+    private _router: Router,
+    private _sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.validateForm = this.fb.group({
+    this.validateForm = this._formBuilder.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]],
       captchaValue: [null, [Validators.required]],
@@ -38,10 +38,10 @@ export class LoginComponent implements OnInit {
   }
 
   refreshCaptcha() {
-    this.accountService.getCaptcha().subscribe(result => {
+    this._accountService.getCaptcha().subscribe(result => {
 
       this.captchaKey = result['captchaKey'];
-      this.captcha = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
+      this.captcha = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
         + result['captchaData']);
     });
   }
@@ -53,19 +53,19 @@ export class LoginComponent implements OnInit {
     }
     if (this.validateForm.valid) {
       this.isLoading = true;
-      this.accountService.login(
+      this._accountService.login(
         this.validateForm.controls['userName'].value,
         this.validateForm.controls['password'].value,
         this.captchaKey,
         this.validateForm.controls['captchaValue'].value)
         .subscribe(
           result => {
-            this.storage.userToken = result["token"];
-            this.storage.Name = result["name"];
-            this.storage.Avatar = result["avatar"];
-            this.storage.Identifycation = result["identification"];
-            this.storage.Route = result["routes"];
-            this.router.navigate(['/dashboard']);
+            this._storageService.userToken = result["token"];
+            this._storageService.Name = result["name"];
+            this._storageService.Avatar = result["avatar"];
+            this._storageService.Identifycation = result["identification"];
+            this._storageService.Route = result["routes"];
+            this._router.navigate(['/dashboard']);
           },
           error => {
             this.refreshCaptcha();

@@ -26,13 +26,14 @@ export class TenantManageComponent implements OnInit {
   size: number = 10;
   total: number = 0;
 
-  constructor(private formBuilder: FormBuilder,
-    private tenantService: TenantService,
-    private modalService: NzModalService,
-    private messageService: NzMessageService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _tenantService: TenantService,
+    private _modalService: NzModalService,
+    private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
-    this.searchForm = this.formBuilder.group({
+    this.searchForm = this._formBuilder.group({
       name: [""],
       dataBaseType: [""]
     });
@@ -40,7 +41,7 @@ export class TenantManageComponent implements OnInit {
   }
 
   refresh() {
-    this.tenantService.getTenants(this.page, this.size, this.searchForm.value['name'],
+    this._tenantService.getTenants(this.page, this.size, this.searchForm.value['name'],
       this.searchForm.value['dataBaseType'], this.sortkey, this.isdesc).subscribe(result => {
         this.data = result['data'];
         this.total = result['count'];
@@ -58,21 +59,21 @@ export class TenantManageComponent implements OnInit {
   }
 
   edit(title: TemplateRef<{}>, content: TemplateRef<{}>, tenant: Tenant) {
-    this.tenantService.getTenant(tenant.id).subscribe(result => {
+    this._tenantService.getTenant(tenant.id).subscribe(result => {
       this.editedTenant = result;
       this.editTenant(title, content, this.editedTenant);
     })
   }
 
   private editTenant(title: TemplateRef<{}>, content: TemplateRef<{}>, tenant: Tenant) {
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       name: [this.editedTenant.name, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
       urlPrefix: [this.editedTenant.urlPrefix, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
       dataBaseType: [this.editedTenant.dataBaseType, [Validators.required]],
       connectionString: [this.editedTenant.connectionString, [Validators.required]],
       isActive: [this.editedTenant.isActive],
     });
-    this.tplModal = this.modalService.create({
+    this.tplModal = this._modalService.create({
       nzTitle: title,
       nzContent: content,
       nzFooter: null,
@@ -92,14 +93,14 @@ export class TenantManageComponent implements OnInit {
       this.editedTenant.connectionString = this.editForm.value["connectionString"];
       this.editedTenant.isActive = this.editForm.value["isActive"];
       if (this.editedTenant.id) {
-        this.tenantService.update(this.editedTenant).subscribe(result => {
-          this.messageService.success("更新成功！");
+        this._tenantService.update(this.editedTenant).subscribe(result => {
+          this._messageService.success("更新成功！");
           this.refresh();
           this.tplModal.close();
         });
       } else {
-        this.tenantService.add(this.editedTenant).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._tenantService.add(this.editedTenant).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.refresh();
           this.tplModal.close();
         });
@@ -112,13 +113,13 @@ export class TenantManageComponent implements OnInit {
   }
 
   remove(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该租户?',
       nzContent: null,
       nzOnOk: () =>
-        this.tenantService.delete(id).subscribe(result => {
+        this._tenantService.delete(id).subscribe(result => {
           this.refresh();
-          this.messageService.success("删除成功！");
+          this._messageService.success("删除成功！");
         })
     });
   }

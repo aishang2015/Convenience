@@ -14,7 +14,7 @@ import { MenuService } from 'src/app/business/menu.service';
 export class RoleManageComponent implements OnInit {
 
   @ViewChild('menuTree', { static: false }) menuTree: NzTreeSelectComponent;
-  
+
   searchForm: FormGroup = new FormGroup({});
   editForm: FormGroup = new FormGroup({});
 
@@ -30,14 +30,15 @@ export class RoleManageComponent implements OnInit {
   size: number = 10;
   total: number = 0;
 
-  constructor(private fb: FormBuilder,
-    private modalService: NzModalService,
-    private roleService: RoleService,
-    private menuService: MenuService,
-    private messageService: NzMessageService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _modalService: NzModalService,
+    private _roleService: RoleService,
+    private _menuService: MenuService,
+    private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
+    this.searchForm = this._formBuilder.group({
       roleName: [""]
     });
     this.refresh();
@@ -45,13 +46,13 @@ export class RoleManageComponent implements OnInit {
   }
 
   refresh() {
-    this.roleService.getRoles(null, this.page, this.size)
+    this._roleService.getRoles(null, this.page, this.size)
       .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [];
-    this.menuService.get().subscribe((result: any) => {
+    this._menuService.get().subscribe((result: any) => {
       this.makeNodes(null, nodes, result);
       this.nodes = nodes;
     });
@@ -68,18 +69,18 @@ export class RoleManageComponent implements OnInit {
 
   submitSearch() {
     let key = this.searchForm.value["roleName"];
-    this.roleService.getRoles(key, this.page, this.size)
+    this._roleService.getRoles(key, this.page, this.size)
       .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
   addRole(title: TemplateRef<{}>, content: TemplateRef<{}>) {
     this.editedRole = new Role();
-    this.editForm = this.fb.group({
+    this.editForm = this._formBuilder.group({
       roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
       remark: [this.editedRole.remark, [Validators.maxLength(30)]],
       menus: [[]]
     });
-    this.tplModal = this.modalService.create({
+    this.tplModal = this._modalService.create({
       nzTitle: title,
       nzContent: content,
       nzFooter: null,
@@ -87,14 +88,14 @@ export class RoleManageComponent implements OnInit {
   }
 
   editRole(title: TemplateRef<{}>, content: TemplateRef<{}>, role: Role) {
-    this.roleService.getRole(role.id).subscribe(reuslt => {
+    this._roleService.getRole(role.id).subscribe(reuslt => {
       this.editedRole = reuslt;
-      this.editForm = this.fb.group({
+      this.editForm = this._formBuilder.group({
         roleName: [this.editedRole.name, [Validators.required, Validators.maxLength(15)]],
         remark: [this.editedRole.remark, [Validators.maxLength(30)]],
         menus: [this.editedRole.menus?.split(',')]
       });
-      this.tplModal = this.modalService.create({
+      this.tplModal = this._modalService.create({
         nzTitle: title,
         nzContent: content,
         nzFooter: null,
@@ -104,13 +105,13 @@ export class RoleManageComponent implements OnInit {
   }
 
   removeRole(roleName: string) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该角色?',
       nzContent: null,
       nzOnOk: () =>
-        this.roleService.deleteRole(roleName).subscribe(result => {
+        this._roleService.deleteRole(roleName).subscribe(result => {
           this.refresh();
-          this.messageService.success("删除成功！");
+          this._messageService.success("删除成功！");
         })
     });
   }
@@ -125,16 +126,16 @@ export class RoleManageComponent implements OnInit {
       this.editedRole.remark = this.editForm.value['remark'];
       this.editedRole.menus = this.editForm.value['menus'].join(',');
       if (this.editedRole.id) {
-        this.roleService.updateRole(this.editedRole)
+        this._roleService.updateRole(this.editedRole)
           .subscribe(result => {
             this.refresh(); this.tplModal.close();
-            this.messageService.success("更新成功！");
+            this._messageService.success("更新成功！");
           });
       } else {
-        this.roleService.addRole(this.editedRole)
+        this._roleService.addRole(this.editedRole)
           .subscribe(result => {
             this.refresh(); this.tplModal.close();
-            this.messageService.success("添加成功！");
+            this._messageService.success("添加成功！");
           });
       }
     }

@@ -46,17 +46,17 @@ export class DepartmentManageComponent implements OnInit {
   userDicList = [];
 
   constructor(
-    private messageService: NzMessageService,
-    private modalService: NzModalService,
-    private formBuilder: FormBuilder,
-    private userService: UserService,
-    private departmentService: DepartmentService) { }
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder,
+    private _userService: UserService,
+    private _departmentService: DepartmentService) { }
 
   ngOnInit(): void {
     this.searchChange$
       .asObservable()
       .pipe(debounceTime(800)).subscribe(value => {
-        this.userService.getUserDic(value).subscribe((result: any) => {
+        this._userService.getUserDic(value).subscribe((result: any) => {
           this.userDicList = result;
           this.isLoading = false;
         });
@@ -64,7 +64,7 @@ export class DepartmentManageComponent implements OnInit {
   }
 
   add() {
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       upDepartment: [{ value: this.tree.selectedNode?.title, disabled: true }],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       email: [null, [Validators.email, Validators.maxLength(50)]],
@@ -72,7 +72,7 @@ export class DepartmentManageComponent implements OnInit {
       leaderid: [null],
       sort: [null, Validators.required]
     });
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: this.addTitleTpl,
       nzContent: this.contentTpl,
       nzFooter: null,
@@ -86,9 +86,9 @@ export class DepartmentManageComponent implements OnInit {
 
   edit(id) {
     this.searchChange$.next(this.data.find(d => d.id == id).leaderName);
-    this.departmentService.get(id).subscribe((result: Department) => {
+    this._departmentService.get(id).subscribe((result: Department) => {
       this.currentId = result.id;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         upDepartment: [{ value: this.getUpperDepartment(result.upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         email: [result.email, [Validators.email, Validators.maxLength(50)]],
@@ -97,7 +97,7 @@ export class DepartmentManageComponent implements OnInit {
         sort: [result.sort, Validators.required]
       });
 
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: this.addTitleTpl,
         nzContent: this.contentTpl,
         nzFooter: null,
@@ -108,12 +108,12 @@ export class DepartmentManageComponent implements OnInit {
   }
 
   remove(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该部门?',
       nzContent: null,
       nzOnOk: () => {
-        this.departmentService.delete(id).subscribe(reuslt => {
-          this.messageService.success("删除成功！");
+        this._departmentService.delete(id).subscribe(reuslt => {
+          this._messageService.success("删除成功！");
           this.refresh();
         });
       },
@@ -135,14 +135,14 @@ export class DepartmentManageComponent implements OnInit {
       d.sort = this.editForm.value['sort'];
       if (this.currentId) {
         d.id = this.currentId;
-        this.departmentService.update(d).subscribe(reuslt => {
-          this.messageService.success("修改成功！");
+        this._departmentService.update(d).subscribe(reuslt => {
+          this._messageService.success("修改成功！");
           this.refresh();
           this.modal.close();
         });
       } else {
-        this.departmentService.add(d).subscribe(reuslt => {
-          this.messageService.success("添加成功！");
+        this._departmentService.add(d).subscribe(reuslt => {
+          this._messageService.success("添加成功！");
           this.refresh();
           this.modal.close();
         });

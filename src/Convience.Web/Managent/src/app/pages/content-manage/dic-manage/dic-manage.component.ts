@@ -38,11 +38,11 @@ export class DicManageComponent implements OnInit {
   tableHeader = '';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private modalService: NzModalService,
-    private messageService: NzMessageService,
-    private dicdataService: DicDataService,
-    private dictypeService: DicTypeService
+    private _formBuilder: FormBuilder,
+    private _modalService: NzModalService,
+    private _messageService: NzMessageService,
+    private _dicdataService: DicDataService,
+    private _dictypeService: DicTypeService
   ) { }
 
   ngOnInit(): void {
@@ -50,19 +50,19 @@ export class DicManageComponent implements OnInit {
   }
 
   initDataTypes() {
-    this.dictypeService.getList().subscribe((result: any) => {
+    this._dictypeService.getList().subscribe((result: any) => {
       this.dicTypes = result;
     });
   }
 
   addDicType() {
     this.currentDicTypeId = null;
-    this.editDicTypeForm = this.formBuilder.group({
+    this.editDicTypeForm = this._formBuilder.group({
       code: [null, [Validators.required, Validators.maxLength(15)]],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       sort: [null, [Validators.required]]
     });
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: '添加字典类型',
       nzContent: this.dicTypeTpl,
       nzFooter: null,
@@ -71,14 +71,14 @@ export class DicManageComponent implements OnInit {
   }
 
   editDicType(id) {
-    this.dictypeService.get(id).subscribe((result: any) => {
+    this._dictypeService.get(id).subscribe((result: any) => {
       this.currentDicTypeId = id;
-      this.editDicTypeForm = this.formBuilder.group({
+      this.editDicTypeForm = this._formBuilder.group({
         code: [result.code, [Validators.required, Validators.maxLength(15)]],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         sort: [result.sort, [Validators.required]]
       });
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: '添加字典类型',
         nzContent: this.dicTypeTpl,
         nzFooter: null,
@@ -89,12 +89,12 @@ export class DicManageComponent implements OnInit {
   }
 
   removeDicType(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除?',
       nzContent: null,
       nzOnOk: () => {
-        this.dictypeService.delete(id).subscribe(result => {
-          this.messageService.success("删除成功！");
+        this._dictypeService.delete(id).subscribe(result => {
+          this._messageService.success("删除成功！");
           this.initDataTypes();
           if(id == this.selectedDicType?.id){
             this.dicDatas.splice(0,this.dicDatas.length);
@@ -107,7 +107,7 @@ export class DicManageComponent implements OnInit {
   }
 
   viewDicData(item) {
-    this.dicdataService.getList(item.id).subscribe((result: any) => {
+    this._dicdataService.getList(item.id).subscribe((result: any) => {
       this.dicDatas = result;
       this.tableHeader = item.name;
       this.selectedDicType = item;
@@ -115,7 +115,7 @@ export class DicManageComponent implements OnInit {
   }
 
   refreshDicData() {
-    this.dicdataService.getList(this.selectedDicType.id).subscribe((result: any) => {
+    this._dicdataService.getList(this.selectedDicType.id).subscribe((result: any) => {
       this.dicDatas = result;
     });
   }
@@ -133,14 +133,14 @@ export class DicManageComponent implements OnInit {
 
       if (this.currentDicTypeId) {
         model.id = this.currentDicTypeId;
-        this.dictypeService.update(model).subscribe(result => {
-          this.messageService.success("修改成功！");
+        this._dictypeService.update(model).subscribe(result => {
+          this._messageService.success("修改成功！");
           this.initDataTypes();
           this.modal.close();
         });
       } else {
-        this.dictypeService.add(model).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._dictypeService.add(model).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.initDataTypes();
           this.modal.close();
         });
@@ -150,11 +150,11 @@ export class DicManageComponent implements OnInit {
 
   addDicData() {
     this.currentDicDataId = null;
-    this.editDicDataForm = this.formBuilder.group({
+    this.editDicDataForm = this._formBuilder.group({
       name: [null, [Validators.required, Validators.maxLength(15)]],
       sort: [null, [Validators.required]]
     });
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: '添加字典数据',
       nzContent: this.dicDataTpl,
       nzFooter: null,
@@ -163,13 +163,13 @@ export class DicManageComponent implements OnInit {
   }
 
   editDicData(id) {
-    this.dicdataService.get(id).subscribe((result: any) => {
+    this._dicdataService.get(id).subscribe((result: any) => {
       this.currentDicDataId = id;
-      this.editDicDataForm = this.formBuilder.group({
+      this.editDicDataForm = this._formBuilder.group({
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         sort: [result.sort, [Validators.required]]
       });
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: '编辑字典数据',
         nzContent: this.dicDataTpl,
         nzFooter: null,
@@ -179,12 +179,12 @@ export class DicManageComponent implements OnInit {
   }
 
   removeDicData(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除?',
       nzContent: null,
       nzOnOk: () => {
-        this.dicdataService.delete(id).subscribe(result => {
-          this.messageService.success("删除成功！");
+        this._dicdataService.delete(id).subscribe(result => {
+          this._messageService.success("删除成功！");
           this.refreshDicData();
         });
       },
@@ -204,14 +204,14 @@ export class DicManageComponent implements OnInit {
 
       if (this.currentDicDataId) {
         model.id = this.currentDicDataId;
-        this.dicdataService.update(model).subscribe(result => {
-          this.messageService.success("修改成功！");
+        this._dicdataService.update(model).subscribe(result => {
+          this._messageService.success("修改成功！");
           this.refreshDicData();
           this.modal.close();
         });
       } else {
-        this.dicdataService.add(model).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._dicdataService.add(model).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.refreshDicData();
           this.modal.close();
         });

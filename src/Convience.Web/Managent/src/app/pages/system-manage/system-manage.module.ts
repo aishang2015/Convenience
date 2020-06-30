@@ -6,6 +6,7 @@ import { RoleManageComponent } from './role-manage/role-manage.component';
 import { UserManageComponent } from './user-manage/user-manage.component';
 import { MenuManageComponent } from './menu-manage/menu-manage.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
+import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTableModule, NzTagModule, NzAvatarModule, NzCardModule, NzInputModule, NzTreeModule, NzTreeSelectModule, NzIconModule, NzRadioModule } from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,22 @@ import { LoginGuard } from 'src/app/guards/login.guard';
       { path: 'role', component: RoleManageComponent, canActivate: [LoginGuard] },
       { path: 'user', component: UserManageComponent, canActivate: [LoginGuard] },
       { path: 'menu', component: MenuManageComponent, canActivate: [LoginGuard] },
-    ])
+    ]),
+
+    // NGZorro组件
+    NzSelectModule,
+    NzFormModule,
+    NzButtonModule,
+    NzPaginationModule,
+    NzTableModule,
+    NzTagModule,
+    NzAvatarModule,
+    NzCardModule,
+    NzInputModule,
+    NzTreeModule,
+    NzTreeSelectModule,
+    NzIconModule,
+    NzRadioModule,
   ]
 })
 export class SystemManageModule { }

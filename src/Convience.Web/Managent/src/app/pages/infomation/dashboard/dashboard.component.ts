@@ -1,7 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Chart, registerShape } from '@antv/g2';
-import { RangePoint } from '@antv/g2/lib/interface';
 import { DashboardService } from 'src/app/business/dashboard.service';
 
 @Component({
@@ -13,11 +11,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   data = { userCount: 0, roleCount: 0, departmentCount: 0, positionCount: 0 };
 
-  constructor(private dashboardService: DashboardService) {
+  constructor(private _dashboardService: DashboardService) {
   }
 
   ngOnInit() {
-    this.dashboardService.get().subscribe((result: any) => this.data = result);
+    this._dashboardService.get().subscribe((result: any) => this.data = result);
   }
 
   ngAfterViewInit(): void {

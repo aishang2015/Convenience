@@ -37,17 +37,18 @@ export class ArticleEditComponent implements OnInit {
 
   };
 
-  constructor(private route: ActivatedRoute,
-    private router: Router,
-    private articleService: ArticleService,
-    private messageService: NzMessageService,
-    private columnService: ColumnService,
-    private formBuilder: FormBuilder,
-    private storageService: StorageService) { }
+  constructor(
+    private _activatedRoute: ActivatedRoute,
+    private _router: Router,
+    private _articleService: ArticleService,
+    private _messageService: NzMessageService,
+    private _columnService: ColumnService,
+    private _formBuilder: FormBuilder,
+    private _storageService: StorageService) { }
 
   ngOnInit(): void {
-    this.storageService.clearTinymceCache();
-    this.editForm = this.formBuilder.group({
+    this._storageService.clearTinymceCache();
+    this.editForm = this._formBuilder.group({
       title: [null, [Validators.required, Validators.maxLength(50)]],
       subTitle: [null, [Validators.maxLength(200)]],
       columnId: [null],
@@ -56,11 +57,11 @@ export class ArticleEditComponent implements OnInit {
       tags: [null, [Validators.maxLength(200)]],
       content: [null]
     });
-    let id = this.route.snapshot.paramMap.get('id')?.trim();
+    let id = this._activatedRoute.snapshot.paramMap.get('id')?.trim();
     this.currentId = id ? Number(id) : null;
     if (this.currentId) {
-      this.articleService.get(this.currentId).subscribe((result: any) => {
-        this.editForm = this.formBuilder.group({
+      this._articleService.get(this.currentId).subscribe((result: any) => {
+        this.editForm = this._formBuilder.group({
           title: [result['title'], [Validators.required, Validators.maxLength(50)]],
           subTitle: [result['subTitle'], [Validators.maxLength(200)]],
           columnId: [result['columnId']],
@@ -92,26 +93,26 @@ export class ArticleEditComponent implements OnInit {
       article.content = this.editForm.value['content'];
       if (this.currentId) {
         article.id = this.currentId;
-        this.articleService.update(article).subscribe(result => {
-          this.messageService.success('文章更新成功！');
-          this.router.navigate(['/content/article']);
+        this._articleService.update(article).subscribe(result => {
+          this._messageService.success('文章更新成功！');
+          this._router.navigate(['/content/article']);
         });
       } else {
-        this.articleService.add(article).subscribe(result => {
-          this.messageService.success('文章创建成功！');
-          this.router.navigate(['/content/article']);
+        this._articleService.add(article).subscribe(result => {
+          this._messageService.success('文章创建成功！');
+          this._router.navigate(['/content/article']);
         });
       }
     }
   }
 
   back() {
-    this.router.navigate(['/content/article']);
+    this._router.navigate(['/content/article']);
   }
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [];
-    this.columnService.getAll().subscribe((result: any) => {
+    this._columnService.getAll().subscribe((result: any) => {
       this.makeNodes(null, nodes, result);
       this.nodes = nodes;
     });

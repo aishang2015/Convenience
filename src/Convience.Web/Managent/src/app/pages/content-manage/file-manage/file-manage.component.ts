@@ -45,11 +45,12 @@ export class FileManageComponent implements OnInit {
     return value ? null : { 'notEmpty': true };
   };
 
-  constructor(private modalService: NzModalService,
-    private messageService: NzMessageService,
-    private fileService: FileService,
-    private folderService: FolderService,
-    private formBuilder: FormBuilder) {
+  constructor(
+    private _modalService: NzModalService,
+    private _messageService: NzMessageService,
+    private _fileService: FileService,
+    private _folderService: FolderService,
+    private _formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -66,13 +67,13 @@ export class FileManageComponent implements OnInit {
   }
 
   refresh() {
-    this.fileService.get(1, 200, this.currentDirectory).subscribe((result: any) => {
+    this._fileService.get(1, 200, this.currentDirectory).subscribe((result: any) => {
       this.fileInfoList = result;
     });
   }
 
   upload() {
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: this.uploadTitleTpl,
       nzContent: this.uploadContentTpl,
       nzFooter: this.uploadFooterTpl,
@@ -87,9 +88,9 @@ export class FileManageComponent implements OnInit {
 
   handleUpload() {
     this.uploading = true;
-    this.fileService.upload(this.currentDirectory, this.fileList).subscribe(result => {
+    this._fileService.upload(this.currentDirectory, this.fileList).subscribe(result => {
       this.modal.close();
-      this.messageService.success("上传完毕！");
+      this._messageService.success("上传完毕！");
       this.refresh();
       this.fileList = [];
       this.uploading = false;
@@ -99,18 +100,18 @@ export class FileManageComponent implements OnInit {
   }
 
   delete(fileInfo: FileInfo) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除?',
       nzContent: null,
       nzOnOk: () => {
         if (fileInfo.isDirectory) {
-          this.folderService.deleteFolder(fileInfo.directory, fileInfo.fileName).subscribe(result => {
-            this.messageService.success("删除成功！");
+          this._folderService.deleteFolder(fileInfo.directory, fileInfo.fileName).subscribe(result => {
+            this._messageService.success("删除成功！");
             this.refresh();
           });
         } else {
-          this.fileService.delete(fileInfo.fileName, fileInfo.directory).subscribe(result => {
-            this.messageService.success("删除成功！");
+          this._fileService.delete(fileInfo.fileName, fileInfo.directory).subscribe(result => {
+            this._messageService.success("删除成功！");
             this.refresh();
           });
         }
@@ -119,7 +120,7 @@ export class FileManageComponent implements OnInit {
   }
 
   download(fileInfo: FileInfo) {
-    this.fileService.download(fileInfo.fileName, fileInfo.directory).subscribe((result: any) => {
+    this._fileService.download(fileInfo.fileName, fileInfo.directory).subscribe((result: any) => {
       const a = document.createElement('a');
       const blob = new Blob([result], { 'type': "application/octet-stream" });
       a.href = URL.createObjectURL(blob);
@@ -129,12 +130,12 @@ export class FileManageComponent implements OnInit {
   }
 
   createFolder() {
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: '创建文件夹',
       nzContent: this.folderContentTpl,
       nzFooter: null
     });
-    this.folderForm = this.formBuilder.group({
+    this.folderForm = this._formBuilder.group({
       folderName: [null, [Validators.required, Validators.maxLength(15),
       Validators.pattern('^[^\\\\/:\*\?""<>|]{1,120}$'), this.emptyValidator]]
     });
@@ -146,8 +147,8 @@ export class FileManageComponent implements OnInit {
       this.folderForm.controls[i].updateValueAndValidity();
     }
     if (this.folderForm.valid) {
-      this.folderService.addFolder(this.currentDirectory, this.folderForm.value['folderName']).subscribe(result => {
-        this.messageService.success("文件夹创建成功！");
+      this._folderService.addFolder(this.currentDirectory, this.folderForm.value['folderName']).subscribe(result => {
+        this._messageService.success("文件夹创建成功！");
         this.refresh();
         this.modal.close();
       });

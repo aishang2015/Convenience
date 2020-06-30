@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutComponent } from './layout/layout.component';
-import { NzBreadCrumbModule, NzLayoutModule, NzDropDownModule, NzCardModule, NzAvatarModule, NzBadgeModule, NzIconModule, NzMessageModule } from 'ng-zorro-antd';
+import { NzBreadCrumbModule, NzLayoutModule, NzDropDownModule, NzCardModule, NzAvatarModule, NzBadgeModule, NzIconModule, NzMessageModule, NzFormModule, NzButtonComponent, NzButtonModule, NzInputModule, NzModalModule } from 'ng-zorro-antd';
 import { RouterModule } from '@angular/router';
 import { AppCommonModule } from '../app-common/app-common.module';
 
@@ -15,14 +15,19 @@ import { AppCommonModule } from '../app-common/app-common.module';
     CommonModule,
     RouterModule,
     AppCommonModule,
+    NzFormModule,
     NzBreadCrumbModule,
+    NzButtonModule,
     NzLayoutModule,
     NzDropDownModule,
     NzCardModule,
     NzAvatarModule,
     NzBadgeModule,
     NzIconModule,
-    NzMessageModule
+    NzMessageModule,
+    NzButtonModule,
+    NzInputModule,
+    NzModalModule,
   ],
   exports: [
     LayoutComponent

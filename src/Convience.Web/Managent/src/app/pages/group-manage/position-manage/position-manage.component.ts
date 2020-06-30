@@ -35,22 +35,22 @@ export class PositionManageComponent implements OnInit {
   modal: NzModalRef;
 
   constructor(
-    private positionService: PositionService,
-    private messageService: NzMessageService,
-    private modalService: NzModalService,
-    private formBuilder: FormBuilder) { }
+    private _positionService: PositionService,
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.refresh();
   }
 
   add() {
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       name: [null, [Validators.required, Validators.maxLength(10)]],
       sort: [null, [Validators.required]],
     });
     this.currentId = null;
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: this.addTitleTpl,
       nzContent: this.contentTpl,
       nzFooter: null,
@@ -61,7 +61,7 @@ export class PositionManageComponent implements OnInit {
 
   refresh() {
     this.isSpinning = true;
-    this.positionService.get(this.page, this.size).subscribe((result: any) => {
+    this._positionService.get(this.page, this.size).subscribe((result: any) => {
       this.data = result['data'];
       this.total = result['count'];
       this.isSpinning = false;
@@ -69,13 +69,13 @@ export class PositionManageComponent implements OnInit {
   }
 
   edit(id) {
-    this.positionService.getPosition(id).subscribe(result => {
+    this._positionService.getPosition(id).subscribe(result => {
       this.currentId = id;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         name: [result['name'], [Validators.required, Validators.maxLength(10)]],
         sort: [result['sort'], [Validators.required]],
       });
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: this.editTitleTpl,
         nzContent: this.contentTpl,
         nzFooter: null,
@@ -85,11 +85,11 @@ export class PositionManageComponent implements OnInit {
   }
 
   remove(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该职位?',
       nzContent: null,
-      nzOnOk: () => this.positionService.delete(id).subscribe(result => {
-        this.messageService.success("删除成功！");
+      nzOnOk: () => this._positionService.delete(id).subscribe(result => {
+        this._messageService.success("删除成功！");
         this.refresh();
       }),
     });
@@ -107,15 +107,15 @@ export class PositionManageComponent implements OnInit {
       p.name = this.editForm.value['name'];
       p.sort = this.editForm.value['sort'];
       if (this.currentId == null) {
-        this.positionService.add(p).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._positionService.add(p).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.refresh();
           this.modal.close();
         });
       } else {
         p.id = this.currentId;
-        this.positionService.update(p).subscribe(result => {
-          this.messageService.success("修改成功！");
+        this._positionService.update(p).subscribe(result => {
+          this._messageService.success("修改成功！");
           this.refresh();
           this.modal.close();
         });

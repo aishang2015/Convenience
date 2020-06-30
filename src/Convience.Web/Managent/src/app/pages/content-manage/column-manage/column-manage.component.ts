@@ -29,10 +29,10 @@ export class ColumnManageComponent implements OnInit {
   modal: NzModalRef;
 
   constructor(
-    private messageService: NzMessageService,
-    private modalService: NzModalService,
-    private formBuilder: FormBuilder,
-    private columnService: ColumnService) { }
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder,
+    private _columnService: ColumnService) { }
 
   ngOnInit(): void {
     this.initNodes();
@@ -40,12 +40,12 @@ export class ColumnManageComponent implements OnInit {
 
   add() {
     this.currentId = null;
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       upColumn: [{ value: this.getUpperSelectColumn(), disabled: true }],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       sort: [null, [Validators.required]]
     });
-    this.modal = this.modalService.create({
+    this.modal = this._modalService.create({
       nzTitle: '添加栏目',
       nzContent: this.contentTpl,
       nzFooter: null,
@@ -55,7 +55,7 @@ export class ColumnManageComponent implements OnInit {
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [{ title: '文章栏目管理', key: null, icon: 'database', expanded: true, children: [] }];
-    this.columnService.getAll().subscribe((result: any) => {
+    this._columnService.getAll().subscribe((result: any) => {
       this.data = result;
       this.makeNodes(null, nodes[0], this.data);
       this.nodes = nodes;
@@ -73,15 +73,15 @@ export class ColumnManageComponent implements OnInit {
   }
 
   edit(id) {
-    this.columnService.get(id).subscribe((result: Column) => {
+    this._columnService.get(id).subscribe((result: Column) => {
       this.currentId = result.id;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         upColumn: [{ value: this.getUpperColumnName(result.upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         sort: [result.sort, Validators.required]
       });
 
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: '编辑栏目',
         nzContent: this.contentTpl,
         nzFooter: null,
@@ -91,13 +91,13 @@ export class ColumnManageComponent implements OnInit {
   }
 
   remove(id) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该栏目?',
       nzContent: null,
       nzOnOk: () => {
-        this.columnService.delete(id).subscribe(result => {
+        this._columnService.delete(id).subscribe(result => {
           this.initNodes();
-          this.messageService.success("删除成功！");
+          this._messageService.success("删除成功！");
         });
       },
     });
@@ -116,14 +116,14 @@ export class ColumnManageComponent implements OnInit {
 
       if (this.currentId) {
         column.id = this.currentId;
-        this.columnService.update(column).subscribe(result => {
-          this.messageService.success("修改成功！");
+        this._columnService.update(column).subscribe(result => {
+          this._messageService.success("修改成功！");
           this.initNodes();
           this.modal.close();
         });
       } else {
-        this.columnService.add(column).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._columnService.add(column).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.initNodes();
           this.modal.close();
         });

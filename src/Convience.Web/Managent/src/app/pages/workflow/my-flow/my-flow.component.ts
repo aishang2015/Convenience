@@ -13,8 +13,6 @@ import * as jp from 'jsplumb';
 import { WorkflowFlowService } from 'src/app/business/workflow-flow.service';
 import { WorkflowNode } from '../model/workflowNode';
 import { WorkflowLink } from '../model/workflowLink';
-import { interval } from 'rxjs';
-import { delay } from 'rxjs/operators';
 import { WorkflowInstanceRoute } from '../model/workflowInstanceRoute';
 
 @Component({
@@ -71,7 +69,6 @@ export class MyFlowComponent implements OnInit {
   checkedData: WorkflowInstance;
 
   constructor(
-    private _rootElementRef: ElementRef,
     private _renderer: Renderer2,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
@@ -347,7 +344,7 @@ export class MyFlowComponent implements OnInit {
     })
   }
 
-  print(){
+  print() {
 
     const printContent = document.getElementById("print-area");
     const WindowPrt = window.open('', '', '');

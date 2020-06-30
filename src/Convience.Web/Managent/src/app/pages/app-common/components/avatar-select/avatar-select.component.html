@@ -1,4 +1,4 @@
-<div class="avatarContainer" (click)="showAvatarModal()">
+<div class="avatar-container" (click)="showAvatarModal()">
     <div *ngIf="!input.value">
         <i class="upload-icon" nz-icon nzType="plus" nzTheme="outline"></i>
         <div>请选择</div>
@@ -8,8 +8,8 @@
 <input #input style="display:none"/>
 
 <ng-template #avatarSelectTpl>
-    <div *ngFor="let av of avatarList" class="avatarSelect" (click)="setSelectedAvatar(av)"
-        [ngClass]="{'avatarSelected': av==selectedAvatar}">
+    <div *ngFor="let av of avatarList" class="avatar-select" (click)="setSelectedAvatar(av)"
+        [ngClass]="{'avatar-selected': av==selectedAvatar}">
         <img [src]="getImgUrl(av)">
     </div>
 </ng-template>

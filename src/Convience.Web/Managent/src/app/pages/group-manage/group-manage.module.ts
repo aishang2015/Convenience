@@ -7,6 +7,7 @@ import { DepartmentTreeComponent } from './department-tree/department-tree.compo
 import { DepartmentManageComponent } from './department-manage/department-manage.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
+import { NzFormModule, NzSelectModule, NzCardModule, NzInputModule, NzTableModule, NzTreeSelectModule, NzTreeModule, NzPaginationModule, NzTagModule, NzAvatarModule, NzIconModule, NzButtonModule } from 'ng-zorro-antd';
 
 
 
@@ -24,7 +25,21 @@ import { LoginGuard } from 'src/app/guards/login.guard';
       { path: 'position', component: PositionManageComponent, canActivate: [LoginGuard] },
       { path: 'department', component: DepartmentManageComponent, canActivate: [LoginGuard] },
       { path: 'employee', component: EmployeeComponent, canActivate: [LoginGuard] },
-    ])
+    ]),
+    
+    // NGZorro组件
+    NzFormModule,
+    NzSelectModule,
+    NzCardModule,
+    NzInputModule,
+    NzTableModule,
+    NzTreeSelectModule,
+    NzTreeModule,
+    NzPaginationModule,
+    NzTagModule,
+    NzAvatarModule,
+    NzIconModule,
+    NzButtonModule
   ]
 })
 export class GroupManageModule { }

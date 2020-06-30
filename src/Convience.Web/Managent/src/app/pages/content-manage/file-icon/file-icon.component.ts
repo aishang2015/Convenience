@@ -24,10 +24,10 @@ export class FileIconComponent implements OnInit {
   private isFirstClick = true;
   private fristClickTime = Date.now();
 
-  constructor(private iconService: NzIconService) { }
+  constructor(private _iconService: NzIconService) { }
 
   ngOnInit(): void {
-    this.iconService.fetchFromIconfont({
+    this._iconService.fetchFromIconfont({
       scriptUrl: 'https://at.alicdn.com/t/font_1777474_z6ft00wvau.js'
     });
   }

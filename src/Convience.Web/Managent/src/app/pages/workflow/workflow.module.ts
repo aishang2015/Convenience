@@ -6,14 +6,13 @@ import { WorkflowManageComponent } from './workflow-manage/workflow-manage.compo
 import { FlowDesignComponent } from './flow-design/flow-design.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { RouterModule } from '@angular/router';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzDividerModule } from 'ng-zorro-antd';
+import { NzDividerModule, NzSelectModule, NzFormModule, NzTreeModule, NzTreeSelectModule, NzTableModule, NzButtonModule, NzPaginationModule, NzCardModule, NzInputModule, NzIconModule } from 'ng-zorro-antd';
 import { WorkflowGroupTreeComponent } from './workflow-group-tree/workflow-group-tree.component';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { HandleWorkFlowComponent } from './handle-work-flow/handle-work-flow.component';
@@ -41,13 +40,24 @@ registerLocaleData(zh);
       { path: 'myFlow', component: MyFlowComponent, canActivate: [LoginGuard] },
       { path: 'handledFlow', component: HandleWorkFlowComponent, canActivate: [LoginGuard] },
     ]),
-    DragDropModule,
+
+    // NGZorro组件
+    NzSelectModule,
+    NzFormModule,
     NzDatePickerModule,
     NzInputNumberModule,
     NzTimePickerModule,
     NzSwitchModule,
     NzDividerModule,
-    NzToolTipModule
+    NzToolTipModule,
+    NzTreeModule,
+    NzTreeSelectModule,
+    NzTableModule,
+    NzButtonModule,
+    NzPaginationModule,
+    NzCardModule,
+    NzInputModule,
+    NzIconModule,
   ]
 })
 export class WorkflowModule { }

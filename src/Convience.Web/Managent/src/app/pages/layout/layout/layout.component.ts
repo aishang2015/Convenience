@@ -35,20 +35,22 @@ export class LayoutComponent implements OnInit {
     return newPassword === confirmPassword ? null : { 'notEqual': true };
   };
 
-  constructor(private storageService: StorageService, private router: Router,
-    private fb: FormBuilder,
-    private modalService: NzModalService,
-    private messageService: NzMessageService,
-    private accountService: AccountService) { }
+  constructor(
+    private _storageService: StorageService, 
+    private _router: Router,
+    private _formBuilder: FormBuilder,
+    private _modalService: NzModalService,
+    private _messageService: NzMessageService,
+    private _accountService: AccountService) { }
 
   ngOnInit() {
-    this.name = this.storageService.Name;
-    this.avatar = this.storageService.Avatar;
+    this.name = this._storageService.Name;
+    this.avatar = this._storageService.Avatar;
   }
 
   logout() {
-    this.storageService.removeUserToken();
-    this.router.navigate(['/account/login']);
+    this._storageService.removeUserToken();
+    this._router.navigate(['/account/login']);
   }
 
   setBreadcrumb(first: string, ...rest: string[]) {
@@ -64,14 +66,14 @@ export class LayoutComponent implements OnInit {
   }
 
   modifyPwd() {
-    this.modifyForm = this.fb.group({
+    this.modifyForm = this._formBuilder.group({
       // key: value,validators,asyncvalidators,updateOn
-      userName: [{ value: this.storageService.userName, disabled: true }],
+      userName: [{ value: this._storageService.userName, disabled: true }],
       oldPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required]],
       confirmPassword: ['', [Validators.required, this.equalValidator]]
     });
-    this.modalRef = this.modalService.create({
+    this.modalRef = this._modalService.create({
       nzTitle: this.editPwdTitleTpl,
       nzContent: this.editPwdContentTpl,
       nzFooter: null,
@@ -86,11 +88,11 @@ export class LayoutComponent implements OnInit {
     }
     if (this.modifyForm.valid) {
       this.isLoading = true;
-      this.accountService.modifyPassword(this.modifyForm.controls['oldPassword'].value, this.modifyForm.controls['newPassword'].value)
+      this._accountService.modifyPassword(this.modifyForm.controls['oldPassword'].value, this.modifyForm.controls['newPassword'].value)
         .subscribe(
           result => {
             this.modifyForm.reset();
-            this.messageService.success("密码修改成功！");
+            this._messageService.success("密码修改成功！");
             this.modalRef.close();
           },
           error => {

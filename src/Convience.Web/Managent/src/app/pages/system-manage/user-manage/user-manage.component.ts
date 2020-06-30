@@ -28,16 +28,17 @@ export class UserManageComponent implements OnInit {
   data: User[] = [];
   roles: Role[] = [];
 
-  constructor(private formBuilder: FormBuilder,
-    private userService: UserService,
-    private roleService: RoleService,
-    private messageService: NzMessageService,
-    private modalService: NzModalService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _userService: UserService,
+    private _roleService: RoleService,
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService) { }
 
   ngOnInit(): void {
     this.initRoleList();
     this.refresh();
-    this.searchForm = this.formBuilder.group({
+    this.searchForm = this._formBuilder.group({
       userName: [null],
       phoneNumber: [null],
       name: [null],
@@ -46,11 +47,11 @@ export class UserManageComponent implements OnInit {
   }
 
   initRoleList() {
-    this.roleService.getRoleList().subscribe((result: any) => this.roles = result);
+    this._roleService.getRoleList().subscribe((result: any) => this.roles = result);
   }
 
   refresh() {
-    this.userService.getUsers(this.page, this.size, this.searchForm.value['userName'],
+    this._userService.getUsers(this.page, this.size, this.searchForm.value['userName'],
       this.searchForm.value['phoneNumber'], this.searchForm.value['name'], this.searchForm.value['roleid'])
       .subscribe(result => {
         this.data = result['data'];
@@ -61,7 +62,7 @@ export class UserManageComponent implements OnInit {
   add(title: TemplateRef<{}>, content: TemplateRef<{}>) {
     this.isNewUser = true;
     this.editedUser = new User();
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       avatar: [''],
       userName: ['', [Validators.required, Validators.maxLength(15)]],
       password: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(4)]],
@@ -71,7 +72,7 @@ export class UserManageComponent implements OnInit {
       sex: [0],
       isActive: [false],
     });
-    this.tplModal = this.modalService.create({
+    this.tplModal = this._modalService.create({
       nzTitle: title,
       nzContent: content,
       nzFooter: null,
@@ -82,10 +83,10 @@ export class UserManageComponent implements OnInit {
 
 
   edit(title: TemplateRef<{}>, content: TemplateRef<{}>, user: User) {
-    this.userService.getUser(user.id).subscribe(user => {
+    this._userService.getUser(user.id).subscribe(user => {
       this.isNewUser = false;
       this.editedUser = user;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         avatar: [user['avatar']],
         userName: [user['userName'], [Validators.required, Validators.maxLength(15)]],
         password: [null, [Validators.maxLength(30), Validators.minLength(4)]],
@@ -95,7 +96,7 @@ export class UserManageComponent implements OnInit {
         sex: [user['sex']],
         isActive: [user['isActive']],
       });
-      this.tplModal = this.modalService.create({
+      this.tplModal = this._modalService.create({
         nzTitle: title,
         nzContent: content,
         nzFooter: null,
@@ -107,13 +108,13 @@ export class UserManageComponent implements OnInit {
 
 
   remove(id: string) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该用户?',
       nzContent: null,
       nzOnOk: () =>
-        this.userService.delete(id).subscribe(result => {
+        this._userService.delete(id).subscribe(result => {
           this.refresh();
-          this.messageService.success("删除成功！");
+          this._messageService.success("删除成功！");
         })
     });
   }
@@ -140,14 +141,14 @@ export class UserManageComponent implements OnInit {
       user.isActive = this.editForm.value['isActive'];
       if (this.editedUser.id) {
         user.id = this.editedUser.id;
-        this.userService.update(user).subscribe(result => {
-          this.messageService.success("更新成功！");
+        this._userService.update(user).subscribe(result => {
+          this._messageService.success("更新成功！");
           this.tplModal.close();
           this.refresh();
         });
       } else {
-        this.userService.add(user).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._userService.add(user).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.tplModal.close();
           this.refresh();
         });

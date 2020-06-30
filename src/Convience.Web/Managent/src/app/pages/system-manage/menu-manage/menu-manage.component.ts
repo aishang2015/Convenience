@@ -25,10 +25,11 @@ export class MenuManageComponent implements OnInit {
 
   modalRef: NzModalRef;
 
-  constructor(private modalService: NzModalService,
-    private fb: FormBuilder,
-    private menuService: MenuService,
-    private messageService: NzMessageService) { }
+  constructor(
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder,
+    private _menuService: MenuService,
+    private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
     this.initNodes();
@@ -36,7 +37,7 @@ export class MenuManageComponent implements OnInit {
 
   initNodes() {
     let nodes: NzTreeNodeOptions[] = [{ title: '菜单管理', key: null, icon: 'global', expanded: true, children: [] }];
-    this.menuService.get().subscribe((result: any) => {
+    this._menuService.get().subscribe((result: any) => {
       this.data = result;
       this.makeNodes(null, nodes[0], this.data);
       this.nodes = nodes;
@@ -57,12 +58,12 @@ export class MenuManageComponent implements OnInit {
     if (this.selectedNode) {
       let selectMenu: Menu = this.data.find(menu => menu.id.toString() == this.selectedNode?.key);
       if (selectMenu && (selectMenu.type == 2 || selectMenu.type == 3)) {
-        this.messageService.warning("按钮和链接类型节点无法添加子元素！");
+        this._messageService.warning("按钮和链接类型节点无法添加子元素！");
         return;
       }
     }
     this.editedMenu = new Menu();
-    this.editForm = this.fb.group({
+    this.editForm = this._formBuilder.group({
       upMenu: [{ value: this.getUpperMenuBySelect(), disabled: true }],
       name: [null, [Validators.required, Validators.maxLength(10)]],
       identification: [null],
@@ -71,7 +72,7 @@ export class MenuManageComponent implements OnInit {
       route: [null],
       sort: [null, [Validators.required]]
     });
-    this.modalRef = this.modalService.create({
+    this.modalRef = this._modalService.create({
       nzTitle: title,
       nzContent: content,
       nzFooter: null,
@@ -81,7 +82,7 @@ export class MenuManageComponent implements OnInit {
 
   edit(title: TemplateRef<{}>, content: TemplateRef<{}>, menu: Menu) {
     this.editedMenu = menu;
-    this.editForm = this.fb.group({
+    this.editForm = this._formBuilder.group({
       upMenu: [{ value: this.getUpperMenuById(menu.upId), disabled: true }],
       name: [menu.name, [Validators.required, Validators.maxLength(10)]],
       identification: [menu.identification],
@@ -90,7 +91,7 @@ export class MenuManageComponent implements OnInit {
       route: [menu.route],
       sort: [menu.sort, [Validators.required]]
     });
-    this.modalRef = this.modalService.create({
+    this.modalRef = this._modalService.create({
       nzTitle: title,
       nzContent: content,
       nzFooter: null,
@@ -114,14 +115,14 @@ export class MenuManageComponent implements OnInit {
       menu.upId = this.selectedNode?.key?.toString();
       if (this.editedMenu.id) {
         menu.id = this.editedMenu.id;
-        this.menuService.update(menu).subscribe(result => {
-          this.messageService.success("修改成功！");
+        this._menuService.update(menu).subscribe(result => {
+          this._messageService.success("修改成功！");
           this.initNodes();
           this.modalRef.close();
         });
       } else {
-        this.menuService.add(menu).subscribe(result => {
-          this.messageService.success("添加成功！");
+        this._menuService.add(menu).subscribe(result => {
+          this._messageService.success("添加成功！");
           this.initNodes();
           this.modalRef.close();
         });
@@ -134,13 +135,13 @@ export class MenuManageComponent implements OnInit {
   }
 
   remove(id: string) {
-    this.modalService.confirm({
+    this._modalService.confirm({
       nzTitle: '是否删除该菜单?',
       nzContent: '删除菜单会导致相关用户的权限无法使用，请谨慎操作！',
       nzOnOk: () =>
-        this.menuService.delete(id).subscribe(result => {
+        this._menuService.delete(id).subscribe(result => {
           this.initNodes();
-          this.messageService.success("删除成功！");
+          this._messageService.success("删除成功！");
         })
     });
   }

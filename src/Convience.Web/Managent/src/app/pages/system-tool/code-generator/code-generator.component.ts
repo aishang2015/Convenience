@@ -46,12 +46,13 @@ export class CodeGeneratorComponent implements OnInit {
 
   editCode = '';
 
-  constructor(private formBuilder: FormBuilder,
-    private messageService: NzMessageService,
-    private codeService: CodeService) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _messageService: NzMessageService,
+    private _codeService: CodeService) { }
 
   ngOnInit(): void {
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
       databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
     });
@@ -83,7 +84,7 @@ export class CodeGeneratorComponent implements OnInit {
     }
     if (this.editForm.valid) {
       if (this.controls.length == 0) {
-        this.messageService.error("至少要有一个字段!");
+        this._messageService.error("至少要有一个字段!");
         return;
       }
       this.makeCodes();
@@ -92,7 +93,7 @@ export class CodeGeneratorComponent implements OnInit {
 
   makeCodes() {
 
-    this.fileNameList = this.codeService.getFileNameList(this.editForm.value['entityName']);
+    this.fileNameList = this._codeService.getFileNameList(this.editForm.value['entityName']);
     this.radioList = [];
     this.fileNameList.forEach(element => {
       this.radioList.push({ name: element, value: this.radioList.length });
@@ -109,18 +110,18 @@ export class CodeGeneratorComponent implements OnInit {
       })
     });
 
-    this.code[0] = this.codeService.getBackEntity(this.editForm.value['entityName'], this.editForm.value['databaseContext'], properties);
-    this.code[1] = this.codeService.getBackEntityConfig(this.editForm.value['entityName'], properties);
-    this.code[2] = this.codeService.getBackModels(this.editForm.value['entityName'], properties);
-    this.code[3] = this.codeService.getBackViewModelValidator(this.editForm.value['entityName'], properties);
-    this.code[4] = this.codeService.getBackQueryValidator(this.editForm.value['entityName']);
-    this.code[5] = this.codeService.getBackService(this.editForm.value['entityName'], this.editForm.value['databaseContext']);
-    this.code[6] = this.codeService.getBackController(this.editForm.value['entityName']);
+    this.code[0] = this._codeService.getBackEntity(this.editForm.value['entityName'], this.editForm.value['databaseContext'], properties);
+    this.code[1] = this._codeService.getBackEntityConfig(this.editForm.value['entityName'], properties);
+    this.code[2] = this._codeService.getBackModels(this.editForm.value['entityName'], properties);
+    this.code[3] = this._codeService.getBackViewModelValidator(this.editForm.value['entityName'], properties);
+    this.code[4] = this._codeService.getBackQueryValidator(this.editForm.value['entityName']);
+    this.code[5] = this._codeService.getBackService(this.editForm.value['entityName'], this.editForm.value['databaseContext']);
+    this.code[6] = this._codeService.getBackController(this.editForm.value['entityName']);
 
-    this.code[7] = this.codeService.getFrontModel(this.editForm.value['entityName'], properties);
-    this.code[8] = this.codeService.getFrontService(this.editForm.value['entityName']);
-    this.code[9] = this.codeService.getFrontHtml(this.editForm.value['entityName'], properties);
-    this.code[10] = this.codeService.getFrontTs(this.editForm.value['entityName'], properties);
+    this.code[7] = this._codeService.getFrontModel(this.editForm.value['entityName'], properties);
+    this.code[8] = this._codeService.getFrontService(this.editForm.value['entityName']);
+    this.code[9] = this._codeService.getFrontHtml(this.editForm.value['entityName'], properties);
+    this.code[10] = this._codeService.getFrontTs(this.editForm.value['entityName'], properties);
   }
 
   toThirdStep() {
@@ -146,7 +147,7 @@ export class CodeGeneratorComponent implements OnInit {
     this.radioValue = 0;
     this.currentIndex = 0;
     this.controls = [];
-    this.editForm = this.formBuilder.group({
+    this.editForm = this._formBuilder.group({
       entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
       databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
     });

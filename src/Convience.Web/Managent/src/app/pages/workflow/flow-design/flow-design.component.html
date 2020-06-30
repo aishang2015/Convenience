@@ -5,7 +5,7 @@
         <button nz-button (click)="save()">保存</button>
     </nz-button-group>
 </nz-card>
-<div id="editArea">
+<div id="edit-area">
     <div id="tool-bar">
         <nz-card>
             <h2>节点</h2>
@@ -20,7 +20,7 @@
             </div>
         </nz-card>
     </div>
-    <div id="flowContainer" #flowContainer (drop)="dropZone($event)" (dragover)="onDragOver($event)">
+    <div id="flow-container" #flowContainer (drop)="dropZone($event)" (dragover)="onDragOver($event)">
     </div>
     <div #selectedBorder class="sborder">
         <div #lborder class="lborder"></div>

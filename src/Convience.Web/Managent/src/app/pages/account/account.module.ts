@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AppCommonModule } from '../app-common/app-common.module';
-import { LoginGuard } from 'src/app/guards/login.guard';
+import { NzCardModule, NzFormModule, NzButtonModule, NzIconModule, NzInputModule } from 'ng-zorro-antd';
+import { AuthGuard } from 'src/app/guards/auth.guard';
 
 @NgModule({
   declarations: [
@@ -14,8 +15,16 @@ import { LoginGuard } from 'src/app/guards/login.guard';
     AppCommonModule,
     RouterModule.forChild([
       { path: '', pathMatch: 'full', redirectTo: 'login' },
-      { path: "login", component: LoginComponent, canActivate: [LoginGuard] }
-    ])
+      { path: "login", component: LoginComponent, canActivate: [AuthGuard] }
+    ]),
+
+    // NGZorro组件
+    NzFormModule,
+    NzCardModule,
+    NzButtonModule,
+    NzIconModule,
+    NzFormModule,
+    NzInputModule,
   ]
 })
 export class AccountModule { }

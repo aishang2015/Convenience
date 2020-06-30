@@ -4,7 +4,7 @@ import { FileManageComponent } from './file-manage/file-manage.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { RouterModule } from '@angular/router';
 import { FileIconComponent } from './file-icon/file-icon.component';
-import { NzUploadModule, NzAlertModule, NzListModule } from 'ng-zorro-antd';
+import { NzUploadModule, NzAlertModule, NzListModule, NzFormModule, NzInputModule, NzTableModule, NzPaginationModule, NzButtonModule, NzCardModule, NzTreeSelectModule, NzTagModule, NzTreeModule, NzBreadCrumbModule, NzIconModule } from 'ng-zorro-antd';
 import { ColumnManageComponent } from './column-manage/column-manage.component';
 import { ArticleManageComponent } from './article-manage/article-manage.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
@@ -34,8 +34,22 @@ import { LoginGuard } from 'src/app/guards/login.guard';
 
     ]),
     EditorModule,
+
+    // NGZorro组件
     NzAlertModule,
-    NzListModule
+    NzListModule,
+    NzFormModule,
+    NzInputModule,
+    NzTableModule,
+    NzPaginationModule,
+    NzButtonModule,
+    NzCardModule,
+    NzTreeSelectModule,
+    NzTreeModule,
+    NzTagModule,
+    NzBreadCrumbModule,
+    NzIconModule,
+
   ],
   providers: [
     { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }

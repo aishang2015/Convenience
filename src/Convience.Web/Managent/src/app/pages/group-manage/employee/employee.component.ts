@@ -39,17 +39,17 @@ export class EmployeeComponent implements OnInit {
   selectedDepartmentKey: string = '';
 
   constructor(
-    private messageService: NzMessageService,
-    private modalService: NzModalService,
-    private formBuilder: FormBuilder,
-    private employeeService: EmployeeService,
-    private positionService: PositionService) { }
+    private _messageService: NzMessageService,
+    private _modalService: NzModalService,
+    private _formBuilder: FormBuilder,
+    private _employeeService: EmployeeService,
+    private _positionService: PositionService) { }
 
   ngOnInit(): void {
-    this.positionService.getAll().subscribe((result: any) => {
+    this._positionService.getAll().subscribe((result: any) => {
       this.positionOptions = result;
     });
-    this.searchForm = this.formBuilder.group({
+    this.searchForm = this._formBuilder.group({
       phoneNumber: [null],
       name: [null],
       position: [null]
@@ -58,7 +58,7 @@ export class EmployeeComponent implements OnInit {
   }
 
   refresh() {
-    this.employeeService.getEmployees(this.page, this.size,
+    this._employeeService.getEmployees(this.page, this.size,
       this.searchForm.value['phoneNumber'],
       this.searchForm.value['name'], 
       this.selectedDepartmentKey,
@@ -70,14 +70,14 @@ export class EmployeeComponent implements OnInit {
   }
 
   edit(id) {
-    this.employeeService.get(id).subscribe((result: any) => {
+    this._employeeService.get(id).subscribe((result: any) => {
       this.currentId = id;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         name: [{ value: result['name'], disabled: true }],
         department: [Number(result['departmentId'])],
         positions: [result['positionIds']?.split(',')]
       });
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: this.editTitleTpl,
         nzContent: this.contentTpl,
         nzFooter: null,
@@ -99,8 +99,8 @@ export class EmployeeComponent implements OnInit {
       employee.id = this.currentId;
       employee.departmentId = this.editForm.value['department']?.toString();
       employee.positionIds = this.editForm.value['positions'].join(',');
-      this.employeeService.updateEmployee(employee).subscribe(result => {
-        this.messageService.success("修改成功！");
+      this._employeeService.updateEmployee(employee).subscribe(result => {
+        this._messageService.success("修改成功！");
         this.refresh();
         this.modal.close();
       });
