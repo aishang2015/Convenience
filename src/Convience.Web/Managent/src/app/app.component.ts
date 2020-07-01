@@ -1,6 +1,6 @@
-import { Component, OnChanges } from '@angular/core';
-import { StorageService } from './core/services/storage.service';
+import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',

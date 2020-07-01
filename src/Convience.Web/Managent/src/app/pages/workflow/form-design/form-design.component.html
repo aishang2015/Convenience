@@ -1,0 +1,242 @@
+<div id="edit-area">
+    <div id="tool-container">
+        <nz-card>
+            <h2>元素</h2>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,1)">
+                <label>标签</label>
+            </div>
+            <div class="control" draggable="true" (dragstart)="onDragStart($event,2)">
+                <input nz-input value="输入框" />
+                <div class="mask"></div>
+            </div>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,3)">
+                <nz-select style="width: 100%;" ngModel="选择器">
+                    <nz-option nzValue="选择器" nzLabel="选择器"></nz-option>
+                </nz-select>
+                <div class="mask"></div>
+            </div>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,4)">
+                <input nz-input value="数值输入" />
+                <div class="mask"></div>
+            </div>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,5)">
+                <nz-date-picker style="width: 100%;" nzPlaceHolder="日期选择"></nz-date-picker>
+                <div class="mask"></div>
+            </div>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,6)">
+                <nz-time-picker style="width: 100%;" nzPlaceHolder="时间选择"></nz-time-picker>
+                <div class="mask"></div>
+            </div>
+            <div draggable="true" class="control" (dragstart)="onDragStart($event,7)">
+                <textarea rows="4" nz-input style="width: 100%;" ngModel="多行文本"></textarea>
+                <div class="mask"></div>
+            </div>
+        </nz-card>
+    </div>
+    <div id="form-Container">
+        <nz-card>
+            <div id="form-tool-bar">
+                <label>当前工作流：{{workflowName}}</label>
+                <div style="display: inline-block;">
+                    <nz-form-label style="width: 80px;display: inline-block;">页面高</nz-form-label>
+                    <nz-form-control style="width: 100px;display: inline-block;">
+                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.height"
+                            [nzFormatter]="formatterPiex" [nzParser]="parserPiex"
+                            (ngModelChange)="formHeightChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div style="display: inline-block;">
+                    <nz-form-label style="width: 80px;display: inline-block;">页面宽</nz-form-label>
+                    <nz-form-control style="width: 100px;display: inline-block;">
+                        <nz-input-number style="width: 100%;" [(ngModel)]="formData.width" [nzFormatter]="formatterPiex"
+                            [nzParser]="parserPiex" (ngModelChange)="formWidthChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div style="display: inline-block;margin-left: 20px;">
+                    <button nz-button nzType="default" nzShape="circle" (click)="reloadFormSize($event)"><i nz-icon
+                            nzType="redo"></i></button>
+                </div>
+                <div style="display: inline-block;margin-left: 20px;">
+                    <nz-select [(ngModel)]="formData.background" style="width: 100px;"
+                        (ngModelChange)="formBackGroundChanged($event)">
+                        <nz-option nzCustomContent nzLabel="纯黑" nzValue="black">
+                            <div style="height: 20px;background-color: black;"></div>
+                        </nz-option>
+                        <nz-option nzCustomContent nzLabel="橙色" nzValue="#EB7347">
+                            <div style="height: 20px;background-color: #EB7347;"></div>
+                        </nz-option>
+                        <nz-option nzCustomContent nzLabel="暗绿" nzValue="#84AF9B">
+                            <div style="height: 20px;background-color: #84AF9B;"></div>
+                        </nz-option>
+                        <nz-option nzCustomContent nzLabel="蓝色" nzValue="#00CCFF">
+                            <div style="height: 20px;background-color: #00CCFF;"></div>
+                        </nz-option>
+                        <nz-option nzCustomContent nzLabel="灰色" nzValue="#D0D0D0">
+                            <div style="height: 20px;background-color: #D0D0D0;"></div>
+                        </nz-option>
+                    </nz-select>
+                </div>
+                <nz-button-group class="ml-10">
+                    <button nz-button (click)="back()">返回</button>
+                    <button nz-button (click)="save()" [nzLoading]="isloading">保存</button>
+                </nz-button-group>
+            </div>
+            <div id="form-area" #formArea (drop)="dropZone($event)" (dragover)="onDragOver($event)">
+            </div>
+        </nz-card>
+    </div>
+    <div id="prop-container">
+        <nz-card>
+            <h2>属性</h2>
+            <div *ngIf="checkedNode">
+                <h3 class="ml-10">通用</h3>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">控件名称</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input [(ngModel)]="checkedNodeData.name" style="width: 100%;">
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">字号</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-select [(ngModel)]="checkedNodeData.fontSize" style="width: 100%;"
+                            (ngModelChange)="fontSizeChange($event)">
+                            <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of fontsize"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">宽度</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-number [(ngModel)]="checkedNodeData.width" [nzStep]="1" style="width: 100%;"
+                            [nzFormatter]="formatterPiex" [nzParser]="parserPiex"
+                            (ngModelChange)="widthChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">上边距</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-number [(ngModel)]="checkedNodeData.top" style="width: 100%;"
+                            [nzFormatter]="formatterPiex" [nzParser]="parserPiex" (ngModelChange)="topChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">左边距</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-number [(ngModel)]="checkedNodeData.left" [nzStep]="1" style="width: 100%;"
+                            [nzFormatter]="formatterPiex" [nzParser]="parserPiex" (ngModelChange)="leftChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">位置</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-button-group>
+                            <button nz-button (click)="setVertialPosition('left')"><i nz-icon nzType="pic-left"
+                                    nzTheme="outline"></i></button>
+                            <button nz-button (click)="setVertialPosition('middle')"><i nz-icon nzType="pic-center"
+                                    nzTheme="outline"></i></button>
+                            <button nz-button (click)="setVertialPosition('right')"><i nz-icon nzType="pic-right"
+                                    nzTheme="outline"></i></button>
+                        </nz-button-group>
+                    </nz-form-control>
+                </div>
+                <nz-divider
+                    *ngIf="checkedNodeData.controlType == 1 || checkedNodeData.controlType == 7 || checkedNodeData.controlType == 3">
+                </nz-divider>
+                <h3 class="ml-10"
+                    *ngIf="checkedNodeData.controlType == 1 || checkedNodeData.controlType == 7 || checkedNodeData.controlType == 3">
+                    数据</h3>
+                <div nz-row class="mt-10" *ngIf="checkedNodeData.controlType == 1">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">内容</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input [(ngModel)]="checkedNodeData.content" (ngModelChange)="contentChanged($event)">
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10" *ngIf="checkedNodeData.controlType == 7">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">行数</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-number [(ngModel)]="checkedNodeData.line" [nzStep]="1" style="width: 100%;"
+                            (ngModelChange)="lineChanged($event)">
+                        </nz-input-number>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10" *ngIf="checkedNodeData.controlType == 3">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">选项</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input (keydown.enter)="optionEnter($event)" [(ngModel)]="inputOption"
+                            nzPlaceHolder="选项">
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10 mr-10" *ngIf="checkedNodeData.controlType == 3">
+                    <div *ngFor="let o of checkedNodeData.optionList" class="badage" (click)="removeOption($event)">
+                        {{o}}
+                    </div>
+                </div>
+                <nz-divider *ngIf="checkedNodeData.controlType != 1"></nz-divider>
+
+                <!-- <h3 class="ml-10" *ngIf="checkedNodeData.controlType != 1">校验</h3>
+                <div nz-row class="mt-10" *ngIf="checkedNodeData.controlType != 1">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">必须</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-switch [(ngModel)]="checkedNodeData.isRequired"></nz-switch>
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10"
+                    *ngIf="checkedNodeData.controlType != 1 && checkedNodeData.controlType != 3 && checkedNodeData.controlType != 5 && checkedNodeData.controlType != 6">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">正则匹配</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <input nz-input [(ngModel)]="checkedNodeData.parttern">
+                    </nz-form-control>
+                </div>
+                <div nz-row class="mt-10"
+                    *ngIf="checkedNodeData.controlType != 1 && checkedNodeData.controlType != 3 && checkedNodeData.controlType != 5 && checkedNodeData.controlType != 6">
+                    <nz-form-label [nzSm]="8" [nzXs]="24">最大长度</nz-form-label>
+                    <nz-form-control [nzSm]="16" [nzXs]="24">
+                        <nz-input-number [(ngModel)]="checkedNodeData.maxLength" style="width: 100%;"></nz-input-number>
+                    </nz-form-control>
+                </div> -->
+            </div>
+        </nz-card>
+    </div>
+
+
+    <div #label class="formElement">
+        <label>标签</label>
+    </div>
+    <div #input class="formElement">
+        <input nz-input value="输入框" style="width: 200px;" />
+        <div class="mask"></div>
+    </div>
+    <div #select class="formElement">
+        <nz-select style="width: 200px;" ngModel="选择器">
+            <nz-option nzValue="选择器" nzLabel="选择器"></nz-option>
+        </nz-select>
+        <div class="mask"></div>
+    </div>
+    <div #numberInput class="formElement">
+        <input nz-input value="数值输入" style="width: 200px;" />
+        <div class="mask"></div>
+    </div>
+    <div #datePicker class="formElement">
+        <nz-date-picker style="width: 200px;" nzPlaceHolder="日期选择"></nz-date-picker>
+        <div class="mask"></div>
+    </div>
+    <div #timePicker class="formElement">
+        <nz-time-picker style="width: 200px;" nzPlaceHolder="时间选择"></nz-time-picker>
+        <div class="mask"></div>
+    </div>
+    <div #multiLineInput class="formElement">
+        <textarea rows="4" nz-input style="width: 200px;" ngModel="多行文本"></textarea>
+        <div class="mask"></div>
+    </div>
+
+    <div #selectedBorder class="sborder">
+        <div #lborder class="lborder"></div>
+        <div #rborder class="rborder"></div>
+    </div>
+</div>

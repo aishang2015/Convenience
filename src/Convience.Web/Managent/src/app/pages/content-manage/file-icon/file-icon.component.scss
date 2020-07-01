@@ -1,0 +1,47 @@
+.content {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px;
+    width: 140px;
+    height: 160px;
+    .control {
+        margin: 2px;
+    }
+    .content-icon {
+        font-size: 100px;
+    }
+    .describe {
+        height: 40px;
+        p {
+            margin: 0;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+    .layer {
+        position: absolute;
+        display: none;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0 auto;
+    }
+}
+.content:hover {
+    background-color: rgba($color: lightgray, $alpha: 0.2);
+    .layer {
+        display: inline-block;
+        height: 40px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+    }
+    .describe {
+        //display: none;
+        visibility: hidden;
+    }
+}

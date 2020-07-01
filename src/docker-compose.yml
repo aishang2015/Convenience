@@ -42,7 +42,7 @@ services:
     container_name: api1
     image: api-app
     build: 
-      context: .
+      context: ./Convience.Backend
       dockerfile: Convience.Applications/Convience.ManagentApi/Dockerfile
     restart: always
     ports:

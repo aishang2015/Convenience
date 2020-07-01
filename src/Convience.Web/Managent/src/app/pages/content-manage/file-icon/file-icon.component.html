@@ -1,0 +1,11 @@
+<div class="content" (click)="click()">
+    <i class="content-icon" nz-icon [nzIconfont]="getIconType()"></i>
+    <div class="describe">
+        <p>{{file.fileName}}</p>
+        <p>{{file.createTime | date: 'yyyy-MM-dd'}}</p>
+    </div>
+    <div class="layer">
+        <ng-container *canOperate="'downloadFileBtn'"><button *ngIf="!file.isDirectory" class="control" nz-button nzType="primary" nzShape="circle" (click)="download()"><i nz-icon nzType="cloud-download"></i></button></ng-container>
+        <button class="control" nz-button nzType="primary" nzShape="circle" (click)="delete()" *canOperate="'deleteFileBtn'" ><i nz-icon nzType="delete"></i></button>
+    </div>
+</div>
