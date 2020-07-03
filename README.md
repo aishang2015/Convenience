@@ -1,4 +1,4 @@
-## Convience
+## Convenience
 
 使用.NET Core 3.1 + Angular 9 + NG-ZORRO开发，实现了很多基本功能，方便二次开发。
 
