@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { CodeGeneratorComponent } from './code-generator/code-generator.component';
-import { NzStepsModule, NzTabsModule, NzRadioModule, NzResultModule, NzFormModule, NzPaginationModule, NzSelectModule, NzCardModule, NzIconModule, NzInputModule, NzButtonModule } from 'ng-zorro-antd';
+import { NzStepsModule, NzTabsModule, NzRadioModule, NzResultModule, NzFormModule, NzPaginationModule, NzSelectModule, NzCardModule, NzIconModule, NzInputModule, NzButtonModule, NzSwitchModule } from 'ng-zorro-antd';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { LoginGuard } from 'src/app/guards/login.guard';
 import { ManageUiComponent } from './manage-ui/manage-ui.component';
@@ -36,7 +36,8 @@ import { ManageUiComponent } from './manage-ui/manage-ui.component';
     NzSelectModule,
     NzCardModule,
     NzIconModule,
-    NzButtonModule
+    NzButtonModule,
+    NzSwitchModule
   ]
 })
 export class SystemToolModule { }
