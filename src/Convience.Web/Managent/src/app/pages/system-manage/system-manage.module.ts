@@ -6,7 +6,7 @@ import { RoleManageComponent } from './role-manage/role-manage.component';
 import { UserManageComponent } from './user-manage/user-manage.component';
 import { MenuManageComponent } from './menu-manage/menu-manage.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
-import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTableModule, NzTagModule, NzAvatarModule, NzCardModule, NzInputModule, NzTreeModule, NzTreeSelectModule, NzIconModule, NzRadioModule } from 'ng-zorro-antd';
+import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTableModule, NzTagModule, NzAvatarModule, NzCardModule, NzInputModule, NzTreeModule, NzTreeSelectModule, NzIconModule, NzRadioModule, NzSwitchModule } from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTab
     NzTreeSelectModule,
     NzIconModule,
     NzRadioModule,
+    NzSwitchModule
   ]
 })
 export class SystemManageModule { }

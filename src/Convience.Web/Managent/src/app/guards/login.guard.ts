@@ -17,6 +17,7 @@ export class LoginGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     if (!this.storageService.hasUserToken() || this.storageService.IsTokenExpire) {
+      this.storageService.removeUserToken();
       this.router.navigate(['/account/login']);
       return false;
     }

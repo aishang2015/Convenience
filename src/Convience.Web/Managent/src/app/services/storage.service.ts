@@ -11,12 +11,25 @@ export class StorageService {
   constructor() { }
 
   set userToken(value) {
-    localStorage.setItem('userToken', value);
     let expirationDate = this.jwtService.getTokenExpirationDate(value);
     let decodeToken = this.jwtService.decodeToken(value);
-    this.UserRoles = decodeToken['userroleids'];
-    this.userName = decodeToken['username'];
+
+    localStorage.setItem('userToken', value);
+    localStorage.setItem("userroles", decodeToken['userroleids']);
+    localStorage.setItem("username", decodeToken['username']);
     localStorage.setItem('userTokenExpiration', expirationDate.toString());
+  }
+
+  removeUserToken() {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userroles');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userTokenExpiration');
+
+    localStorage.removeItem("name");
+    localStorage.removeItem("avatar");
+    localStorage.removeItem("identifycation");
+    localStorage.removeItem("route");
   }
 
   get userToken() {
@@ -27,21 +40,14 @@ export class StorageService {
     return localStorage.getItem('userTokenExpiration');
   }
 
+  get userName() {
+    return localStorage.getItem("username");
+  }
+
   get IsTokenExpire() {
     let now = new Date();
     let expire = new Date(this.tokenExpiration);
     return now > expire;
-  }
-
-  get userName() {
-    return localStorage.getItem("username");
-  }
-  set userName(value) {
-    localStorage.setItem("username", value);
-  }
-
-  removeUserToken() {
-    localStorage.removeItem('userToken');
   }
 
   hasUserToken(): boolean {
@@ -57,9 +63,6 @@ export class StorageService {
 
   get UserRoles() {
     return localStorage.getItem("userroles");
-  }
-  set UserRoles(value) {
-    localStorage.setItem("userroles", value);
   }
 
   get Avatar() {
