@@ -9,7 +9,7 @@ namespace Convience.Entity.Configurations
     {
         public void Configure(EntityTypeBuilder<MenuTree> builder)
         {
-            builder.Property(m => m.Id).HasIdentityOptions(startValue: 187);
+            builder.Property(m => m.Id).HasIdentityOptions(startValue: 194);
         }
     }
 }
