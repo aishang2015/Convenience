@@ -115,16 +115,19 @@ namespace Convience.WPFClient.Windows
 
         private void ShowMainWindow()
         {
-            Visibility = Visibility.Hidden;
-            var main = new MainWindow(_appDbContext);
-            main.LogoutEvent += () =>
+            Hide();
+            var that = this;
+            var main = App.GetWindow<MainWindow>();
+            main.LogoutEvent += async () =>
             {
                 _appDbContext.LoginInfos.RemoveRange(_appDbContext.LoginInfos);
                 _appDbContext.SaveChanges();
-                Visibility = Visibility.Visible;
+                Show();
+
+                // 不能再事件中使用wait();
+                await LoadCaptcha();
                 main.IsCloseApp = false;
                 main.Close();
-                _ = LoadCaptcha();
             };
             main.Show();
         }

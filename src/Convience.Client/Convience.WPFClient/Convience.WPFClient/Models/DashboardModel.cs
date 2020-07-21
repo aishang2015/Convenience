@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Convience.WPFClient.Models
+﻿namespace Convience.WPFClient.Models
 {
     public class DashboardModel
     {

@@ -23,6 +23,8 @@ export class CodeGeneratorComponent implements OnInit {
 
   radioList: { name: string; value: number; }[] = [];
 
+  isGenerateFinish: boolean = false;
+
   // code: {
   //   bentity?: string; 
   //   bconfig?: string; 
@@ -93,6 +95,7 @@ export class CodeGeneratorComponent implements OnInit {
 
   makeCodes() {
 
+    this.isGenerateFinish = false;
     this.fileNameList = this._codeService.getFileNameList(this.editForm.value['entityName']);
     this.radioList = [];
     this.fileNameList.forEach(element => {
@@ -122,6 +125,7 @@ export class CodeGeneratorComponent implements OnInit {
     this.code[8] = this._codeService.getFrontService(this.editForm.value['entityName']);
     this.code[9] = this._codeService.getFrontHtml(this.editForm.value['entityName'], properties);
     this.code[10] = this._codeService.getFrontTs(this.editForm.value['entityName'], properties);
+    this.isGenerateFinish = true;
   }
 
   toThirdStep() {

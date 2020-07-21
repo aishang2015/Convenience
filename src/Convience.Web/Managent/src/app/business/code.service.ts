@@ -9,7 +9,7 @@ export class CodeService {
 
   getFileNameList(entityName: string) {
     let result: string[] = [];
-    let name = this.transfer(entityName);
+    let name = this.upperFirstCharacter(entityName);
     let lower = entityName.toLowerCase();
     result.push(`${name}.cs`);
     result.push(`${name}Configuration.cs`);
@@ -30,7 +30,7 @@ export class CodeService {
   getBackEntity(entityName: string, dbcontext: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `public ${this.getCsharpType(element.type)} ${this.transfer(element.property)} { get; set; }
+      propertyString += `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }
 
         `;
     });
@@ -38,8 +38,8 @@ export class CodeService {
 
 namespace Convience.Entity.Entity
 {
-    [Entity(DbContextType = typeof(${this.transfer(dbcontext)}))]
-    public class ${this.transfer(entityName)}
+    [Entity(DbContextType = typeof(${this.upperFirstCharacter(dbcontext)}))]
+    public class ${this.upperFirstCharacter(entityName)}
     {
         ${propertyString}
     }
@@ -47,7 +47,7 @@ namespace Convience.Entity.Entity
   }
 
   getBackEntityConfig(entityName: string, properties: { property; isRequired; length; }[]) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
     let builder = '';
     properties.forEach(element => {
       if (element.isRequired) {
@@ -79,22 +79,22 @@ namespace Convience.Entity.Configurations
   getBackModels(entityName: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `public ${this.getCsharpType(element.type)} ${this.transfer(element.property)} {get;set;}
+      propertyString += `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} {get;set;}
 
         `;
     });
     return `namespace Convience.Model.Models
 {
-    public class ${this.transfer(entityName)}ViewModel
+    public class ${this.upperFirstCharacter(entityName)}ViewModel
     {
         ${propertyString}
     }
     
-    public class ${this.transfer(entityName)}ResultModel : ${this.transfer(entityName)}ViewModel
+    public class ${this.upperFirstCharacter(entityName)}ResultModel : ${this.upperFirstCharacter(entityName)}ViewModel
     {
     }
     
-    public class ${this.transfer(entityName)}QueryModel
+    public class ${this.upperFirstCharacter(entityName)}QueryModel
     {
         public int Page { get; set; }
 
@@ -104,7 +104,7 @@ namespace Convience.Entity.Configurations
   }
 
   getBackViewModelValidator(entityName: string, properties: { property; isRequired; length; }[]) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
 
     let builder = '';
     properties.forEach(element => {
@@ -122,7 +122,7 @@ namespace Convience.Entity.Configurations
       }
     });
 
-    return builder?`using FluentValidation;
+    return builder ? `using FluentValidation;
     
 namespace Convience.Model.Validators
 {
@@ -133,11 +133,11 @@ namespace Convience.Model.Validators
           ${builder}
         }
     }
-}`:'';
+}`: '';
   }
 
   getBackQueryValidator(entityName: string) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
     return `using FluentValidation;
 
 namespace Convience.Model.Validators
@@ -153,7 +153,8 @@ namespace Convience.Model.Validators
   }
 
   getBackService(entityName: string, dbcontext: string) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
+    let lower = this.lowerFirstCharacter(entityName);
     return `using Convience.EntityFrameWork.Repositories;
 using Convience.Util.Extension;
 using AutoMapper;
@@ -180,33 +181,34 @@ namespace Convience.Service
 
     public class ${camel}Service : I${camel}Service
     {
-        private readonly IRepository<${camel}> _${camel}Repository;
+        private readonly IRepository<${camel}> _${lower}Repository;
         
-        private readonly IUnitOfWork<${this.transfer(dbcontext)}> _unitOfWork;
+        private readonly IUnitOfWork<${this.upperFirstCharacter(dbcontext)}> _unitOfWork;
 
         private readonly IMapper _mapper;
 
-        public ${camel}Service(IRepository<${camel}> ${camel}Repository,
-          IUnitOfWork<${this.transfer(dbcontext)}> unitOfWork,
+        public ${camel}Service(IRepository<${camel}> ${lower}Repository,
+          IUnitOfWork<${this.upperFirstCharacter(dbcontext)}> unitOfWork,
           IMapper mapper)
         {
-            _${camel}Repository = ${camel}Repository;
+            _${lower}Repository = ${lower}Repository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<${camel}ResultModel> GetByIdAsync(int id)
         {
-            var ${camel} = await _${camel}Repository.GetAsync(id);
+            var ${camel} = await _${lower}Repository.GetAsync(id);
             return _mapper.Map<${camel}ResultModel>(${camel});
         }
         
         public (IEnumerable<${camel}ResultModel>, int) Get${camel}s(${camel}QueryModel query)
         {
             var where = ExpressionExtension.TrueExpression<${camel}>();
-            var ${camel}Query =  _${camel}Repository.Get().Where(@where);
+            var ${lower}Query =  _${lower}Repository.Get().Where(@where);
             var skip = query.Size * (query.Page - 1);
-            return (${camel}QueryModel.Skip(skip).Take(query.Size), ${camel}Query.Count());
+            var result = _mapper.Map<IEnumerable<${camel}>,IEnumerable<${camel}ResultModel>>(${lower}Query.Skip(skip).Take(query.Size).ToList());
+            return (result, ${lower}Query.Count());
         }
 
         public async Task<bool> Add${camel}Async(${camel}ViewModel model)
@@ -214,7 +216,7 @@ namespace Convience.Service
             try
             {
                 var ${camel} = _mapper.Map<${camel}>(model);
-                await _${camel}Repository.AddAsync(${camel});
+                await _${lower}Repository.AddAsync(${camel});
                 await _unitOfWork.SaveAsync();
                 return true;
             }
@@ -228,7 +230,7 @@ namespace Convience.Service
         {
             try
             {
-                await _${camel}Repository.RemoveAsync(id);
+                await _${lower}Repository.RemoveAsync(id);
                 await _unitOfWork.SaveAsync();
                 return true;
             }
@@ -242,7 +244,7 @@ namespace Convience.Service
         {
             try
             {
-                var entity = await _${camel}Repository.GetAsync(model.Id);
+                var entity = await _${lower}Repository.GetAsync(model.Id);
                 _mapper.Map(model, entity);
                 await _unitOfWork.SaveAsync();
                 return true;
@@ -257,7 +259,6 @@ namespace Convience.Service
   }
 
   getBackIService(entityName: string) {
-    let camel = this.transfer(entityName);
     return `using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -268,7 +269,8 @@ namespace Convience.Service
   }
 
   getBackController(entityName: string) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
+    let lower = this.lowerFirstCharacter(entityName);
     return `using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -284,18 +286,18 @@ namespace Convience.ManagentApi.Controllers
     [Authorize]
     public class ${camel}Controller : ControllerBase
     {       
-        private readonly I${camel}Service _${camel}Service;
+        private readonly I${camel}Service _${lower}Service;
 
-        public ${camel}Controller(I${camel}Service ${camel}Service)
+        public ${camel}Controller(I${camel}Service ${lower}Service)
         {
-            _${camel}Service = ${camel}Service;
+            _${lower}Service = ${lower}Service;
         }
 
         [HttpGet]
         [Permission("${camel}Get")]
         public async Task<IActionResult> GetById(int id)
         {
-            var ${camel} = await _${camel}Service.GetByIdAsync(id);
+            var ${camel} = await _${lower}Service.GetByIdAsync(id);
             return Ok(${camel});
         }
 
@@ -303,7 +305,7 @@ namespace Convience.ManagentApi.Controllers
         [Permission("${camel}List")]
         public IActionResult Get([FromQuery]${camel}QueryModel ${camel}Query)
         {
-            var result = _${camel}Service.Get${camel}s(${camel}Query);
+            var result = _${lower}Service.Get${camel}s(${camel}Query);
             return Ok(new
             {
                 data = result.Item1,
@@ -315,7 +317,7 @@ namespace Convience.ManagentApi.Controllers
         [Permission("${camel}Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var isSuccess = await _${camel}Service.Delete${camel}Async(id);
+            var isSuccess = await _${lower}Service.Delete${camel}Async(id);
             if (!isSuccess)
             {
                 return this.BadRequestResult("删除失败!");
@@ -327,7 +329,7 @@ namespace Convience.ManagentApi.Controllers
         [Permission("${camel}Add")]
         public async Task<IActionResult> Add(${camel}ViewModel ${camel}ViewModel)
         {
-            var isSuccess = await _${camel}Service.Add${camel}Async(${camel}ViewModel);
+            var isSuccess = await _${lower}Service.Add${camel}Async(${camel}ViewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("添加失败!");
@@ -339,7 +341,7 @@ namespace Convience.ManagentApi.Controllers
         [Permission("${camel}Update")]
         public async Task<IActionResult> Update(${camel}ViewModel ${camel}ViewModel)
         {
-            var isSuccess = await _${camel}Service.Update${camel}Async(${camel}ViewModel);
+            var isSuccess = await _${lower}Service.Update${camel}Async(${camel}ViewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("更新失败!");
@@ -353,16 +355,17 @@ namespace Convience.ManagentApi.Controllers
   getFrontModel(entityName: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `${this.transfer(element.property)}?: ${this.getTypeScriptType(element.type)};
+      propertyString += `${this.lowerFirstCharacter(element.property)}?: ${this.getTypeScriptType(element.type)};
     `;
     });
-    return `export class ${this.transfer(entityName)} {
-    ${propertyString}
+    return `export class ${this.upperFirstCharacter(entityName)} {
+    ${this.lowerFirstCharacter(propertyString)}
 }`;
   }
 
   getFrontService(entityName: string) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
+    let lower = this.lowerFirstCharacter(entityName);
     let result =
       `
 import { Injectable } from '@angular/core';
@@ -390,12 +393,12 @@ export class ${camel}Service {
     return this.httpClient.delete(\`\${this.uriConstant.${camel}Uri}?id=\${id}\`);
   }
 
-  update(${camel}) {
-    return this.httpClient.patch(this.uriConstant.${camel}Uri, ${camel});
+  update(${lower}) {
+    return this.httpClient.patch(this.uriConstant.${camel}Uri, ${lower});
   }
 
-  add(${camel}) {
-    return this.httpClient.post(this.uriConstant.${camel}Uri, ${camel});
+  add(${lower}) {
+    return this.httpClient.post(this.uriConstant.${camel}Uri, ${lower});
   }
 }
 `
@@ -403,7 +406,7 @@ export class ${camel}Service {
   }
 
   getFrontHtml(entityName: string, properties: { property; }[]) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
 
     let ths = '';
     properties.forEach(element => {
@@ -412,15 +415,15 @@ export class ${camel}Service {
     });
     let tds = '';
     properties.forEach(element => {
-      tds += `<td nzAlign="center">{{ data.${this.transfer(element.property)} }}</td>
+      tds += `<td nzAlign="center">{{ data.${this.lowerFirstCharacter(element.property)} }}</td>
                     `;
     });
     let items = '';
     properties.forEach(element => {
       items += `<nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_${this.transfer(element.property)}'">${element.property}</nz-form-label>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_${this.lowerFirstCharacter(element.property)}'">${element.property}</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="">
-                <input [attr.id]="'edit_${this.transfer(element.property)}'" formControlName="${this.transfer(element.property)}" nz-input placeholder="${element.property}"
+                <input [attr.id]="'edit_${this.lowerFirstCharacter(element.property)}'" formControlName="${this.lowerFirstCharacter(element.property)}" nz-input placeholder="${element.property}"
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
@@ -494,17 +497,24 @@ export class ${camel}Service {
   }
 
   getFrontTs(entityName: string, properties: { property; }[]) {
-    let camel = this.transfer(entityName);
+    let camel = this.upperFirstCharacter(entityName);
+    let lower = this.lowerFirstCharacter(entityName);
 
     let fs = '';
     properties.forEach(element => {
-      fs += `${this.transfer(element.property)}: [result.${this.transfer(element.property)}, []],
+      fs += `${this.lowerFirstCharacter(element.property)}: [result.${this.lowerFirstCharacter(element.property)}, []],
             `;
     });
 
     let efs = '';
     properties.forEach(element => {
-      efs += `${this.transfer(element.property)}: [null, []],
+      efs += `${this.lowerFirstCharacter(element.property)}: [null, []],
+            `;
+    });
+
+    let fse = '';
+    properties.forEach(element => {
+      fse += `${lower}.${this.lowerFirstCharacter(element.property)} = this.editForm.values["${this.lowerFirstCharacter(element.property)}"];
             `;
     });
 
@@ -530,10 +540,10 @@ export class ${camel}Component implements OnInit {
     contentTpl;
 
     constructor(
-        private ${camel}Service:${camel}Service,
-        private messageService: NzMessageService,
-        private modalService: NzModalService,
-        private formBuilder: FormBuilder) { }
+        private _${lower}Service:${camel}Service,
+        private _messageService: NzmessageService,
+        private _modalService: NzModalService,
+        private _formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
       this.refresh();
@@ -541,10 +551,10 @@ export class ${camel}Component implements OnInit {
 
     add(){
       this.currentId = null;
-      this.editForm = this.formBuilder.group({
+      this.editForm = this._formBuilder.group({
         ${efs}
       });
-      this.modal = this.modalService.create({
+      this.modal = this._modalService.create({
         nzTitle: '添加',
         nzContent: this.contentTpl,
         nzFooter: null,
@@ -553,7 +563,7 @@ export class ${camel}Component implements OnInit {
     }
 
     refresh() { 
-      this.${camel}Service.getList(this.page, this.size)
+      this._${lower}Service.getList(this.page, this.size)
         .subscribe(result => {
           this.data = result['data'];
           this.total = result['count'];
@@ -565,12 +575,12 @@ export class ${camel}Component implements OnInit {
     }
 
     edit(id) {
-        this.${camel}Service.get(id).subscribe((result: any) => {
+        this._${lower}Service.get(id).subscribe((result: any) => {
           this.currentId = result.id;
-          this.editForm = this.formBuilder.group({
+          this.editForm = this._formBuilder.group({
             ${fs}
           });
-          this.modal = this.modalService.create({
+          this.modal = this._modalService.create({
             nzTitle: '编辑',
             nzContent: this.contentTpl,
             nzFooter: null,
@@ -580,12 +590,12 @@ export class ${camel}Component implements OnInit {
     }
 
     remove(id) {
-      this.modalService.confirm({
+      this._modalService.confirm({
         nzTitle: '是否删除该?',
         nzContent: null,
         nzOnOk: () => {
-          this.${camel}Service.delete(id).subscribe(result => {
-            this.messageService.success("删除成功！");
+          this._${lower}Service.delete(id).subscribe(result => {
+            this._messageService.success("删除成功！");
             this.refresh();
           });
         },
@@ -598,18 +608,18 @@ export class ${camel}Component implements OnInit {
         this.editForm.controls[i].updateValueAndValidity();
       }
       if (this.editForm.valid) {
-        var ${camel} = new ${camel}();
-
+        var ${lower} = new ${camel}();
+        ${fse}
         if (this.currentId) {
-          ${camel}.id = this.currentId;
-          this.${camel}Service.update(${camel}).subscribe(result => {
-            this.messageService.success("修改成功！");
+          ${lower}.id = this.currentId;
+          this._${lower}Service.update(${lower}).subscribe(result => {
+            this._messageService.success("修改成功！");
             this.refresh();
             this.modal.close();
           });
         } else {
-          this.${camel}Service.add(${camel}).subscribe(result => {
-            this.messageService.success("添加成功！");
+          this._${lower}Service.add(${lower}).subscribe(result => {
+            this._messageService.success("添加成功！");
             this.refresh();
             this.modal.close();
           });
@@ -625,7 +635,11 @@ export class ${camel}Component implements OnInit {
     sizeChange() {
       this.page = 1;
       this.refresh();
-    }    
+    }
+
+    cancel() {
+      this.modal.close();
+    }
 }
 
     `;
@@ -633,9 +647,15 @@ export class ${camel}Component implements OnInit {
   }
 
 
-  transfer(str: string) {
+  upperFirstCharacter(str: string) {
     if (str.length > 0) {
       return str[0].toUpperCase() + str.substring(1, str.length);
+    }
+  }
+
+  lowerFirstCharacter(str: string) {
+    if (str.length > 0) {
+      return str[0].toLowerCase() + str.substring(1, str.length);
     }
   }
 

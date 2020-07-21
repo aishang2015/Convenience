@@ -15,7 +15,7 @@ namespace Convience.WPFClient
     /// </summary>
     public partial class App : Application
     {
-        public IServiceProvider ServiceProvider { get; private set; }
+        public static IServiceProvider ServiceProvider { get; private set; }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -40,6 +40,11 @@ namespace Convience.WPFClient
         {
             var db = ServiceProvider.GetRequiredService<AppDbContext>();
             db.Database.EnsureCreated();
+        }
+
+        public static TWindow GetWindow<TWindow>() where TWindow : Window
+        {
+            return ServiceProvider.GetRequiredService<TWindow>();
         }
     }
 }
