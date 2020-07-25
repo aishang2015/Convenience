@@ -28,7 +28,7 @@ namespace Convience.HttpClients
             })
             .AddPolicyHandler(GetRetryPolicy())
             .AddPolicyHandler(GetCircuitBreakerPolicy())
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(2));
+            .AddPolicyHandler(GetTimeoutPolicy());
             return services;
         }
 
@@ -38,8 +38,8 @@ namespace Convience.HttpClients
         public static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
         {
             return HttpPolicyExtensions
-              .HandleTransientHttpError()
-              .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+              .HandleTransientHttpError()   // 5xx,408情况
+              .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound) // 404情况
               .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
 
@@ -49,8 +49,16 @@ namespace Convience.HttpClients
         public static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
         {
             return HttpPolicyExtensions
-                .HandleTransientHttpError()
+                .HandleTransientHttpError()  // System.Net.Http.HttpRequestException情况
                 .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
+        }
+
+        /// <summary>
+        /// 超时策略
+        /// </summary>
+        public static IAsyncPolicy<HttpResponseMessage> GetTimeoutPolicy()
+        {
+            return Policy.TimeoutAsync<HttpResponseMessage>(5);
         }
     }
 }
