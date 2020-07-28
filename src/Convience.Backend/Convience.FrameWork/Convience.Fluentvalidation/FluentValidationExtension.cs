@@ -13,7 +13,7 @@ namespace Convience.Fluentvalidation
     {
         public static IMvcBuilder AddFluentValidation(this IMvcBuilder builder, IServiceCollection services)
         {
-            ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+            ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
             builder.AddFluentValidation(configuration =>
             {
                 var assemblies = ReflectionHelper.AssemblyList;
