@@ -22,10 +22,12 @@
                     <td nzAlign="center">{{ getState(data.workFlowInstanceState) }}</td>
                     <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
-                        <button nz-button nzTooltipTitle="编辑内容" nzTooltipPlacement="top" nz-tooltip nzType="default"
-                            nzType="default" nzShape="circle" (click)="viewForm(data)" class="mr-10"> <i nz-icon
-                                nzType="edit"></i>
-                        </button>
+                        <ng-container *ngIf="data.workFlowInstanceState==1||data.workFlowInstanceState==3">
+                            <button nz-button nzTooltipTitle="编辑内容" nzTooltipPlacement="top" nz-tooltip nzType="default"
+                                nzType="default" nzShape="circle" (click)="viewForm(data)" class="mr-10"> <i nz-icon
+                                    nzType="edit"></i>
+                            </button>
+                        </ng-container>
                         <button nz-button nzTooltipTitle="查看流程" nzTooltipPlacement="top" nz-tooltip nzType="default"
                             nzShape="circle" (click)="viewflow(data)" class="mr-10">
                             <i nz-icon nzType="fork"></i>

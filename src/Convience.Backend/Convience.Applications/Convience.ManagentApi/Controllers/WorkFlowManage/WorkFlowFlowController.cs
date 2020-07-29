@@ -32,7 +32,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workflowFlowAddUpdate")]
         public async Task<IActionResult> AddOrUpdate(WorkFlowFlowViewModel viewModel)
         {
-            var isSuccess = await _workFlowFlowService.AddOrUpdateWorkFlowFlow(viewModel, HttpContext.User.GetUserName());
+            var isSuccess = await _workFlowFlowService.AddOrUpdateWorkFlowFlow(viewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("操作失败!");

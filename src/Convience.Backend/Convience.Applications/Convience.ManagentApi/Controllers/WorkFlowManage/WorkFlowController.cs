@@ -57,7 +57,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workflowAdd")]
         public async Task<IActionResult> Add(WorkFlowViewModel workflowViewModel)
         {
-            var isSuccess = await _workflowService.AddWorkFlowAsync(workflowViewModel, User.GetName());
+            var isSuccess = await _workflowService.AddWorkFlowAsync(workflowViewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("添加失败!");
@@ -69,7 +69,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workflowUpdate")]
         public async Task<IActionResult> Update(WorkFlowViewModel workflowViewModel)
         {
-            var isSuccess = await _workflowService.UpdateWorkFlowAsync(workflowViewModel, User.GetUserName());
+            var isSuccess = await _workflowService.UpdateWorkFlowAsync(workflowViewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("更新失败!");

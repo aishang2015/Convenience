@@ -7,6 +7,7 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models.WorkFlowManage;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
@@ -23,17 +24,17 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 创建工作流实例
         /// </summary>
-        Task<bool> CreateWorkFlowInstance(int workflowId, string account, string userName);
+        Task<bool> CreateWorkFlowInstance(int workflowId);
 
         /// <summary>
         /// 用户发起的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(string account, int page, int size);
+        (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(int page, int size);
 
         /// <summary>
         /// 需要用户处理的的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(string account, int page, int size);
+        (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(int page, int size);
 
         /// <summary>
         /// 取得工作流内容
@@ -55,22 +56,22 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 提交
         /// </summary>
-        Task<bool> SubmitWorkFlowInstance(string account, WorkFlowInstanceHandleViewModel viewModel);
+        Task<bool> SubmitWorkFlowInstance(WorkFlowInstanceHandleViewModel viewModel);
 
         /// <summary>
         /// 取消工作流
         /// </summary>
-        Task<bool> CancelFlowInstance(int workFlowInstanceId, string account);
+        Task<bool> CancelFlowInstance(int workFlowInstanceId);
 
         /// <summary>
         /// 删除工作流ID
         /// </summary>
-        Task<bool> DeleteWorkFlowInstance(int workFlowInstanceId, string account);
+        Task<bool> DeleteWorkFlowInstance(int workFlowInstanceId);
 
         /// <summary>
         /// 审核
         /// </summary>
-        Task<bool> ApproveOrDisApproveNode(string account, WorkFlowInstanceHandleViewModel viewModel);
+        Task<bool> ApproveOrDisApproveNode(WorkFlowInstanceHandleViewModel viewModel);
 
     }
 
@@ -100,6 +101,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly IMapper _mapper;
 
         public WorkFlowInstanceService(
@@ -115,6 +118,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlowInstanceValue> instanceValueRepository,
             IRepository<WorkFlowCondition> conditionRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _logger = logger;
@@ -129,11 +133,15 @@ namespace Convience.Service.WorkFlowManage
             _instanceValueRepository = instanceValueRepository;
             _conditionRepository = conditionRepository;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
-        public async Task<bool> CreateWorkFlowInstance(int workflowId, string account, string userName)
+        public async Task<bool> CreateWorkFlowInstance(int workflowId)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
+            var userName = _httpContextAccessor.HttpContext?.User?.GetName();
+
             // 获取开始节点id
             var startNode = await _nodeRepository.Get(n => n.WorkFlowId == workflowId && n.NodeType == NodeTypeEnum.StartNode)
                 .FirstOrDefaultAsync();
@@ -182,15 +190,18 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(string account, int page, int size)
+        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(int page, int size)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
             var query = _instanceRepository.Get(i => i.CreatedUserAccount == account);
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
             return (_mapper.Map<IEnumerable<WorkFlowInstanceResultModel>>(result.ToArray()), query.Count());
         }
 
-        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(string account, int page, int size)
+        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(int page, int size)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
             // 根据用户信息查找需要处理的实例
             var query = (from route in _instanceRouteRepository.Get()
                          join i in _instanceRepository.Get() on route.WorkFlowInstanceId equals i.Id
@@ -240,8 +251,9 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 用户发起工作流进行提交
         /// </summary>
-        public async Task<bool> SubmitWorkFlowInstance(string account, WorkFlowInstanceHandleViewModel viewModel)
+        public async Task<bool> SubmitWorkFlowInstance(WorkFlowInstanceHandleViewModel viewModel)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
             var instance = _instanceRepository.Get(i =>
                 i.Id == viewModel.WorkFlowInstanceId &&
                 i.CreatedUserAccount == account &&
@@ -311,8 +323,10 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 取消工作流
         /// </summary>
-        public async Task<bool> CancelFlowInstance(int workFlowInstanceId, string account)
+        public async Task<bool> CancelFlowInstance(int workFlowInstanceId)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
             var instance = _instanceRepository.Get(i =>
                 i.Id == workFlowInstanceId &&
                 i.CreatedUserAccount == account).FirstOrDefault();
@@ -338,8 +352,10 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 人员审核流程
         /// </summary>
-        public async Task<bool> ApproveOrDisApproveNode(string account, WorkFlowInstanceHandleViewModel viewModel)
+        public async Task<bool> ApproveOrDisApproveNode(WorkFlowInstanceHandleViewModel viewModel)
         {
+            var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
             // 取得当前用户待处理的节点
             var route = _instanceRouteRepository.Get(route =>
                 route.WorkFlowInstanceId == viewModel.WorkFlowInstanceId &&
@@ -580,10 +596,11 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 删除工作流ID
         /// </summary>
-        public async Task<bool> DeleteWorkFlowInstance(int workFlowInstanceId, string account)
+        public async Task<bool> DeleteWorkFlowInstance(int workFlowInstanceId)
         {
             try
             {
+                var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
                 await _instanceRepository.RemoveAsync(i =>
                     i.Id == workFlowInstanceId &&
                     i.CreatedUserAccount == account &&

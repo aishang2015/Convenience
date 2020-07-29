@@ -31,8 +31,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceAdd")]
         public async Task<IActionResult> CreateWorkFlowInstance([FromBody] WorkFlowInstanceViewModel vm)
         {
-            var isSuccess = await _workFlowInstanceService
-               .CreateWorkFlowInstance(vm.WorkFlowId, User.GetUserName(), User.GetName());
+            var isSuccess = await _workFlowInstanceService.CreateWorkFlowInstance(vm.WorkFlowId);
             if (!isSuccess)
             {
                 return this.BadRequestResult("创建工作流失败!");
@@ -47,7 +46,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceDelete")]
         public async Task<IActionResult> DeleteWorkFlowInstance([FromQuery] int id)
         {
-            var isSuccess = await _workFlowInstanceService.DeleteWorkFlowInstance(id, User.GetUserName());
+            var isSuccess = await _workFlowInstanceService.DeleteWorkFlowInstance(id);
             if (!isSuccess)
             {
                 return this.BadRequestResult("删除工作流失败!");
@@ -63,7 +62,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceList")]
         public IActionResult GetWorkFlowInstances([FromQuery] PageQueryModel query)
         {
-            var result = _workFlowInstanceService.GetInstanceList(User.GetUserName(), query.Page, query.Size);
+            var result = _workFlowInstanceService.GetInstanceList(query.Page, query.Size);
             return Ok(new
             {
                 data = result.Item1,
@@ -110,7 +109,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceSubmit")]
         public async Task<IActionResult> SubmitWorkFlowInstance(WorkFlowInstanceHandleViewModel vm)
         {
-            var isSuccess = await _workFlowInstanceService.SubmitWorkFlowInstance(User.GetUserName(), vm);
+            var isSuccess = await _workFlowInstanceService.SubmitWorkFlowInstance(vm);
             if (!isSuccess)
             {
                 return this.BadRequestResult("提交工作流失败!");
@@ -125,7 +124,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceCancel")]
         public async Task<IActionResult> CancelFlowInstance([FromBody] WorkFlowInstanceHandleViewModel vm)
         {
-            var isSuccess = await _workFlowInstanceService.CancelFlowInstance(vm.WorkFlowInstanceId, User.GetUserName());
+            var isSuccess = await _workFlowInstanceService.CancelFlowInstance(vm.WorkFlowInstanceId);
             if (!isSuccess)
             {
                 return this.BadRequestResult("取消工作流失败!");
@@ -140,7 +139,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("handledWorkFlowInstanceList")]
         public IActionResult GetHandledWorkFlowInstances([FromQuery] PageQueryModel query)
         {
-            var result = _workFlowInstanceService.GetHandledInstanceList(User.GetUserName(), query.Page, query.Size);
+            var result = _workFlowInstanceService.GetHandledInstanceList(query.Page, query.Size);
             return Ok(new
             {
                 data = result.Item1,
@@ -152,7 +151,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("handleWorkFlowInstanceApprove")]
         public async Task<IActionResult> ApproveOrDisApproveNode([FromBody] WorkFlowInstanceHandleViewModel vm)
         {
-            var isSuccess = await _workFlowInstanceService.ApproveOrDisApproveNode(User.GetUserName(), vm);
+            var isSuccess = await _workFlowInstanceService.ApproveOrDisApproveNode(vm);
             if (!isSuccess)
             {
                 return this.BadRequestResult("审批失败!");

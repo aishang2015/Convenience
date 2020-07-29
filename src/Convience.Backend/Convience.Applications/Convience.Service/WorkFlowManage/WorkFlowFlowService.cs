@@ -3,8 +3,10 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
+using Convience.JwtAuthentication;
 using Convience.Model.Models.WorkFlowManage;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using System;
@@ -18,7 +20,7 @@ namespace Convience.Service.WorkFlowManage
     {
         WorkFlowFlowResultModel GetWorkFlowFlow(int workflowId);
 
-        Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel, string userName);
+        Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel);
     }
 
     public class WorkFlowFlowService : IWorkFlowFlowService
@@ -35,6 +37,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private IMapper _mapper;
 
         public WorkFlowFlowService(ILogger<WorkFlowFlowService> logger,
@@ -43,6 +47,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlowNode> nodeRepository,
             IRepository<WorkFlowCondition> conditionRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _logger = logger;
@@ -51,13 +56,16 @@ namespace Convience.Service.WorkFlowManage
             _nodeRepository = nodeRepository;
             _conditionRepository = conditionRepository;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
-        public async Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel, string userName)
+        public async Task<bool> AddOrUpdateWorkFlowFlow(WorkFlowFlowViewModel viewModel)
         {
             try
             {
+                var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
                 foreach (var link in viewModel.WorkFlowLinkViewModels)
                 {
                     link.WorkFlowId = viewModel.WorkFlowId;

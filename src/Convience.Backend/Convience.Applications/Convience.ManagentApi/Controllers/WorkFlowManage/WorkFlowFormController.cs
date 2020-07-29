@@ -33,7 +33,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workflowFormAddUpdate")]
         public async Task<IActionResult> AddOrUpdate(WorkFlowFormViewModel viewModel)
         {
-            var isSuccess = await _workFlowFormService.AddOrUpdateWorkFlowForm(viewModel, HttpContext.User.GetUserName());
+            var isSuccess = await _workFlowFormService.AddOrUpdateWorkFlowForm(viewModel);
             if (!isSuccess)
             {
                 return this.BadRequestResult("保存失败!");
