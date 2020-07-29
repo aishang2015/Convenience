@@ -33,12 +33,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
         [Permission("employeeList")]
         public IActionResult Get([FromQuery] EmployeeQueryModel employeeQuery)
         {
-            var result = _employeeService.GetEmployees(employeeQuery);
-            return Ok(new
-            {
-                data = result.Item1,
-                count = result.Item2
-            });
+            return Ok(_employeeService.GetEmployees(employeeQuery));
         }
 
         [HttpPatch]

@@ -5,6 +5,7 @@ using Convience.Entity.Entity;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
 
 using Microsoft.AspNetCore.Http;
@@ -29,12 +30,12 @@ namespace Convience.Service.WorkFlowManage
         /// <summary>
         /// 用户发起的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(int page, int size);
+        PagingResultModel<WorkFlowInstanceResultModel> GetInstanceList(int page, int size);
 
         /// <summary>
         /// 需要用户处理的的工作流实例
         /// </summary>
-        (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(int page, int size);
+        PagingResultModel<WorkFlowInstanceResultModel> GetHandledInstanceList(int page, int size);
 
         /// <summary>
         /// 取得工作流内容
@@ -190,15 +191,19 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetInstanceList(int page, int size)
+        public PagingResultModel<WorkFlowInstanceResultModel> GetInstanceList(int page, int size)
         {
             var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
             var query = _instanceRepository.Get(i => i.CreatedUserAccount == account);
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
-            return (_mapper.Map<IEnumerable<WorkFlowInstanceResultModel>>(result.ToArray()), query.Count());
+            return new PagingResultModel<WorkFlowInstanceResultModel>
+            {
+                Data = _mapper.Map<IList<WorkFlowInstanceResultModel>>(result.ToArray()),
+                Count = query.Count()
+            };
         }
 
-        public (IEnumerable<WorkFlowInstanceResultModel>, int) GetHandledInstanceList(int page, int size)
+        public PagingResultModel<WorkFlowInstanceResultModel> GetHandledInstanceList(int page, int size)
         {
             var account = _httpContextAccessor.HttpContext?.User?.GetUserName();
 
@@ -212,7 +217,11 @@ namespace Convience.Service.WorkFlowManage
 
             // 取得结果
             var result = query.OrderByDescending(i => i.CreatedTime).Skip((page - 1) * size).Take(size);
-            return (_mapper.Map<IEnumerable<WorkFlowInstanceResultModel>>(result.ToArray()), query.Count());
+            return new PagingResultModel<WorkFlowInstanceResultModel>
+            {
+                Data = _mapper.Map<IList<WorkFlowInstanceResultModel>>(result.ToArray()),
+                Count = query.Count()
+            };
 
         }
 

@@ -62,12 +62,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("workFlowInstanceList")]
         public IActionResult GetWorkFlowInstances([FromQuery] PageQueryModel query)
         {
-            var result = _workFlowInstanceService.GetInstanceList(query.Page, query.Size);
-            return Ok(new
-            {
-                data = result.Item1,
-                count = result.Item2,
-            });
+            return Ok(_workFlowInstanceService.GetInstanceList(query.Page, query.Size));
         }
 
         /// <summary>
@@ -139,12 +134,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
         [Permission("handledWorkFlowInstanceList")]
         public IActionResult GetHandledWorkFlowInstances([FromQuery] PageQueryModel query)
         {
-            var result = _workFlowInstanceService.GetHandledInstanceList(query.Page, query.Size);
-            return Ok(new
-            {
-                data = result.Item1,
-                count = result.Item2,
-            });
+            return Ok(_workFlowInstanceService.GetHandledInstanceList(query.Page, query.Size));
         }
 
         [HttpPost("handle")]

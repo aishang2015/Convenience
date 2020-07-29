@@ -1,6 +1,7 @@
 ﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.GroupManage;
 using Convience.Util.Extension;
 
@@ -17,7 +18,7 @@ namespace Convience.Service.GroupManage
     {
         EmployeeResultModel GetEmployeeById(int id);
 
-        (IEnumerable<EmployeeResultModel>, int) GetEmployees(EmployeeQueryModel query);
+        PagingResultModel<EmployeeResultModel> GetEmployees(EmployeeQueryModel query);
 
         Task<bool> UpdateEmplyeeAsync(EmployeeViewModel viewModel);
     }
@@ -64,7 +65,7 @@ namespace Convience.Service.GroupManage
             return users.FirstOrDefault();
         }
 
-        public (IEnumerable<EmployeeResultModel>, int) GetEmployees(EmployeeQueryModel query)
+        public PagingResultModel<EmployeeResultModel> GetEmployees(EmployeeQueryModel query)
         {
             var where = ExpressionExtension.TrueExpression<SystemUser>()
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
@@ -108,7 +109,11 @@ namespace Convience.Service.GroupManage
                             PositionIds = string.Join(',', pquery)
                         };
             var skip = query.Size * (query.Page - 1);
-            return (users.Skip(skip).Take(query.Size), users.Count());
+            return new PagingResultModel<EmployeeResultModel>
+            {
+                Data = users.Skip(skip).Take(query.Size).ToList(),
+                Count = users.Count()
+            };
         }
 
         public async Task<bool> UpdateEmplyeeAsync(EmployeeViewModel viewModel)

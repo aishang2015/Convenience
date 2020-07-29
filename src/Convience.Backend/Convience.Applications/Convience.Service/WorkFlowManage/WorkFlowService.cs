@@ -4,6 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Util.Extension;
 
@@ -22,7 +23,7 @@ namespace Convience.Service.WorkFlowManage
     {
         Task<WorkFlowResultModel> GetByIdAsync(int id);
 
-        (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query);
+        PagingResultModel<WorkFlowResultModel> GetWorkFlows(WorkFlowQueryModel query);
 
         Task<bool> AddWorkFlowAsync(WorkFlowViewModel model);
 
@@ -115,7 +116,7 @@ namespace Convience.Service.WorkFlowManage
             return _mapper.Map<WorkFlowResultModel>(result);
         }
 
-        public (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query)
+        public PagingResultModel<WorkFlowResultModel> GetWorkFlows(WorkFlowQueryModel query)
         {
             Expression<Func<WorkFlow, bool>> where = ExpressionExtension.TrueExpression<WorkFlow>()
                 .And(wf => wf.WorkFlowGroupId == query.WorkFlowGroupId)
@@ -125,8 +126,11 @@ namespace Convience.Service.WorkFlowManage
                 .OrderByDescending(w => w.CreatedTime)
                 .Skip((query.Page - 1) * query.Size).Take(query.Size).ToArray();
 
-            return (_mapper.Map<WorkFlow[], IEnumerable<WorkFlowResultModel>>(workFlowQuery), workFlowQuery.Count());
-
+            return new PagingResultModel<WorkFlowResultModel>
+            {
+                Data = _mapper.Map<IList<WorkFlowResultModel>>(workFlowQuery),
+                Count = workFlowQuery.Count()
+            };
         }
 
         public async Task<(bool, string)> PublishWorkFlow(int id, bool isPublish)

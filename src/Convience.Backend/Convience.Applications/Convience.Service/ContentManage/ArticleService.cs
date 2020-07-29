@@ -3,6 +3,7 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Model.Models;
 using Convience.Model.Models.ContentManage;
 using Convience.Util.Extension;
 
@@ -21,7 +22,7 @@ namespace Convience.Service.ContentManage
     {
         Task<ArticleResultModel> GetByIdAsync(int id);
 
-        (IEnumerable<ArticleResultModel>, int) GetArticles(ArticleQueryModel query);
+        PagingResultModel<ArticleResultModel> GetArticles(ArticleQueryModel query);
 
         Task<bool> AddArticleAsync(ArticleViewModel model);
 
@@ -89,7 +90,7 @@ namespace Convience.Service.ContentManage
             }
         }
 
-        public (IEnumerable<ArticleResultModel>, int) GetArticles(ArticleQueryModel query)
+        public PagingResultModel<ArticleResultModel> GetArticles(ArticleQueryModel query)
         {
             Expression<Func<Article, bool>> where = ExpressionExtension.TrueExpression<Article>()
                 .AndIfHaveValue(query.Title, a => a.Title.Contains(query.Title))
@@ -113,7 +114,11 @@ namespace Convience.Service.ContentManage
                                    CreateTime = article.CreateTime
                                };
             var skip = query.Size * (query.Page - 1);
-            return (articleQuery.Skip(skip).Take(query.Size), articleQuery.Count());
+            return new PagingResultModel<ArticleResultModel>
+            {
+                Data = articleQuery.Skip(skip).Take(query.Size).ToList(),
+                Count = articleQuery.Count()
+            };
         }
 
         public async Task<ArticleResultModel> GetByIdAsync(int id)
