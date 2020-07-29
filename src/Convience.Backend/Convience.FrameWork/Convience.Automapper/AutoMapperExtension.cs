@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
+
 using Convience.Util.Helpers;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Convience.Automapper

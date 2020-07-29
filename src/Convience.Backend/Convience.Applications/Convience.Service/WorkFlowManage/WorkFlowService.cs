@@ -3,9 +3,12 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
+using Convience.JwtAuthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Util.Extension;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using System;
@@ -20,11 +23,11 @@ namespace Convience.Service.WorkFlowManage
     {
         Task<WorkFlowResultModel> GetByIdAsync(int id);
 
-        (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query);
+        PagingResultModel<WorkFlowResultModel> GetWorkFlows(WorkFlowQueryModel query);
 
-        Task<bool> AddWorkFlowAsync(WorkFlowViewModel model, string userName);
+        Task<bool> AddWorkFlowAsync(WorkFlowViewModel model);
 
-        Task<bool> UpdateWorkFlowAsync(WorkFlowViewModel model, string userName);
+        Task<bool> UpdateWorkFlowAsync(WorkFlowViewModel model);
 
         Task<bool> DeleteWorkFlowAsync(int id);
 
@@ -44,6 +47,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private IMapper _mapper;
 
         public WorkFlowService(
@@ -52,6 +57,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlowLink> linkRepository,
             IRepository<WorkFlowNode> nodeRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _logger = logger;
@@ -59,13 +65,16 @@ namespace Convience.Service.WorkFlowManage
             _linkRepository = linkRepository;
             _nodeRepository = nodeRepository;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
-        public async Task<bool> AddWorkFlowAsync(WorkFlowViewModel model, string userName)
+        public async Task<bool> AddWorkFlowAsync(WorkFlowViewModel model)
         {
             try
             {
+                var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
                 var workflow = _mapper.Map<WorkFlow>(model);
                 workflow.CreatedTime = DateTime.Now;
                 workflow.UpdatedTime = DateTime.Now;
@@ -107,7 +116,7 @@ namespace Convience.Service.WorkFlowManage
             return _mapper.Map<WorkFlowResultModel>(result);
         }
 
-        public (IEnumerable<WorkFlowResultModel>, int) GetWorkFlows(WorkFlowQueryModel query)
+        public PagingResultModel<WorkFlowResultModel> GetWorkFlows(WorkFlowQueryModel query)
         {
             Expression<Func<WorkFlow, bool>> where = ExpressionExtension.TrueExpression<WorkFlow>()
                 .And(wf => wf.WorkFlowGroupId == query.WorkFlowGroupId)
@@ -117,8 +126,11 @@ namespace Convience.Service.WorkFlowManage
                 .OrderByDescending(w => w.CreatedTime)
                 .Skip((query.Page - 1) * query.Size).Take(query.Size).ToArray();
 
-            return (_mapper.Map<WorkFlow[], IEnumerable<WorkFlowResultModel>>(workFlowQuery), workFlowQuery.Count());
-
+            return new PagingResultModel<WorkFlowResultModel>
+            {
+                Data = _mapper.Map<IList<WorkFlowResultModel>>(workFlowQuery),
+                Count = workFlowQuery.Count()
+            };
         }
 
         public async Task<(bool, string)> PublishWorkFlow(int id, bool isPublish)
@@ -184,10 +196,12 @@ namespace Convience.Service.WorkFlowManage
             }
         }
 
-        public async Task<bool> UpdateWorkFlowAsync(WorkFlowViewModel model, string userName)
+        public async Task<bool> UpdateWorkFlowAsync(WorkFlowViewModel model)
         {
             try
             {
+                var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
                 var wf = _workFlowRepository.Get(wf => wf.Id == model.Id).FirstOrDefault();
                 _mapper.Map(model, wf);
                 wf.UpdatedTime = DateTime.Now;

@@ -5,7 +5,9 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
+
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace Convience.Service.SystemManage
     {
         public IEnumerable<DicResultModel> GetUserDic(string name);
 
-        public (IEnumerable<UserResultModel>, int) GetUsers(UserQueryModel query);
+        public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query);
 
         public Task<UserResultModel> GetUserAsync(string Id);
 
@@ -116,7 +118,7 @@ namespace Convience.Service.SystemManage
             return dic.Take(10);
         }
 
-        public (IEnumerable<UserResultModel>, int) GetUsers(UserQueryModel query)
+        public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query)
         {
             Expression<Func<SystemUser, bool>> where = ExpressionExtension.TrueExpression<SystemUser>()
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
@@ -124,7 +126,6 @@ namespace Convience.Service.SystemManage
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
 
             var userQuery = _userRepository.GetUsers();
-            int count;
             if (!string.IsNullOrEmpty(query.RoleId))
             {
                 var roleid = int.Parse(query.RoleId);
@@ -154,9 +155,12 @@ namespace Convience.Service.SystemManage
                         };
 
             var skip = query.Size * (query.Page - 1);
-            count = userQuery.Where(where).Count();
             var users = userQuery.Where(where).Skip(skip).Take(query.Size).ToArray();
-            return (_mapper.Map<SystemUser[], IEnumerable<UserResultModel>>(users), count);
+            return new PagingResultModel<UserResultModel>
+            {
+                Data = _mapper.Map<SystemUser[], IEnumerable<UserResultModel>>(users).ToList(),
+                Count = userQuery.Where(where).Count()
+            };
         }
 
         public async Task<string> RemoveUserAsync(string Id)

@@ -20,12 +20,9 @@ namespace Convience.Util.Extension
             {
                 var invokedExpr = Expression.Invoke(andExpression, expression.Parameters.Cast<Expression>());
                 var newExp = Expression.And(expression.Body, invokedExpr);
-                return Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
+                expression = Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
             }
-            else
-            {
-                return expression;
-            }
+            return expression;
         }
 
         /// <summary>
@@ -38,12 +35,9 @@ namespace Convience.Util.Extension
             {
                 var invokedExpr = Expression.Invoke(andExpression, expression.Parameters.Cast<Expression>());
                 var newExp = Expression.And(expression.Body, invokedExpr);
-                return Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
+                expression = Expression.Lambda<Func<T, bool>>(newExp, expression.Parameters);
             }
-            else
-            {
-                return expression;
-            }
+            return expression;
         }
 
         /// <summary>

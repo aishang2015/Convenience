@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+
 using Convience.Entity.Data;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.EntityFrameWork.Repositories;
+using Convience.JwtAuthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +21,7 @@ namespace Convience.Service.WorkFlowManage
     {
         WorkFlowFormResultModel GetWorkFlowForm(int workflowId);
 
-        Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel, string userName);
+        Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel);
 
         IEnumerable<DicResultModel> GetWorkFlowFormControlDic(int WorkFlowId);
     }
@@ -33,6 +38,8 @@ namespace Convience.Service.WorkFlowManage
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private IMapper _mapper;
 
         public WorkFlowFormService(
@@ -41,6 +48,7 @@ namespace Convience.Service.WorkFlowManage
             IRepository<WorkFlowForm> formRepository,
             IRepository<WorkFlowFormControl> formControlRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _logger = logger;
@@ -48,6 +56,7 @@ namespace Convience.Service.WorkFlowManage
             _formRepository = formRepository;
             _formControlRepository = formControlRepository;
             _unitOfWork = unitOfWork;
+            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 
@@ -62,10 +71,12 @@ namespace Convience.Service.WorkFlowManage
             };
         }
 
-        public async Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel, string userName)
+        public async Task<bool> AddOrUpdateWorkFlowForm(WorkFlowFormViewModel viewModel)
         {
             try
             {
+                var userName = _httpContextAccessor.HttpContext?.User?.GetUserName();
+
                 viewModel.FormViewModel.WorkFlowId = viewModel.WorkFlowId;
                 foreach (var control in viewModel.FormControlViewModels)
                 {

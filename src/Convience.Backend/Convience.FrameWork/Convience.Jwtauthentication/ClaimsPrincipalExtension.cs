@@ -1,8 +1,8 @@
-﻿using Convience.JwtAuthentication;
+﻿
 using System.Linq;
 using System.Security.Claims;
 
-namespace Convience.ManagentApi.Infrastructure
+namespace Convience.JwtAuthentication
 {
     public static class ClaimsPrincipalExtension
     {

@@ -34,12 +34,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
         [Permission("articleList")]
         public IActionResult Get([FromQuery] ArticleQueryModel articleQuery)
         {
-            var result = _articleService.GetArticles(articleQuery);
-            return Ok(new
-            {
-                data = result.Item1,
-                count = result.Item2
-            });
+            return Ok(_articleService.GetArticles(articleQuery));
         }
 
         [HttpDelete]
