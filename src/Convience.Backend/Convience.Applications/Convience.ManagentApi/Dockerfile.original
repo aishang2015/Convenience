@@ -19,7 +19,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["Convience.Applications/Convience.ManagentApi/Convience.ManagentApi.csproj", "Convience.Applications/Convience.ManagentApi/"]
 COPY ["Convience.Applications/Convience.Service/Convience.Service.csproj", "Convience.Applications/Convience.Service/"]
-COPY ["Convience.Applications/Convience.Caching/Convience.Caching.csproj", "Convience.Applications/Convience.Caching/"]
 COPY ["Convience.Applications/Convience.Model/Convience.Model.csproj", "Convience.Applications/Convience.Model/"]
 COPY ["Convience.Applications/Convience.Entity/Convience.Entity.csproj", "Convience.Applications/Convience.Entity/"]
 COPY ["Convience.FrameWork/Convience.Core/Convience.Core.csproj", "Convience.FrameWork/Convience.Core/"]

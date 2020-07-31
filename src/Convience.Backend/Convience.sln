@@ -73,6 +73,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.InMemoryCap", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.SqlServerCap", "Convience.FrameWork\Convience.MessageQueue\Convience.SqlServerCap\Convience.SqlServerCap.csproj", "{217D80A3-01E5-45CF-A6A3-A7BF9377CE12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.Caching", "Convience.Applications\Convience.Caching\Convience.Caching.csproj", "{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,10 @@ Global
 		{217D80A3-01E5-45CF-A6A3-A7BF9377CE12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{217D80A3-01E5-45CF-A6A3-A7BF9377CE12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{217D80A3-01E5-45CF-A6A3-A7BF9377CE12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -225,6 +231,7 @@ Global
 		{2B60F058-0536-4966-83B5-3567ABE38B3C} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
 		{95B6D59A-4925-4E69-AFC1-F7026F926441} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
 		{217D80A3-01E5-45CF-A6A3-A7BF9377CE12} = {8DBEE62C-5F24-41E6-AD07-2F725C7EFCF8}
+		{17BCEDD5-C2F0-4A0C-A9C1-B1C4CFD9ED76} = {116CE78A-855F-4077-B201-45C2564B8E51}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}

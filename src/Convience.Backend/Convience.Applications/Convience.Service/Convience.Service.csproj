@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Convience.Model\Convience.Model.csproj" />
+    <ProjectReference Include="..\Convience.Caching\Convience.Caching.csproj" />
   </ItemGroup>
 
 </Project>

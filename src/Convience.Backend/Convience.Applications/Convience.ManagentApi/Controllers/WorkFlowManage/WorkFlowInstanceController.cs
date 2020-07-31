@@ -1,5 +1,4 @@
 ﻿using Convience.Fluentvalidation;
-using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models;
 using Convience.Model.Models.WorkFlowManage;
