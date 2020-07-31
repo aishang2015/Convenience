@@ -1,4 +1,5 @@
 using Convience.Automapper;
+using Convience.Caching;
 using Convience.CapMQ;
 using Convience.Easycaching;
 using Convience.Entity.Data;
@@ -42,19 +43,21 @@ namespace Convience.ManagentApi
             var dbConnectionString = Configuration.GetConnectionString("PostgreSQL");
             var mqConnectionString = Configuration.GetConnectionString("RabbitMQ");
             var mdbConnectionConfig = Configuration.GetSection("MongoDb");
+            var jwtOption = Configuration.GetSection("JwtOption");
+            var cachingOption = Configuration.GetSection("CachingOption");
 
             services.AddControllers().AddNewtonsoftJson()
                 .AddFluentValidation(services);
 
             services.AddApplicationDbContext(dbConnectionString)
-                .AddJwtBearer(Configuration)
+                .AddJwtBearer(jwtOption)
                 .AddPermissionAuthorization()
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddAutoMapper()
                 .AddPostgreHangFire(dbConnectionString)
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
-                .AddMemoryCache()
+                .AddMemoryCache(cachingOption)
                 .AddMongoDBFileManage(mdbConnectionConfig)
                 .AddServices();
         }
@@ -108,7 +111,7 @@ namespace Convience.ManagentApi
 
         public static IServiceCollection AddJwtBearer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddJwtAuthentication(null, configuration.GetSection("JwtOption"));
+            services.AddJwtAuthentication(null, configuration);
             services.AddAuthorization();
             return services;
         }
@@ -127,12 +130,14 @@ namespace Convience.ManagentApi
             return services;
         }
 
-        public static IServiceCollection AddMemoryCache(this IServiceCollection services)
+        public static IServiceCollection AddMemoryCache(this IServiceCollection services,
+            IConfiguration configuration)
         {
             var configs = new List<(CacheType, string, string, int)>() {
                 (CacheType.InMemory,"defaultMemoryCache",null,0)
             };
             services.AddEasyCaching(configs);
+            services.AddCachingServices(configuration);
             return services;
         }
 
