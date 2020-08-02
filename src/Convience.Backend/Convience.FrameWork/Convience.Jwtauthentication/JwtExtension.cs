@@ -10,7 +10,8 @@ namespace Convience.JwtAuthentication
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
             string authenticationScheme,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            JwtBearerEvents events = null)
         {
             authenticationScheme = authenticationScheme ?? JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme;
 
@@ -34,14 +35,10 @@ namespace Convience.JwtAuthentication
                      ValidateLifetime = true
                  };
 
-                 //option.Events = new JwtBearerEvents
-                 //{
-                 //    OnAuthenticationFailed = (context) =>
-                 //    {
-                 //        context.Response.StatusCode = 401;
-                 //        return context.Response.WriteAsync("authentication failed.");
-                 //    }
-                 //};
+                 if (events != null)
+                 {
+                     option.Events = events;
+                 }
              });
 
             return services;

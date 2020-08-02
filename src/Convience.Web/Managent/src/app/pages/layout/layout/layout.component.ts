@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { AccountService } from 'src/app/business/account.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { SignalrService } from 'src/app/business/signalr.service';
 
 @Component({
   selector: 'app-layout',
@@ -36,16 +37,22 @@ export class LayoutComponent implements OnInit {
   };
 
   constructor(
-    private _storageService: StorageService, 
+    private _storageService: StorageService,
     private _router: Router,
     private _formBuilder: FormBuilder,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
-    private _accountService: AccountService) { }
+    private _accountService: AccountService,
+    private _signalRService: SignalrService) { }
 
   ngOnInit() {
     this.name = this._storageService.Name;
     this.avatar = this._storageService.Avatar;
+
+    // this._signalRService.addReceiveMessageHandler("newMsg", (value) => {
+    //   console.log(value);
+    // });
+    // this._signalRService.start();
   }
 
   logout() {
