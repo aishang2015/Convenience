@@ -34,6 +34,7 @@ COPY ["Convience.FrameWork/Convience.Swashbuckle/Convience.Swashbuckle.csproj", 
 COPY ["Convience.FrameWork/Convience.Jwtauthentication/Convience.JwtAuthentication.csproj", "Convience.FrameWork/Convience.Jwtauthentication/"]
 COPY ["Convience.FrameWork/Convience.Caches/Convience.Easycaching/Convience.Easycaching.csproj", "Convience.FrameWork/Convience.Caches/Convience.Easycaching/"]
 COPY ["Convience.FrameWork/Convience.Taskscheduling/Convience.Hangfire/Convience.Hangfire.csproj", "Convience.FrameWork/Convience.Taskscheduling/Convience.Hangfire/"]
+COPY ["Convience.FrameWork/Convience.Comunication/Convience.SignalRs/Convience.SignalRs.csproj", "Convience.FrameWork/Convience.Comunication/Convience.SignalRs/"]
 COPY ["Convience.FrameWork/Convience.Fluentvalidation/Convience.Fluentvalidation.csproj", "Convience.FrameWork/Convience.Fluentvalidation/"]
 COPY ["Convience.FrameWork/Convience.MessageQueue/Convience.MediatR/Convience.MediatRs.csproj", "Convience.FrameWork/Convience.MessageQueue/Convience.MediatR/"]
 COPY ["Convience.FrameWork/Convience.MessageQueue/Convience.CapMQ/Convience.CapMQ.csproj", "Convience.FrameWork/Convience.MessageQueue/Convience.CapMQ/"]

@@ -22,6 +22,7 @@
     "@angular/router": "^10.0.3",
     "@antv/g2": "^4.0.3",
     "@auth0/angular-jwt": "^4.0.0",
+    "@microsoft/signalr": "^3.1.6",
     "@tinymce/tinymce-angular": "^4.0.0",
     "file-saver": "^2.0.2",
     "jsplumb": "^2.13.2",

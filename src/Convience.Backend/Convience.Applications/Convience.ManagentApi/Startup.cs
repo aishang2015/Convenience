@@ -11,6 +11,7 @@ using Convience.Hangfire;
 using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.SignalRs;
 using Convience.Swashbuckle;
 using Convience.Util.Extension;
 using Convience.Util.Middlewares;
@@ -59,7 +60,9 @@ namespace Convience.ManagentApi
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
                 .AddMemoryCache(cachingOption)
                 .AddMongoDBFileManage(mdbConnectionConfig)
-                .AddServices();
+                .AddServices()
+                .AddResponseCompression()
+                .AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,8 +91,11 @@ namespace Convience.ManagentApi
 
             app.UseAuthorization();
 
+            app.UseResponseCompression();
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<TestHub>("/hubs");
                 endpoints.MapControllers();
             });
         }
@@ -111,7 +117,7 @@ namespace Convience.ManagentApi
 
         public static IServiceCollection AddJwtBearer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddJwtAuthentication(null, configuration);
+            services.AddJwtAuthentication(null, configuration, new SignalRJwtBearerEvents());
             services.AddAuthorization();
             return services;
         }
