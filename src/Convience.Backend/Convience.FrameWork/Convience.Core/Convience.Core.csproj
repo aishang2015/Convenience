@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Convience.Swashbuckle\Convience.Swashbuckle.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Background\Convience.Background.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Hangfire\Convience.Hangfire.csproj" />
+    <ProjectReference Include="..\Convience.Taskscheduling\Convience.Quartz\Convience.Quartz.csproj" />
     <ProjectReference Include="..\Convience.Util\Convience.Util.csproj" />
   </ItemGroup>
 
