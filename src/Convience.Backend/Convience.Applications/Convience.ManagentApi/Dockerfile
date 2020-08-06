@@ -30,6 +30,7 @@ COPY ["Convience.FrameWork/Convience.Filestorage/Convience.Filestorage.MongoDB/C
 COPY ["Convience.FrameWork/Convience.Filestorage/Convience.Filestorage.Abstraction/Convience.Filestorage.Abstraction.csproj", "Convience.FrameWork/Convience.Filestorage/Convience.Filestorage.Abstraction/"]
 COPY ["Convience.FrameWork/Convience.Data/Convience.MongoDB/Convience.MongoDB.csproj", "Convience.FrameWork/Convience.Data/Convience.MongoDB/"]
 COPY ["Convience.FrameWork/Convience.Filestorage/Convience.Filestorage.Filesystem/Convience.Filestorage.Filesystem.csproj", "Convience.FrameWork/Convience.Filestorage/Convience.Filestorage.Filesystem/"]
+COPY ["Convience.FrameWork/Convience.Taskscheduling/Convience.Quartz/Convience.Quartz.csproj", "Convience.FrameWork/Convience.Taskscheduling/Convience.Quartz/"]
 COPY ["Convience.FrameWork/Convience.Swashbuckle/Convience.Swashbuckle.csproj", "Convience.FrameWork/Convience.Swashbuckle/"]
 COPY ["Convience.FrameWork/Convience.Jwtauthentication/Convience.JwtAuthentication.csproj", "Convience.FrameWork/Convience.Jwtauthentication/"]
 COPY ["Convience.FrameWork/Convience.Caches/Convience.Easycaching/Convience.Easycaching.csproj", "Convience.FrameWork/Convience.Caches/Convience.Easycaching/"]
