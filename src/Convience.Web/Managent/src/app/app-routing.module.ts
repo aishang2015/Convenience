@@ -13,9 +13,10 @@ const routes: Routes = [
       { path: "content", loadChildren: () => import("./pages/content-manage/content-manage.module").then(m => m.ContentManageModule) },
       { path: "saas", loadChildren: () => import("./pages/saas-manage/saas-manage.module").then(m => m.SaasManageModule) },
       { path: "tool", loadChildren: () => import("./pages/system-tool/system-tool.module").then(m => m.SystemToolModule) },
-      { path: "workflow", loadChildren: () => import("./pages/workflow/workflow.module").then(m => m.WorkflowModule) }
+      { path: "workflow", loadChildren: () => import("./pages/workflow/workflow.module").then(m => m.WorkflowModule) },
     ]
   },
+  { path: "**", loadChildren: () => import("./pages/nofound/nofound.module").then(m => m.NofoundModule) },
 ];
 
 @NgModule({
