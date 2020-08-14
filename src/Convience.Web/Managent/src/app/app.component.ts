@@ -9,14 +9,14 @@ import { StorageService } from './services/storage.service';
 })
 export class AppComponent {
 
-  isLogin = this.storageService.hasUserToken();
+  // isLogin = this.storageService.hasUserToken();
 
-  constructor(private storageService: StorageService, private router: Router) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.isLogin = this.storageService.hasUserToken();
-      }
-    });
-  }
+  // constructor(private storageService: StorageService, private router: Router) {
+  //   this.router.events.subscribe(event => {
+  //     if (event instanceof NavigationEnd) {
+  //       this.isLogin = this.storageService.hasUserToken();
+  //     }
+  //   });
+  // }
 
 }
