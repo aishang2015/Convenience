@@ -11,5 +11,7 @@
 
         public const string UserDepartment = "userdepartment";
         public const string UserPosition = "userposition";
+
+        public const string UserSchema = "userschema";
     }
 }

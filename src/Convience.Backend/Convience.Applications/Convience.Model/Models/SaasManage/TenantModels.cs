@@ -10,8 +10,6 @@ namespace Convience.Model.Models.SaasManage
 
         public string Name { get; set; }
 
-        public string DataBaseType { get; set; }
-
         public string SortKey { get; set; }
 
         public bool isDesc { get; set; }
@@ -23,11 +21,7 @@ namespace Convience.Model.Models.SaasManage
 
         public string Name { get; set; }
 
-        public string UrlPrefix { get; set; }
-
-        public int DataBaseType { get; set; }
-
-        public string ConnectionString { get; set; }
+        public string Schema { get; set; }
 
         public bool IsActive { get; set; }
 

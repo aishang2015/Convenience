@@ -7,18 +7,6 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzFor]="'dataBaseType'">数据库类型</nz-form-label>
-            <nz-form-control>
-                <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'dataBaseType'"
-                    [formControlName]="'dataBaseType'">
-                    <nz-option [nzValue]="0" [nzLabel]="'SqlServer'"></nz-option>
-                    <nz-option [nzValue]="1" [nzLabel]="'Sqlite'"></nz-option>
-                    <nz-option [nzValue]="2" [nzLabel]="'MySQL'"></nz-option>
-                    <nz-option [nzValue]="3" [nzLabel]="'PostgreSQL'"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
             <nz-form-control>
                 <button nz-button nzType="primary">搜索</button>
             </nz-form-control>
@@ -45,8 +33,6 @@
 
 <nz-card [nzSize]="'small'" class="full-triple">
     <div>
-        <button nz-button class="mr-10" (click)="add(addTenantTitleTpl,tenantContentTpl)"
-            *canOperate="'addTenantBtn'"><i nz-icon nzType="plus"></i>添加租户</button>
         <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
     </div>
     <div class="mt-10">
@@ -56,9 +42,7 @@
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
                     <th nzAlign="center" nzWidth="150px">名称</th>
-                    <th nzAlign="center" nzWidth="150px">Url前缀</th>
-                    <th nzAlign="center" nzWidth="120px">数据库类型</th>
-                    <th nzAlign="center">连接串</th>
+                    <th nzAlign="center">Schema</th>
                     <th nzAlign="center" nzWidth="90px">激活状态</th>
                     <th nzAlign="center" nzWidth="180px">创建日期</th>
                     <th nzAlign="center" nzWidth="120px">操作</th>
@@ -68,20 +52,13 @@
                 <tr *ngFor="let data of dataTable.data;let i = index">
                     <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                     <td nzAlign="center">{{ data.name }}</td>
-                    <td nzAlign="center">{{ data.urlPrefix }}</td>
-                    <td nzAlign="center">{{ data.dataBaseType | dbType }}</td>
-                    <td nzAlign="center">{{ data.connectionString }}</td>
+                    <td nzAlign="center">{{ data.schema }}</td>
                     <td nzAlign="center">
                         <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
                         <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
                     </td>
                     <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
                     <td nzAlign="center">
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'updateTenantBtn'"
-                            (click)="edit(editTenantTitleTpl,tenantContentTpl,data)" class="mr-10"><i nz-icon
-                                nzType="edit"></i></button>
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteTenantBtn'"
-                            (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
                     </td>
                 </tr>
             </tbody>
@@ -92,73 +69,3 @@
             nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
     </div>
 </nz-card>
-
-<ng-template #addTenantTitleTpl>
-    <span>添加租户</span>
-</ng-template>
-<ng-template #editTenantTitleTpl>
-    <span>编辑租户</span>
-</ng-template>
-<ng-template #tenantContentTpl>
-    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_name'" nzRequired="true">租户名称</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
-                <input [attr.id]="'edit_name'" formControlName="name" nz-input placeholder="租户名称" autocomplete="off" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_urlPrefix'" nzRequired="true">Url前缀</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
-                <input [attr.id]="'edit_urlPrefix'" formControlName="urlPrefix" nz-input placeholder="Url前缀"
-                    autocomplete="off" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_dataBaseType'" nzRequired="true">数据库类型</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
-                <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'dataBaseType'"
-                    [formControlName]="'dataBaseType'">
-                    <nz-option [nzValue]="0" [nzLabel]="'SqlServer'"></nz-option>
-                    <nz-option [nzValue]="1" [nzLabel]="'Sqlite'"></nz-option>
-                    <nz-option [nzValue]="2" [nzLabel]="'MySQL'"></nz-option>
-                    <nz-option [nzValue]="3" [nzLabel]="'PostgreSQL'"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_connectionString'" nzRequired="true">连接字符串
-            </nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="errorTpl">
-                <textarea [attr.id]="'edit_connectionString'" formControlName="connectionString" nz-input
-                    placeholder="连接字符串" autocomplete="off" rows="3"></textarea>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_isActive'">激活状态</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-switch [attr.id]="'edit_isActive'" formControlName="isActive" nzCheckedChildren="激活"
-                    nzUnCheckedChildren="停用"></nz-switch>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-control [nzSpan]="14" [nzOffset]="6">
-                <button nz-button nzType="primary" class="mr-10">提交</button>
-                <button nz-button type="reset" (click)="cancelEdit()">取消</button>
-            </nz-form-control>
-        </nz-form-item>
-    </form>
-</ng-template>
-
-
-<ng-template #errorTpl let-control>
-    <ng-container *ngIf="control.hasError('required')">
-        请输入内容！
-    </ng-container>
-    <ng-container *ngIf="control.hasError('maxlength')">
-        长度不能超过15！
-    </ng-container>
-    <ng-container *ngIf="control.hasError('pattern')">
-        只能包含数字和字母！
-    </ng-container>
-</ng-template>

@@ -99,7 +99,10 @@ namespace Convience.Util.Extension
                 {
                     var implementType = assembly.GetTypes()
                         .FirstOrDefault(type => type.IsClass && serviceType.IsAssignableFrom(type));
-                    result.Add((serviceType, implementType));
+                    if (implementType != null)
+                    {
+                        result.Add((serviceType, implementType));
+                    }
                 }
             });
 
@@ -120,7 +123,10 @@ namespace Convience.Util.Extension
                 {
                     var serviceType = serviceGenericType.MakeGenericType(type);
                     var implementType = implementGenericType.MakeGenericType(type);
-                    result.Add((serviceType, implementType));
+                    if (implementType != null)
+                    {
+                        result.Add((serviceType, implementType));
+                    }
                 }
             });
 

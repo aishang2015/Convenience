@@ -23,5 +23,11 @@ namespace Convience.JwtAuthentication
             return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserRoleIds)
                 ?.Value ?? string.Empty;
         }
+
+        public static string GetUserSchema(this ClaimsPrincipal claimsPrincipal)
+        {
+            return claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.UserSchema)
+                ?.Value ?? string.Empty;
+        }
     }
 }

@@ -7,11 +7,14 @@ namespace Convience.EntityFrameWork.Saas
 {
     public class AppSaasDbContext : DbContext
     {
-        public string Schema { get; private set; }
+        public string Schema { get; private set; } = "temp";
 
         public AppSaasDbContext(DbContextOptions<AppSaasDbContext> options, ISchemaService schemaService) : base(options)
         {
-            Schema = schemaService.Schema;
+            if (!string.IsNullOrEmpty(schemaService.Schema))
+            {
+                Schema = schemaService.Schema;
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -5,6 +5,7 @@ using Convience.Easycaching;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
+using Convience.EntityFrameWork.Saas;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
@@ -45,6 +46,7 @@ namespace Convience.ManagentApi
             var mqConnectionString = Configuration.GetConnectionString("RabbitMQ");
             var mdbConnectionConfig = Configuration.GetSection("MongoDb");
             var jwtOption = Configuration.GetSection("JwtOption");
+            var tenantJwtOption = Configuration.GetSection("TenantJwtOption");
             var cachingOption = Configuration.GetSection("CachingOption");
 
             services.AddControllers().AddNewtonsoftJson()
@@ -63,6 +65,9 @@ namespace Convience.ManagentApi
                 .AddServices()
                 .AddResponseCompression()
                 .AddSignalR();
+
+            // ◊‚ªß≈‰÷√
+            services.AddTenantDbContext(dbConnectionString).AddTenantJwtBearer(tenantJwtOption);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -115,10 +120,24 @@ namespace Convience.ManagentApi
             return services;
         }
 
+        public static IServiceCollection AddTenantDbContext(this IServiceCollection services, string connectionString)
+        {
+            services.AddCustomDbContext<AppSaasDbContext>(connectionString, DataBaseType.PostgreSQL);
+            services.AddRepositories<AppSaasDbContext>();
+            services.AddSchemaService<SchemaService>();
+            return services;
+        }
+
         public static IServiceCollection AddJwtBearer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddJwtAuthentication(null, configuration, new SignalRJwtBearerEvents());
             services.AddAuthorization();
+            return services;
+        }
+
+        public static IServiceCollection AddTenantJwtBearer(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddJwtAuthentication(JwtAuthenticationSchemeConstants.MemberAuthenticationScheme, configuration);
             return services;
         }
 

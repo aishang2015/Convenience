@@ -4,7 +4,7 @@ import { AppCommonModule } from '../app-common/app-common.module';
 import { RouterModule } from '@angular/router';
 import { TenantManageComponent } from './tenant-manage/tenant-manage.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
-import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTagModule, NzTableModule, NzRadioModule, NzCardModule, NzInputModule, NzSwitchModule } from 'ng-zorro-antd';
+import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTagModule, NzTableModule, NzRadioModule, NzCardModule, NzInputModule, NzSwitchModule, NzIconModule } from 'ng-zorro-antd';
 
 
 
@@ -30,6 +30,7 @@ import { NzSelectModule, NzFormModule, NzButtonModule, NzPaginationModule, NzTag
     NzCardModule,
     NzInputModule,
     NzSwitchModule,
+    NzIconModule
   ]
 })
 export class SaasManageModule { }
