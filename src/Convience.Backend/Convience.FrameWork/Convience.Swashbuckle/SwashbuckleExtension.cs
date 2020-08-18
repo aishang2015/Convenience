@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System.Collections.Generic;
 
 namespace Convience.Swashbuckle
 {
@@ -23,12 +22,12 @@ namespace Convience.Swashbuckle
                     Scheme = "Bearer"
                 });
 
-                option.AddSecurityRequirement(new OpenApiSecurityRequirement                    
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Reference = new OpenApiReference 
+                            Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
                                 Id = "Bearer"

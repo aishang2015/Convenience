@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Convience.EntityFrameWork.Saas
+﻿namespace Convience.EntityFrameWork.Saas
 {
     public interface ISchemaService
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Convience.Model.Models.Tenant
+﻿namespace Convience.Model.Models.Tenant
 {
     public class LoginViewModel
     {

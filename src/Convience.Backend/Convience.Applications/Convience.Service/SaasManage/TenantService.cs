@@ -4,7 +4,6 @@ using AutoMapper;
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity.Tenants;
-using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.SaasManage;
 using Convience.Util.Extension;
