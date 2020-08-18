@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Convience.ManagentApi.TenantControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/tenant/[controller]")]
     [ApiController]
     [MemberAuthorize]
     public class MemberController : ControllerBase
