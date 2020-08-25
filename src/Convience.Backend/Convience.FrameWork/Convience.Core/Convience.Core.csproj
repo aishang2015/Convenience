@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Convience.Caches\Convience.Cache\Convience.Cache.csproj" />
     <ProjectReference Include="..\Convience.Caches\Convience.Easycaching\Convience.Easycaching.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.HttpClients\Convience.HttpClients.csproj" />
+    <ProjectReference Include="..\Convience.Comunication\Convience.Mail\Convience.Mail.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.SignalRs\Convience.SignalRs.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.WebSocket\Convience.WebSockets.csproj" />
     <ProjectReference Include="..\Convience.Data\Convience.EntityFrameWork\Convience.EntityFrameWork.csproj" />
