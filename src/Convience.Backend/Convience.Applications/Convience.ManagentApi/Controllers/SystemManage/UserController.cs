@@ -1,4 +1,5 @@
 ﻿using Convience.Fluentvalidation;
+using Convience.Injection;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Model.Models.SystemManage;
 using Convience.Service.SystemManage;
@@ -15,13 +16,10 @@ namespace Convience.ManagentApi.Controllers.SystemManage
     [Authorize]
     public class UserController : ControllerBase
     {
+#pragma warning disable CS0649
 
+        [Autowired]
         private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
 
         [HttpGet("list")]
         [Permission("userList")]
