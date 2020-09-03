@@ -17,20 +17,10 @@ namespace Convience.Injection
             // 获取控制器类型
             var controllerType = context.ActionDescriptor.ControllerTypeInfo.AsType();
 
-            // 通过容器获取控制器实例
-            var controllerInstance = context.HttpContext.RequestServices.GetRequiredService(controllerType);
+            // 取得实例
+            var controllerInstance = CreateInstance(context.HttpContext.RequestServices, controllerType);
 
-            // 获取所有被标记自动装配的字段
-            var autowiredFields = controllerType.GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(field => field.GetCustomAttribute<AutowiredAttribute>() != null);
-
-            // 循环创建实例
-            foreach (var field in autowiredFields)
-            {
-                var fieldInstance = CreateInstance(context.HttpContext.RequestServices, field.FieldType);
-                field.SetValue(controllerInstance, fieldInstance);
-            }
-
+            // 返回实例
             return controllerInstance;
         }
 
