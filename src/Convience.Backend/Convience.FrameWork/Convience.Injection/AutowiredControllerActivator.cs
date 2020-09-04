@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace Convience.Injection
@@ -33,17 +31,26 @@ namespace Convience.Injection
         /// </summary>
         private object CreateInstance(IServiceProvider serviceProvider, Type type)
         {
-            var instance = serviceProvider.GetRequiredService(type);
+            var instance = serviceProvider.GetService(type);
 
-            // 在类型中查找包含自动装配的字段
-            var autowiredFields = instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(field => field.GetCustomAttribute<AutowiredAttribute>() != null);
-
-            // 循环创建实例
-            foreach (var field in autowiredFields)
+            // 当实例可以从容器中获取时，继续在实例中寻找可以自动注入的对象
+            if (instance != null)
             {
-                var fieldInstance = CreateInstance(serviceProvider, field.FieldType);
-                field.SetValue(instance, fieldInstance);
+                // 在类型中查找
+                var autowiredFields = instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+
+                // 循环创建实例
+                foreach (var field in autowiredFields)
+                {
+                    var fieldInstance = CreateInstance(serviceProvider, field.FieldType);
+
+                    // 如果实例可以获得,并且其包含自动装配特性，则将其放入字段中
+                    if (fieldInstance != null &&
+                        field.GetCustomAttribute<AutowiredAttribute>() != null)
+                    {
+                        field.SetValue(instance, fieldInstance);
+                    }
+                }
             }
             return instance;
         }

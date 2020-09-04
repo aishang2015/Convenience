@@ -1,13 +1,13 @@
 ﻿namespace Convience.Model.Models.Tenant
 {
-    public class LoginViewModel
+    public class TenantLoginViewModel
     {
         public string Account { get; set; }
 
         public string Password { get; set; }
     }
 
-    public class LoginResultModel
+    public class TenantLoginResultModel
     {
         public string Token { get; set; }
     }

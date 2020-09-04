@@ -18,7 +18,7 @@ namespace Convience.ManagentApi.TenantControllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginViewModel viewModel)
+        public IActionResult Login([FromBody] TenantLoginViewModel viewModel)
         {
             var result = _accountService.Login(viewModel);
             if (result.Item1)
