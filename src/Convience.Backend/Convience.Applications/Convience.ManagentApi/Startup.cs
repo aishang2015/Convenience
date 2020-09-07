@@ -9,12 +9,12 @@ using Convience.EntityFrameWork.Saas;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
+using Convience.Injection;
 using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.SignalRs;
 using Convience.Swashbuckle;
-using Convience.Util.Extension;
 using Convience.Util.Middlewares;
 
 using Hangfire;
@@ -49,7 +49,7 @@ namespace Convience.ManagentApi
             var tenantJwtOption = Configuration.GetSection("TenantJwtOption");
             var cachingOption = Configuration.GetSection("CachingOption");
 
-            services.AddControllers().AddNewtonsoftJson()
+            services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()
                 .AddFluentValidation(services);
 
             services.AddApplicationDbContext(dbConnectionString)
@@ -64,6 +64,7 @@ namespace Convience.ManagentApi
                 .AddMongoDBFileManage(mdbConnectionConfig)
                 .AddServices()
                 .AddResponseCompression()
+                .AddAutowired()
                 .AddSignalR();
 
             // ◊‚ªß≈‰÷√

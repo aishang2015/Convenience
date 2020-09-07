@@ -1,15 +1,29 @@
 ﻿using Convience.Util.Helpers;
-
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Convience.Util.Extension
+namespace Convience.Injection
 {
-    public static class ServiceExtension
+    public static class InjectionExtension
     {
+        /// <summary>
+        /// 通过在字段上标记autowired特性，实现自动装配功能。
+        /// 该类型必须直接或间接被controller调用才可以。
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddAutowired(this IServiceCollection services)
+        {
+            // 需要添加来保证所有的控制器放入di中
+            // services.AddControllers()[--->].AddControllersAsServices()[<---]
+            services.Replace(ServiceDescriptor.Transient<IControllerActivator, AutowiredControllerActivator>());
+            return services;
+        }
+
         /// <summary>
         /// 批量注册(类型条件)
         /// </summary>
@@ -92,19 +106,18 @@ namespace Convience.Util.Extension
         {
             var result = new List<(Type, Type)>();
 
-            ReflectionHelper.AssemblyList.ForEach(assembly =>
+            // 聚合
+            var allTypes = ReflectionHelper.AssemblyList.SelectMany(assembly => assembly.GetTypes());
+
+            // 根据条件获取所有抽象类型
+            var abstractTypes = allTypes.Where(predicate);
+
+            // 根据抽象类型查找实现类型
+            foreach (var abstractType in abstractTypes)
             {
-                var serviceTypes = assembly.GetTypes().Where(predicate);
-                foreach (var serviceType in serviceTypes)
-                {
-                    var implementType = assembly.GetTypes()
-                        .FirstOrDefault(type => type.IsClass && serviceType.IsAssignableFrom(type));
-                    if (implementType != null)
-                    {
-                        result.Add((serviceType, implementType));
-                    }
-                }
-            });
+                allTypes.Where(type => type.IsClass && abstractType.IsAssignableFrom(type))
+                    .ToList().ForEach(implementType => result.Add((abstractType, implementType)));
+            }
 
             return result;
         }
@@ -116,19 +129,21 @@ namespace Convience.Util.Extension
         {
             var result = new List<(Type, Type)>();
 
-            ReflectionHelper.AssemblyList.ForEach(assembly =>
+            // 聚合
+            var allTypes = ReflectionHelper.AssemblyList.SelectMany(assembly => assembly.GetTypes());
+
+            // 根据条件获取所有抽象类型
+            var abstractTypes = allTypes.Where(predicate);
+
+            foreach (var abstractType in abstractTypes)
             {
-                var baseTypes = assembly.GetTypes().Where(predicate);
-                foreach (var type in baseTypes)
+                var serviceType = serviceGenericType.MakeGenericType(abstractType);
+                var implementType = implementGenericType.MakeGenericType(abstractType);
+                if (implementType != null)
                 {
-                    var serviceType = serviceGenericType.MakeGenericType(type);
-                    var implementType = implementGenericType.MakeGenericType(type);
-                    if (implementType != null)
-                    {
-                        result.Add((serviceType, implementType));
-                    }
+                    result.Add((serviceType, implementType));
                 }
-            });
+            }
 
             return result;
         }

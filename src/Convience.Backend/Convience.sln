@@ -79,7 +79,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.SignalRs", "Convi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Quartz", "Convience.FrameWork\Convience.Taskscheduling\Convience.Quartz\Convience.Quartz.csproj", "{34CC248F-FD6E-48C0-9FB0-B079DBA98512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.Mail", "Convience.FrameWork\Convience.Comunication\Convience.Mail\Convience.Mail.csproj", "{2E41F543-17C1-4F20-9770-800CFB24901A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Convience.Mail", "Convience.FrameWork\Convience.Comunication\Convience.Mail\Convience.Mail.csproj", "{2E41F543-17C1-4F20-9770-800CFB24901A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Convience.Injection", "Convience.FrameWork\Convience.Injection\Convience.Injection.csproj", "{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -211,6 +213,10 @@ Global
 		{2E41F543-17C1-4F20-9770-800CFB24901A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E41F543-17C1-4F20-9770-800CFB24901A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E41F543-17C1-4F20-9770-800CFB24901A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,6 +259,7 @@ Global
 		{5599ED23-B8C8-419F-A8C8-80937500411A} = {259BDEF8-1D7D-44BE-B9EB-F48511353BD5}
 		{34CC248F-FD6E-48C0-9FB0-B079DBA98512} = {53B8A136-289D-4861-87C9-00078E217FE6}
 		{2E41F543-17C1-4F20-9770-800CFB24901A} = {259BDEF8-1D7D-44BE-B9EB-F48511353BD5}
+		{7E9225C6-BBA1-45FA-A3E8-AC0E45638C69} = {B2FBD460-03C9-44A5-8325-4DE983290B8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {849E7953-7A28-4DDF-A3B5-B9FC5B203823}

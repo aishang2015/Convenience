@@ -16,7 +16,7 @@ namespace Convience.Service.TenantService
 {
     public interface IAccountService
     {
-        (bool, string) Login(LoginViewModel loginViewModel);
+        (bool, string) Login(TenantLoginViewModel loginViewModel);
 
         Task<bool> Regist(RegisterViewModel registerViewModel);
     }
@@ -47,7 +47,7 @@ namespace Convience.Service.TenantService
             _jwtFactory = new JwtFactory(option);
         }
 
-        public (bool, string) Login(LoginViewModel loginViewModel)
+        public (bool, string) Login(TenantLoginViewModel loginViewModel)
         {
             var tenant = _tenantRepository.Get(tenant => tenant.Name == loginViewModel.Account)
                 .FirstOrDefault();
