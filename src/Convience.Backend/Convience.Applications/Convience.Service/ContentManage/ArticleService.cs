@@ -38,7 +38,7 @@ namespace Convience.Service.ContentManage
 
         private readonly IRepository<Column> _columnRepository;
 
-        private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
+        private readonly SystemIdentityDbUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
@@ -46,7 +46,7 @@ namespace Convience.Service.ContentManage
             ILogger<ArticleService> logger,
             IRepository<Article> articleRepository,
             IRepository<Column> columnRepository,
-            IUnitOfWork<SystemIdentityDbContext> unitOfWork,
+            SystemIdentityDbUnitOfWork unitOfWork,
             IMapper mapper)
         {
             _logger = logger;
