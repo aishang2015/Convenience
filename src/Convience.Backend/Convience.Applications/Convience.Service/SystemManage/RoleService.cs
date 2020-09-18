@@ -4,6 +4,7 @@ using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
+using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 
 using System;
@@ -16,7 +17,7 @@ namespace Convience.Service.SystemManage
 
     public interface IRoleService
     {
-        IEnumerable<RoleResultModel> GetRoles(int page, int size, string name);
+        PagingResultModel<RoleResultModel> GetRoles(int page, int size, string name);
 
         Task<RoleResultModel> GetRole(string id);
 
@@ -27,8 +28,6 @@ namespace Convience.Service.SystemManage
         Task<string> AddRole(RoleViewModel model);
 
         Task<string> Update(RoleViewModel model);
-
-        int Count();
 
         IEnumerable<string> GetRoleClaimValue(string[] roleIds, string claimType);
     }
@@ -101,11 +100,6 @@ namespace Convience.Service.SystemManage
             return string.Empty;
         }
 
-        public int Count()
-        {
-            return _roleRepository.GetRoles().Count();
-        }
-
         public async Task<RoleResultModel> GetRole(string id)
         {
             var role = await _roleRepository.GetRoleById(id);
@@ -118,12 +112,20 @@ namespace Convience.Service.SystemManage
             return roleResult;
         }
 
-        public IEnumerable<RoleResultModel> GetRoles(int page, int size, string name)
+        public PagingResultModel<RoleResultModel> GetRoles(int page, int size, string name)
         {
             var roles = string.IsNullOrEmpty(name) ?
                 _roleRepository.GetRoles(page, size).ToArray() :
                 _roleRepository.GetRoles(role => role.Name.Contains(name), page, size).ToArray();
-            return _mapper.Map<SystemRole[], IEnumerable<RoleResultModel>>(roles);
+
+            var count = string.IsNullOrEmpty(name) ?
+                _roleRepository.GetRoles().Count() :
+                _roleRepository.GetRoles(role => role.Name.Contains(name)).Count();
+            return new PagingResultModel<RoleResultModel>
+            {
+                Data = _mapper.Map<IList<RoleResultModel>>(roles),
+                Count = count
+            };
         }
 
         public IEnumerable<RoleResultModel> GetRoles()
