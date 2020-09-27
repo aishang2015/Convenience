@@ -46,7 +46,9 @@ COPY ["Convience.FrameWork/Convience.Automapper/Convience.Automapper.csproj", "C
 COPY ["Convience.FrameWork/Convience.Caches/Convience.Cache/Convience.Cache.csproj", "Convience.FrameWork/Convience.Caches/Convience.Cache/"]
 COPY ["Convience.FrameWork/Convience.Comunication/Convience.WebSocket/Convience.WebSockets.csproj", "Convience.FrameWork/Convience.Comunication/Convience.WebSocket/"]
 COPY ["Convience.FrameWork/Convience.Data/Convience.EntityFrameWork/Convience.EntityFrameWork.csproj", "Convience.FrameWork/Convience.Data/Convience.EntityFrameWork/"]
+COPY ["Convience.FrameWork/Convience.Comunication/Convience.Mail/Convience.Mail.csproj", "Convience.FrameWork/Convience.Comunication/Convience.Mail/"]
 COPY ["Convience.FrameWork/Convience.Comunication/Convience.HttpClients/Convience.HttpClients.csproj", "Convience.FrameWork/Convience.Comunication/Convience.HttpClients/"]
+COPY ["Convience.FrameWork/Convience.Injection/Convience.Injection.csproj", "Convience.FrameWork/Convience.Injection/"]
 RUN dotnet restore "Convience.Applications/Convience.ManagentApi/Convience.ManagentApi.csproj"
 COPY . .
 WORKDIR "/src/Convience.Applications/Convience.ManagentApi"

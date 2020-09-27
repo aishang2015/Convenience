@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Convience.EntityFrameWork.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Convience.Entity.Data
 {
@@ -8,6 +9,9 @@ namespace Convience.Entity.Data
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddScoped<IUnitOfWork<SystemIdentityDbContext>, SystemIdentityDbUnitOfWork>();
+            services.AddScoped<SystemIdentityDbUnitOfWork, SystemIdentityDbUnitOfWork>();
             return services;
         }
     }

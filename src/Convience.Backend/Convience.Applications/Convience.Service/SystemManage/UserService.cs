@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Injection;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
@@ -39,29 +40,23 @@ namespace Convience.Service.SystemManage
 
     public class UserService : IUserService
     {
+
+#pragma warning disable CS0649
+
+        [Autowired]
         private readonly ILogger<UserService> _logger;
 
+        [Autowired]
         private readonly IUserRepository _userRepository;
 
+        [Autowired]
         private readonly IRoleRepository _roleRepository;
 
+        [Autowired]
         private readonly IMapper _mapper;
 
+        [Autowired]
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
-
-        public UserService(
-            ILogger<UserService> logger,
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IMapper mapper,
-            IUnitOfWork<SystemIdentityDbContext> unitOfWork)
-        {
-            _logger = logger;
-            _userRepository = userRepository;
-            _roleRepository = roleRepository;
-            _mapper = mapper;
-            _unitOfWork = unitOfWork;
-        }
 
         public async Task<string> AddUserAsync(UserViewModel model)
         {

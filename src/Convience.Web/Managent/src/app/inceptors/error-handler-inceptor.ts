@@ -4,6 +4,7 @@ import { NzMessageService } from 'ng-zorro-antd';
 import { tap } from 'rxjs/operators';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';
+import { ShowErrorService } from '../services/show-error.service';
 
 
 @Injectable()
@@ -11,6 +12,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
 
     constructor(private messageService: NzMessageService,
         private storageService: StorageService,
+        private showErrorService: ShowErrorService,
         private router: Router) { }
 
     // 在请求中添加认证header
@@ -32,6 +34,8 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                         this.router.navigate(['/account/login']);
                     } else if (error.status == 403) {
                         msg = '没有操作的权限！';
+                    } else if (error.status == 404) {
+                        msg = '服务器地址错误！';
                     } else if (error.status == 500) {
                         msg = '发生系统错误！';
                     } else {
@@ -39,7 +43,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
                             msg += error.error[key];
                         }
                     }
-                    this.messageService.error(msg);
+                    this.showErrorService.publishError(msg);
                 }
             )
         );

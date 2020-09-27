@@ -3,8 +3,7 @@
 using AutoMapper;
 
 using Convience.Entity.Data;
-using Convience.Entity.Entity;
-using Convience.EntityFrameWork.Infrastructure;
+using Convience.Entity.Entity.Tenants;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.SaasManage;
 using Convience.Util.Extension;
@@ -60,10 +59,8 @@ namespace Convience.Service.SaasManage
 
         public long Count(TenantQueryModel query)
         {
-            Enum.TryParse(typeof(DataBaseType), query.DataBaseType, out object type);
             Expression<Func<Tenant, bool>> where = ExpressionExtension.TrueExpression<Tenant>()
-                .AndIfHaveValue(query.Name, t => t.Name.Contains(query.Name))
-                .AndIfHaveValue(query.DataBaseType, t => t.DataBaseType == (DataBaseType)type);
+                .AndIfHaveValue(query.Name, t => t.Name.Contains(query.Name));
 
             var queryExpress = _tenantRepository.Get(where);
             return _tenantRepository.CountAsync(queryExpress).Result;
@@ -71,10 +68,8 @@ namespace Convience.Service.SaasManage
 
         public IEnumerable<TenantResultModel> Get(TenantQueryModel query)
         {
-            Enum.TryParse(typeof(DataBaseType), query.DataBaseType, out object type);
             Expression<Func<Tenant, bool>> where = ExpressionExtension.TrueExpression<Tenant>()
-                .AndIfHaveValue(query.Name, t => t.Name.Contains(query.Name))
-                .AndIfHaveValue(query.DataBaseType, t => t.DataBaseType == (DataBaseType)type);
+                .AndIfHaveValue(query.Name, t => t.Name.Contains(query.Name));
 
             Expression<Func<Tenant, object>> order = query.SortKey switch
             {

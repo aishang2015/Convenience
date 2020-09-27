@@ -1,9 +1,7 @@
 export class Tenant {
     id?: string;
     name?: string;
-    urlPrefix?: string;
-    dataBaseType?: number = 0;
-    connectionString?: string;
-    isActive?: boolean = false;
+    schema?: string;
+    isActive?: boolean;
     createdTime?: Date;
 }

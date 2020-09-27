@@ -9,6 +9,7 @@
     <ProjectReference Include="..\Convience.Caches\Convience.Cache\Convience.Cache.csproj" />
     <ProjectReference Include="..\Convience.Caches\Convience.Easycaching\Convience.Easycaching.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.HttpClients\Convience.HttpClients.csproj" />
+    <ProjectReference Include="..\Convience.Comunication\Convience.Mail\Convience.Mail.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.SignalRs\Convience.SignalRs.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.WebSocket\Convience.WebSockets.csproj" />
     <ProjectReference Include="..\Convience.Data\Convience.EntityFrameWork\Convience.EntityFrameWork.csproj" />
@@ -18,6 +19,7 @@
     <ProjectReference Include="..\Convience.Filestorage\Convience.Filestorage.Filesystem\Convience.Filestorage.Filesystem.csproj" />
     <ProjectReference Include="..\Convience.Filestorage\Convience.Filestorage.MongoDB\Convience.Filestorage.MongoDB.csproj" />
     <ProjectReference Include="..\Convience.Fluentvalidation\Convience.Fluentvalidation.csproj" />
+    <ProjectReference Include="..\Convience.Injection\Convience.Injection.csproj" />
     <ProjectReference Include="..\Convience.Jwtauthentication\Convience.JwtAuthentication.csproj" />
     <ProjectReference Include="..\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj" />
     <ProjectReference Include="..\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj" />

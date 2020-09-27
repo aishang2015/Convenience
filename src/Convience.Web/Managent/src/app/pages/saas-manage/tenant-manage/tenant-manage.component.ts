@@ -52,35 +52,6 @@ export class TenantManageComponent implements OnInit {
     this.refresh();
   }
 
-
-  add(title: TemplateRef<{}>, content: TemplateRef<{}>) {
-    this.editedTenant = new Tenant();
-    this.editTenant(title, content, this.editedTenant);
-  }
-
-  edit(title: TemplateRef<{}>, content: TemplateRef<{}>, tenant: Tenant) {
-    this._tenantService.getTenant(tenant.id).subscribe(result => {
-      this.editedTenant = result;
-      this.editTenant(title, content, this.editedTenant);
-    })
-  }
-
-  private editTenant(title: TemplateRef<{}>, content: TemplateRef<{}>, tenant: Tenant) {
-    this.editForm = this._formBuilder.group({
-      name: [this.editedTenant.name, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
-      urlPrefix: [this.editedTenant.urlPrefix, [Validators.required, Validators.maxLength(15),Validators.pattern('^[a-zA-Z0-9]*$')]],
-      dataBaseType: [this.editedTenant.dataBaseType, [Validators.required]],
-      connectionString: [this.editedTenant.connectionString, [Validators.required]],
-      isActive: [this.editedTenant.isActive],
-    });
-    this.tplModal = this._modalService.create({
-      nzTitle: title,
-      nzContent: content,
-      nzFooter: null,
-      nzMaskClosable: false
-    });
-  }
-
   submitEdit() {
     for (const i in this.editForm.controls) {
       this.editForm.controls[i].markAsDirty();
@@ -88,9 +59,6 @@ export class TenantManageComponent implements OnInit {
     }
     if (this.editForm.valid) {
       this.editedTenant.name = this.editForm.value["name"];
-      this.editedTenant.urlPrefix = this.editForm.value["urlPrefix"];
-      this.editedTenant.dataBaseType = this.editForm.value["dataBaseType"];
-      this.editedTenant.connectionString = this.editForm.value["connectionString"];
       this.editedTenant.isActive = this.editForm.value["isActive"];
       if (this.editedTenant.id) {
         this._tenantService.update(this.editedTenant).subscribe(result => {

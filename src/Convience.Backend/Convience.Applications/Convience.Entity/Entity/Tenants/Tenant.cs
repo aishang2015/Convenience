@@ -1,10 +1,9 @@
-﻿
-using Convience.Entity.Data;
+﻿using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 
 using System;
 
-namespace Convience.Entity.Entity
+namespace Convience.Entity.Entity.Tenants
 {
     [Entity(DbContextType = typeof(SystemIdentityDbContext))]
     public class Tenant
@@ -13,11 +12,7 @@ namespace Convience.Entity.Entity
 
         public string Name { get; set; }
 
-        public string UrlPrefix { get; set; }
-
-        public DataBaseType DataBaseType { get; set; }
-
-        public string ConnectionString { get; set; }
+        public string Schema { get; set; }
 
         public bool IsActive { get; set; }
 

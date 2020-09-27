@@ -34,11 +34,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
         [Permission("roleList")]
         public IActionResult GetRoles([FromQuery] string name, [FromQuery] int page, [FromQuery] int size)
         {
-            return Ok(new
-            {
-                data = _roleService.GetRoles(page, size, name),
-                count = _roleService.Count()
-            });
+            return Ok(_roleService.GetRoles(page, size, name));
         }
 
         [HttpDelete]
