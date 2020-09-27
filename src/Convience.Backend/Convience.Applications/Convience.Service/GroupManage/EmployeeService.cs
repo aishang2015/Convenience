@@ -121,23 +121,25 @@ namespace Convience.Service.GroupManage
             var user = await _userRepository.GetUserByIdAsync(viewModel.Id.ToString());
             if (user != null)
             {
-                await _unitOfWork.StartTransactionAsync();
-                try
+                using (var tran = await _unitOfWork.StartTransactionAsync())
                 {
-                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
-                        new List<string> { viewModel.DepartmentId });
+                    try
+                    {
+                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                            new List<string> { viewModel.DepartmentId });
 
-                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
-                        viewModel.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                            viewModel.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
-                    await _unitOfWork.CommitAsync();
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync();
-                    return false;
+                        await _unitOfWork.CommitAsync(tran);
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e.Message);
+                        _logger.LogError(e.StackTrace);
+                        await _unitOfWork.RollBackAsync(tran);
+                        return false;
+                    }
                 }
             }
             return true;

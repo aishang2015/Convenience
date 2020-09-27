@@ -63,70 +63,74 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> AddDepartmentAsync(DepartmentViewModel model)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var department = _mapper.Map<Department>(model);
-                var entity = await _departmentRepository.AddAsync(department);
-                await _unitOfWork.SaveAsync();
-                if (!string.IsNullOrWhiteSpace(model.UpId))
+                try
                 {
-                    var upid = int.Parse(model.UpId);
-                    var tree = _departmentTreeRepository.Get(dt => dt.Descendant == upid);
-                    foreach (var node in tree)
+                    var department = _mapper.Map<Department>(model);
+                    var entity = await _departmentRepository.AddAsync(department);
+                    await _unitOfWork.SaveAsync();
+                    if (!string.IsNullOrWhiteSpace(model.UpId))
                     {
-                        await _departmentTreeRepository.AddAsync(new DepartmentTree
+                        var upid = int.Parse(model.UpId);
+                        var tree = _departmentTreeRepository.Get(dt => dt.Descendant == upid);
+                        foreach (var node in tree)
                         {
-                            Ancestor = node.Ancestor,
-                            Descendant = entity.Id,
-                            Length = node.Length + 1
-                        });
+                            await _departmentTreeRepository.AddAsync(new DepartmentTree
+                            {
+                                Ancestor = node.Ancestor,
+                                Descendant = entity.Id,
+                                Length = node.Length + 1
+                            });
+                        }
                     }
+                    await _departmentTreeRepository.AddAsync(new DepartmentTree
+                    {
+                        Ancestor = entity.Id,
+                        Descendant = entity.Id,
+                        Length = 0
+                    });
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
                 }
-                await _departmentTreeRepository.AddAsync(new DepartmentTree
+                catch (Exception e)
                 {
-                    Ancestor = entity.Id,
-                    Descendant = entity.Id,
-                    Length = 0
-                });
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                }
             }
             return false;
         }
 
         public async Task<bool> DeleteDepartmentAsync(int id)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var claims = _userRepository.GetUserClaims()
-                    .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
-                    c.ClaimValue == id.ToString());
-                _userRepository.GetUserClaims().RemoveRange(claims);
+                try
+                {
+                    var claims = _userRepository.GetUserClaims()
+                        .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
+                        c.ClaimValue == id.ToString());
+                    _userRepository.GetUserClaims().RemoveRange(claims);
 
-                var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
-                    .Select(dt => dt.Descendant);
-                await _departmentRepository.RemoveAsync(d => childId.Contains(d.Id));
-                await _departmentTreeRepository.RemoveAsync(
-                    dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
-                return false;
+                    var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
+                        .Select(dt => dt.Descendant);
+                    await _departmentRepository.RemoveAsync(d => childId.Contains(d.Id));
+                    await _departmentTreeRepository.RemoveAsync(
+                        dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                    return false;
+                }
             }
         }
 

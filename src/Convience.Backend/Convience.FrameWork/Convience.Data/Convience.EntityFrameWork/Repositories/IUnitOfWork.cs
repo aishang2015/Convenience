@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Storage;
 using System.Threading.Tasks;
 
 namespace Convience.EntityFrameWork.Repositories
@@ -24,16 +24,16 @@ namespace Convience.EntityFrameWork.Repositories
         /// <summary>
         /// 开启手动事务
         /// </summary>
-        Task StartTransactionAsync();
+        Task<IDbContextTransaction> StartTransactionAsync();
 
         /// <summary>
         /// 手动事务回滚
         /// </summary>
-        Task RollBackAsync();
+        Task RollBackAsync(IDbContextTransaction transaction);
 
         /// <summary>
         /// 手动事务提交
         /// </summary>
-        Task CommitAsync();
+        Task CommitAsync(IDbContextTransaction transaction);
     }
 }

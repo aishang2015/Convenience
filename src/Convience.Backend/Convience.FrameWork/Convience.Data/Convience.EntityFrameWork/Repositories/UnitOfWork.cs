@@ -11,8 +11,6 @@ namespace Convience.EntityFrameWork.Repositories
     {
         private readonly TDbContext _dbContext;
 
-        private IDbContextTransaction _transaction;
-
         public UnitOfWork(TDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -92,21 +90,19 @@ namespace Convience.EntityFrameWork.Repositories
             }
         }
 
-        public async Task StartTransactionAsync()
+        public async Task<IDbContextTransaction> StartTransactionAsync()
         {
-            _transaction = await _dbContext?.Database.BeginTransactionAsync();
+            return await _dbContext?.Database.BeginTransactionAsync();
         }
 
-        public async Task RollBackAsync()
+        public async Task RollBackAsync(IDbContextTransaction transaction)
         {
-            await _transaction?.RollbackAsync();
-            await _transaction.DisposeAsync();
+            await transaction?.RollbackAsync();
         }
 
-        public async Task CommitAsync()
+        public async Task CommitAsync(IDbContextTransaction transaction)
         {
-            await _transaction?.CommitAsync();
-            await _transaction.DisposeAsync();
+            await transaction?.CommitAsync();
         }
     }
 }
