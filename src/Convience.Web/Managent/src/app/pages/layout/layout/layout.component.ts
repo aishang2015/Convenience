@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { AccountService } from 'src/app/business/account.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { SignalrService } from 'src/app/business/signalr.service';
+import { SignalrService } from 'src/app/services/signalr.service';
 
 @Component({
   selector: 'app-layout',

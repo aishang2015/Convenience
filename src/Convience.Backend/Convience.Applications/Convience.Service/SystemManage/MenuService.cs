@@ -56,46 +56,48 @@ namespace Convience.Service.SystemManage
 
         public async Task<bool> AddMenuAsync(MenuViewModel model)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var menu = _mapper.Map<Menu>(model);
-                var entity = await _menuRepository.AddAsync(menu);
-                await _unitOfWork.SaveAsync();
-
-                if (!string.IsNullOrEmpty(model.UpId))
+                try
                 {
-                    var upid = int.Parse(model.UpId);
-                    var tree = _menuTreeRepository.Get(t => t.Descendant == upid);
+                    var menu = _mapper.Map<Menu>(model);
+                    var entity = await _menuRepository.AddAsync(menu);
+                    await _unitOfWork.SaveAsync();
 
-                    // 做成树数据
-                    foreach (var m in tree)
+                    if (!string.IsNullOrEmpty(model.UpId))
                     {
-                        await _menuTreeRepository.AddAsync(new MenuTree
+                        var upid = int.Parse(model.UpId);
+                        var tree = _menuTreeRepository.Get(t => t.Descendant == upid);
+
+                        // 做成树数据
+                        foreach (var m in tree)
                         {
-                            Ancestor = m.Ancestor,
-                            Descendant = entity.Id,
-                            Length = m.Length + 1
-                        });
+                            await _menuTreeRepository.AddAsync(new MenuTree
+                            {
+                                Ancestor = m.Ancestor,
+                                Descendant = entity.Id,
+                                Length = m.Length + 1
+                            });
+                        }
                     }
+                    await _menuTreeRepository.AddAsync(new MenuTree
+                    {
+                        Ancestor = entity.Id,
+                        Descendant = entity.Id,
+                        Length = 0
+                    });
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
                 }
-                await _menuTreeRepository.AddAsync(new MenuTree
+                catch (Exception e)
                 {
-                    Ancestor = entity.Id,
-                    Descendant = entity.Id,
-                    Length = 0
-                });
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                }
+                return false;
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
-            }
-            return false;
         }
 
         public async Task<bool> DeleteMenuAsync(int id)

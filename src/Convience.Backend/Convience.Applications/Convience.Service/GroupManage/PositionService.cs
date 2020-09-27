@@ -85,25 +85,27 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> DeletePositionAsync(int id)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var claims = _userRepository.GetUserClaims()
-                    .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
-                    c.ClaimValue == id.ToString());
-                _userRepository.GetUserClaims().RemoveRange(claims);
+                try
+                {
+                    var claims = _userRepository.GetUserClaims()
+                        .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
+                        c.ClaimValue == id.ToString());
+                    _userRepository.GetUserClaims().RemoveRange(claims);
 
-                await _positionRepository.RemoveAsync(id);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
-                return false;
+                    await _positionRepository.RemoveAsync(id);
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                    return false;
+                }
             }
         }
 

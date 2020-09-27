@@ -54,65 +54,69 @@ namespace Convience.Service.WorkFlowManage
 
         public async Task<bool> AddWorkFlowGroupAsync(WorkFlowGroupViewModel model)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var workflowGroup = _mapper.Map<WorkFlowGroup>(model);
-                var entity = await _workFlowGroupRepository.AddAsync(workflowGroup);
-                await _unitOfWork.SaveAsync();
-                if (!string.IsNullOrWhiteSpace(model.UpId))
+                try
                 {
-                    var upid = int.Parse(model.UpId);
-                    var tree = _workFlowGroupTreeRepository.Get(dt => dt.Descendant == upid);
-                    foreach (var node in tree)
+                    var workflowGroup = _mapper.Map<WorkFlowGroup>(model);
+                    var entity = await _workFlowGroupRepository.AddAsync(workflowGroup);
+                    await _unitOfWork.SaveAsync();
+                    if (!string.IsNullOrWhiteSpace(model.UpId))
                     {
-                        await _workFlowGroupTreeRepository.AddAsync(new WorkFlowGroupTree
+                        var upid = int.Parse(model.UpId);
+                        var tree = _workFlowGroupTreeRepository.Get(dt => dt.Descendant == upid);
+                        foreach (var node in tree)
                         {
-                            Ancestor = node.Ancestor,
-                            Descendant = entity.Id,
-                            Length = node.Length + 1
-                        });
+                            await _workFlowGroupTreeRepository.AddAsync(new WorkFlowGroupTree
+                            {
+                                Ancestor = node.Ancestor,
+                                Descendant = entity.Id,
+                                Length = node.Length + 1
+                            });
+                        }
                     }
+                    await _workFlowGroupTreeRepository.AddAsync(new WorkFlowGroupTree
+                    {
+                        Ancestor = entity.Id,
+                        Descendant = entity.Id,
+                        Length = 0
+                    });
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
                 }
-                await _workFlowGroupTreeRepository.AddAsync(new WorkFlowGroupTree
+                catch (Exception e)
                 {
-                    Ancestor = entity.Id,
-                    Descendant = entity.Id,
-                    Length = 0
-                });
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                }
+                return false;
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
-            }
-            return false;
         }
 
         public async Task<bool> DeleteWorkFlowGroupAsync(int id)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                // todo 校验是否包含工作流，如果包含则不能删除
-                var childId = _workFlowGroupTreeRepository.Get(dt => dt.Ancestor == id)
-                    .Select(dt => dt.Descendant);
-                await _workFlowGroupRepository.RemoveAsync(d => childId.Contains(d.Id));
-                await _workFlowGroupTreeRepository.RemoveAsync(dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
-                return false;
+                try
+                {
+                    // todo 校验是否包含工作流，如果包含则不能删除
+                    var childId = _workFlowGroupTreeRepository.Get(dt => dt.Ancestor == id)
+                        .Select(dt => dt.Descendant);
+                    await _workFlowGroupRepository.RemoveAsync(d => childId.Contains(d.Id));
+                    await _workFlowGroupTreeRepository.RemoveAsync(dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                    return false;
+                }
             }
         }
 

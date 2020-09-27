@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { StorageService } from '../services/storage.service';
+import { StorageService } from './storage.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { UriConfig } from '../configs/uri-config';
 
