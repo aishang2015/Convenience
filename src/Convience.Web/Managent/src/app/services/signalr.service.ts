@@ -16,7 +16,7 @@ export class SignalrService {
     if (!SignalrService.connection) {
       var loginToken = this._storageService.userToken;
       SignalrService.connection = new signalR.HubConnectionBuilder()
-        .withUrl(`${this._uriConfig.BaseUri}/hubs`, { accessTokenFactory: () => loginToken })
+        .withUrl(`${this._uriConfig._baseUri}/hubs`, { accessTokenFactory: () => loginToken })
         .configureLogging(signalR.LogLevel.Information)
         .build();
       SignalrService.connection.onclose(async () => {
