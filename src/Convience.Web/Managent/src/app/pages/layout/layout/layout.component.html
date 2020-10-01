@@ -95,7 +95,7 @@
 
                     <div style="float: left;">
                         <nz-tag *ngFor="let tag of tags; let i = index" [nzMode]="'closeable'"
-                            (nzAfterClose)="handleClose(tag)" class="historyTag" >
+                            (nzOnClose)="handleClose(tag)" class="historyTag" >
                             <span (click)="navigate(tag)">{{ tag.name }}</span>
                         </nz-tag>
                     </div>
