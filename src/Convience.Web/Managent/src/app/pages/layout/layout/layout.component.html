@@ -3,6 +3,26 @@
         <div class="logo">
             <label>Convience</label>
         </div>
+        <ul nz-menu nzTheme="dark" nzMode="horizontal" id="titleMenuBar" *ngIf="!isSideMenu">
+            <ng-container *ngFor="let node of menuTree">
+                <ng-container *canOperate="node.canOperate">
+                    <li nz-menu-item nzMatchRouter *ngIf="node.children.length==0">
+                        <a [routerLink]="[ node.routerLink ]" (click)="navigateTo(node.canOperate)">
+                            <i nz-icon [nzType]="node.iconType"></i><span>{{node.name}}</span></a>
+                    </li>
+                    <li nz-submenu [nzIcon]="node.iconType" [nzTitle]="node.name" *ngIf="node.children.length>0">
+                        <ul>
+                            <ng-container *ngFor="let childNode of node.children">
+                                <li nz-menu-item nzMatchRouter *canOperate="childNode.canOperate">
+                                    <a [routerLink]="[ childNode.routerLink ]"
+                                        (click)="navigateTo(childNode.canOperate)">
+                                        <i nz-icon [nzType]="childNode.iconType"></i>{{childNode.name}}</a></li>
+                            </ng-container>
+                        </ul>
+                    </li>
+                </ng-container>
+            </ng-container>
+        </ul>
         <div class="user">
             <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
                 <nz-badge nzDot>
@@ -24,12 +44,12 @@
         </div>
     </nz-header>
     <nz-layout>
-        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+        <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="null" *ngIf="isSideMenu">
             <ul nz-menu nzMode="inline" nzTheme="light" class="sider-menu">
                 <ng-container *ngFor="let node of menuTree">
                     <ng-container *canOperate="node.canOperate">
                         <li nz-menu-item nzMatchRouter *ngIf="node.children.length==0">
-                            <a [routerLink]="[ node.routerLink ]" (click)="setBreadcrumb(node.firstBreadcrumb)">
+                            <a [routerLink]="[ node.routerLink ]" (click)="navigateTo(node.canOperate)">
                                 <i nz-icon [nzType]="node.iconType"></i><span
                                     *ngIf="!isCollapsed">{{node.name}}</span></a>
                         </li>
@@ -38,7 +58,7 @@
                                 <ng-container *ngFor="let childNode of node.children">
                                     <li nz-menu-item nzMatchRouter *canOperate="childNode.canOperate">
                                         <a [routerLink]="[ childNode.routerLink ]"
-                                            (click)="setBreadcrumb(childNode.firstBreadcrumb,childNode.lastBreadcrumb)">
+                                            (click)="navigateTo(childNode.canOperate)">
                                             <i nz-icon [nzType]="childNode.iconType"></i>{{childNode.name}}</a></li>
                                 </ng-container>
                             </ul>
@@ -50,15 +70,35 @@
         <nz-layout class="inner-layout">
             <nz-card [nzSize]="'small'">
                 <div style="display:flex;display: -webkit-flex;align-items:center;">
+                    <ng-container *ngIf="isSideMenu">
+                        <div style="float: left;">
+                            <button nz-button nzType="link" nzSize="small" (click)="isCollapsed = !isCollapsed">
+                                <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                            </button>
+                        </div>
+                        <div style="float: left;padding:0 10px;color: gray;">|</div>
+                    </ng-container>
                     <div style="float: left;">
-                        <button nz-button nzType="link" nzSize="small" (click)="isCollapsed = !isCollapsed">
-                            <i class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></i>
+                        <button nz-button nzType="link" nzSize="small"
+                            (click)="isSideMenu = !isSideMenu;isCollapsed=false;">
+                            <i class="trigger" nz-icon
+                                [nzType]="isSideMenu ? 'insert-row-left' : 'insert-row-above'"></i>
                         </button>
                     </div>
                     <div style="float: left;padding:0 10px;color: lightgray;">|</div>
+
                     <nz-breadcrumb style="margin:0;float: left;top: 50%;">
                         <nz-breadcrumb-item *ngFor="let info of breadcrumbInfo">{{info}}</nz-breadcrumb-item>
                     </nz-breadcrumb>
+
+                    <div style="float: left;padding:0 10px;"></div>
+
+                    <div style="float: left;">
+                        <nz-tag *ngFor="let tag of tags; let i = index" [nzMode]="'closeable'"
+                            (nzAfterClose)="handleClose(tag)" class="historyTag" >
+                            <span (click)="navigate(tag)">{{ tag.name }}</span>
+                        </nz-tag>
+                    </div>
                 </div>
             </nz-card>
             <div class="fullWindow">
