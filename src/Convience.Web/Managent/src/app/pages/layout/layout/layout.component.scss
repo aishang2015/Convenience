@@ -10,6 +10,10 @@ nz-header {
     }
   }
 
+  #titleMenuBar {
+    float: left;
+  }
+
   .header-menu {
     float: left;
     line-height: 64px;
@@ -49,6 +53,10 @@ nz-header {
 
 nz-sider {
   width: 200px;
+}
+
+.historyTag {
+  cursor: pointer;
 }
 
 // nz-breadcrumb {
