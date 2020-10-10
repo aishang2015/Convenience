@@ -1,7 +1,6 @@
 import { Component, OnInit, forwardRef, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { provideRoutes } from '@angular/router';
-import { NzModalService, NzModalRef } from 'ng-zorro-antd';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-avatar-select',

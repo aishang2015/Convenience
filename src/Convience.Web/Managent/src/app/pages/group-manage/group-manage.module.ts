@@ -7,7 +7,18 @@ import { DepartmentTreeComponent } from './department-tree/department-tree.compo
 import { DepartmentManageComponent } from './department-manage/department-manage.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
-import { NzFormModule, NzSelectModule, NzCardModule, NzInputModule, NzTableModule, NzTreeSelectModule, NzTreeModule, NzPaginationModule, NzTagModule, NzAvatarModule, NzIconModule, NzButtonModule } from 'ng-zorro-antd';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 
 
 

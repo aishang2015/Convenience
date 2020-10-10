@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { NzMessageService, NzModalService, NzModalRef, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { Article } from '../model/article';
 import { Column } from '../model/column';
 import { ColumnService } from 'src/app/business/column.service';
 import { ArticleService } from 'src/app/business/article.service';
 import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-article-manage',

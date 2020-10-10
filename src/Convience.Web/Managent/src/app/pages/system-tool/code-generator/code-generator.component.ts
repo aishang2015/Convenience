@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { EntityControl } from '../model/entityControl';
-import { NzMessageService } from 'ng-zorro-antd';
 import { CodeService } from 'src/app/business/code.service';
 import { saveAs } from 'file-saver';
 import * as JSZip from 'jszip';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-code-generator',

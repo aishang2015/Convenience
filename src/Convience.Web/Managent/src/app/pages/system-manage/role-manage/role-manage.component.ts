@@ -1,10 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Role } from '../model/role';
-import { NzModalService, NzModalRef, NzMessageService, NzTreeNodeOptions, NzTreeSelectComponent } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/business/role.service';
 import { Menu } from '../model/menu';
 import { MenuService } from 'src/app/business/menu.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { NzTreeSelectComponent } from 'ng-zorro-antd/tree-select';
 
 @Component({
   selector: 'app-role-manage',

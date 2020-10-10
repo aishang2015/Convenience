@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DicData } from '../model/dicdata';
 import { DicType } from '../model/dictype';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { DicDataService } from 'src/app/business/dicdata.service';
 import { DicTypeService } from 'src/app/business/dictype.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-dic-manage',

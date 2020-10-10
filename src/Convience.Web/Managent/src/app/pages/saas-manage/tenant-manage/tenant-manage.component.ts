@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzModalRef, NzMessageService, NzModalService } from 'ng-zorro-antd';
 import { Tenant } from '../model/tenant';
 import { TenantService } from 'src/app/business/tenant.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-tenant-manage',

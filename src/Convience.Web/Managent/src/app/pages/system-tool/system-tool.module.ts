@@ -3,11 +3,20 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { CodeGeneratorComponent } from './code-generator/code-generator.component';
-import { NzStepsModule, NzTabsModule, NzRadioModule, NzResultModule, NzFormModule, NzPaginationModule, NzSelectModule, NzCardModule, NzIconModule, NzInputModule, NzButtonModule, NzSwitchModule } from 'ng-zorro-antd';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { LoginGuard } from 'src/app/guards/login.guard';
 import { ManageUiComponent } from './manage-ui/manage-ui.component';
-
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 
 @NgModule({

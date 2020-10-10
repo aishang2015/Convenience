@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
 import { WorkflowInstance } from '../model/workflowInstance';
 import { WorkFlowForm } from '../model/workflowForm';
 import { WorkFlowFormControl } from '../model/workFlowFormControl';
 import { WorkflowNode } from '../model/workflowNode';
 import { WorkflowLink } from '../model/workflowLink';
-import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { WorkflowService } from 'src/app/business/workflow.service';
 import { WorkflowFormService } from 'src/app/business/workflow-form.service';
 import { WorkflowFlowService } from 'src/app/business/workflow-flow.service';
@@ -14,6 +13,8 @@ import * as jp from 'jsplumb';
 import { WorkFlow } from '../model/workflow';
 import { WorkflowInstanceRoute } from '../model/workflowInstanceRoute';
 import { StorageService } from 'src/app/services/storage.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-handle-work-flow',
@@ -155,7 +156,6 @@ export class HandleWorkFlowComponent implements OnInit {
         nzMaskClosable: false,
         nzWidth: document.body.clientWidth * 0.8
       });
-      let ele = document.getElementById('flowContainer');
       let jsPlumbInstance: any = jp.jsPlumb.getInstance({
         DragOptions: { cursor: 'move', zIndex: 2000 },
         Container: 'flowContainer'
@@ -184,14 +184,14 @@ export class HandleWorkFlowComponent implements OnInit {
           jsPlumbInstance.makeSource(node.domId, {
             anchor: 'Continuous',
             allowLoopback: false,
-            filter: (event, element) => {
+            filter: () => {
               return false;
             }
           }, endpointOption);
           jsPlumbInstance.makeTarget(node.domId, {
             anchor: 'Continuous',
             allowLoopback: false,
-            filter: (event, element) => {
+            filter: () => {
               return false;
             }
           }, endpointOption);
@@ -269,7 +269,7 @@ export class HandleWorkFlowComponent implements OnInit {
           workFlowInstanceId: this.checkedData.id,
           IsPass: true,
           handleComment: this.comment
-        }).subscribe(result => {
+        }).subscribe(() => {
           this._messageService.success('处理完毕!');
           this.refresh();
           this._nzModal.close();
@@ -288,7 +288,7 @@ export class HandleWorkFlowComponent implements OnInit {
           workFlowInstanceId: this.checkedData.id,
           IsPass: false,
           handleComment: this.comment
-        }).subscribe(result => {
+        }).subscribe(() => {
           this._messageService.success('处理完毕!');
           this.refresh();
           this._nzModal.close();

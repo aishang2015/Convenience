@@ -2,9 +2,10 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../model/user';
 import { UserService } from 'src/app/business/user.service';
-import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { RoleService } from 'src/app/business/role.service';
 import { Role } from '../model/role';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-user-manage',

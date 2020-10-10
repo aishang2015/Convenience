@@ -12,11 +12,21 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-import { NzDividerModule, NzSelectModule, NzFormModule, NzTreeModule, NzTreeSelectModule, NzTableModule, NzButtonModule, NzPaginationModule, NzCardModule, NzInputModule, NzIconModule } from 'ng-zorro-antd';
 import { WorkflowGroupTreeComponent } from './workflow-group-tree/workflow-group-tree.component';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { HandleWorkFlowComponent } from './handle-work-flow/handle-work-flow.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 registerLocaleData(zh);
 
 

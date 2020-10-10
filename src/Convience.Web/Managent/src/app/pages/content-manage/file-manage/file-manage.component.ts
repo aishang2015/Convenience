@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NzIconService } from 'ng-zorro-antd/icon';
 import { FileInfo } from '../model/fileInfo';
-import { NzModalService, NzModalRef, UploadFile, NzMessageService } from 'ng-zorro-antd';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalRef } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { FileService } from 'src/app/business/file.service';
 import { FolderService } from 'src/app/business/folder.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
@@ -33,7 +34,7 @@ export class FileManageComponent implements OnInit {
 
   modal: NzModalRef;
 
-  fileList: UploadFile[] = [];
+  fileList: any[] = [];
 
   uploading: boolean = false;
 
@@ -81,7 +82,7 @@ export class FileManageComponent implements OnInit {
     })
   }
 
-  beforeUpload = (file: UploadFile): boolean => {
+  beforeUpload = (file): boolean => {
     this.fileList = this.fileList.concat(file);
     return false;
   };

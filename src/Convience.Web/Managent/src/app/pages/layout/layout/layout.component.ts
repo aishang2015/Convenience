@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { NzModalService, NzModalRef, NzMessageService } from 'ng-zorro-antd';
 import { AccountService } from 'src/app/business/account.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { SignalrService } from 'src/app/services/signalr.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-layout',
@@ -105,8 +105,7 @@ export class LayoutComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _modalService: NzModalService,
     private _messageService: NzMessageService,
-    private _accountService: AccountService,
-    private _signalRService: SignalrService) { }
+    private _accountService: AccountService) { }
 
   ngOnInit() {
     this.name = this._storageService.Name;

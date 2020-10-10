@@ -4,9 +4,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ArticleService } from 'src/app/business/article.service';
 import { ColumnService } from 'src/app/business/column.service';
 import { Column } from '../model/column';
-import { NzTreeNodeOptions, NzMessageService } from 'ng-zorro-antd';
 import { Article } from '../model/article';
 import { StorageService } from 'src/app/services/storage.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-article-edit',
