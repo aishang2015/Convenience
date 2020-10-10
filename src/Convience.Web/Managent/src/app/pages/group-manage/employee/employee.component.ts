@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { NzModalRef, NzMessageService, NzModalService, NzTreeNodeOptions } from 'ng-zorro-antd';
-import { Department } from '../model/department';
 import { Position } from '../model/position';
 import { Employee } from '../model/employee';
 import { EmployeeService } from 'src/app/business/employee.service';
 import { PositionService } from 'src/app/business/position.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-employee',
@@ -99,7 +100,7 @@ export class EmployeeComponent implements OnInit {
       employee.id = this.currentId;
       employee.departmentId = this.editForm.value['department']?.toString();
       employee.positionIds = this.editForm.value['positions'].join(',');
-      this._employeeService.updateEmployee(employee).subscribe(result => {
+      this._employeeService.updateEmployee(employee).subscribe(() => {
         this._messageService.success("修改成功！");
         this.refresh();
         this.modal.close();

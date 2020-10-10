@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, Renderer2, ElementRef } from '@angular/core';
-import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { WorkflowInstance } from '../model/workflowInstance';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
 import { WorkflowService } from 'src/app/business/workflow.service';
@@ -14,6 +13,8 @@ import { WorkflowFlowService } from 'src/app/business/workflow-flow.service';
 import { WorkflowNode } from '../model/workflowNode';
 import { WorkflowLink } from '../model/workflowLink';
 import { WorkflowInstanceRoute } from '../model/workflowInstanceRoute';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-my-flow',

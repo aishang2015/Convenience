@@ -1,6 +1,7 @@
-import { Component, OnInit, ElementRef, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzMessageService, NzModalService, NzModalRef } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { PositionService } from 'src/app/business/position.service';
 import { Position } from '../model/position';
 
@@ -65,7 +66,7 @@ export class PositionManageComponent implements OnInit {
       this.data = result['data'];
       this.total = result['count'];
       this.isSpinning = false;
-    }, error => this.isSpinning = false);
+    }, () => this.isSpinning = false);
   }
 
   edit(id) {
@@ -88,7 +89,7 @@ export class PositionManageComponent implements OnInit {
     this._modalService.confirm({
       nzTitle: '是否删除该职位?',
       nzContent: null,
-      nzOnOk: () => this._positionService.delete(id).subscribe(result => {
+      nzOnOk: () => this._positionService.delete(id).subscribe(() => {
         this._messageService.success("删除成功！");
         this.refresh();
       }),
@@ -107,14 +108,14 @@ export class PositionManageComponent implements OnInit {
       p.name = this.editForm.value['name'];
       p.sort = this.editForm.value['sort'];
       if (this.currentId == null) {
-        this._positionService.add(p).subscribe(result => {
+        this._positionService.add(p).subscribe(() => {
           this._messageService.success("添加成功！");
           this.refresh();
           this.modal.close();
         });
       } else {
         p.id = this.currentId;
-        this._positionService.update(p).subscribe(result => {
+        this._positionService.update(p).subscribe(() => {
           this._messageService.success("修改成功！");
           this.refresh();
           this.modal.close();

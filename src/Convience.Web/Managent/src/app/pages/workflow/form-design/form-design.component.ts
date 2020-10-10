@@ -5,7 +5,7 @@ import { WorkFlowFormControl, ControlTypeEnum } from '../model/workFlowFormContr
 import { ActivatedRoute } from '@angular/router';
 import { WorkflowFormService } from 'src/app/business/workflow-form.service';
 import { WorkFlowForm } from '../model/workflowForm';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-form-design',

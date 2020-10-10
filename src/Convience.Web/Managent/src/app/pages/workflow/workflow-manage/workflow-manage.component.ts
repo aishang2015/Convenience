@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WorkflowGroupTreeComponent } from '../workflow-group-tree/workflow-group-tree.component';
-import { NzModalRef, NzModalService, NzMessageService } from 'ng-zorro-antd';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { WorkflowGroupService } from 'src/app/business/workflowgroup.service';
 import { WorkFlowGroup } from '../model/workflowGroup';
 import { WorkflowService } from 'src/app/business/workflow.service';
 import { WorkFlow } from '../model/workflow';
 import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-workflow-manage',

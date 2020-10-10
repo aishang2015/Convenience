@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NzIconService } from 'ng-zorro-antd';
+import { NzIconService } from 'ng-zorro-antd/icon';
 import { FileInfo } from '../model/fileInfo';
 
 @Component({

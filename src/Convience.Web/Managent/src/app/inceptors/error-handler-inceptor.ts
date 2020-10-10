@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpResponse } from '@angular/common/http';
-import { NzMessageService } from 'ng-zorro-antd';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { tap } from 'rxjs/operators';
 import { StorageService } from '../services/storage.service';
 import { Router } from '@angular/router';

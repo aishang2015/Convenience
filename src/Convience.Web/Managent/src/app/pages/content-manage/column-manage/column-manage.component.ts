@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NzModalRef, NzMessageService, NzModalService, NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd';
 import { Column } from '../model/column';
 import { ColumnService } from 'src/app/business/column.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-column-manage',
@@ -95,7 +97,7 @@ export class ColumnManageComponent implements OnInit {
       nzTitle: '是否删除该栏目?',
       nzContent: null,
       nzOnOk: () => {
-        this._columnService.delete(id).subscribe(result => {
+        this._columnService.delete(id).subscribe(() => {
           this.initNodes();
           this._messageService.success("删除成功！");
         });
@@ -116,13 +118,13 @@ export class ColumnManageComponent implements OnInit {
 
       if (this.currentId) {
         column.id = this.currentId;
-        this._columnService.update(column).subscribe(result => {
+        this._columnService.update(column).subscribe(() => {
           this._messageService.success("修改成功！");
           this.initNodes();
           this.modal.close();
         });
       } else {
-        this._columnService.add(column).subscribe(result => {
+        this._columnService.add(column).subscribe(() => {
           this._messageService.success("添加成功！");
           this.initNodes();
           this.modal.close();

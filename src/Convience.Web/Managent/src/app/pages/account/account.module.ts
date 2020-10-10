@@ -3,8 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AppCommonModule } from '../app-common/app-common.module';
-import { NzCardModule, NzFormModule, NzButtonModule, NzIconModule, NzInputModule } from 'ng-zorro-antd';
 import { AuthGuard } from 'src/app/guards/auth.guard';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @NgModule({
   declarations: [
