@@ -14,7 +14,8 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 })
 export class LayoutComponent implements OnInit {
 
-  menuTree = [
+  // 菜单数据
+  public menuTree = [
     {
       canOperate: 'dashaboard', routerLink: '/dashboard', iconType: 'dot-chart', firstBreadcrumb: '仪表盘', lastBreadcrumb: '', name: '仪表盘',
       children: []
@@ -67,13 +68,19 @@ export class LayoutComponent implements OnInit {
         { canOperate: 'cap', routerLink: '/tool/cap', iconType: 'forward', firstBreadcrumb: '内容管理', lastBreadcrumb: 'CAP', name: 'CAP', },
       ]
     },
-
   ];
 
-  breadcrumbInfo: string[] = ['仪表盘'];
-  isCollapsed;
-  name;
-  avatar;
+  // 面包渣数据
+  public breadcrumbInfo: string[] = ['仪表盘'];
+  public isCollapsed;
+  public name;
+  public avatar;
+
+  // tag
+  public tags: Array<any> = [];
+
+  // 侧边按钮栏或标题按钮栏
+  public isSideMenu = true;
 
   @ViewChild('editPwdTitleTpl', { static: true })
   editPwdTitleTpl;
@@ -123,6 +130,42 @@ export class LayoutComponent implements OnInit {
     rest.forEach(element => {
       this.breadcrumbInfo.push(element);
     });
+  }
+
+  // 移除tag
+  handleClose(removedTag: {}): void {
+    this.tags = this.tags.filter(tag => tag.name !== removedTag);
+  }
+
+  navigateTo(key) {
+
+    // 找到对应的数据
+    let findElement: any = this.menuTree.find(e => e.canOperate == key);
+    if (!findElement) {
+      for (const element of this.menuTree) {
+        if (element.children.length > 0) {
+          findElement = element.children.find(e => e.canOperate == key);
+          if (findElement) break;
+        }
+      }
+    }
+
+    // 设置面包渣导航
+    this.breadcrumbInfo = [];
+    this.breadcrumbInfo.push(findElement.firstBreadcrumb);
+    if (findElement.lastBreadcrumb) {
+      this.breadcrumbInfo.push(findElement.lastBreadcrumb);
+    }
+
+    // 添加tag
+    this.handleClose(findElement.name);
+    this.tags.push({ name: findElement.name, route: findElement.routerLink });
+
+  }
+
+  // 导航到指定路由
+  navigate(tag) {
+    this._router.navigate([tag.route]);
   }
 
   getImgUrl(name) {

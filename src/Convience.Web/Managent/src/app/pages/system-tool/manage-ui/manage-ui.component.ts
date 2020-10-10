@@ -21,7 +21,7 @@ export class ManageUiComponent implements OnInit {
 
     this._activatedRoute.data.subscribe(data => {
       let uri = data.uri;
-      let url = `${this._uriConstant.BaseUri}/${uri}`;
+      let url = `${this._uriConstant._baseUri}/${uri}`;
       this.code = this._sanitizer.bypassSecurityTrustResourceUrl(url);
     });
 

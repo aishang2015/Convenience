@@ -38,6 +38,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
     NzButtonModule,
     NzInputModule,
     NzModalModule,
+    NzTagModule,
   ],
   exports: [
     LayoutComponent

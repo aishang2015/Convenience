@@ -32,6 +32,9 @@ namespace Convience.EntityFrameWork.Infrastructure
                     case DataBaseType.PostgreSQL:
                         option.UseNpgsql(connectionString);
                         break;
+                    case DataBaseType.Oracle:
+                        option.UseOracle(connectionString);
+                        break;
                 }
             }).AddIdentity<TUser, TRole>(option =>
             {
@@ -65,6 +68,9 @@ namespace Convience.EntityFrameWork.Infrastructure
                         break;
                     case DataBaseType.PostgreSQL:
                         option.UseNpgsql(connectionString);
+                        break;
+                    case DataBaseType.Oracle:
+                        option.UseOracle(connectionString);
                         break;
                 }
             });

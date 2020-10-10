@@ -54,44 +54,46 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> AddColumnAsync(ColumnViewModel model)
         {
-            await _unitOfWork.StartTransactionAsync();
-            try
+            using (var tran = await _unitOfWork.StartTransactionAsync())
             {
-                var column = _mapper.Map<Column>(model);
-                var entity = await _columnRepository.AddAsync(column);
-                await _unitOfWork.SaveAsync();
-
-                if (!string.IsNullOrEmpty(model.UpId))
+                try
                 {
-                    var upid = int.Parse(model.UpId);
-                    var tree = _columnTreeRepository.Get(t => t.Descendant == upid);
+                    var column = _mapper.Map<Column>(model);
+                    var entity = await _columnRepository.AddAsync(column);
+                    await _unitOfWork.SaveAsync();
 
-                    // 做成树数据
-                    foreach (var m in tree)
+                    if (!string.IsNullOrEmpty(model.UpId))
                     {
-                        await _columnTreeRepository.AddAsync(new ColumnTree
+                        var upid = int.Parse(model.UpId);
+                        var tree = _columnTreeRepository.Get(t => t.Descendant == upid);
+
+                        // 做成树数据
+                        foreach (var m in tree)
                         {
-                            Ancestor = m.Ancestor,
-                            Descendant = entity.Id,
-                            Length = m.Length + 1
-                        });
+                            await _columnTreeRepository.AddAsync(new ColumnTree
+                            {
+                                Ancestor = m.Ancestor,
+                                Descendant = entity.Id,
+                                Length = m.Length + 1
+                            });
+                        }
                     }
+                    await _columnTreeRepository.AddAsync(new ColumnTree
+                    {
+                        Ancestor = entity.Id,
+                        Descendant = entity.Id,
+                        Length = 0
+                    });
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitAsync(tran);
+                    return true;
                 }
-                await _columnTreeRepository.AddAsync(new ColumnTree
+                catch (Exception e)
                 {
-                    Ancestor = entity.Id,
-                    Descendant = entity.Id,
-                    Length = 0
-                });
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                await _unitOfWork.RollBackAsync();
+                    _logger.LogError(e.Message);
+                    _logger.LogError(e.StackTrace);
+                    await _unitOfWork.RollBackAsync(tran);
+                }
             }
             return false;
         }
