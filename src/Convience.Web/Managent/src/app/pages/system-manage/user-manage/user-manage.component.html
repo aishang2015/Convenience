@@ -1,9 +1,9 @@
 <nz-card [nzSize]="'small'">
     <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
         <nz-form-item>
-            <nz-form-label [nzFor]="'userName'">用户名</nz-form-label>
+            <nz-form-label [nzFor]="'userName'">账号</nz-form-label>
             <nz-form-control>
-                <input nz-input placeholder="用户名" [formControlName]="'userName'" [attr.id]="'userName'"
+                <input nz-input placeholder="账号" [formControlName]="'userName'" [attr.id]="'userName'"
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
@@ -50,7 +50,7 @@
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
                     <th nzAlign="center" nzWidth="80px">头像</th>
-                    <th nzAlign="center" nzWidth="120px">用户名</th>
+                    <th nzAlign="center" nzWidth="120px">账号</th>
                     <th nzAlign="center" nzWidth="120px">姓名</th>
                     <th nzAlign="center" nzWidth="120px">电话号码</th>
                     <th nzAlign="center" nzWidth="60px">性别</th>
@@ -109,14 +109,14 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_userName'">用户名</nz-form-label>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_userName'">账号</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="userNameErrorTpl">
-                <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="用户名"
+                <input [attr.id]="'edit_userName'" formControlName="userName" nz-input placeholder="账号"
                     autocomplete="off" />
             </nz-form-control>
             <ng-template #userNameErrorTpl let-control>
                 <ng-container *ngIf="control.hasError('required')">
-                    请输入用户名！
+                    请输入账号！
                 </ng-container>
                 <ng-container *ngIf="control.hasError('maxlength')">
                     角色名长度不能超过15！

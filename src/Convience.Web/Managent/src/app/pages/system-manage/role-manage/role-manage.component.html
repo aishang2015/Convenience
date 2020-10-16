@@ -38,7 +38,7 @@
                     <td nzAlign="center">{{ data.remark }}</td>
                     <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle" [disabled]="data.name=='超级管理员'"
-                            *canOperate="'updateRoleBtn'" (click)="editRole(addRoleTitleTpl,roleContentTpl,data)"
+                            *canOperate="'updateRoleBtn'" (click)="editRole(editRoleTitleTpl,roleContentTpl,data)"
                             class="mr-10">
                             <i nz-icon nzType="edit"></i>
                         </button>
