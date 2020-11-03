@@ -18,24 +18,15 @@ namespace Convience.EntityFrameWork.Infrastructure
         {
             services.AddDbContext<TDbContext>(option =>
             {
-                switch (dataBaseType)
+                option = dataBaseType switch
                 {
-                    case DataBaseType.SqlServer:
-                        option.UseSqlServer(connectionString);
-                        break;
-                    case DataBaseType.Sqlite:
-                        option.UseSqlite(connectionString);
-                        break;
-                    case DataBaseType.MySQL:
-                        option.UseMySql(connectionString);
-                        break;
-                    case DataBaseType.PostgreSQL:
-                        option.UseNpgsql(connectionString);
-                        break;
-                    case DataBaseType.Oracle:
-                        option.UseOracle(connectionString);
-                        break;
-                }
+                    DataBaseType.SqlServer => option.UseSqlServer(connectionString),
+                    DataBaseType.Sqlite => option.UseSqlite(connectionString),
+                    DataBaseType.MySQL => option.UseMySql(connectionString),
+                    DataBaseType.PostgreSQL => option.UseNpgsql(connectionString),
+                    DataBaseType.Oracle => option.UseOracle(connectionString),
+                    _ => option
+                };
             }).AddIdentity<TUser, TRole>(option =>
             {
                 option.Password.RequireDigit = false;
@@ -55,24 +46,15 @@ namespace Convience.EntityFrameWork.Infrastructure
         {
             services.AddDbContext<TDbContext>(option =>
             {
-                switch (dataBaseType)
+                option = dataBaseType switch
                 {
-                    case DataBaseType.SqlServer:
-                        option.UseSqlServer(connectionString);
-                        break;
-                    case DataBaseType.Sqlite:
-                        option.UseSqlite(connectionString);
-                        break;
-                    case DataBaseType.MySQL:
-                        option.UseMySql(connectionString);
-                        break;
-                    case DataBaseType.PostgreSQL:
-                        option.UseNpgsql(connectionString);
-                        break;
-                    case DataBaseType.Oracle:
-                        option.UseOracle(connectionString);
-                        break;
-                }
+                    DataBaseType.SqlServer => option.UseSqlServer(connectionString),
+                    DataBaseType.Sqlite => option.UseSqlite(connectionString),
+                    DataBaseType.MySQL => option.UseMySql(connectionString),
+                    DataBaseType.PostgreSQL => option.UseNpgsql(connectionString),
+                    DataBaseType.Oracle => option.UseOracle(connectionString),
+                    _ => option
+                };
             });
             return services;
         }

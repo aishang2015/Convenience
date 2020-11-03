@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
 {
-    public interface IUserService
+    public interface IUserService : IBaseService
     {
         public IEnumerable<DicResultModel> GetUserDic(string name);
 
@@ -38,7 +38,7 @@ namespace Convience.Service.SystemManage
         public Task<bool> ResetUserPassword(string userName, string password);
     }
 
-    public class UserService : IUserService
+    public class UserService : BaseService, IUserService
     {
 
 #pragma warning disable CS0649
