@@ -33,6 +33,8 @@ export class RoleManageComponent implements OnInit {
   size: number = 10;
   total: number = 0;
 
+  searchString = null;
+
   constructor(
     private _formBuilder: FormBuilder,
     private _modalService: NzModalService,
@@ -49,7 +51,7 @@ export class RoleManageComponent implements OnInit {
   }
 
   refresh() {
-    this._roleService.getRoles(null, this.page, this.size)
+    this._roleService.getRoles(this.searchString, this.page, this.size)
       .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
   }
 
@@ -71,9 +73,8 @@ export class RoleManageComponent implements OnInit {
   }
 
   submitSearch() {
-    let key = this.searchForm.value["roleName"];
-    this._roleService.getRoles(key, this.page, this.size)
-      .subscribe((result: any) => { this.data = result['data']; this.total = result['count']; });
+    this.searchString = this.searchForm.value["roleName"];
+    this.refresh();
   }
 
   addRole(title: TemplateRef<{}>, content: TemplateRef<{}>) {

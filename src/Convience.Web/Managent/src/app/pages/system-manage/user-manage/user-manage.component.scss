@@ -1,3 +1,17 @@
 nz-tag {
   margin: 0;
 }
+
+#searchBar {
+  nz-form-label{
+    width: 70px;
+  }
+
+  input {
+    width: 150px;
+  }
+
+  nz-select {
+    width: 150px;
+  }
+}

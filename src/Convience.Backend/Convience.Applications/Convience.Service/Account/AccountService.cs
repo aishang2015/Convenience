@@ -110,7 +110,7 @@ namespace Convience.Service.Account
         public async Task<string> ValidateCaptcha(string captchaKey, string captchaValue)
         {
             var value = await _cachingProvider.GetAsync(captchaKey, typeof(string));
-            if (!string.IsNullOrEmpty(value?.ToString()))
+            if (value != null)
             {
                 return captchaValue == value.ToString() ? string.Empty : "验证码错误！";
             }

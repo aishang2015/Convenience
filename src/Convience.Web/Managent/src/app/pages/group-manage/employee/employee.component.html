@@ -7,7 +7,7 @@
     </div>
     <div class="right">
         <nz-card [nzSize]="'small'">
-            <div>
+            <div id="searchBar">
                 <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
                     <nz-form-item class="mb-5">
                         <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
@@ -37,6 +37,8 @@
                     <nz-form-item>
                         <nz-form-control>
                             <button nz-button nzType="primary">搜索</button>
+                            <button nz-button nzType="outline" type="button" class="ml-10"
+                                (click)="resetSearchForm()">重置</button>
                         </nz-form-control>
                     </nz-form-item>
                 </form>
@@ -102,7 +104,8 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">选择部门</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-tree-select #menuTree [nzNodes]="departmentNode" nzPlaceHolder="请选择" formControlName="department">
+                <nz-tree-select #menuTree [nzNodes]="departmentNode" nzPlaceHolder="请选择" formControlName="department"
+                    nzVirtualHeight="300px">
                 </nz-tree-select>
             </nz-form-control>
         </nz-form-item>

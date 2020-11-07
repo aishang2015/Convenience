@@ -1,4 +1,4 @@
-<nz-card [nzSize]="'small'">
+<nz-card [nzSize]="'small'" id="searchBar">
     <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
         <nz-form-item>
             <nz-form-label [nzFor]="'userName'">账号</nz-form-label>
@@ -23,7 +23,7 @@
         <nz-form-item>
             <nz-form-label [nzFor]="'roleid'">角色</nz-form-label>
             <nz-form-control>
-                <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'"
+                <nz-select nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'"
                     [formControlName]="'roleid'">
                     <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name"></nz-option>
                 </nz-select>
@@ -32,6 +32,7 @@
         <nz-form-item>
             <nz-form-control>
                 <button nz-button nzType="primary">搜索</button>
+                <button nz-button nzType="outline" type="button" class="ml-10" (click)="resetSearchForm()">重置</button>
             </nz-form-control>
         </nz-form-item>
     </form>

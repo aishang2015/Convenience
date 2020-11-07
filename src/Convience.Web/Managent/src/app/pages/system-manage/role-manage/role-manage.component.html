@@ -3,7 +3,7 @@
         <nz-form-item>
             <nz-form-control>
                 <nz-input-group nzPrefixIcon="search">
-                    <input formControlName="roleName" nz-input placeholder="角色名称" />
+                    <input formControlName="roleName" nz-input placeholder="角色名称" nzcli/>
                 </nz-input-group>
             </nz-form-control>
         </nz-form-item>
@@ -81,7 +81,7 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_menu'">菜单权限</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-tree-select #menuTree [nzNodes]="nodes" nzCheckable nzPlaceHolder="请选择" formControlName="menus">
+                <nz-tree-select #menuTree [nzNodes]="nodes" nzCheckable nzPlaceHolder="请选择" formControlName="menus" nzVirtualHeight="300px">
                 </nz-tree-select>
             </nz-form-control>
         </nz-form-item>

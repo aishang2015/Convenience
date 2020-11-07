@@ -6,7 +6,7 @@ using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
-
+using Convience.Util.Extension;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,17 +114,13 @@ namespace Convience.Service.SystemManage
 
         public PagingResultModel<RoleResultModel> GetRoles(int page, int size, string name)
         {
-            var roles = string.IsNullOrEmpty(name) ?
-                _roleRepository.GetRoles(page, size).ToArray() :
-                _roleRepository.GetRoles(role => role.Name.Contains(name), page, size).ToArray();
-
-            var count = string.IsNullOrEmpty(name) ?
-                _roleRepository.GetRoles().Count() :
-                _roleRepository.GetRoles(role => role.Name.Contains(name)).Count();
+            var query = _roleRepository.GetRoles()
+                .AndIfHaveValue(name, r => r.Name.Contains(name));
+            var roles = query.Skip(size * (page - 1)).Take(size);
             return new PagingResultModel<RoleResultModel>
             {
                 Data = _mapper.Map<IList<RoleResultModel>>(roles),
-                Count = count
+                Count = query.Count()
             };
         }
 

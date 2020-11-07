@@ -22,6 +22,9 @@ namespace Convience.Model.Validators.SystemManage
 
             RuleFor(viewmodel => viewmodel.Route).MaximumLength(50)
                 .WithMessage("路由长度不能超过50！");
+
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("菜单排序长度过长！");
         }
     }
 }

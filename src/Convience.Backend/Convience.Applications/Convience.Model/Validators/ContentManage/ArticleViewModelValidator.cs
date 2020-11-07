@@ -18,6 +18,8 @@ namespace Convience.Model.Validators.ContentManage
                 .WithMessage("文章出处长度不能超过200！");
             RuleFor(viewmodel => viewmodel.Tags).MaximumLength(200)
                 .WithMessage("文章关键字长度不能超过200！");
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("文章排序长度过长！");
         }
     }
 }

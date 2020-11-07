@@ -9,6 +9,7 @@ import { GenderPipe } from 'src/app/pipes/gender.pipe';
 import { DbTypePipe } from 'src/app/pipes/db-type.pipe';
 import { MenuTypePipe } from 'src/app/pipes/menu-type.pipe';
 import { CanOperateDirective } from 'src/app/directives/can-operate.directive';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { CanOperateDirective } from 'src/app/directives/can-operate.directive';
   ],
   imports: [
     CommonModule,
+    NzButtonModule
   ],
   exports: [
     ReactiveFormsModule,

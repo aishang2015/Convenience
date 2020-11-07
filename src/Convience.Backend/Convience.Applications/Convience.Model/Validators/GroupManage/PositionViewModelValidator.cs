@@ -14,6 +14,9 @@ namespace Convience.Model.Validators.GroupManage
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(15)
                 .WithMessage("职位名称长度不能超过15！");
 
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("职位排序长度过长！");
+
         }
     }
 }
