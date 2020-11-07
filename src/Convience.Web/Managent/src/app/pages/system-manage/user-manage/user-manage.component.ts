@@ -29,6 +29,9 @@ export class UserManageComponent implements OnInit {
   data: User[] = [];
   roles: Role[] = [];
 
+  // store search parameters
+  private _searchObject: any = {};
+
   constructor(
     private _formBuilder: FormBuilder,
     private _userService: UserService,
@@ -39,12 +42,7 @@ export class UserManageComponent implements OnInit {
   ngOnInit(): void {
     this.initRoleList();
     this.refresh();
-    this.searchForm = this._formBuilder.group({
-      userName: [null],
-      phoneNumber: [null],
-      name: [null],
-      roleid: [null],
-    });
+    this.resetSearchForm();
   }
 
   initRoleList() {
@@ -52,8 +50,11 @@ export class UserManageComponent implements OnInit {
   }
 
   refresh() {
-    this._userService.getUsers(this.page, this.size, this.searchForm.value['userName'],
-      this.searchForm.value['phoneNumber'], this.searchForm.value['name'], this.searchForm.value['roleid'])
+    this._userService.getUsers(this.page, this.size,
+      this._searchObject?.userName,
+      this._searchObject?.phoneNumber,
+      this._searchObject?.name,
+      this._searchObject?.roleid)
       .subscribe(result => {
         this.data = result['data'];
         this.total = result['count'];
@@ -81,7 +82,6 @@ export class UserManageComponent implements OnInit {
       nzMaskClosable: false
     });
   }
-
 
   edit(title: TemplateRef<{}>, content: TemplateRef<{}>, user: User) {
     this._userService.getUser(user.id).subscribe(user => {
@@ -120,8 +120,22 @@ export class UserManageComponent implements OnInit {
     });
   }
 
+  // reset the search form content 
+  resetSearchForm() {
+    this.searchForm = this._formBuilder.group({
+      userName: [null],
+      phoneNumber: [null],
+      name: [null],
+      roleid: [null],
+    });
+  }
+
   submitSearch() {
     this.page = 1;
+    this._searchObject.userName = this.searchForm.value['userName'];
+    this._searchObject.phoneNumber = this.searchForm.value['phoneNumber'];
+    this._searchObject.name = this.searchForm.value['name'];
+    this._searchObject.roleid = this.searchForm.value['roleid'];
     this.refresh();
   }
 

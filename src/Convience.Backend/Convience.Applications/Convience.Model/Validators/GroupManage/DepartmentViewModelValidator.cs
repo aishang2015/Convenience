@@ -22,6 +22,9 @@ namespace Convience.Model.Validators.GroupManage
 
             RuleFor(viewmodel => viewmodel.Telephone).MaximumLength(20)
                 .WithMessage("电话长度不能超过20!");
+
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("部门排序长度过长！");
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Convience.Model.Validators.ContentManage
                 .WithMessage("字典数据名不能为空！");
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(15)
                 .WithMessage("字典数据名长度不能超过15！");
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("字典数据名排序长度过长！");
         }
     }
 }

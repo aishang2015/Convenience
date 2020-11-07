@@ -56,10 +56,18 @@
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired="true" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sort'">排序</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="'请输入排序'">
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="sortErrorTpl">
                 <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input autocomplete="off"
-                    placeholder="排序" />
-            </nz-form-control>
+                    placeholder="排序" maxlength="8"/>
+            </nz-form-control>            
+            <ng-template #sortErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入排序
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    排序长度不能超过8！
+                </ng-container>
+            </ng-template>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control>

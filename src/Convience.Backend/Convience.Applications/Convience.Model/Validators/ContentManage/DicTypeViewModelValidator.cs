@@ -16,6 +16,8 @@ namespace Convience.Model.Validators.ContentManage
                 .WithMessage("字典类型名长度不能超过15！");
             RuleFor(viewmodel => viewmodel.Code).MaximumLength(15)
                 .WithMessage("字典类型编码长度不能超过15！");
+            RuleFor(viewmodel => viewmodel.Sort).LessThan(999999999)
+                .WithMessage("字典类型编码排序长度过长！");
         }
     }
 }

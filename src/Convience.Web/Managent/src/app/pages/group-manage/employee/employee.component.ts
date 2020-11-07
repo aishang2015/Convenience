@@ -39,6 +39,9 @@ export class EmployeeComponent implements OnInit {
 
   selectedDepartmentKey: string = '';
 
+  // store search parameters
+  private _searchObject: any = {};
+
   constructor(
     private _messageService: NzMessageService,
     private _modalService: NzModalService,
@@ -50,20 +53,16 @@ export class EmployeeComponent implements OnInit {
     this._positionService.getAll().subscribe((result: any) => {
       this.positionOptions = result;
     });
-    this.searchForm = this._formBuilder.group({
-      phoneNumber: [null],
-      name: [null],
-      position: [null]
-    })
+    this.resetSearchForm();
     this.refresh();
   }
 
   refresh() {
     this._employeeService.getEmployees(this.page, this.size,
-      this.searchForm.value['phoneNumber'],
-      this.searchForm.value['name'], 
+      this._searchObject?.phoneNumber,
+      this._searchObject?.name,
       this.selectedDepartmentKey,
-      this.searchForm.value['position'])
+      this._searchObject?.position)
       .subscribe((result: any) => {
         this.data = result.data;
         this.total = result.count;
@@ -86,7 +85,19 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
+  // reset the search form content 
+  resetSearchForm() {
+    this.searchForm = this._formBuilder.group({
+      phoneNumber: [null],
+      name: [null],
+      position: [null]
+    });
+  }
+
   submitSearch() {
+    this._searchObject.phoneNumber = this.searchForm.value['phoneNumber'];
+    this._searchObject.name = this.searchForm.value['name'];
+    this._searchObject.position = this.searchForm.value['position'];
     this.refresh();
   }
 
