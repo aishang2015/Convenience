@@ -43,7 +43,7 @@ export class ColumnManageComponent implements OnInit {
   add() {
     this.currentId = null;
     this.editForm = this._formBuilder.group({
-      upColumn: [{ value: this.getUpperSelectColumn(), disabled: true }],
+      upColumn: [this.selectedNode?.key],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       sort: [null, [Validators.required]]
     });
@@ -77,8 +77,9 @@ export class ColumnManageComponent implements OnInit {
   edit(id) {
     this._columnService.get(id).subscribe((result: Column) => {
       this.currentId = result.id;
+      let upId = this.data.find(d => d.id == result.id)?.upId;
       this.editForm = this._formBuilder.group({
-        upColumn: [{ value: this.getUpperColumnName(result.upId), disabled: true }],
+        upColumn: [{ value: Number(upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         sort: [result.sort, Validators.required]
       });
@@ -114,7 +115,7 @@ export class ColumnManageComponent implements OnInit {
       let column = new Column();
       column.name = this.editForm.value["name"];
       column.sort = this.editForm.value["sort"];
-      column.upId = this.selectedNode?.key?.toString();
+      column.upId = this.editForm.value["upColumn"];
 
       if (this.currentId) {
         column.id = this.currentId;
