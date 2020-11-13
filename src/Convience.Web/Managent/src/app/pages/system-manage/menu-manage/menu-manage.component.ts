@@ -66,7 +66,7 @@ export class MenuManageComponent implements OnInit {
     }
     this.editedMenu = new Menu();
     this.editForm = this._formBuilder.group({
-      upMenu: [{ value: this.getUpperMenuBySelect(), disabled: true }],
+      upMenu: [this.selectedNode?.key],
       name: [null, [Validators.required, Validators.maxLength(10)]],
       identification: [null],
       permission: [null],
@@ -84,8 +84,10 @@ export class MenuManageComponent implements OnInit {
 
   edit(title: TemplateRef<{}>, content: TemplateRef<{}>, menu: Menu) {
     this.editedMenu = menu;
+    console.log(menu);
     this.editForm = this._formBuilder.group({
-      upMenu: [{ value: this.getUpperMenuById(menu.upId), disabled: true }],
+      upMenu: [{ value: Number(menu.upId), disabled: true }],
+      //upMenu: [Number(menu.upId)],
       name: [menu.name, [Validators.required, Validators.maxLength(10)]],
       identification: [menu.identification],
       permission: [menu.permission],
@@ -114,7 +116,7 @@ export class MenuManageComponent implements OnInit {
       menu.route = this.editForm.value["route"];
       menu.sort = this.editForm.value["sort"];
       menu.type = this.editForm.value["type"];
-      menu.upId = this.selectedNode?.key?.toString();
+      menu.upId = this.editForm.value["upMenu"];
       if (this.editedMenu.id) {
         menu.id = this.editedMenu.id;
         this._menuService.update(menu).subscribe(result => {

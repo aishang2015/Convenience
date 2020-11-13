@@ -55,7 +55,8 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">上级栏目</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input formControlName="upColumn" /></nz-form-control>
+                <nz-tree-select [nzNodes]="nodes" formControlName="upColumn" nzVirtualHeight="400px"></nz-tree-select>
+            </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_columnName'">栏目名称</nz-form-label>

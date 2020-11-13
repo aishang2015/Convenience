@@ -59,8 +59,9 @@
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">上级部门</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input formControlName="upDepartment" /></nz-form-control>
+            <nz-form-control [nzSm]="14" [nzXs]="24">                
+                <nz-tree-select [nzNodes]="tree.nodes" formControlName="upDepartment" nzVirtualHeight="400px"></nz-tree-select>
+            </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_departmentName'">部门名称</nz-form-label>

@@ -66,7 +66,7 @@ export class DepartmentManageComponent implements OnInit {
 
   add() {
     this.editForm = this._formBuilder.group({
-      upDepartment: [{ value: this.tree.selectedNode?.title, disabled: true }],
+      upDepartment: [this.tree.selectedNode?.key],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       email: [null, [Validators.email, Validators.maxLength(50)]],
       telephone: [null, [Validators.maxLength(20)]],
@@ -89,8 +89,9 @@ export class DepartmentManageComponent implements OnInit {
     this.searchChange$.next(this.data.find(d => d.id == id).leaderName);
     this._departmentService.get(id).subscribe((result: Department) => {
       this.currentId = result.id;
+      let upId = this.tree.data.find(d => d.id == result.id)?.upId;
       this.editForm = this._formBuilder.group({
-        upDepartment: [{ value: this.getUpperDepartment(result.upId), disabled: true }],
+        upDepartment: [{ value: Number(upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         email: [result.email, [Validators.email, Validators.maxLength(50)]],
         telephone: [result.telephone, [Validators.maxLength(20)]],
@@ -128,7 +129,7 @@ export class DepartmentManageComponent implements OnInit {
     }
     if (this.editForm.valid) {
       let d = new Department();
-      d.upId = this.tree.selectedNode?.key?.toString();
+      d.upId = this.editForm.value['upDepartment'];
       d.name = this.editForm.value['name'];
       d.email = this.editForm.value['email'];
       d.telephone = this.editForm.value['telephone'];

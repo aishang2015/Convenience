@@ -183,7 +183,7 @@ export class WorkflowManageComponent implements OnInit {
 
   addWorkFlowGroup() {
     this.workflowGroupEditForm = this._formBuilder.group({
-      upWorkFlowGroup: [{ value: this.workflowGroupTree.selectedNode?.title, disabled: true }],
+      upWorkFlowGroup: [this.workflowGroupTree.selectedNode?.key],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       sort: [null, Validators.required]
     });
@@ -201,8 +201,9 @@ export class WorkflowManageComponent implements OnInit {
 
       this.editingWorkflowGroupId = id;
 
+      let upId = this.workflowGroupTree.data.find(d => d.id == result.id)?.upId;
       this.workflowGroupEditForm = this._formBuilder.group({
-        upWorkFlowGroup: [{ value: result.upId, disabled: true }],
+        upWorkFlowGroup: [{ value: Number(upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         sort: [result.sort, Validators.required]
       });
@@ -237,7 +238,7 @@ export class WorkflowManageComponent implements OnInit {
     }
     if (this.workflowGroupEditForm.valid) {
       let d = new WorkFlowGroup();
-      d.upId = this.workflowGroupTree.selectedNode?.key?.toString();
+      d.upId = this.workflowGroupEditForm.value['upWorkFlowGroup'];
       d.name = this.workflowGroupEditForm.value['name'];
       d.sort = this.workflowGroupEditForm.value['sort'];
       if (this.editingWorkflowGroupId) {

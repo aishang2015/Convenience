@@ -70,7 +70,8 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">上级菜单</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <input nz-input formControlName="upMenu" /></nz-form-control>
+                <nz-tree-select [nzNodes]="nodes" formControlName="upMenu" nzVirtualHeight="400px"></nz-tree-select>
+            </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_menuName'">菜单名称</nz-form-label>
