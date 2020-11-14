@@ -1,76 +1,139 @@
-<nz-card [nzSize]="'small'">
-    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+<div class="content">
+    <div class="left">
+        <nz-card [nzSize]="'small'">
+            <nz-button-group class="mb-10">
+                <button nz-button (click)="addColumn()" *canOperate="'addColumnBtn'">添加栏目</button>
+                <ng-container *canOperate="'updateColumnBtn'">
+                    <button nz-button (click)="editColumn()"
+                        *ngIf="selectedNode?.key">修改栏目</button>
+                </ng-container>
+                <ng-container *canOperate="'deleteColumnBtn'">
+                    <button nz-button (click)="deleteColumn()"
+                        *ngIf="selectedNode?.key">删除栏目</button>
+                </ng-container>
+            </nz-button-group>
+            <nz-tree #nzTreeComponent [nzData]="nodes" nzShowIcon="true" (nzClick)="treeClick($event)"
+                [nzExpandedIcon]="mutiExpandedIconTpl">
+                <ng-template #mutiExpandedIconTpl let-node>
+                    <i *ngIf="!node.origin.isLeaf" nz-icon [nzType]="node.isExpanded ? 'caret-down' : 'caret-right'"
+                        style="color: lightgray;"></i>
+                    <i *ngIf="node.origin.isLeaf" nz-icon nzType="file" class="ant-tree-switcher-line-icon"></i>
+                </ng-template>
+            </nz-tree>
+        </nz-card>
+    </div>
+    <div class="right">
+        <nz-card [nzSize]="'small'" style="height: auto;">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'title'">标题</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input placeholder="标题" [formControlName]="'title'" [attr.id]="'title'"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'tag'">标签</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input placeholder="标签" [formControlName]="'tag'" [attr.id]="'tag'"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control>
+                        <button nz-button nzType="primary">搜索</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-card>
+
+        <nz-card [nzSize]="'small'" class="full-double">
+            <div>
+                <button nz-button class="mr-10" (click)="add()" *canOperate="'addArticleBtn'">
+                    <i nz-icon nzType="plus"></i>添加文章</button>
+                <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+            </div>
+            <div class="mt-10">
+                <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+                    nzBordered="true">
+                    <thead>
+                        <tr>
+                            <th nzAlign="center" nzWidth="50px">#</th>
+                            <th nzAlign="center">标题</th>
+                            <th nzAlign="center" nzWidth="120px">栏目</th>
+                            <th nzAlign="center" nzWidth="200px">标签</th>
+                            <th nzAlign="center" nzWidth="180px">创建时间</th>
+                            <th nzAlign="center" nzWidth="180px">排序</th>
+                            <th nzAlign="center" nzWidth="120px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataTable.data;let i = index">
+                            <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                            <td nzAlign="center">{{ data.title }}</td>
+                            <td nzAlign="center">{{ data.columnName }}</td>
+                            <td nzAlign="center">
+                                <nz-tag style="margin-right: 5px;margin-top: 5px;" nzColor="success"
+                                    *ngFor="let item of getTagList(data.tags)">{{item}}</nz-tag>
+                            </td>
+                            <td nzAlign="center">{{ data.createTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td nzAlign="center">{{ data.sort }}</td>
+                            <td nzAlign="center">
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'updateArticleBtn'"
+                                    (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteArticleBtn'"
+                                    (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+            <div class="mt-10">
+                <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+                    nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()">
+                </nz-pagination>
+            </div>
+        </nz-card>
+    </div>
+</div>
+
+<ng-template #columnTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
         <nz-form-item>
-            <nz-form-label [nzFor]="'title'">标题</nz-form-label>
-            <nz-form-control>
-                <input nz-input placeholder="标题" [formControlName]="'title'" [attr.id]="'title'" autocomplete="off" />
+            <nz-form-label [nzSm]="6" [nzXs]="24">上级栏目</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-tree-select [nzNodes]="nodes" formControlName="upColumn" nzVirtualHeight="400px"></nz-tree-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzFor]="'tag'">标签</nz-form-label>
-            <nz-form-control>
-                <input nz-input placeholder="标签" [formControlName]="'tag'" [attr.id]="'tag'" autocomplete="off" />
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_columnName'">栏目名称</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="columnNameErrorTpl">
+                <input [attr.id]="'edit_columnName'" formControlName="name" nz-input placeholder="栏目名称"
+                    autocomplete="off" />
             </nz-form-control>
+            <ng-template #columnNameErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入栏目名称！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    栏目名称长度不能超过15！
+                </ng-container>
+            </ng-template>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzFor]="'columnId'">栏目</nz-form-label>
-            <nz-form-control>
-                <nz-tree-select style="width: 150px;" [nzNodes]="nodes" [formControlName]="'columnId'"
-                    nzPlaceHolder="栏目" nzVirtualHeight="300px">
-                </nz-tree-select>
+            <nz-form-label nzRequired [nzSm]="6" [nzXs]="24" [nzFor]="'edit_sort'">排序</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入排序！">
+                <input type="number" [attr.id]="'edit_sort'" formControlName="sort" nz-input placeholder="排序"
+                    autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
+
+
         <nz-form-item>
-            <nz-form-control>
-                <button nz-button nzType="primary">搜索</button>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancel()">取消</button>
             </nz-form-control>
         </nz-form-item>
     </form>
-</nz-card>
-
-<nz-card [nzSize]="'small'" class="full-double">
-    <div>
-        <button nz-button class="mr-10" (click)="add()" *canOperate="'addArticleBtn'">
-            <i nz-icon nzType="plus"></i>添加文章</button>
-        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
-    </div>
-    <div class="mt-10">
-        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
-            nzBordered="true">
-            <thead>
-                <tr>
-                    <th nzAlign="center" nzWidth="50px">#</th>
-                    <th nzAlign="center" nzWidth="120px">栏目</th>
-                    <th nzAlign="center">标题</th>
-                    <th nzAlign="center" nzWidth="200px">标签</th>
-                    <th nzAlign="center" nzWidth="180px">创建时间</th>
-                    <th nzAlign="center" nzWidth="180px">排序</th>
-                    <th nzAlign="center" nzWidth="120px">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let data of dataTable.data;let i = index">
-                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
-                    <td nzAlign="center">{{ data.columnName }}</td>
-                    <td nzAlign="center">{{ data.title }}</td>
-                    <td nzAlign="center">
-                        <nz-tag style="margin-right: 5px;margin-top: 5px;" nzColor="success"
-                            *ngFor="let item of getTagList(data.tags)">{{item}}</nz-tag>
-                    </td>
-                    <td nzAlign="center">{{ data.createTime | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
-                    <td nzAlign="center">{{ data.sort }}</td>
-                    <td nzAlign="center">
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'updateArticleBtn'"
-                            (click)="edit(data.id)" class="mr-10"><i nz-icon nzType="edit"></i></button>
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteArticleBtn'"
-                            (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </nz-table>
-    </div>
-    <div class="mt-10">
-        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
-            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
-    </div>
-</nz-card>
+</ng-template>
