@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-article-manage',
@@ -25,7 +26,7 @@ export class ArticleManageComponent implements OnInit {
   page: number = 1;
   total: number = 0;
 
-  
+
   currentId?: number = null;
 
   editForm: FormGroup = new FormGroup({});
@@ -34,7 +35,10 @@ export class ArticleManageComponent implements OnInit {
   contentTpl;
 
   @ViewChild('columnTpl', { static: true })
-  columnTpl;  
+  columnTpl;
+
+  @ViewChild('preViewTpl', { static: true })
+  preViewTpl;
 
   searchForm: FormGroup = new FormGroup({});
 
@@ -46,12 +50,15 @@ export class ArticleManageComponent implements OnInit {
 
   searchTag: string;
 
+  viewedArticle: Article;
+
   constructor(
     private _messageService: NzMessageService,
     private _modalService: NzModalService,
     private _formBuilder: FormBuilder,
     private _columnService: ColumnService,
     private _articleService: ArticleService,
+    private _sanitized: DomSanitizer,
     private _router: Router) { }
 
   ngOnInit(): void {
@@ -87,6 +94,22 @@ export class ArticleManageComponent implements OnInit {
 
   edit(id) {
     this._router.navigate(['/content/article/edit', { id: id }]);
+  }
+
+  viewArticle(id) {
+    this._articleService.get(id).subscribe((result: any) => {
+      this.viewedArticle = result;
+      this._modalService.create({
+        nzTitle: "文章预览",
+        nzContent: this.preViewTpl,
+        nzFooter: null,
+        nzWidth: "70%"
+      });
+    });
+  }
+
+  pass(content) {
+    return this._sanitized.bypassSecurityTrustHtml(content);
   }
 
   refresh() {
@@ -144,7 +167,7 @@ export class ArticleManageComponent implements OnInit {
     this.refresh();
   }
 
-  addColumn(){
+  addColumn() {
     this.currentId = null;
     this.editForm = this._formBuilder.group({
       upColumn: [this.selectedNode?.key],
@@ -159,7 +182,7 @@ export class ArticleManageComponent implements OnInit {
     });
   }
 
-  editColumn(){
+  editColumn() {
     this._columnService.get(this.selectedNode?.key).subscribe((result: Column) => {
       this.currentId = result.id;
       let upId = this.treeData.find(d => d.id == result.id)?.upId;
@@ -178,7 +201,7 @@ export class ArticleManageComponent implements OnInit {
     });
   }
 
-  deleteColumn(){
+  deleteColumn() {
     this._modalService.confirm({
       nzTitle: '是否删除该栏目?',
       nzContent: null,
@@ -218,5 +241,5 @@ export class ArticleManageComponent implements OnInit {
       }
     }
   }
-  
+
 }

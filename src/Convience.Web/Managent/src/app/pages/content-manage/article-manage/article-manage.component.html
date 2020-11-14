@@ -4,12 +4,10 @@
             <nz-button-group class="mb-10">
                 <button nz-button (click)="addColumn()" *canOperate="'addColumnBtn'">添加栏目</button>
                 <ng-container *canOperate="'updateColumnBtn'">
-                    <button nz-button (click)="editColumn()"
-                        *ngIf="selectedNode?.key">修改栏目</button>
+                    <button nz-button (click)="editColumn()" *ngIf="selectedNode?.key">修改栏目</button>
                 </ng-container>
                 <ng-container *canOperate="'deleteColumnBtn'">
-                    <button nz-button (click)="deleteColumn()"
-                        *ngIf="selectedNode?.key">删除栏目</button>
+                    <button nz-button (click)="deleteColumn()" *ngIf="selectedNode?.key">删除栏目</button>
                 </ng-container>
             </nz-button-group>
             <nz-tree #nzTreeComponent [nzData]="nodes" nzShowIcon="true" (nzClick)="treeClick($event)"
@@ -22,7 +20,7 @@
             </nz-tree>
         </nz-card>
     </div>
-    <div class="right">
+    <div class="right" style="height: calc(100% - 56px - 12px);">
         <nz-card [nzSize]="'small'" style="height: auto;">
             <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
                 <nz-form-item>
@@ -68,7 +66,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let data of dataTable.data;let i = index">
+                        <tr *ngFor="let data of dataTable.data;let i = index" (dblclick)="viewArticle(data.id)">
                             <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
                             <td nzAlign="center">{{ data.title }}</td>
                             <td nzAlign="center">{{ data.columnName }}</td>
@@ -136,4 +134,11 @@
             </nz-form-control>
         </nz-form-item>
     </form>
+</ng-template>
+
+<ng-template #preViewTpl>
+    <h2 style="text-align: center;">{{viewedArticle.title}}</h2>
+    <nz-card nzSize="small">
+        <div [innerHtml]="pass(viewedArticle.content)"></div>
+    </nz-card>
 </ng-template>
