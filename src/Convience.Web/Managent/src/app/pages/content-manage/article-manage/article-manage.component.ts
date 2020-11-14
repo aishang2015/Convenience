@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Article } from '../model/article';
 import { Column } from '../model/column';
 import { ColumnService } from 'src/app/business/column.service';
@@ -7,7 +7,7 @@ import { ArticleService } from 'src/app/business/article.service';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { NzFormatEmitEvent, NzTreeNode, NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-article-manage',
@@ -17,6 +17,7 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 export class ArticleManageComponent implements OnInit {
 
   data: Article[] = [];
+  treeData: any[] = [];
 
   nodes: NzTreeNodeOptions[] = [];
 
@@ -24,12 +25,26 @@ export class ArticleManageComponent implements OnInit {
   page: number = 1;
   total: number = 0;
 
+  
+  currentId?: number = null;
+
+  editForm: FormGroup = new FormGroup({});
+
   @ViewChild('contentTpl', { static: true })
   contentTpl;
+
+  @ViewChild('columnTpl', { static: true })
+  columnTpl;  
 
   searchForm: FormGroup = new FormGroup({});
 
   modal: NzModalRef;
+
+  selectedNode: NzTreeNode;
+
+  searchTitle: string;
+
+  searchTag: string;
 
   constructor(
     private _messageService: NzMessageService,
@@ -42,27 +57,27 @@ export class ArticleManageComponent implements OnInit {
   ngOnInit(): void {
     this.searchForm = this._formBuilder.group({
       title: [],
-      tag: [],
-      columnId: []
+      tag: []
     });
     this.initNodes();
     this.refresh();
   }
 
   initNodes() {
-    let nodes: NzTreeNodeOptions[] = [];
+    let nodes: NzTreeNodeOptions[] = [{ title: '文章栏目', key: null, icon: 'database', expanded: true, children: [] }];
     this._columnService.getAll().subscribe((result: any) => {
-      this.makeNodes(null, nodes, result);
+      this.treeData = result;
+      this.makeNodes(null, nodes[0], this.treeData);
       this.nodes = nodes;
     });
   }
 
-  makeNodes(upId, nodes, columns: Column[]) {
+  makeNodes(upId, node, columns: Column[]) {
     var cs = columns.filter(column => column.upId == upId);
     cs.forEach(column => {
       let data = { title: column.name, key: column.id, icon: 'database', children: [] };
-      this.makeNodes(column.id, data.children, columns);
-      nodes.push(data);
+      this.makeNodes(column.id, data, columns);
+      node.children.push(data);
     });
   }
 
@@ -75,9 +90,12 @@ export class ArticleManageComponent implements OnInit {
   }
 
   refresh() {
-    this._articleService.getList(this.page, this.size,
-      this.searchForm.value['title'], this.searchForm.value['tag'],
-      this.searchForm.value['columnId'])
+    this._articleService.getList(
+      this.page,
+      this.size,
+      this.searchTitle,
+      this.searchTag,
+      this.selectedNode?.key)
       .subscribe(result => {
         this.data = result['data'];
         this.total = result['count'];
@@ -98,6 +116,8 @@ export class ArticleManageComponent implements OnInit {
   }
 
   submitSearch() {
+    this.searchTitle = this.searchForm.value["title"];
+    this.searchTag = this.searchForm.value["tag"];
     this.refresh();
   }
 
@@ -118,4 +138,85 @@ export class ArticleManageComponent implements OnInit {
     return tags?.split(',').filter(e => e);
   }
 
+
+  treeClick(event: NzFormatEmitEvent) {
+    this.selectedNode = event.keys.length > 0 ? event.node : null;
+    this.refresh();
+  }
+
+  addColumn(){
+    this.currentId = null;
+    this.editForm = this._formBuilder.group({
+      upColumn: [this.selectedNode?.key],
+      name: [null, [Validators.required, Validators.maxLength(15)]],
+      sort: [null, [Validators.required]]
+    });
+    this.modal = this._modalService.create({
+      nzTitle: '添加栏目',
+      nzContent: this.columnTpl,
+      nzFooter: null,
+      nzMaskClosable: false,
+    });
+  }
+
+  editColumn(){
+    this._columnService.get(this.selectedNode?.key).subscribe((result: Column) => {
+      this.currentId = result.id;
+      let upId = this.treeData.find(d => d.id == result.id)?.upId;
+      this.editForm = this._formBuilder.group({
+        upColumn: [{ value: Number(upId), disabled: true }],
+        name: [result.name, [Validators.required, Validators.maxLength(15)]],
+        sort: [result.sort, Validators.required]
+      });
+
+      this.modal = this._modalService.create({
+        nzTitle: '编辑栏目',
+        nzContent: this.columnTpl,
+        nzFooter: null,
+        nzMaskClosable: false,
+      });
+    });
+  }
+
+  deleteColumn(){
+    this._modalService.confirm({
+      nzTitle: '是否删除该栏目?',
+      nzContent: null,
+      nzOnOk: () => {
+        this._columnService.delete(this.selectedNode?.key).subscribe(() => {
+          this.initNodes();
+          this._messageService.success("删除成功！");
+        });
+      },
+    });
+  }
+
+  submitEdit() {
+    for (const i in this.editForm.controls) {
+      this.editForm.controls[i].markAsDirty();
+      this.editForm.controls[i].updateValueAndValidity();
+    }
+    if (this.editForm.valid) {
+      let column = new Column();
+      column.name = this.editForm.value["name"];
+      column.sort = this.editForm.value["sort"];
+      column.upId = this.editForm.value["upColumn"];
+
+      if (this.currentId) {
+        column.id = this.currentId;
+        this._columnService.update(column).subscribe(() => {
+          this._messageService.success("修改成功！");
+          this.initNodes();
+          this.modal.close();
+        });
+      } else {
+        this._columnService.add(column).subscribe(() => {
+          this._messageService.success("添加成功！");
+          this.initNodes();
+          this.modal.close();
+        });
+      }
+    }
+  }
+  
 }

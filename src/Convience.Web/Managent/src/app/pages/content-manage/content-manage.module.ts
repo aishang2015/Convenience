@@ -4,7 +4,6 @@ import { FileManageComponent } from './file-manage/file-manage.component';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { RouterModule } from '@angular/router';
 import { FileIconComponent } from './file-icon/file-icon.component';
-import { ColumnManageComponent } from './column-manage/column-manage.component';
 import { ArticleManageComponent } from './article-manage/article-manage.component';
 import { ArticleEditComponent } from './article-edit/article-edit.component';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
@@ -29,7 +28,6 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
   declarations: [
     FileManageComponent,
     FileIconComponent,
-    ColumnManageComponent,
     ArticleManageComponent,
     ArticleEditComponent,
     DicManageComponent
@@ -40,7 +38,6 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
     NzUploadModule,
     RouterModule.forChild([
       { path: 'file', component: FileManageComponent, canActivate: [LoginGuard] },
-      { path: 'column', component: ColumnManageComponent, canActivate: [LoginGuard] },
       { path: 'article', component: ArticleManageComponent, canActivate: [LoginGuard] },
       { path: 'article/edit', component: ArticleEditComponent, canActivate: [LoginGuard] },
       { path: 'dic', component: DicManageComponent, canActivate: [LoginGuard] },

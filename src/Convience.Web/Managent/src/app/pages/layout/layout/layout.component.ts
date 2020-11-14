@@ -47,7 +47,6 @@ export class LayoutComponent implements OnInit {
       canOperate: 'contentmanage', routerLink: '', iconType: 'book', firstBreadcrumb: '', lastBreadcrumb: '', name: '内容管理',
       children: [
         { canOperate: 'articleManage', routerLink: '/content/article', iconType: 'align-left', firstBreadcrumb: '内容管理', lastBreadcrumb: '文章管理', name: '文章管理', },
-        { canOperate: 'columnManage', routerLink: '/content/column', iconType: 'database', firstBreadcrumb: '内容管理', lastBreadcrumb: '栏目管理', name: '栏目管理', },
         { canOperate: 'fileManage', routerLink: '/content/file', iconType: 'file', firstBreadcrumb: '内容管理', lastBreadcrumb: '文件管理', name: '文件管理', },
         { canOperate: 'dicManage', routerLink: '/content/dic', iconType: 'book', firstBreadcrumb: '内容管理', lastBreadcrumb: '字典管理', name: '字典管理', },
       ]
