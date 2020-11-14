@@ -83,7 +83,8 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">上级类别</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24">
-                <nz-tree-select [nzNodes]="tree.nodes" formControlName="upWorkFlowGroup" nzVirtualHeight="400px"></nz-tree-select>
+                <nz-tree-select [nzNodes]="tree.nodes" formControlName="upWorkFlowGroup" nzVirtualHeight="400px">
+                </nz-tree-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -163,4 +164,12 @@
             </nz-form-control>
         </nz-form-item>
     </form>
+</ng-template>
+
+<ng-template #formEditTpl>
+    <app-form-design [workflowId]="editWorkflowId" [workflowName]="editWorkflowName"></app-form-design>
+</ng-template>
+
+<ng-template #flowEditTpl>
+    <app-flow-design [workflowId]="editWorkflowId" [workflowName]="editWorkflowName"></app-flow-design>
 </ng-template>

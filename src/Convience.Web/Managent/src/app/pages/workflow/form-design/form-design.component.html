@@ -1,3 +1,9 @@
+<nz-card nzSize="small">
+    <label style="float: right;line-height: 32px;margin-right: 10px;">当前工作流：{{workflowName}}</label>
+    <nz-button-group>
+        <button nz-button (click)="save()">保存</button>
+    </nz-button-group>
+</nz-card>
 <div id="edit-area">
     <div id="tool-container">
         <nz-card>
@@ -78,10 +84,6 @@
                         </nz-option>
                     </nz-select>
                 </div>
-                <nz-button-group class="ml-10">
-                    <button nz-button (click)="back()">返回</button>
-                    <button nz-button (click)="save()" [nzLoading]="isloading">保存</button>
-                </nz-button-group>
             </div>
             <div id="form-area" #formArea (drop)="dropZone($event)" (dragover)="onDragOver($event)">
             </div>

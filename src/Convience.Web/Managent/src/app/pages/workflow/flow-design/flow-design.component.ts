@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
 import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs/internal/observable/fromEvent';
 import { ActivatedRoute } from '@angular/router';
@@ -72,10 +72,6 @@ export class FlowDesignComponent implements OnInit {
   // 点击选中的节点
   private _checkedNode = null;
 
-  // 工作流ID
-  private _workflowId = null;
-  workflowName = null;
-
   // 加载中
   isLoading = false;
 
@@ -97,6 +93,13 @@ export class FlowDesignComponent implements OnInit {
   // 表单选项
   formControlList = [];
 
+  // 工作流ID
+  @Input()
+  workflowId = null;
+
+  @Input()
+  workflowName = null;
+
   constructor(
     private _renderer: Renderer2,
     private _route: ActivatedRoute,
@@ -110,9 +113,6 @@ export class FlowDesignComponent implements OnInit {
     private _modalServce: NzModalService) { }
 
   ngOnInit(): void {
-
-    this._workflowId = this._route.snapshot.paramMap.get('id')?.trim();
-    this.workflowName = this._route.snapshot.paramMap.get('name')?.trim();
 
     this.listenKeyboard();
     this.initGraph();
@@ -139,7 +139,7 @@ export class FlowDesignComponent implements OnInit {
     });
 
     // 初始化表单选项
-    this._formService.getControlDic(this._workflowId).subscribe((result: any) => {
+    this._formService.getControlDic(this.workflowId).subscribe((result: any) => {
       this.formControlList = result;
     });
   }
@@ -173,7 +173,7 @@ export class FlowDesignComponent implements OnInit {
 
   // 初始化数据
   initData() {
-    this._flowService.get(this._workflowId).subscribe((result: any) => {
+    this._flowService.get(this.workflowId).subscribe((result: any) => {
       this._nodeDataList = result.workFlowNodeResults ? result.workFlowNodeResults : [];
       this._linkDataList = result.workFlowLinkResults ? result.workFlowLinkResults : [];
       this._conditionDataList = result.workFlowConditionResults ? result.workFlowConditionResults : [];
@@ -431,8 +431,13 @@ export class FlowDesignComponent implements OnInit {
       })
     });
 
+    this._nodeDataList.forEach(n => {
+      n.left = Number.parseInt(n.left.toString());
+      n.top = Number.parseInt(n.top.toString());
+    });
+
     this._flowService.addOrUpdate({
-      workFlowId: Number.parseInt(this._workflowId),
+      workFlowId: Number.parseInt(this.workflowId),
       workFlowLinkViewModels: this._linkDataList,
       workFlowNodeViewModels: this._nodeDataList,
       workFlowConditionViewModels: this._conditionDataList,
