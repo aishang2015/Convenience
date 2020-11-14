@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ElementRef, Input } from '@angular/core';
 import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs';
 import { WorkFlowFormControl, ControlTypeEnum } from '../model/workFlowFormControl';
@@ -63,7 +63,10 @@ export class FormDesignComponent implements OnInit {
   inputOption = null;
 
   // 工作流ID
-  private _workflowId = null;
+  @Input()
+  workflowId = null;
+
+  @Input()
   workflowName = null;
 
   constructor(private _renderer: Renderer2,
@@ -72,9 +75,6 @@ export class FormDesignComponent implements OnInit {
     private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
-
-    this._workflowId = this._route.snapshot.paramMap.get('id')?.trim();
-    this.workflowName = this._route.snapshot.paramMap.get('name')?.trim();
 
     this.initGraph();
     this.initKeyboardListening();
@@ -144,7 +144,7 @@ export class FormDesignComponent implements OnInit {
   }
 
   initData() {
-    this._formService.get(this._workflowId).subscribe((result: any) => {
+    this._formService.get(this.workflowId).subscribe((result: any) => {
       this.formData = result.formResult;
       this._nodeDataList = result.formControlResults;
       if (!this.formData) {
@@ -433,7 +433,7 @@ export class FormDesignComponent implements OnInit {
     }
 
     this._formService.addOrUpdate({
-      workFlowId: Number.parseInt(this._workflowId),
+      workFlowId: Number.parseInt(this.workflowId),
       formViewModel: this.formData,
       formControlViewModels: this._nodeDataList
     }).subscribe(result => {

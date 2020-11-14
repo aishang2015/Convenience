@@ -25,6 +25,12 @@ export class WorkflowManageComponent implements OnInit {
   @ViewChild('workflowEditTpl', { static: true })
   workflowEditTpl;
 
+  @ViewChild('formEditTpl', { static: true })
+  formEditTpl;
+
+  @ViewChild('flowEditTpl', { static: true })
+  flowEditTpl;
+
   // 分页器
   size: number = 10;
   page: number = 1;
@@ -50,6 +56,12 @@ export class WorkflowManageComponent implements OnInit {
 
   // 工作流数据
   data: WorkFlow[] = [];
+
+  // 编辑中的工作流id
+  editWorkflowId;
+
+  // 编辑中的工作流名称
+  editWorkflowName;
 
   constructor(
     private _modalService: NzModalService,
@@ -153,11 +165,25 @@ export class WorkflowManageComponent implements OnInit {
   }
 
   editFlow(id, name) {
-    this._router.navigate(['/workflow/flowDesign', { id: id, name: name }]);
+    this.editWorkflowId = id;
+    this.editWorkflowName = name;
+    this._modalService.create({
+      nzTitle: "编辑表单",
+      nzContent: this.flowEditTpl,
+      nzFooter: null,
+      nzWidth: "90%"
+    });
   }
 
   editForm(id, name) {
-    this._router.navigate(['/workflow/formDesign', { id: id, name: name }]);
+    this.editWorkflowId = id;
+    this.editWorkflowName = name;
+    this._modalService.create({
+      nzTitle: "编辑表单",
+      nzContent: this.formEditTpl,
+      nzFooter: null,
+      nzWidth: "90%"
+    });
   }
 
   pageChange() {
