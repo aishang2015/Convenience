@@ -4,7 +4,7 @@
     {
         SqlServer,
         PostgreSQL,
-        //MySQL,
+        MySQL,
         InMemory
     }
 }

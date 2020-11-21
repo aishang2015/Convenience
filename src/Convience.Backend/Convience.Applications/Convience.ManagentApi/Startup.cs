@@ -47,7 +47,6 @@ namespace Convience.ManagentApi
             var mdbConnectionConfig = Configuration.GetSection("MongoDb");
             var jwtOption = Configuration.GetSection("JwtOption");
             var tenantJwtOption = Configuration.GetSection("TenantJwtOption");
-            var cachingOption = Configuration.GetSection("CachingOption");
 
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()
                 .AddFluentValidation(services);
@@ -60,7 +59,7 @@ namespace Convience.ManagentApi
                 .AddAutoMapper()
                 .AddPostgreHangFire(dbConnectionString)
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
-                .AddMemoryCache(cachingOption)
+                .AddMemoryCache()
                 .AddMongoDBFileManage(mdbConnectionConfig)
                 .AddServices()
                 .AddResponseCompression()
@@ -156,14 +155,13 @@ namespace Convience.ManagentApi
             return services;
         }
 
-        public static IServiceCollection AddMemoryCache(this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddMemoryCache(this IServiceCollection services)
         {
             var configs = new List<(CacheType, string, string, int)>() {
                 (CacheType.InMemory,"defaultMemoryCache",null,0)
             };
             services.AddEasyCaching(configs);
-            services.AddCachingServices(configuration);
+            services.AddCachingServices();
             return services;
         }
 

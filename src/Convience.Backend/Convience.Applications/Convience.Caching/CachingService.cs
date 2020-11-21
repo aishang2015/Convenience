@@ -22,7 +22,7 @@ namespace AppService.Service
         /// 取得缓存数据(同步)
         /// </summary>
         /// <returns>数据</returns>
-        IList<T> GetCacheData();
+        IList<T> GetCacheData(int expire = 60);
 
         /// <summary>
         /// 清除缓存数据（同步）
@@ -33,7 +33,7 @@ namespace AppService.Service
         /// 取得缓存数据（异步）
         /// </summary>
         /// <returns>数据</returns>
-        Task<IList<T>> GetCacheDataAsync();
+        Task<IList<T>> GetCacheDataAsync(int expire = 60);
 
         /// <summary>
         /// 清除缓存数据（异步）
@@ -49,16 +49,12 @@ namespace AppService.Service
 
         private readonly IEasyCachingProvider _provider;
 
-        private readonly CachingOption _cachingOption;
-
         public CachingService(
             IRepository<T> repository,
-            IEasyCachingProvider provider,
-            IOptions<CachingOption> options)
+            IEasyCachingProvider provider)
         {
             _repository = repository;
             _provider = provider;
-            _cachingOption = options.Value;
         }
 
         #region 公开方法
@@ -75,7 +71,7 @@ namespace AppService.Service
         /// 取得缓存数据（异步）
         /// </summary>
         /// <returns>数据</returns>
-        public async Task<IList<T>> GetCacheDataAsync()
+        public async Task<IList<T>> GetCacheDataAsync(int expire = 60)
         {
             var cacheList = await _provider.GetAsync<List<T>>(_cacheKey);
             if (!cacheList.HasValue)
@@ -83,7 +79,7 @@ namespace AppService.Service
                 // 全量取出
                 var dataList = _repository.Get().ToList();
                 await _provider.SetAsync(_cacheKey, dataList,
-                    TimeSpan.FromSeconds(_cachingOption.ExpireSpan));
+                    TimeSpan.FromSeconds(expire));
                 return dataList;
             }
             return cacheList.Value;
@@ -101,14 +97,14 @@ namespace AppService.Service
         /// 取得缓存数据(同步)
         /// </summary>
         /// <returns>数据</returns>
-        public IList<T> GetCacheData()
+        public IList<T> GetCacheData(int expire = 60)
         {
             var cacheList = _provider.Get<List<T>>(_cacheKey);
             if (!cacheList.HasValue)
             {
                 // 全量取出
                 var dataList = _repository.Get().ToList();
-                _provider.Set(_cacheKey, dataList, TimeSpan.FromSeconds(_cachingOption.ExpireSpan));
+                _provider.Set(_cacheKey, dataList, TimeSpan.FromSeconds(expire));
                 return dataList;
             }
             return cacheList.Value;
