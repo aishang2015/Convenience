@@ -1,9 +1,6 @@
-﻿using Convience.Caching;
-using Convience.EntityFrameWork.Repositories;
+﻿using Convience.EntityFrameWork.Repositories;
 
 using EasyCaching.Core;
-
-using Microsoft.Extensions.Options;
 
 using System;
 using System.Collections.Generic;
