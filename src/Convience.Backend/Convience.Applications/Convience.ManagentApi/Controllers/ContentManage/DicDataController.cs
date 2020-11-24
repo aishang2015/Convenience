@@ -1,5 +1,6 @@
 using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -40,6 +41,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpDelete]
         [Permission("dicDataDelete")]
+        [LogFilter("内容管理", "字典管理", "删除字典值")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _dicDataService.DeleteDicDataAsync(id);
@@ -52,6 +54,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpPost]
         [Permission("dicDataAdd")]
+        [LogFilter("内容管理", "字典管理", "创建字典值")]
         public async Task<IActionResult> Add(DicDataViewModel dicdataViewModel)
         {
             var isSuccess = await _dicDataService.AddDicDataAsync(dicdataViewModel);
@@ -64,6 +67,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpPatch]
         [Permission("dicDataUpdate")]
+        [LogFilter("内容管理", "字典管理", "更新字典值")]
         public async Task<IActionResult> Update(DicDataViewModel dicdataViewModel)
         {
             var isSuccess = await _dicDataService.UpdateDicDataAsync(dicdataViewModel);

@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -44,6 +45,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("fileDelete")]
+        [LogFilter("内容管理", "文件管理", "删除文件")]
         public async Task<IActionResult> DeleteFile([FromQuery] FileViewModel viewModel)
         {
             var isSuccess = await _fileManageService.DeleteFileAsync(viewModel);
@@ -56,6 +58,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpGet]
         [Permission("fileGet")]
+        [LogFilter("内容管理", "文件管理", "下载文件")]
         public async Task<IActionResult> DownloadFile([FromQuery] FileViewModel viewModel)
         {
             var stream = await _fileManageService.DownloadAsync(viewModel);

@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -24,6 +25,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPost]
         [Permission("fileAdd")]
+        [LogFilter("内容管理", "文件管理", "创建文件夹")]
         public async Task<IActionResult> MakeDirectory([FromBody] FileViewModel vm)
         {
             var result = await _fileManageService.MakeDirectoryAsync(vm);
@@ -36,6 +38,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("fileDelete")]
+        [LogFilter("内容管理", "文件管理", "删除文件夹")]
         public async Task<IActionResult> DeleteDirectory([FromQuery] FileViewModel vm)
         {
             var isSuccess = await _fileManageService.DeleteDirectoryAsync(vm);

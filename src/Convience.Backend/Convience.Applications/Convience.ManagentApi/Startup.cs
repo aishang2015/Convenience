@@ -13,6 +13,7 @@ using Convience.Injection;
 using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Jobs;
 using Convience.SignalRs;
 using Convience.Swashbuckle;
 using Convience.Util.Middlewares;
@@ -205,7 +206,7 @@ namespace Convience.ManagentApi
             app.UseHFAuthorizeDashBoard("/taskManage");
             app.UseHFAnonymousDashBoard("/taskView");
 
-            RecurringJob.AddOrUpdate<HangfireResetDataJob>("定时重置系统用户和菜单数据", j => j.Run(), Cron.Daily);
+            RecurringJob.AddOrUpdate<ResetUserAndMenuDataJob>("定时重置系统用户和菜单数据", j => j.Run(), Cron.Daily);
             return app;
         }
     }

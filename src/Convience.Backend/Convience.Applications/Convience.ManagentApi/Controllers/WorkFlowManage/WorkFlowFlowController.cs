@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Service.WorkFlowManage;
 
@@ -29,6 +30,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPost]
         [Permission("workflowFlowAddUpdate")]
+        [LogFilter("工作流", "工作流流程管理", "更新工作流流程")]
         public async Task<IActionResult> AddOrUpdate(WorkFlowFlowViewModel viewModel)
         {
             var isSuccess = await _workFlowFlowService.AddOrUpdateWorkFlowFlow(viewModel);

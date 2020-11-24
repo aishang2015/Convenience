@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Service.WorkFlowManage;
 
@@ -37,6 +38,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpDelete]
         [Permission("workflowGroupDelete")]
+        [LogFilter("工作流", "工作流分组管理", "删除工作流分组")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _workFlowGroupService.DeleteWorkFlowGroupAsync(id);
@@ -49,6 +51,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPost]
         [Permission("workflowGroupAdd")]
+        [LogFilter("工作流", "工作流分组管理", "创建工作流分组")]
         public async Task<IActionResult> Add(WorkFlowGroupViewModel viewModel)
         {
             var isSuccess = await _workFlowGroupService.AddWorkFlowGroupAsync(viewModel);
@@ -61,6 +64,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPatch]
         [Permission("workflowGroupUpdate")]
+        [LogFilter("工作流", "工作流分组管理", "更新工作流分组")]
         public async Task<IActionResult> Update(WorkFlowGroupViewModel viewModel)
         {
             var isSuccess = await _workFlowGroupService.UpdateWorkFlowGroupAsync(viewModel);

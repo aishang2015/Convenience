@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.SystemManage;
 using Convience.Service.SystemManage;
 
@@ -31,6 +32,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpDelete]
         [Permission("menuDelete")]
+        [LogFilter("系统管理", "菜单管理", "删除菜单")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _menuService.DeleteMenuAsync(id);
@@ -43,6 +45,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPost]
         [Permission("menuAdd")]
+        [LogFilter("系统管理", "菜单管理", "创建菜单")]
         public async Task<IActionResult> Add(MenuViewModel menuViewModel)
         {
             var isSuccess = await _menuService.AddMenuAsync(menuViewModel);
@@ -55,6 +58,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPatch]
         [Permission("menuUpdate")]
+        [LogFilter("系统管理", "菜单管理", "更新菜单")]
         public async Task<IActionResult> Update(MenuViewModel menuViewModel)
         {
             var isSuccess = await _menuService.UpdateMenuAsync(menuViewModel);

@@ -75,6 +75,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpPost("password")]
         [Authorize]
+        [LogFilter("", "", "修改密码")]
         public async Task<IActionResult> ChangePwdByOldPwd(ChangePwdViewModel viewmodel)
         {
             var result = await _loginService.ChangePassword(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);

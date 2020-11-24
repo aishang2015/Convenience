@@ -1,6 +1,7 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.Injection;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.SystemManage;
 using Convience.Service.SystemManage;
 
@@ -45,6 +46,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPost]
         [Permission("userAdd")]
+        [LogFilter("系统管理", "用户管理", "创建用户")]
         public async Task<IActionResult> AddUser([FromBody] UserViewModel model)
         {
             var result = await _userService.AddUserAsync(model);
@@ -57,6 +59,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPatch]
         [Permission("userUpdate")]
+        [LogFilter("系统管理", "用户管理", "更新用户")]
         public async Task<IActionResult> UpdateUser([FromBody] UserViewModel model)
         {
             var result = await _userService.UpdateUserAsync(model);
@@ -69,6 +72,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpDelete]
         [Permission("userDelete")]
+        [LogFilter("系统管理", "用户管理", "删除用户")]
         public async Task<IActionResult> RemoveUser([FromQuery] string id)
         {
             var result = await _userService.RemoveUserAsync(id);
