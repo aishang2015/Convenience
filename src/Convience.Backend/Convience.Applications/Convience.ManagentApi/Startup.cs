@@ -21,6 +21,7 @@ using Hangfire;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -83,6 +84,12 @@ namespace Convience.ManagentApi
             {
                 app.UseMiddleware<CustomExceptionMiddleware>();
             }
+
+            app.Use(next => context =>
+            {
+                context.Request.EnableBuffering();
+                return next(context);
+            });
 
             app.UseSwashbuckle("backend");
 
@@ -195,10 +202,10 @@ namespace Convience.ManagentApi
         {
             GlobalConfiguration.Configuration.UseActivator(new HangFireJobActivator(serviceProvider.GetService<IServiceScopeFactory>()));
 
-            app.UseHFDashBoard();
-            app.UseHFDashBoard("/taskManage");
+            app.UseHFAuthorizeDashBoard("/taskManage");
+            app.UseHFAnonymousDashBoard("/taskView");
 
-            RecurringJob.AddOrUpdate<HangfireResetDataJob>("JobIOCA", j => j.Run(), Cron.Daily);
+            RecurringJob.AddOrUpdate<HangfireResetDataJob>("定时重置系统用户和菜单数据", j => j.Run(), Cron.Daily);
             return app;
         }
     }

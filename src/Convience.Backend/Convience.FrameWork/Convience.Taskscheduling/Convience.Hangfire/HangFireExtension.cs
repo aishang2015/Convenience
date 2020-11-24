@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.MemoryStorage;
 using Hangfire.MySql;
 using Hangfire.PostgreSql;
@@ -93,14 +94,15 @@ namespace Convience.Hangfire
                     .UseRecommendedSerializerSettings()
                     .UseStorage(new MySqlStorage(connectionString, new MySqlStorageOptions
                     {
-                        TransactionIsolationLevel = IsolationLevel.ReadCommitted,   // 事务隔离级别
-                        QueuePollInterval = TimeSpan.FromSeconds(3),                // 作业队列轮询间隔
-                        JobExpirationCheckInterval = TimeSpan.FromHours(1),         // 作业过期检查间隔(管理过期记录)
-                        CountersAggregateInterval = TimeSpan.FromMinutes(5),        // 计数器统计间隔
-                        PrepareSchemaIfNecessary = true,                            // 自动创建表
-                        DashboardJobListLimit = 50000,                              // 仪表盘显示作业限制
-                        TransactionTimeout = TimeSpan.FromMinutes(1),               // 事务超时时间
-                        TablesPrefix = "Hangfire_"                                  // hangfire表名前缀
+                        TransactionIsolationLevel = System.Transactions.IsolationLevel.ReadCommitted,   // 事务隔离级别
+                        QueuePollInterval = TimeSpan.FromSeconds(3),                                    // 作业队列轮询间隔
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),                             // 作业过期检查间隔(管理过期记录)
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),                            // 计数器统计间隔
+                        PrepareSchemaIfNecessary = true,                                                // 自动创建表
+                        DashboardJobListLimit = 50000,                                                  // 仪表盘显示作业限制
+                        TransactionTimeout = TimeSpan.FromMinutes(1),                                   // 事务超时时间
+                        TablesPrefix = "T_Hangfire",                                                    // hangfire表名前缀
+                        InvisibilityTimeout = TimeSpan.FromDays(1)                                      // 弃用属性，设定线程重开间隔
                     })).WithJobExpirationTimeout(TimeSpan.FromHours(1000));         // 作业过期时间，过期任务会被从数据库清理。此值不能小于1小时，否则会引起异常
 
             }).AddHangfireServer(option =>
@@ -125,7 +127,7 @@ namespace Convience.Hangfire
             return services;
         }
 
-        public static IApplicationBuilder UseHFDashBoard(this IApplicationBuilder app,
+        public static IApplicationBuilder UseHFAnonymousDashBoard(this IApplicationBuilder app,
             string path = "/hangfire", bool readOnly = true)
         {
             app.UseHangfireDashboard(path, new DashboardOptions()
@@ -148,6 +150,31 @@ namespace Convience.Hangfire
             //BackgroundJob.ContinueJobWith(id, () => Console.WriteLine("world!"));
 
 
+            return app;
+        }
+
+
+        public static IApplicationBuilder UseHFAuthorizeDashBoard(this IApplicationBuilder app,
+            string path = "/hangfire", string userName = "admin", string password = "admin")
+        {
+            app.UseHangfireDashboard(path, new DashboardOptions
+            {
+                Authorization = new[] { new BasicAuthAuthorizationFilter(
+                    new BasicAuthAuthorizationFilterOptions
+                    {
+                        RequireSsl = false,
+                        SslRedirect = false,
+                        LoginCaseSensitive = true,
+                        Users = new []
+                        {
+                            new BasicAuthAuthorizationUser
+                            {
+                                Login = userName,
+                                PasswordClear =  password
+                            }
+                        }
+                    })}
+            });
             return app;
         }
     }

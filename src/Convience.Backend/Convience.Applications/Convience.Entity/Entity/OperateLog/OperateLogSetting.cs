@@ -27,12 +27,17 @@ namespace Convience.Entity.Entity.OperateLog
         public string Function { get; set; }
 
         /// <summary>
-        /// 访问资源地址
+        /// 控制器
         /// </summary>
-        public string Uri { get; set; }
+        public string Controller { get; set; }
 
         /// <summary>
-        /// 资源方法
+        /// 行为
+        /// </summary>
+        public string Action { get; set; }
+
+        /// <summary>
+        /// 方法
         /// </summary>
         public string Method { get; set; }
 
@@ -44,6 +49,6 @@ namespace Convience.Entity.Entity.OperateLog
         /// <summary>
         /// 是否记录此类记录
         /// </summary>
-        public int IsRecord { get; set; }
+        public bool IsRecord { get; set; }
     }
 }

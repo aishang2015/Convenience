@@ -29,7 +29,7 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     AppCommonModule,
     RouterModule.forChild([
       { path: 'swagger', component: ManageUiComponent, data: { uri: 'swagger/index.html' }, canActivate: [LoginGuard] },
-      { path: 'hangfire', component: ManageUiComponent, data: { uri: 'hangfire' }, canActivate: [LoginGuard] },
+      { path: 'hangfire', component: ManageUiComponent, data: { uri: 'taskview' }, canActivate: [LoginGuard] },
       { path: 'cap', component: ManageUiComponent, data: { uri: 'cap' }, canActivate: [LoginGuard] },
       { path: 'code', component: CodeGeneratorComponent, canActivate: [LoginGuard] },
     ]),
