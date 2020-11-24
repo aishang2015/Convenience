@@ -15,7 +15,12 @@ namespace Convience.Entity.Entity.OperateLog
         /// <summary>
         /// 操作人
         /// </summary>
-        public int OperateBy { get; set; }
+        public string OperatorAccount { get; set; }
+
+        /// <summary>
+        /// 操作人名
+        /// </summary>
+        public string OperatorName { get; set; }
 
         /// <summary>
         /// 操作时间
@@ -26,6 +31,11 @@ namespace Convience.Entity.Entity.OperateLog
         /// 执行结果
         /// </summary>
         public string ResultCode { get; set; }
+
+        /// <summary>
+        /// 资源地址
+        /// </summary>
+        public string Uri { get; set; }
 
         /// <summary>
         /// 更新字段，关键数据变化可以切入逻辑中记录这三个字段

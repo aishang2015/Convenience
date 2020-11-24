@@ -102,7 +102,7 @@ namespace Convience.Hangfire
                         TransactionTimeout = TimeSpan.FromMinutes(1),                                   // 事务超时时间
                         TablesPrefix = "T_Hangfire",                                                    // hangfire表名前缀
                         InvisibilityTimeout = TimeSpan.FromDays(1)                                      // 弃用属性，设定线程重开间隔
-                    })).WithJobExpirationTimeout(TimeSpan.FromHours(1000));         // 作业过期时间，过期任务会被从数据库清理。此值不能小于1小时，否则会引起异常
+                    })).WithJobExpirationTimeout(TimeSpan.FromHours(24 * 7));         // 作业过期时间，过期任务会被从数据库清理。此值不能小于1小时，否则会引起异常
 
             }).AddHangfireServer(option =>
             {

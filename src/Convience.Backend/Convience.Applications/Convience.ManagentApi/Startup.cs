@@ -206,7 +206,7 @@ namespace Convience.ManagentApi
             app.UseHFAuthorizeDashBoard("/taskManage");
             app.UseHFAnonymousDashBoard("/taskView");
 
-            RecurringJob.AddOrUpdate<ResetUserAndMenuDataJob>("定时重置系统用户和菜单数据", j => j.Run(), Cron.Daily);
+            AllJobSetting.SetJobs();
             return app;
         }
     }

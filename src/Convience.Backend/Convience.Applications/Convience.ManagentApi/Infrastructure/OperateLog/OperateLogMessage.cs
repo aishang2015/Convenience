@@ -11,5 +11,9 @@
         public string HttpResultCode { get; set; }
 
         public string RequestContent { get; set; }
+
+        public string Account { get; set; }
+
+        public string Name { get; set; }
     }
 }
