@@ -2,11 +2,7 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity.OperateLog;
 using Convience.EntityFrameWork.Repositories;
-using Convience.JwtAuthentication;
-using Convience.ManagentApi.Infrastructure.OperateLog;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Jobs

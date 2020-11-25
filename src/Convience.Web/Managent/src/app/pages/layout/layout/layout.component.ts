@@ -60,10 +60,12 @@ export class LayoutComponent implements OnInit {
     {
       canOperate: 'systemtool', routerLink: '', iconType: 'tool', firstBreadcrumb: '', lastBreadcrumb: '', name: '系统工具',
       children: [
-        { canOperate: 'code', routerLink: '/tool/code', iconType: 'fund-view', firstBreadcrumb: '内容管理', lastBreadcrumb: '代码生成', name: '代码生成', },
-        { canOperate: 'swagger', routerLink: '/tool/swagger', iconType: 'api', firstBreadcrumb: '内容管理', lastBreadcrumb: 'Swagger', name: 'Swagger', },
-        { canOperate: 'hangfire', routerLink: '/tool/hangfire', iconType: 'fund-view', firstBreadcrumb: '内容管理', lastBreadcrumb: 'Hangfire', name: 'Hangfire', },
-        { canOperate: 'cap', routerLink: '/tool/cap', iconType: 'forward', firstBreadcrumb: '内容管理', lastBreadcrumb: 'CAP', name: 'CAP', },
+        { canOperate: 'logMange', routerLink: '/tool/logManage', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: '操作日志', name: '操作日志配置', },
+        { canOperate: 'logDetail', routerLink: '/tool/logDetail', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: '操作日志', name: '操作日志内容', },
+        { canOperate: 'code', routerLink: '/tool/code', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: '代码生成', name: '代码生成', },
+        { canOperate: 'swagger', routerLink: '/tool/swagger', iconType: 'api', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Swagger', name: 'Swagger', },
+        { canOperate: 'hangfire', routerLink: '/tool/hangfire', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Hangfire', name: 'Hangfire', },
+        { canOperate: 'cap', routerLink: '/tool/cap', iconType: 'forward', firstBreadcrumb: '系统工具', lastBreadcrumb: 'CAP', name: 'CAP', },
       ]
     },
   ];

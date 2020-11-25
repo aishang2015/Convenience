@@ -77,4 +77,8 @@ export class UriConfig {
     get WorkFlowFormUri(): string { return `${this._apiUri}/workflowForm` };
 
     get WorkFlowInstanceUri(): string { return `${this._apiUri}/workflowInstance` };
+    
+    get OperateLogSettingUri(): string { return `${this._apiUri}/operateLogSetting` };
+
+    get OperateLogDetailUri(): string { return `${this._apiUri}/operateLogDetail` };
 }

@@ -31,6 +31,38 @@ namespace Convience.Service
         /// <summary>
         /// 设置数据排序方式
         /// </summary>
+        public IOrderedQueryable<T> GetOrderQuery<T>(IOrderedQueryable<T> query, string sort, string order,
+            Dictionary<string, Expression<Func<T, object>>> properties)
+        {
+            if (!string.IsNullOrEmpty(sort) && !string.IsNullOrEmpty(order))
+            {
+                var sortArray = sort.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                var orderArray = order.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < sortArray.Length; i++)
+                {
+                    var field = sortArray[i];
+                    var orderByExpression = properties[field];
+
+                    // 没有相应的字段退出
+                    if (orderByExpression == null)
+                    {
+                        continue;
+                    }
+                    var o = orderArray[i];
+
+                    // 添加排序
+                    query = o == "ascend" ?
+                        query.ThenBy(orderByExpression) :
+                        query.ThenByDescending(orderByExpression);
+                }
+            }
+            return query;
+        }
+
+
+        /// <summary>
+        /// 设置数据排序方式
+        /// </summary>
         public IQueryable<T> GetOrderQuery<T>(IQueryable<T> query, string sort, string order,
             Dictionary<string, Expression<Func<T, object>>> properties)
         {
