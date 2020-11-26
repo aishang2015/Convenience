@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.WorkFlowManage;
 using Convience.Service.WorkFlowManage;
 
@@ -37,6 +38,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpDelete]
         [Permission("workflowDelete")]
+        [LogFilter("工作流", "工作流定义管理", "删除工作流定义")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _workflowService.DeleteWorkFlowAsync(id);
@@ -49,6 +51,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPost]
         [Permission("workflowAdd")]
+        [LogFilter("工作流", "工作流定义管理", "创建工作流定义")]
         public async Task<IActionResult> Add(WorkFlowViewModel workflowViewModel)
         {
             var isSuccess = await _workflowService.AddWorkFlowAsync(workflowViewModel);
@@ -61,6 +64,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPatch]
         [Permission("workflowUpdate")]
+        [LogFilter("工作流", "工作流定义管理", "更新工作流定义")]
         public async Task<IActionResult> Update(WorkFlowViewModel workflowViewModel)
         {
             var isSuccess = await _workflowService.UpdateWorkFlowAsync(workflowViewModel);
@@ -73,6 +77,7 @@ namespace Convience.ManagentApi.Controllers.WorkFlowManage
 
         [HttpPut]
         [Permission("workflowPublish")]
+        [LogFilter("工作流", "工作流定义管理", "发布工作流定义")]
         public async Task<IActionResult> Publish(WorkFlowViewModel workflowViewModel)
         {
             var result = await _workflowService.PublishWorkFlow(workflowViewModel.Id, workflowViewModel.IsPublish);

@@ -1,16 +1,17 @@
 ﻿using Convience.Entity.Data;
+using Convience.ManagentApi.Infrastructure;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace Convience.ManagentApi.Infrastructure
+namespace Convience.ManagentApi.Jobs
 {
-    public class HangfireResetDataJob
+    public class ResetUserAndMenuDataJob
     {
         private readonly SystemIdentityDbContext _systemIdentityDbContext;
 
         private readonly UserManager<SystemUser> _userManager;
 
-        public HangfireResetDataJob(SystemIdentityDbContext systemIdentityDbContext,
+        public ResetUserAndMenuDataJob(SystemIdentityDbContext systemIdentityDbContext,
             UserManager<SystemUser> userManager)
         {
             _systemIdentityDbContext = systemIdentityDbContext;

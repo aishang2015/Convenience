@@ -3,8 +3,6 @@ using AppService.Service;
 
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.Util.Helpers;
-
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Linq;
@@ -13,8 +11,7 @@ namespace Convience.Caching
 {
     public static class CachingExtension
     {
-        public static IServiceCollection AddCachingServices(this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddCachingServices(this IServiceCollection services)
         {
             // 程序中不包含第三方的程序集
             var assemblyList = ReflectionHelper.AssemblyList;
@@ -36,14 +33,7 @@ namespace Convience.Caching
                 });
             }
 
-            services.Configure<CachingOption>(configuration);
             return services;
         }
-    }
-
-    public class CachingOption
-    {
-        // 缓存过期间隔，单位秒
-        public double ExpireSpan { get; set; }
     }
 }

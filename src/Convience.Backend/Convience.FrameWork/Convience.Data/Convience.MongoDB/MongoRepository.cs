@@ -354,6 +354,15 @@ namespace Convience.MongoDB
         }
 
         /// <summary>
+        /// 根据条件查询数据数量
+        /// </summary>
+        public async Task<long> CountAsync<T>(FilterDefinition<T> filter)
+        {
+            var total = await GetCollection<T>().CountDocumentsAsync(filter);
+            return total;
+        }
+
+        /// <summary>
         /// 查询分页数据
         /// </summary>
         public List<T> GetByPage<T>(FilterDefinition<T> filter, int pageIndex, int pageSize, SortDefinition<T> sort = null)

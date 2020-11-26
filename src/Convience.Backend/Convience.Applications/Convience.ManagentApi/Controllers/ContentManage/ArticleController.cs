@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -39,6 +40,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("articleDelete")]
+        [LogFilter("内容管理", "文章管理", "删除文章")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _articleService.DeleteArticleAsync(id);
@@ -51,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPost]
         [Permission("articleAdd")]
+        [LogFilter("内容管理", "文章管理", "创建文章")]
         public async Task<IActionResult> Add(ArticleViewModel articleViewModel)
         {
             var isSuccess = await _articleService.AddArticleAsync(articleViewModel);
@@ -63,6 +66,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPatch]
         [Permission("articleUpdate")]
+        [LogFilter("内容管理", "文章管理", "更新文章")]
         public async Task<IActionResult> Update(ArticleViewModel articleViewModel)
         {
             var isSuccess = await _articleService.UpdateArticleAsync(articleViewModel);

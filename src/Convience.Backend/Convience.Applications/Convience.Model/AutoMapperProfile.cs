@@ -2,12 +2,14 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.OperateLog;
 using Convience.Entity.Entity.Tenants;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.Model.Models.ContentManage;
 using Convience.Model.Models.GroupManage;
 using Convience.Model.Models.SaasManage;
 using Convience.Model.Models.SystemManage;
+using Convience.Model.Models.SystemTool;
 using Convience.Model.Models.WorkFlowManage;
 
 namespace Convience.Model
@@ -70,6 +72,9 @@ namespace Convience.Model
             CreateMap<WorkFlowInstanceValueViewModel, WorkFlowInstanceValue>();
             CreateMap<WorkFlowInstanceValue, WorkFlowInstanceValueResultModel>();
             CreateMap<WorkFlowInstanceRoute, WorkflowinstanceRouteResultModel>();
+
+            CreateMap<OperateLogDetailResultModel, OperateLogDetail>().ReverseMap();
+            CreateMap<OperateLogSettingResultModel, OperateLogSetting>().ReverseMap();
         }
     }
 }

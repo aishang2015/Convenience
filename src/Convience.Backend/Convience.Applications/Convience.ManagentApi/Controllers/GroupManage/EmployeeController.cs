@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
 
@@ -38,6 +39,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPatch]
         [Permission("employeeUpdate")]
+        [LogFilter("组织管理", "员工管理", "更新员工信息")]
         public async Task<IActionResult> Update([FromBody] EmployeeViewModel viewModel)
         {
             var isSuccess = await _employeeService.UpdateEmplyeeAsync(viewModel);

@@ -1,10 +1,14 @@
 ﻿using Convience.Entity.Data;
 using Convience.Entity.Entity;
-
+using Convience.Entity.Entity.OperateLog;
+using Convience.ManagentApi.Infrastructure.OperateLog;
+using Convience.Util.Helpers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
-
 using System;
+using System.Linq;
 
 namespace Convience.ManagentApi.Infrastructure
 {
@@ -15,6 +19,7 @@ namespace Convience.ManagentApi.Infrastructure
         {
             var userManager = services.GetRequiredService<UserManager<SystemUser>>();
             var roleManager = services.GetRequiredService<RoleManager<SystemRole>>();
+
             roleManager.CreateAsync(new SystemRole
             {
                 Name = "超级管理员",
@@ -23,6 +28,7 @@ namespace Convience.ManagentApi.Infrastructure
 
             InitUsers(userManager);
             InitMenuTree(dbContext);
+            InitOpreationInfo(dbContext);
         }
 
         public static void InitUsers(UserManager<SystemUser> userManager)
@@ -299,6 +305,50 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<MenuTree>().Add(new MenuTree(200, 48, 84, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(201, 49, 84, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(202, 84, 84, 0));
+
+            dbContext.SaveChanges();
+        }
+
+        private static void InitOpreationInfo(SystemIdentityDbContext dbContext)
+        {
+            // 取得满足条件的控制器类型
+            var controllerTypes = from type in ReflectionHelper.AssemblyList.SelectMany(a => a.GetTypes())
+                                  where type.IsSubclassOf(typeof(ControllerBase))
+                                  select type;
+
+            // 循环控制器类型
+            controllerTypes.ToList().ForEach(controller =>
+            {
+                // 循环方法类型
+                controller.GetMethods().ToList().ForEach(method =>
+                {
+                    if (method.GetCustomAttributes(false).Any(attribute => typeof(LogFilter) == attribute.GetType()))
+                    {
+                        var attribute = method.GetCustomAttributes(typeof(LogFilter), false).First() as LogFilter;
+
+                        // 获取http方法
+                        var httpMethod = method.GetCustomAttributes(false).Where(a =>
+                            a.GetType() == typeof(HttpGetAttribute) ||
+                            a.GetType() == typeof(HttpPostAttribute) ||
+                            a.GetType() == typeof(HttpDeleteAttribute) ||
+                            a.GetType() == typeof(HttpPatchAttribute) ||
+                            a.GetType() == typeof(HttpPutAttribute)).First() as HttpMethodAttribute;
+
+                        var setting = new OperateLogSetting
+                        {
+                            ModuleName = attribute.Module,
+                            SubModuleName = attribute.SubModule,
+                            Function = attribute.Function,
+                            Controller = controller.FullName,
+                            Action = method.Name,
+                            Method = httpMethod.HttpMethods.FirstOrDefault(),
+                            SaveTime = 14,
+                            IsRecord = true
+                        };
+                        dbContext.Add(setting);
+                    }
+                });
+            });
 
             dbContext.SaveChanges();
         }

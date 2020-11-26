@@ -13,6 +13,7 @@ using Convience.Injection;
 using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Jobs;
 using Convience.SignalRs;
 using Convience.Swashbuckle;
 using Convience.Util.Middlewares;
@@ -21,6 +22,7 @@ using Hangfire;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,7 +49,6 @@ namespace Convience.ManagentApi
             var mdbConnectionConfig = Configuration.GetSection("MongoDb");
             var jwtOption = Configuration.GetSection("JwtOption");
             var tenantJwtOption = Configuration.GetSection("TenantJwtOption");
-            var cachingOption = Configuration.GetSection("CachingOption");
 
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()
                 .AddFluentValidation(services);
@@ -60,7 +61,7 @@ namespace Convience.ManagentApi
                 .AddAutoMapper()
                 .AddPostgreHangFire(dbConnectionString)
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
-                .AddMemoryCache(cachingOption)
+                .AddMemoryCache()
                 .AddMongoDBFileManage(mdbConnectionConfig)
                 .AddServices()
                 .AddResponseCompression()
@@ -84,6 +85,12 @@ namespace Convience.ManagentApi
             {
                 app.UseMiddleware<CustomExceptionMiddleware>();
             }
+
+            app.Use(next => context =>
+            {
+                context.Request.EnableBuffering();
+                return next(context);
+            });
 
             app.UseSwashbuckle("backend");
 
@@ -156,14 +163,13 @@ namespace Convience.ManagentApi
             return services;
         }
 
-        public static IServiceCollection AddMemoryCache(this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddMemoryCache(this IServiceCollection services)
         {
             var configs = new List<(CacheType, string, string, int)>() {
                 (CacheType.InMemory,"defaultMemoryCache",null,0)
             };
             services.AddEasyCaching(configs);
-            services.AddCachingServices(configuration);
+            services.AddCachingServices();
             return services;
         }
 
@@ -197,10 +203,10 @@ namespace Convience.ManagentApi
         {
             GlobalConfiguration.Configuration.UseActivator(new HangFireJobActivator(serviceProvider.GetService<IServiceScopeFactory>()));
 
-            app.UseHFDashBoard();
-            app.UseHFDashBoard("/taskManage");
+            app.UseHFAuthorizeDashBoard("/taskManage");
+            app.UseHFAnonymousDashBoard("/taskView");
 
-            RecurringJob.AddOrUpdate<HangfireResetDataJob>("JobIOCA", j => j.Run(), Cron.Daily);
+            AllJobSetting.SetJobs();
             return app;
         }
     }

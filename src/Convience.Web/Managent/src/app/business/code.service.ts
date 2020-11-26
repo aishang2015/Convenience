@@ -363,9 +363,18 @@ namespace Convience.ManagentApi.Controllers
 }`;
   }
 
-  getFrontService(entityName: string) {
+  getFrontService(entityName: string, properties: { property; }[]) {
     let camel = this.upperFirstCharacter(entityName);
     let lower = this.lowerFirstCharacter(entityName);
+
+
+    let tds = '';
+    properties.forEach(element => {
+      let property = this.lowerFirstCharacter(element.property);
+      tds += `uri += searchObj.${property} ? \`&&${property}=\${searchObj.${property}}\` : '';
+    `;
+    });
+
     let result =
       `
 import { Injectable } from '@angular/core';
@@ -384,8 +393,9 @@ export class ${camel}Service {
     return this.httpClient.get(\`\${this.uriConstant.${camel}Uri}?id=\${id}\`);
   }
 
-  getList(page, size) {
+  getList(page, size, searchObj) {
     let uri = \`\${this.uriConstant.${camel}Uri}/list?page=\${page}&&size=\${size}\`;
+    ${tds}
     return this.httpClient.get(uri);
   }
 
@@ -427,7 +437,7 @@ export class ${camel}Service {
                     autocomplete="off" />
             </nz-form-control>
         </nz-form-item>
-                     `;
+        `;
 
     });
 
@@ -446,7 +456,7 @@ export class ${camel}Service {
     <div>
         <button nz-button class="mr-10" (click)="add()" *canOperate="'add${camel}Btn'">
             <i nz-icon nzType="plus"></i>添加</button>
-        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新</button>
+        <button nz-button class="mr-10" (click)="initData()"><i nz-icon nzType="sync"></i>刷新</button>
     </div>
     <div class="mt-10">
         <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
@@ -509,32 +519,48 @@ export class ${camel}Service {
     let efs = '';
     properties.forEach(element => {
       efs += `${this.lowerFirstCharacter(element.property)}: [null, []],
-            `;
+        `;
     });
 
     let fse = '';
     properties.forEach(element => {
       fse += `${lower}.${this.lowerFirstCharacter(element.property)} = this.editForm.values["${this.lowerFirstCharacter(element.property)}"];
-            `;
+        `;
+    });
+
+    let setSearchObject = '';
+    properties.forEach(element => {
+      setSearchObject += `_searchObj.${this.lowerFirstCharacter(element.property)} = this.searchForm.values["${this.lowerFirstCharacter(element.property)}"];
+      `;
     });
 
 
     let result = `
 export class ${camel}Component implements OnInit {
 
-    size: number = 10;
-    page: number = 1;
-    total: number = 0;
-
-    searchForm: FormGroup = new FormGroup({});
+    // 页面大小
+    public size: number = 10;
     
-    editForm: FormGroup = new FormGroup({});
+    // 页码
+    public page: number = 1;
 
-    data: ${camel}[] = [];  
+    // 数据量
+    public total: number = 0;
 
-    currentId?: number = null;
+    // 搜索表单
+    public searchForm: FormGroup = new FormGroup({});
+    
+    // 编辑表单
+    public editForm: FormGroup = new FormGroup({});
+ 
+    // 表格数据
+    public data: ${camel}[] = [];  
 
-    modal: NzModalRef;
+    // 模态框
+    public modal: NzModalRef;
+
+    // 搜索参数
+    private _searchObj : any = {};
 
     @ViewChild('contentTpl', { static: true })
     contentTpl;
@@ -546,11 +572,34 @@ export class ${camel}Component implements OnInit {
         private _formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
-      this.refresh();
+      this.initSearchForm();
+      this.initData();
     }
 
+    // 初始化搜索表单
+    initSearchForm(){
+      this.searchForm = this._formBuilder.group({
+        ${efs}
+      });
+    }
+
+    // 点击搜索
+    submitSearch() {    
+      ${setSearchObject}
+      this.initData();
+    }
+
+    // 初始化页面数据
+    initData() { 
+      this._${lower}Service.getList(this.page, this.size, this._searchObj)
+        .subscribe(result => {
+          this.data = result['data'];
+          this.total = result['count'];
+        });
+    }
+
+    // 创建新数据
     add(){
-      this.currentId = null;
       this.editForm = this._formBuilder.group({
         ${efs}
       });
@@ -562,21 +611,9 @@ export class ${camel}Component implements OnInit {
       });
     }
 
-    refresh() { 
-      this._${lower}Service.getList(this.page, this.size)
-        .subscribe(result => {
-          this.data = result['data'];
-          this.total = result['count'];
-        });
-    }
-
-    submitSearch() {
-      this.refresh();
-    }
-
+    // 编辑数据
     edit(id) {
         this._${lower}Service.get(id).subscribe((result: any) => {
-          this.currentId = result.id;
           this.editForm = this._formBuilder.group({
             ${fs}
           });
@@ -589,6 +626,7 @@ export class ${camel}Component implements OnInit {
         });
     }
 
+    // 删除数据
     remove(id) {
       this._modalService.confirm({
         nzTitle: '是否删除该?',
@@ -596,45 +634,45 @@ export class ${camel}Component implements OnInit {
         nzOnOk: () => {
           this._${lower}Service.delete(id).subscribe(result => {
             this._messageService.success("删除成功！");
-            this.refresh();
+            this.initData();
           });
         },
       });
     }
 
+    // 提交编辑
     submitEdit(){
       for (const i in this.editForm.controls) {
         this.editForm.controls[i].markAsDirty();
         this.editForm.controls[i].updateValueAndValidity();
       }
       if (this.editForm.valid) {
-        var ${lower} = new ${camel}();
+        let ${lower} = new ${camel}();
         ${fse}
-        if (this.currentId) {
-          ${lower}.id = this.currentId;
+        
+        if (${lower}.id) {
           this._${lower}Service.update(${lower}).subscribe(result => {
             this._messageService.success("修改成功！");
-            this.refresh();
+            this.initData();
             this.modal.close();
           });
         } else {
           this._${lower}Service.add(${lower}).subscribe(result => {
             this._messageService.success("添加成功！");
-            this.refresh();
+            this.initData();
             this.modal.close();
           });
         }
       }
-    }
-    
+    }    
 
     pageChange() {
-      this.refresh();
+      this.initData();
     }
   
     sizeChange() {
       this.page = 1;
-      this.refresh();
+      this.initData();
     }
 
     cancel() {
@@ -668,6 +706,12 @@ export class ${camel}Component implements OnInit {
       case 'int':
         result = 'int';
         break;
+      case 'double':
+        result = 'double';
+        break;
+      case 'decimal':
+        result = 'decimal';
+        break;
       case 'string':
         result = 'string';
         break;
@@ -688,6 +732,12 @@ export class ${camel}Component implements OnInit {
         result = 'string';
         break;
       case 'int':
+        result = 'number';
+        break;
+      case 'double':
+        result = 'number';
+        break;
+      case 'decimal':
         result = 'number';
         break;
       case 'string':

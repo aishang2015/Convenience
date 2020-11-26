@@ -1,4 +1,5 @@
 ﻿using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.SaasManage;
 using Convience.Service.SaasManage;
 
@@ -43,6 +44,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpPost]
         [Permission("tenantAdd")]
+        [LogFilter("", "租户管理", "创建租户")]
         public async Task<IActionResult> Add([FromBody] TenantViewModel model)
         {
             await _tenantService.AddAsync(model);
@@ -51,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpPatch]
         [Permission("tenantUpdate")]
+        [LogFilter("", "租户管理", "更新租户")]
         public async Task<IActionResult> Update([FromBody] TenantViewModel model)
         {
             await _tenantService.UpdateAsync(model);
@@ -59,6 +62,7 @@ namespace Convience.ManagentApi.Controllers.SaasManage
 
         [HttpDelete]
         [Permission("tenantDelete")]
+        [LogFilter("", "租户管理", "删除租户")]
         public async Task<IActionResult> Delete([FromQuery] Guid id)
         {
             await _tenantService.RemoveAsync(id);

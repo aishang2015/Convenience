@@ -122,7 +122,7 @@ export class CodeGeneratorComponent implements OnInit {
     this.code[6] = this._codeService.getBackController(this.editForm.value['entityName']);
 
     this.code[7] = this._codeService.getFrontModel(this.editForm.value['entityName'], properties);
-    this.code[8] = this._codeService.getFrontService(this.editForm.value['entityName']);
+    this.code[8] = this._codeService.getFrontService(this.editForm.value['entityName'], properties);
     this.code[9] = this._codeService.getFrontHtml(this.editForm.value['entityName'], properties);
     this.code[10] = this._codeService.getFrontTs(this.editForm.value['entityName'], properties);
     this.isGenerateFinish = true;

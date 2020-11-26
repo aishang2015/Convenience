@@ -1,6 +1,7 @@
 ﻿
 using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.SystemManage;
 using Convience.Service.SystemManage;
 
@@ -39,6 +40,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpDelete]
         [Permission("roleDelete")]
+        [LogFilter("系统管理", "角色管理", "删除角色")]
         public async Task<IActionResult> DeleteRole([FromQuery] string name)
         {
             var result = await _roleService.RemoveRole(name);
@@ -51,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPost]
         [Permission("roleAdd")]
+        [LogFilter("系统管理", "角色管理", "创建角色")]
         public async Task<IActionResult> AddRole([FromBody] RoleViewModel viewModel)
         {
             var result = await _roleService.AddRole(viewModel);
@@ -63,6 +66,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpPatch]
         [Permission("roleUpdate")]
+        [LogFilter("系统管理", "角色管理", "更新角色")]
         public async Task<IActionResult> UpdateRole([FromBody] RoleViewModel viewModel)
         {
             var result = await _roleService.Update(viewModel);

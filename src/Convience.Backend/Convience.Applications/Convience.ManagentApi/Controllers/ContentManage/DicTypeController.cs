@@ -1,5 +1,6 @@
 using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -40,6 +41,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpDelete]
         [Permission("dicTypeDelete")]
+        [LogFilter("内容管理", "字典管理", "删除字典类型")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _dicTypeService.DeleteDicTypeAsync(id);
@@ -52,6 +54,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpPost]
         [Permission("dicTypeAdd")]
+        [LogFilter("内容管理", "字典管理", "创建字典类型")]
         public async Task<IActionResult> Add(DicTypeViewModel dictypeViewModel)
         {
             var codeExist = _dicTypeService.HasSameCode(dictypeViewModel.Code);
@@ -70,6 +73,7 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpPatch]
         [Permission("dicTypeUpdate")]
+        [LogFilter("内容管理", "字典管理", "更新字典类型")]
         public async Task<IActionResult> Update(DicTypeViewModel dictypeViewModel)
         {
             var codeExist = _dicTypeService.HasSameCode(dictypeViewModel.Id, dictypeViewModel.Code);

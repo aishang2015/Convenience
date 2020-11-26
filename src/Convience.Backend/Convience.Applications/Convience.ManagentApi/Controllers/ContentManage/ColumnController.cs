@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.ContentManage;
 using Convience.Service.ContentManage;
 
@@ -39,6 +40,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpDelete]
         [Permission("columnDelete")]
+        [LogFilter("内容管理", "文章管理", "删除文章栏目")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _columnService.DeleteColumnAsync(id);
@@ -51,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPost]
         [Permission("columnAdd")]
+        [LogFilter("内容管理", "文章管理", "创建文章栏目")]
         public async Task<IActionResult> Add(ColumnViewModel columnViewModel)
         {
             var isSuccess = await _columnService.AddColumnAsync(columnViewModel);
@@ -63,6 +66,7 @@ namespace Convience.ManagentApi.Controllers.ContentManage
 
         [HttpPatch]
         [Permission("columnUpdate")]
+        [LogFilter("内容管理", "文章管理", "更新文章栏目")]
         public async Task<IActionResult> Update(ColumnViewModel columnViewModel)
         {
             var isSuccess = await _columnService.UpdateColumnAsync(columnViewModel);

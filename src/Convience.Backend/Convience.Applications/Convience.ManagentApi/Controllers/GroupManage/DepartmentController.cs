@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
 
@@ -39,6 +40,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpDelete]
         [Permission("departmentDelete")]
+        [LogFilter("组织管理", "部门管理", "删除部门")]
         public async Task<IActionResult> Delete(int id)
         {
             var isSuccess = await _departmentService.DeleteDepartmentAsync(id);
@@ -51,6 +53,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPost]
         [Permission("departmentAdd")]
+        [LogFilter("组织管理", "部门管理", "添加部门")]
         public async Task<IActionResult> Add(DepartmentViewModel viewModel)
         {
             var isSuccess = await _departmentService.AddDepartmentAsync(viewModel);
@@ -63,6 +66,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPatch]
         [Permission("departmentUpdate")]
+        [LogFilter("组织管理", "部门管理", "更新部门")]
         public async Task<IActionResult> Update(DepartmentViewModel viewModel)
         {
             var isSuccess = await _departmentService.UpdateDepartmentAsync(viewModel);

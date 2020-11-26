@@ -27,6 +27,17 @@ namespace Convience.Service
             };
         }
 
+        /// <summary>
+        /// 针对sort和order添加默认排序
+        /// </summary>
+        public string JoinString(string originString, string addString)
+        {
+            if (!string.IsNullOrEmpty(originString))
+            {
+                return $"{originString},{addString}";
+            }
+            return addString;
+        }
 
         /// <summary>
         /// 设置数据排序方式

@@ -1,5 +1,6 @@
 ﻿using Convience.Fluentvalidation;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
 
@@ -57,6 +58,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpDelete]
         [Permission("positionDelete")]
+        [LogFilter("组织管理", "职位管理", "删除职位")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
             var isSuccess = await _positionService.DeletePositionAsync(id);
@@ -69,6 +71,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPost]
         [Permission("positionAdd")]
+        [LogFilter("组织管理", "职位管理", "创建职位")]
         public async Task<IActionResult> Add(PositionViewModel viewModel)
         {
             var isSuccess = await _positionService.AddPositionAsync(viewModel);
@@ -81,6 +84,7 @@ namespace Convience.ManagentApi.Controllers.GroupManage
 
         [HttpPatch]
         [Permission("positionUpdate")]
+        [LogFilter("组织管理", "职位管理", "更新职位")]
         public async Task<IActionResult> Update(PositionViewModel viewModel)
         {
             var isSuccess = await _positionService.UpdatePositionAsync(viewModel);
