@@ -1,4 +1,5 @@
 ﻿using Convience.Entity.Entity.OperateLog;
+using System;
 
 namespace Convience.Model.Models.SystemTool
 {
@@ -35,6 +36,11 @@ namespace Convience.Model.Models.SystemTool
 
     public class OperateLogDetailQueryModel : PageSortQueryModel
     {
+        public string Module { get; set; }
+        public string Submodule { get; set; }
+        public string Operator { get; set; }
+        public DateTime? StartAt { get; set; }
+        public DateTime? EndAt { get; set; }
     }
 
     #endregion
@@ -56,6 +62,8 @@ namespace Convience.Model.Models.SystemTool
 
     public class OperateLogSettingQueryModel : PageSortQueryModel
     {
+        public string Module { get; set; }
+        public string Submodule { get; set; }
     }
 
     #endregion

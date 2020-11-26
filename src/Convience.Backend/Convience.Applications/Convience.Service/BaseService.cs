@@ -27,38 +27,17 @@ namespace Convience.Service
             };
         }
 
-
         /// <summary>
-        /// 设置数据排序方式
+        /// 针对sort和order添加默认排序
         /// </summary>
-        public IOrderedQueryable<T> GetOrderQuery<T>(IOrderedQueryable<T> query, string sort, string order,
-            Dictionary<string, Expression<Func<T, object>>> properties)
+        public string JoinString(string originString, string addString)
         {
-            if (!string.IsNullOrEmpty(sort) && !string.IsNullOrEmpty(order))
+            if (!string.IsNullOrEmpty(originString))
             {
-                var sortArray = sort.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                var orderArray = order.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < sortArray.Length; i++)
-                {
-                    var field = sortArray[i];
-                    var orderByExpression = properties[field];
-
-                    // 没有相应的字段退出
-                    if (orderByExpression == null)
-                    {
-                        continue;
-                    }
-                    var o = orderArray[i];
-
-                    // 添加排序
-                    query = o == "ascend" ?
-                        query.ThenBy(orderByExpression) :
-                        query.ThenByDescending(orderByExpression);
-                }
+                return $"{originString},{addString}";
             }
-            return query;
+            return addString;
         }
-
 
         /// <summary>
         /// 设置数据排序方式

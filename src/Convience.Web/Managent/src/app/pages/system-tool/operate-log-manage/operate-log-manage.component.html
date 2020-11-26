@@ -1,4 +1,27 @@
-<nz-card [nzSize]="'small'" class="full-single">
+<nz-card [nzSize]="'small'" id="searchBar">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <nz-form-item>
+            <nz-form-label [nzFor]="'module'">模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="模块名" [formControlName]="'module'" [attr.id]="'module'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'submodule'">子模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="子模块名" [formControlName]="'submodule'" [attr.id]="'submodule'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+<nz-card [nzSize]="'small'" class="full-double">
     <div class="mt-10">
         <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
             nzBordered="true" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: '2460px' }">
@@ -14,7 +37,7 @@
                     <th nzAlign="center" nzWidth="200px">动作</th>
                     <th nzAlign="center" nzWidth="200px">方法</th>
                     <th nzAlign="center" nzWidth="200px">保存时间</th>
-                    <th nzAlign="center" nzWidth="200px">是否该类型操作</th>
+                    <th nzAlign="center" nzWidth="200px">是否记录日志</th>
                     <th nzAlign="center" nzWidth="120px">操作</th>
                 </tr>
             </thead>
@@ -28,7 +51,10 @@
                     <td nzAlign="center">{{data.action}}</td>
                     <td nzAlign="center">{{data.method}}</td>
                     <td nzAlign="center">{{data.saveTime}}</td>
-                    <td nzAlign="center">{{data.isRecord}}</td>
+                    <td nzAlign="center">
+                        <nz-tag *ngIf="data.isRecord" nzColor="success">是</nz-tag>
+                        <nz-tag *ngIf="!data.isRecord" nzColor="default">否</nz-tag>
+                    </td>
                     <td nzAlign="center">
                         <button nz-button nzType="default" nzShape="circle" *canOperate="'updateLogSettingBtn'"
                             (click)="edit(data)" class="mr-10"><i nz-icon nzType="edit"></i></button>

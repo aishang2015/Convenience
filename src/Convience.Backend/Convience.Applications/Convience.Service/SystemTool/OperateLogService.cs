@@ -5,6 +5,7 @@ using Convience.Entity.Entity.OperateLog;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemTool;
+using Convience.Util.Extension;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -90,10 +91,22 @@ namespace Convience.Service.SystemTool
                             SaveTime = setting.SaveTime
                         };
 
+            query = query
+                .AndIfHaveValue(queryModel.Module, s => s.ModuleName.Contains(queryModel.Module))
+                .AndIfHaveValue(queryModel.Submodule, s => s.SubModuleName.Contains(queryModel.Submodule))
+                .AndIfHaveValue(queryModel.Operator, s => s.OperatorName.Contains(queryModel.Operator))
+                .AndIfHaveValue(queryModel.StartAt, s => s.OperateAt > queryModel.StartAt)
+                .AndIfHaveValue(queryModel.EndAt, s => s.OperateAt < queryModel.EndAt);
+
             // 排序
             var sortFieldDic = new Dictionary<string, Expression<Func<OperateLogDetailResultModel, object>>>();
             sortFieldDic["module"] = t => t.ModuleName;
             sortFieldDic["subModule"] = t => t.SubModuleName;
+            sortFieldDic["operatorName"] = t => t.OperatorAccount;
+            sortFieldDic["operateAt"] = t => t.OperateAt;
+            sortFieldDic["id"] = t => t.Id;
+            queryModel.Sort = JoinString(queryModel.Sort, "id");
+            queryModel.Order = JoinString(queryModel.Order, "ascend");
             query = GetOrderQuery(query, queryModel.Sort, queryModel.Order, sortFieldDic);
 
             // 分页
@@ -112,12 +125,17 @@ namespace Convience.Service.SystemTool
         public PagingResultModel<OperateLogSettingResultModel> GetPagingOperateLogSetting(OperateLogSettingQueryModel queryModel)
         {
             // 查询
-            var query = _logSettingRepository.Get(false);
+            var query = _logSettingRepository.Get(false)
+                .AndIfHaveValue(queryModel.Module, s => s.ModuleName.Contains(queryModel.Module))
+                .AndIfHaveValue(queryModel.Submodule, s => s.SubModuleName.Contains(queryModel.Submodule));
 
             // 排序
             var sortFieldDic = new Dictionary<string, Expression<Func<OperateLogSetting, object>>>();
             sortFieldDic["module"] = t => t.ModuleName;
             sortFieldDic["subModule"] = t => t.SubModuleName;
+            sortFieldDic["id"] = t => t.Id;
+            queryModel.Sort = JoinString(queryModel.Sort, "id");
+            queryModel.Order = JoinString(queryModel.Order, "ascend");
             query = GetOrderQuery(query, queryModel.Sort, queryModel.Order, sortFieldDic);
 
             // 取得数据

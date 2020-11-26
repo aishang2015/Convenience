@@ -14,7 +14,11 @@ export class OperateLogManageComponent implements OnInit {
 
   public data: any[] = [];
 
+  private _searchObject: any = {};
+
   public editForm: FormGroup = new FormGroup({});
+
+  public searchForm: FormGroup = new FormGroup({});
 
   // 表格排序功能
   private _sortArray: string[] = [];
@@ -36,12 +40,21 @@ export class OperateLogManageComponent implements OnInit {
     private _messageService: NzMessageService) { }
 
   ngOnInit(): void {
+    this.initSearchForm();
     this.initData();
+  }
+
+  // 初始化搜索表单
+  public initSearchForm() {
+    this.searchForm = this._formBuilder.group({
+      "module": [null],
+      "submodule": [null]
+    });
   }
 
   // 初始化数据
   public initData() {
-    this._operateLogService.getSettings(this.page, this.size, this._sortArray, this._orderArray).subscribe((result: any) => {
+    this._operateLogService.getSettings(this.page, this.size, this._sortArray, this._orderArray, this._searchObject).subscribe((result: any) => {
       this.data = result.data;
       this.total = result.count
     })
@@ -52,6 +65,7 @@ export class OperateLogManageComponent implements OnInit {
   }
 
   public sizeChange() {
+    this.page = 1;
     this.initData();
   }
 
@@ -68,6 +82,12 @@ export class OperateLogManageComponent implements OnInit {
       nzContent: this.editTpl,
       nzFooter: null
     });
+  }
+
+  public submitSearch() {
+    this._searchObject.module = this.searchForm.value["module"];
+    this._searchObject.submodule = this.searchForm.value["submodule"];
+    this.initData();
   }
 
   public submitEdit() {

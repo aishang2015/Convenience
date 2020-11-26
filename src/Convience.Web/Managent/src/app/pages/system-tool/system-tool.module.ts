@@ -21,6 +21,8 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 
 
 @NgModule({
@@ -56,7 +58,9 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
     NzButtonModule,
     NzSwitchModule,
     NzTableModule,
-    NzInputNumberModule
+    NzInputNumberModule,
+    NzTagModule,
+    NzDatePickerModule
   ]
 })
 export class SystemToolModule { }
