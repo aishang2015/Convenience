@@ -73,6 +73,11 @@ namespace Convience.EntityFrameWork.Repositories
             return query.Skip(skip).Take(size);
         }
 
+        public IQueryable<TEntity> Get(string sql)
+        {
+            return _dataSet.FromSqlRaw(sql);
+        }
+
         public async Task RemoveAsync(object key)
         {
             var entity = await GetAsync(key);
@@ -125,6 +130,14 @@ namespace Convience.EntityFrameWork.Repositories
             foreach (var expression in properties)
             {
                 _context.Entry(entity).Property(expression).IsModified = false;
+            }
+        }
+
+        public void DetachAll()
+        {
+            foreach (var entity in _context.ChangeTracker.Entries())
+            {
+                entity.State = EntityState.Detached;
             }
         }
     }
