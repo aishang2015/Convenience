@@ -5,7 +5,6 @@ import { AppCommonModule } from '../app-common/app-common.module';
 import { CodeGeneratorComponent } from './code-generator/code-generator.component';
 import { OperateLogManageComponent } from './operate-log-manage/operate-log-manage.component';
 import { OperateLogViewComponent } from './operate-log-view/operate-log-view.component';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { LoginGuard } from 'src/app/guards/login.guard';
 import { ManageUiComponent } from './manage-ui/manage-ui.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -23,6 +22,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
 
 
 @NgModule({
@@ -43,7 +43,6 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
       { path: 'logManage', component: OperateLogManageComponent, canActivate: [LoginGuard] },
       { path: 'logDetail', component: OperateLogViewComponent, canActivate: [LoginGuard] },
     ]),
-    MonacoEditorModule.forRoot(),
 
     // NGZorro组件
     NzStepsModule,
@@ -60,7 +59,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
     NzTableModule,
     NzInputNumberModule,
     NzTagModule,
-    NzDatePickerModule
+    NzDatePickerModule,
+    NzCodeEditorModule
   ]
 })
 export class SystemToolModule { }

@@ -93,9 +93,10 @@
         <nz-radio-group [(ngModel)]="radioValue">
             <label nz-radio-button [nzValue]="radio.value" *ngFor="let radio of radioList">{{radio.name}}</label>
         </nz-radio-group>
-        <ngx-monaco-editor class="codeEditor mt-10" [options]="editorOptions"
+        <!-- <ngx-monaco-editor class="codeEditor mt-10" [options]="editorOptions"
             [(ngModel)]="this.code[this.radioValue]" style="height: 600px;" *ngIf="isGenerateFinish">
-        </ngx-monaco-editor>
+        </ngx-monaco-editor> -->
+        <nz-code-editor class="mt-10" style="height: 700px;"  [(ngModel)]="this.code[this.radioValue]" [nzEditorOption]="{ language: 'csharp' }"></nz-code-editor>
         <div *ngIf="!isGenerateFinish" style="text-align: center;margin-top: 5rem;">
             <i nz-icon [nzType]="'loading'" style="font-size: 5rem;"></i>
         </div>
