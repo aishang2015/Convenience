@@ -27,7 +27,7 @@
     "file-saver": "^2.0.2",
     "jsplumb": "^2.13.2",
     "jszip": "^3.4.0",
-    "ng-zorro-antd": "^10.0.1",
+    "ng-zorro-antd": "^11.0.0",
     "rxjs": "~6.5.4",
     "tinymce": "^5.4.1",
     "tslib": "^2.0.0",
