@@ -1,6 +1,6 @@
 ## Convenience
 
-使用.NET Core 3.1 + Angular 10 + NG-ZORRO开发，实现了很多基本功能，方便二次开发。
+使用.NET Core 3.1 + Angular 11 + NG-ZORRO开发，实现了很多基本功能，方便二次开发。
 
 ### 功能
 
@@ -8,7 +8,7 @@
 
 ### 演示
 
-地址：http://172.81.254.197/
+地址：http://180.163.89.224:8888/
 
 账号：admin1~admin9
 
@@ -17,6 +17,12 @@
 ### 开发环境
 
 vs + vs code
+
+### 本地运行
+
+Convience.Web\Managent是web端
+
+Convience.Backend是api端
 
 ### 本地运行（docker）
 
