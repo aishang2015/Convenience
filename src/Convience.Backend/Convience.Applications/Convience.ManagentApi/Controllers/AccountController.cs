@@ -1,10 +1,8 @@
-﻿
-using Convience.Fluentvalidation;
-using Convience.JwtAuthentication;
+﻿using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
-
+using Convience.Util.Extension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

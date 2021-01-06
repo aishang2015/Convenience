@@ -1,9 +1,8 @@
-﻿using Convience.Fluentvalidation;
-using Convience.ManagentApi.Infrastructure.Authorization;
+﻿using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.ManagentApi.Infrastructure.OperateLog;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
-
+using Convience.Util.Extension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

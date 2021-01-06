@@ -1,6 +1,6 @@
-﻿using Convience.Fluentvalidation;
-using Convience.Model.Models.Tenant;
+﻿using Convience.Model.Models.Tenant;
 using Convience.Service.TenantService;
+using Convience.Util.Extension;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

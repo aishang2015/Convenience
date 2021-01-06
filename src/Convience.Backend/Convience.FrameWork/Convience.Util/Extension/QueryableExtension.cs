@@ -52,6 +52,27 @@ namespace Convience.Util.Extension
         {
             return queryable.Where(andExpression);
         }
+
+        /// <summary>
+        /// 或
+        /// </summary>
+        public static IQueryable<T> Or<T>(this IQueryable<T> queryable, Expression<Func<T, bool>> andExpression)
+        {
+            return queryable.Or(andExpression);
+        }
+
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="queryable">查询</param>
+        /// <param name="page">页码从1开始</param>
+        /// <param name="size">每页数据量</param>
+        /// <returns></returns>
+        public static IQueryable<T> PageBy<T>(this IQueryable<T> queryable, int page, int size)
+        {
+            return queryable.Skip((page - 1) * size).Take(size);
+        }
     }
 }
 
