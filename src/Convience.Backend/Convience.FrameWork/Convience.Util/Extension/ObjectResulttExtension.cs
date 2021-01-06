@@ -2,9 +2,9 @@
 
 using System.Linq;
 
-namespace Convience.Fluentvalidation
+namespace Convience.Util.Extension
 {
-    public static class BadRequestExtension
+    public static class ObjectResulttExtension
     {
         public static BadRequestObjectResult BadRequestResult(this ControllerBase controller, params string[] errorMsgs)
         {

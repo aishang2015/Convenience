@@ -27,6 +27,9 @@ namespace Convience.EntityFrameWork.Infrastructure
                     DataBaseType.Oracle => option.UseOracle(connectionString),
                     _ => option
                 };
+
+                // 启用日志参数
+                option.EnableSensitiveDataLogging();
             }).AddIdentity<TUser, TRole>(option =>
             {
                 option.Password.RequireDigit = false;
@@ -55,6 +58,9 @@ namespace Convience.EntityFrameWork.Infrastructure
                     DataBaseType.Oracle => option.UseOracle(connectionString),
                     _ => option
                 };
+
+                // 启用日志参数
+                option.EnableSensitiveDataLogging();
             });
             return services;
         }
