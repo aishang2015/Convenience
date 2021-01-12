@@ -22,8 +22,6 @@ export class DepartmentManageComponent implements OnInit {
   page: number = 1;
   total: number = 0;
 
-  currentId?: number = null;
-
   @ViewChild('editTitleTpl', { static: true })
   editTitleTpl;
 
@@ -66,6 +64,7 @@ export class DepartmentManageComponent implements OnInit {
 
   add() {
     this.editForm = this._formBuilder.group({
+      id: [null],
       upDepartment: [this.tree.selectedNode?.key],
       name: [null, [Validators.required, Validators.maxLength(15)]],
       email: [null, [Validators.email, Validators.maxLength(50)]],
@@ -88,9 +87,9 @@ export class DepartmentManageComponent implements OnInit {
   edit(id) {
     this.searchChange$.next(this.data.find(d => d.id == id).leaderName);
     this._departmentService.get(id).subscribe((result: Department) => {
-      this.currentId = result.id;
       let upId = this.tree.data.find(d => d.id == result.id)?.upId;
       this.editForm = this._formBuilder.group({
+        id: [result.id],
         upDepartment: [{ value: Number(upId), disabled: true }],
         name: [result.name, [Validators.required, Validators.maxLength(15)]],
         email: [result.email, [Validators.email, Validators.maxLength(50)]],
@@ -129,14 +128,14 @@ export class DepartmentManageComponent implements OnInit {
     }
     if (this.editForm.valid) {
       let d = new Department();
+      d.id = this.editForm.value['id'];
       d.upId = this.editForm.value['upDepartment'];
       d.name = this.editForm.value['name'];
       d.email = this.editForm.value['email'];
       d.telephone = this.editForm.value['telephone'];
       d.leaderId = Number(this.editForm.value['leaderid']);
       d.sort = this.editForm.value['sort'];
-      if (this.currentId) {
-        d.id = this.currentId;
+      if (d.id) {
         this._departmentService.update(d).subscribe(reuslt => {
           this._messageService.success("修改成功！");
           this.refresh();
