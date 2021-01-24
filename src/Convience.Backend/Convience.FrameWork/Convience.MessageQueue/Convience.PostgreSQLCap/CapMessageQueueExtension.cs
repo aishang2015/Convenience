@@ -15,6 +15,7 @@ namespace Convience.CapMQ
             {
                 o.UseEntityFramework<TDbContext>();
                 o.UsePostgreSql(dbConnectionString);
+
                 o.UseRabbitMQ(mqConnectionString);
 
                 // 使用可视面板

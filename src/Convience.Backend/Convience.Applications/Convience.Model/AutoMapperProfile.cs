@@ -3,11 +3,9 @@
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
 using Convience.Entity.Entity.OperateLog;
-using Convience.Entity.Entity.Tenants;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.Model.Models.ContentManage;
 using Convience.Model.Models.GroupManage;
-using Convience.Model.Models.SaasManage;
 using Convience.Model.Models.SystemManage;
 using Convience.Model.Models.SystemTool;
 using Convience.Model.Models.WorkFlowManage;
@@ -28,9 +26,6 @@ namespace Convience.Model
             CreateMap<MenuViewModel, Menu>();
             CreateMap<Menu, MenuResultModel>().ForMember(menu => menu.Type,
                 ex => ex.MapFrom(result => (int)result.Type));
-
-            CreateMap<TenantViewModel, Tenant>();
-            CreateMap<Tenant, TenantResultModel>();
 
             CreateMap<DepartmentViewModel, Department>();
             CreateMap<Department, DepartmentResultModel>();

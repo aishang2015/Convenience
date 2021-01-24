@@ -9,8 +9,8 @@ namespace Convience.JwtAuthentication
     public static class JwtExtension
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
-            string authenticationScheme,
             IConfiguration configuration,
+            string authenticationScheme = "Bearer",
             JwtBearerEvents events = null)
         {
             authenticationScheme = authenticationScheme ?? JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme;

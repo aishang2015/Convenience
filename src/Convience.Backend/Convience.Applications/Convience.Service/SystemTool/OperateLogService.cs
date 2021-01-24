@@ -1,12 +1,16 @@
 ﻿using AppService.Service;
+
 using AutoMapper;
+
 using Convience.Entity.Data;
 using Convience.Entity.Entity.OperateLog;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemTool;
 using Convience.Util.Extension;
+
 using Microsoft.Extensions.Logging;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -162,7 +166,7 @@ namespace Convience.Service.SystemTool
                 await _unitOfWork.SaveAsync();
 
                 // 清除setting缓存
-                await _logSettingCache.ClearCacheDataAsync();
+                _logSettingCache.ClearCacheData();
                 return true;
             }
             catch (Exception e)

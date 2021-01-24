@@ -1,4 +1,5 @@
 ﻿using Convience.Entity.Data;
+
 using Microsoft.AspNetCore.SignalR;
 
 using System;

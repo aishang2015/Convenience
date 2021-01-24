@@ -52,12 +52,6 @@ export class LayoutComponent implements OnInit {
       ]
     },
     {
-      canOperate: 'saasmanage', routerLink: '', iconType: 'deployment-unit', firstBreadcrumb: '', lastBreadcrumb: '', name: 'SAAS管理',
-      children: [
-        { canOperate: 'tenantManage', routerLink: '/saas/tenant', iconType: 'user', firstBreadcrumb: 'SAAS管理', lastBreadcrumb: '租户管理', name: '租户管理', },
-      ]
-    },
-    {
       canOperate: 'systemtool', routerLink: '', iconType: 'tool', firstBreadcrumb: '', lastBreadcrumb: '', name: '系统工具',
       children: [
         { canOperate: 'logMange', routerLink: '/tool/logManage', iconType: 'login', firstBreadcrumb: '系统工具', lastBreadcrumb: '操作日志', name: '操作日志配置', },

@@ -3,6 +3,7 @@ using Convience.Model.Models.Account;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
 using Convience.Util.Extension;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,9 +32,9 @@ namespace Convience.ManagentApi.Controllers
         }
 
         [HttpGet("captcha")]
-        public async Task<IActionResult> GetCaptcha()
+        public IActionResult GetCaptcha()
         {
-            var result = await _loginService.GetCaptcha();
+            var result = _loginService.GetCaptcha();
             return Ok(result);
         }
 
@@ -41,7 +42,7 @@ namespace Convience.ManagentApi.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             // 验证验证码
-            var validResult = await _loginService.ValidateCaptcha(model.CaptchaKey, model.CaptchaValue);
+            var validResult = _loginService.ValidateCaptcha(model.CaptchaKey, model.CaptchaValue);
             if (!string.IsNullOrEmpty(validResult))
             {
                 return this.BadRequestResult(validResult);

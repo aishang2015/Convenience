@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Convience.Automapper\Convience.Automapper.csproj" />
-    <ProjectReference Include="..\Convience.Caches\Convience.Cache\Convience.Cache.csproj" />
-    <ProjectReference Include="..\Convience.Caches\Convience.Easycaching\Convience.Easycaching.csproj" />
-    <ProjectReference Include="..\Convience.Comunication\Convience.HttpClients\Convience.HttpClients.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.Mail\Convience.Mail.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.SignalRs\Convience.SignalRs.csproj" />
     <ProjectReference Include="..\Convience.Comunication\Convience.WebSocket\Convience.WebSockets.csproj" />
@@ -22,8 +18,6 @@
     <ProjectReference Include="..\Convience.Injection\Convience.Injection.csproj" />
     <ProjectReference Include="..\Convience.Jwtauthentication\Convience.JwtAuthentication.csproj" />
     <ProjectReference Include="..\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj" />
-    <ProjectReference Include="..\Convience.MessageQueue\Convience.MediatR\Convience.MediatRs.csproj" />
-    <ProjectReference Include="..\Convience.Swashbuckle\Convience.Swashbuckle.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Background\Convience.Background.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Hangfire\Convience.Hangfire.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Quartz\Convience.Quartz.csproj" />
