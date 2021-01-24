@@ -12,6 +12,9 @@ namespace Convience.Util.Helpers
     {
         private static List<CompilationLibrary> _libraryList;
 
+        /// <summary>
+        /// 获取程序中所有非引用的lib
+        /// </summary>
         public static List<CompilationLibrary> LibraryList
         {
             get
@@ -27,6 +30,9 @@ namespace Convience.Util.Helpers
 
         private static List<Assembly> _assemblyList;
 
+        /// <summary>
+        /// 获取程序中所有非引用的lib的程序集
+        /// </summary>
         public static List<Assembly> AssemblyList
         {
             get
@@ -40,7 +46,9 @@ namespace Convience.Util.Helpers
             }
         }
 
-
+        /// <summary>
+        /// 在程序集中找到所有指定类型的子类
+        /// </summary>
         public static List<Type> GetAllSubClass<T>()
         {
             var result = new List<Type>();
@@ -51,6 +59,9 @@ namespace Convience.Util.Helpers
             return result;
         }
 
+        /// <summary>
+        /// 根据指定接口名称获取接口和实现接口的类
+        /// </summary>
         public static List<(Type, Type)> GetInterfaceAndImplementByName(string interfaceName)
         {
             var result = new List<(Type, Type)>();
@@ -68,6 +79,9 @@ namespace Convience.Util.Helpers
             return result;
         }
 
+        /// <summary>
+        /// 获取对象的属性值
+        /// </summary>
         public static object GetPropertyValue(object obj, string property)
         {
             PropertyInfo propertyInfo = obj.GetType().GetProperty(property);

@@ -6,6 +6,9 @@ namespace Convience.Util.Extension
 {
     public static class ObjectResulttExtension
     {
+        /// <summary>
+        /// 将错误信息设置到modelerror并返回400错误的result
+        /// </summary>
         public static BadRequestObjectResult BadRequestResult(this ControllerBase controller, params string[] errorMsgs)
         {
             errorMsgs.ToList().ForEach(msg =>
@@ -13,7 +16,9 @@ namespace Convience.Util.Extension
             return controller.BadRequest(controller.ModelState);
         }
 
-
+        /// <summary>
+        /// 将错误信息设置到modelerror并返回400错误的result
+        /// </summary>
         public static BadRequestObjectResult BadRequestResult(this ControllerBase controller, params (string, string)[] errorMsgs)
         {
             errorMsgs.ToList().ForEach(msg =>

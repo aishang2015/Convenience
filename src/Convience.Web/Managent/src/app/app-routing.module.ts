@@ -11,7 +11,6 @@ const routes: Routes = [
       { path: "system", loadChildren: () => import("./pages/system-manage/system-manage.module").then(m => m.SystemManageModule) },
       { path: "group", loadChildren: () => import("./pages/group-manage/group-manage.module").then(m => m.GroupManageModule) },
       { path: "content", loadChildren: () => import("./pages/content-manage/content-manage.module").then(m => m.ContentManageModule) },
-      { path: "saas", loadChildren: () => import("./pages/saas-manage/saas-manage.module").then(m => m.SaasManageModule) },
       { path: "tool", loadChildren: () => import("./pages/system-tool/system-tool.module").then(m => m.SystemToolModule) },
       { path: "workflow", loadChildren: () => import("./pages/workflow/workflow.module").then(m => m.WorkflowModule) },
     ]
@@ -20,7 +19,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy', useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

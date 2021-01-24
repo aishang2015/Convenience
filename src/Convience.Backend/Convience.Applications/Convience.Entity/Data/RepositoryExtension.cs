@@ -1,4 +1,5 @@
 ﻿using Convience.EntityFrameWork.Repositories;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Convience.Entity.Data

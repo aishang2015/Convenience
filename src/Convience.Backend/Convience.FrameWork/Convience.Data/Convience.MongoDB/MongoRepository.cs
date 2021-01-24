@@ -356,6 +356,15 @@ namespace Convience.MongoDB
         /// <summary>
         /// 根据条件查询数据数量
         /// </summary>
+        public long Count<T>(FilterDefinition<T> filter)
+        {
+            var total = GetCollection<T>().CountDocuments(filter);
+            return total;
+        }
+
+        /// <summary>
+        /// 根据条件查询数据数量
+        /// </summary>
         public async Task<long> CountAsync<T>(FilterDefinition<T> filter)
         {
             var total = await GetCollection<T>().CountDocumentsAsync(filter);

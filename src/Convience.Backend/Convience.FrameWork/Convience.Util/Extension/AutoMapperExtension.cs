@@ -5,7 +5,7 @@ using Convience.Util.Helpers;
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Convience.Automapper
+namespace Convience.Util.Extension
 {
     public static class AutoMapperExtension
     {

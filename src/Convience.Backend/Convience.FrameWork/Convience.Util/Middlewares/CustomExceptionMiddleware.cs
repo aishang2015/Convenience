@@ -26,7 +26,8 @@ namespace Convience.Util.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError("Unhandled exception....", ex);
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
                 httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 var problem = new
                 {

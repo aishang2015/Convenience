@@ -4,8 +4,7 @@ using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
 
-using EasyCaching.Core;
-
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 using System;
@@ -16,9 +15,9 @@ namespace Convience.Service.Account
 {
     public interface IAccountService
     {
-        public Task<CaptchaResultModel> GetCaptcha();
+        public CaptchaResultModel GetCaptcha();
 
-        public Task<string> ValidateCaptcha(string captchaKey, string captchaValue);
+        public string ValidateCaptcha(string captchaKey, string captchaValue);
 
         public Task<bool> IsStopUsing(string userName);
 
@@ -31,12 +30,12 @@ namespace Convience.Service.Account
     {
         private readonly IUserRepository _userRepository;
 
-        private readonly IEasyCachingProvider _cachingProvider;
+        private readonly IMemoryCache _cachingProvider;
 
         private readonly IJwtFactory _jwtFactory;
 
         public AccountService(IUserRepository userRepository,
-            IEasyCachingProvider cachingProvider,
+            IMemoryCache cachingProvider,
             IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
             var option = jwtOptionAccessor.Get(JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme);
@@ -94,12 +93,12 @@ namespace Convience.Service.Account
 
         }
 
-        public async Task<CaptchaResultModel> GetCaptcha()
+        public CaptchaResultModel GetCaptcha()
         {
             var randomValue = CaptchaHelper.GetValidateCode(5);
             var imageData = CaptchaHelper.CreateBase64Image(randomValue);
             var key = Guid.NewGuid().ToString();
-            await _cachingProvider.SetAsync(key, randomValue, TimeSpan.FromMinutes(2));
+            _cachingProvider.Set(key, randomValue, TimeSpan.FromMinutes(2));
             return new CaptchaResultModel
             {
                 CaptchaKey = key,
@@ -107,9 +106,9 @@ namespace Convience.Service.Account
             };
         }
 
-        public async Task<string> ValidateCaptcha(string captchaKey, string captchaValue)
+        public string ValidateCaptcha(string captchaKey, string captchaValue)
         {
-            var value = await _cachingProvider.GetAsync(captchaKey, typeof(string));
+            var value = _cachingProvider.Get(captchaKey);
             if (value != null)
             {
                 return captchaValue == value.ToString() ? string.Empty : "验证码错误！";
