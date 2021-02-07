@@ -59,7 +59,7 @@ namespace AppService.Service
         public IList<T> GetCacheData(int expire = 60)
         {
             var cacheList = _memoryCache.Get<List<T>>(_cacheKey);
-            if (cacheList != null)
+            if (cacheList == null)
             {
                 // 全量取出
                 var dataList = _repository.Get().ToList();
