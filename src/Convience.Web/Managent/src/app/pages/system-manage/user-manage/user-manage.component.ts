@@ -6,6 +6,7 @@ import { RoleService } from 'src/app/business/role.service';
 import { Role } from '../model/role';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 
 @Component({
   selector: 'app-user-manage',
@@ -31,6 +32,10 @@ export class UserManageComponent implements OnInit {
 
   // store search parameters
   private _searchObject: any = {};
+
+  selectedDepartmentKey: string = '';
+
+  departmentNode: NzTreeNodeOptions[] = [];
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -198,6 +203,15 @@ export class UserManageComponent implements OnInit {
 
   getImgUrl(name) {
     return `/assets/avatars/${name}.png`;
+  }
+
+  nodeChecked(key) {
+    this.selectedDepartmentKey = key;
+    this.refresh();
+  }
+
+  loadedData(nodes) {
+    this.departmentNode = nodes;
   }
 
 }

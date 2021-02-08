@@ -52,8 +52,22 @@ namespace Convience.Util.Helpers
             var graph = Graphics.FromImage(image);
 
             // 字体颜色和背景颜色合集
-            Color[] fontColors = { Color.Black, Color.Red, Color.DarkBlue, Color.Brown, Color.DarkCyan, Color.Purple };
-            Color[] backgroundColors = { Color.White, Color.LightYellow, Color.Cyan, Color.LightGray };
+            Color[] fontColors = { Color.White };
+            Color[] backgroundColors = {
+                Color.FromArgb(245, 34, 45),
+                Color.FromArgb(250,84,28),
+                Color.FromArgb(250,140,22),
+                Color.FromArgb(250,173,20),
+                Color.FromArgb(212,177,6),
+                Color.FromArgb(124,179,5),
+                Color.FromArgb(82,196,26),
+                Color.FromArgb(19,194,194),
+                Color.FromArgb(24,144,255),
+                Color.FromArgb(124,179,5),
+                Color.FromArgb(47,84,235),
+                Color.FromArgb(114,46,209),
+                Color.FromArgb(235,47,150),
+            };
             string[] fontFamilies = { "Times New Roman" };
 
             Random random = new Random();

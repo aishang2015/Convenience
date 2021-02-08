@@ -10,6 +10,9 @@ import { DbTypePipe } from 'src/app/pipes/db-type.pipe';
 import { MenuTypePipe } from 'src/app/pipes/menu-type.pipe';
 import { CanOperateDirective } from 'src/app/directives/can-operate.directive';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { DepartmentTreeComponent } from './components/department-tree/department-tree.component';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   declarations: [
@@ -17,11 +20,14 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
     MenuTypePipe,
     DbTypePipe,
     AvatarSelectComponent,
-    CanOperateDirective
+    DepartmentTreeComponent,
+    CanOperateDirective,
   ],
   imports: [
     CommonModule,
-    NzButtonModule
+    NzButtonModule,
+    NzTreeModule,
+    NzIconModule
   ],
   exports: [
     ReactiveFormsModule,
@@ -35,6 +41,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 
     // 组件
     AvatarSelectComponent,
+    DepartmentTreeComponent,
 
     // 指令
     CanOperateDirective

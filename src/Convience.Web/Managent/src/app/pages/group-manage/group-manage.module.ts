@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PositionManageComponent } from './position-manage/position-manage.component';
 import { AppCommonModule } from '../app-common/app-common.module';
-import { DepartmentTreeComponent } from './department-tree/department-tree.component';
 import { DepartmentManageComponent } from './department-manage/department-manage.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
@@ -25,7 +24,6 @@ import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 @NgModule({
   declarations: [
     PositionManageComponent,
-    DepartmentTreeComponent,
     DepartmentManageComponent,
     EmployeeComponent,
   ],

@@ -1,99 +1,115 @@
-<nz-card [nzSize]="'small'" id="searchBar">
-    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
-        <nz-form-item>
-            <nz-form-label [nzFor]="'userName'">账号</nz-form-label>
-            <nz-form-control>
-                <input nz-input placeholder="账号" [formControlName]="'userName'" [attr.id]="'userName'"
-                    autocomplete="off" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzFor]="'phoneNumber'">电话号码</nz-form-label>
-            <nz-form-control>
-                <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'"
-                    autocomplete="off" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
-            <nz-form-control>
-                <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'" autocomplete="off" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzFor]="'roleid'">角色</nz-form-label>
-            <nz-form-control>
-                <nz-select nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'"
-                    [formControlName]="'roleid'">
-                    <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-control>
-                <button nz-button nzType="primary">搜索</button>
-                <button nz-button nzType="outline" type="button" class="ml-10" (click)="resetSearchForm()">重置</button>
-            </nz-form-control>
-        </nz-form-item>
-    </form>
-</nz-card>
+<div class="two-column">
+    <div class="left">
+        <nz-card [nzSize]="'small'">
+            <app-department-tree #tree (nodeChecked)="nodeChecked($event)" (loadData)="loadedData($event)">
+            </app-department-tree>
+        </nz-card>
+    </div>
+    <div class="right">
+        <!--搜索栏-->
+        <nz-card [nzSize]="'small'" id="searchBar">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'userName'">账号</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input placeholder="账号" [formControlName]="'userName'" [attr.id]="'userName'"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'phoneNumber'">电话号码</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input placeholder="电话号码" [formControlName]="'phoneNumber'" [attr.id]="'phoneNumber'"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'name'">姓名</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input placeholder="姓名" [formControlName]="'name'" [attr.id]="'name'"
+                            autocomplete="off" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzFor]="'roleid'">角色</nz-form-label>
+                    <nz-form-control>
+                        <nz-select nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'" [formControlName]="'roleid'">
+                            <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control>
+                        <button nz-button nzType="primary">搜索</button>
+                        <button nz-button nzType="outline" type="button" class="ml-10"
+                            (click)="resetSearchForm()">重置</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </nz-card>
 
-<nz-card [nzSize]="'small'" class="full-double">
-    <div>
-        <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)" *canOperate="'adduserbtn'"><i
-                nz-icon nzType="plus"></i>添加用户</button>
-        <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+        <!--用户数据-->
+        <nz-card [nzSize]="'small'" id="userCard">
+            <div>
+                <button nz-button class="mr-10" (click)="add(addUserTitleTpl,userContentTpl)"
+                    *canOperate="'adduserbtn'"><i nz-icon nzType="plus"></i>添加用户</button>
+                <button nz-button class="mr-10" (click)="refresh()"><i nz-icon nzType="sync"></i>刷新数据</button>
+            </div>
+            <div class="mt-10">
+                <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+                    nzBordered="true">
+                    <thead>
+                        <tr>
+                            <th nzAlign="center" nzWidth="50px">#</th>
+                            <th nzAlign="center" nzWidth="80px">头像</th>
+                            <th nzAlign="center" nzWidth="120px">账号</th>
+                            <th nzAlign="center" nzWidth="120px">姓名</th>
+                            <th nzAlign="center" nzWidth="120px">电话号码</th>
+                            <th nzAlign="center" nzWidth="60px">性别</th>
+                            <th nzAlign="center">系统角色</th>
+                            <th nzAlign="center" nzWidth="60px">状态</th>
+                            <th nzAlign="center" nzWidth="180px">创建时间</th>
+                            <th nzAlign="center" nzWidth="120px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataTable.data;let i = index">
+                            <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                            <td nzAlign="center">
+                                <nz-avatar *ngIf="!data.avatar" nzSize="large" nzIcon="user"></nz-avatar>
+                                <nz-avatar *ngIf="data.avatar" nzSize="large" [nzSrc]="getImgUrl(data.avatar)">
+                                </nz-avatar>
+                            </td>
+                            <td nzAlign="center">{{ data.userName }}</td>
+                            <td nzAlign="center">{{ data.name }}</td>
+                            <td nzAlign="center">{{ data.phoneNumber }}</td>
+                            <td nzAlign="center">{{ data.sex | gender }}</td>
+                            <td nzAlign="center">{{ getRoleName(data.roleIds) }}</td>
+                            <td nzAlign="center">
+                                <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
+                                <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
+                            </td>
+                            <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+                            <td nzAlign="center">
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'updateUserBtn'"
+                                    (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
+                                        nzType="edit"></i></button>
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteUserBtn'"
+                                    (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+            <div class="mt-10">
+                <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+                    nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()">
+                </nz-pagination>
+            </div>
+        </nz-card>
+
     </div>
-    <div class="mt-10">
-        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
-            nzBordered="true">
-            <thead>
-                <tr>
-                    <th nzAlign="center" nzWidth="50px">#</th>
-                    <th nzAlign="center" nzWidth="80px">头像</th>
-                    <th nzAlign="center" nzWidth="120px">账号</th>
-                    <th nzAlign="center" nzWidth="120px">姓名</th>
-                    <th nzAlign="center" nzWidth="120px">电话号码</th>
-                    <th nzAlign="center" nzWidth="60px">性别</th>
-                    <th nzAlign="center">系统角色</th>
-                    <th nzAlign="center" nzWidth="60px">状态</th>
-                    <th nzAlign="center" nzWidth="180px">创建时间</th>
-                    <th nzAlign="center" nzWidth="120px">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let data of dataTable.data;let i = index">
-                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
-                    <td nzAlign="center">
-                        <nz-avatar *ngIf="!data.avatar" nzSize="large" nzIcon="user"></nz-avatar>
-                        <nz-avatar *ngIf="data.avatar" nzSize="large" [nzSrc]="getImgUrl(data.avatar)"></nz-avatar>
-                    </td>
-                    <td nzAlign="center">{{ data.userName }}</td>
-                    <td nzAlign="center">{{ data.name }}</td>
-                    <td nzAlign="center">{{ data.phoneNumber }}</td>
-                    <td nzAlign="center">{{ data.sex | gender }}</td>
-                    <td nzAlign="center">{{ getRoleName(data.roleIds) }}</td>
-                    <td nzAlign="center">
-                        <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
-                        <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
-                    </td>
-                    <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
-                    <td nzAlign="center">
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'updateUserBtn'"
-                            (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
-                                nzType="edit"></i></button>
-                        <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteUserBtn'"
-                            (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
-                    </td>
-                </tr>
-            </tbody>
-        </nz-table>
-    </div>
-    <div class="mt-10">
-        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
-            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
-    </div>
-</nz-card>
+</div>
 
 <ng-template #addUserTitleTpl>
     <span>添加用户</span>

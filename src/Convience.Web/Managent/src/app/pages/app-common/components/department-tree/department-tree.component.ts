@@ -1,7 +1,8 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
-import { Department } from '../model/department';
+
 import { DepartmentService } from 'src/app/business/department.service';
 import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/tree';
+import { Department } from 'src/app/pages/group-manage/model/department';
 
 @Component({
   selector: 'app-department-tree',

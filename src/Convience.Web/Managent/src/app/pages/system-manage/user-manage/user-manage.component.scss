@@ -2,16 +2,49 @@ nz-tag {
   margin: 0;
 }
 
-#searchBar {
-  nz-form-label{
-    width: 70px;
+.two-column {
+  display: flex;
+  justify-content: space-between;
+  height: 100%;
+
+  .left {
+    width: 300px;
+    height: 100%;
+    nz-card {
+      height: 100%;
+      margin-top: 10px;
+    }
   }
 
-  input {
-    width: 150px;
+  .right {
+    width: calc(100% - 310px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+
+    #searchBar {
+      margin-top: 0;
+
+      nz-form-label {
+        width: 70px;
+      }
+
+      input {
+        width: 150px;
+      }
+
+      nz-select {
+        width: 150px;
+      }
+    }
+
+    #userCard {
+      flex-grow: 1;
+    }
   }
 
-  nz-select {
-    width: 150px;
+  nz-card {
+    height: auto;
   }
 }

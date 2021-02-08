@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Department } from '../model/department';
-import { DepartmentTreeComponent } from '../department-tree/department-tree.component';
 import { debounceTime } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from 'src/app/business/user.service';
@@ -32,7 +31,7 @@ export class DepartmentManageComponent implements OnInit {
   contentTpl;
 
   @ViewChild('tree', { static: true })
-  tree: DepartmentTreeComponent;
+  tree: any;
 
   editForm: FormGroup = new FormGroup({});
 
