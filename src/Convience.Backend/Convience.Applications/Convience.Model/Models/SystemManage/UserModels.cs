@@ -15,6 +15,10 @@ namespace Convience.Model.Models.SystemManage
         public string Name { get; set; }
 
         public string RoleId { get; set; }
+
+        public int? Department { get; set; }
+
+        public int? Position { get; set; }
     }
 
     public class UserViewModel
@@ -33,6 +37,10 @@ namespace Convience.Model.Models.SystemManage
 
         public string RoleIds { get; set; }
 
+        public string PositionIds { get; set; }
+
+        public string DepartmentId { get; set; }
+
         public bool IsActive { get; set; }
 
         public string Password { get; set; }
@@ -41,5 +49,11 @@ namespace Convience.Model.Models.SystemManage
     public class UserResultModel : UserViewModel
     {
         public DateTime CreatedTime { get; set; }
+
+        public string RoleName { get; set; }
+
+        public string PositionName { get; set; }
+
+        public string DepartmentName { get; set; }
     }
 }

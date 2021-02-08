@@ -39,6 +39,16 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
+                    <nz-form-label [nzSm]="6" [nzXs]="24">职位</nz-form-label>
+                    <nz-form-control [nzSm]="14" [nzXs]="24">
+                        <nz-select style="width: 150px;" nzAllowClear nzPlaceHolder="请选择职位" formControlName="position">
+                            <nz-option *ngFor="let position of positionOptions" [nzValue]="position.id"
+                                [nzLabel]="position.name">
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
                     <nz-form-control>
                         <button nz-button nzType="primary">搜索</button>
                         <button nz-button nzType="outline" type="button" class="ml-10"
@@ -57,7 +67,7 @@
             </div>
             <div class="mt-10">
                 <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
-                    nzBordered="true">
+                    nzBordered="true" [nzScroll]="{ x: '1800px' }">
                     <thead>
                         <tr>
                             <th nzAlign="center" nzWidth="50px">#</th>
@@ -67,6 +77,8 @@
                             <th nzAlign="center" nzWidth="120px">电话号码</th>
                             <th nzAlign="center" nzWidth="60px">性别</th>
                             <th nzAlign="center">系统角色</th>
+                            <th nzAlign="center" nzWidth="180px">担任职务</th>
+                            <th nzAlign="center" nzWidth="180px">所在部门</th>
                             <th nzAlign="center" nzWidth="60px">状态</th>
                             <th nzAlign="center" nzWidth="180px">创建时间</th>
                             <th nzAlign="center" nzWidth="120px">操作</th>
@@ -84,7 +96,9 @@
                             <td nzAlign="center">{{ data.name }}</td>
                             <td nzAlign="center">{{ data.phoneNumber }}</td>
                             <td nzAlign="center">{{ data.sex | gender }}</td>
-                            <td nzAlign="center">{{ getRoleName(data.roleIds) }}</td>
+                            <td nzAlign="center">{{ data.roleName }}</td>
+                            <td nzAlign="center">{{ data.positionName }}</td>
+                            <td nzAlign="center">{{ data.departmentName }}</td>
                             <td nzAlign="center">
                                 <nz-tag *ngIf="!data.isActive" [nzColor]="'red'">停用</nz-tag>
                                 <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>

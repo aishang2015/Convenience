@@ -7,6 +7,8 @@ import { Role } from '../model/role';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
+import { Position } from '../../group-manage/model/position';
+import { PositionService } from 'src/app/business/position.service';
 
 @Component({
   selector: 'app-user-manage',
@@ -37,15 +39,19 @@ export class UserManageComponent implements OnInit {
 
   departmentNode: NzTreeNodeOptions[] = [];
 
+  positionOptions: Position[] = [];
+
   constructor(
     private _formBuilder: FormBuilder,
     private _userService: UserService,
     private _roleService: RoleService,
     private _messageService: NzMessageService,
-    private _modalService: NzModalService) { }
+    private _modalService: NzModalService,
+    private _positionService: PositionService) { }
 
   ngOnInit(): void {
     this.initRoleList();
+    this.initPositionList();
     this.refresh();
     this.resetSearchForm();
   }
@@ -54,12 +60,18 @@ export class UserManageComponent implements OnInit {
     this._roleService.getRoleList().subscribe((result: any) => this.roles = result);
   }
 
+  initPositionList() {
+    this._positionService.getAll().subscribe((result: any) => this.positionOptions = result);
+  }
+
   refresh() {
     this._userService.getUsers(this.page, this.size,
+      this.selectedDepartmentKey,
       this._searchObject?.userName,
       this._searchObject?.phoneNumber,
       this._searchObject?.name,
-      this._searchObject?.roleid)
+      this._searchObject?.roleid,
+      this._searchObject?.position)
       .subscribe(result => {
         this.data = result['data'];
         this.total = result['count'];
@@ -132,6 +144,7 @@ export class UserManageComponent implements OnInit {
       phoneNumber: [null],
       name: [null],
       roleid: [null],
+      position: [null]
     });
   }
 
@@ -141,6 +154,7 @@ export class UserManageComponent implements OnInit {
     this._searchObject.phoneNumber = this.searchForm.value['phoneNumber'];
     this._searchObject.name = this.searchForm.value['name'];
     this._searchObject.roleid = this.searchForm.value['roleid'];
+    this._searchObject.position = this.searchForm.value['position'];
     this.refresh();
   }
 
@@ -175,17 +189,6 @@ export class UserManageComponent implements OnInit {
       }
     }
 
-  }
-
-  getRoleName(ids: string) {
-    let idarray = ids.split(',');
-    let result: string[] = [];
-    this.roles.forEach(r => {
-      if (idarray.includes(r.id)) {
-        result.push(r.name);
-      }
-    });
-    return result.join(',');
   }
 
   cancelEdit() {

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 
 using Convience.Entity.Data;
+using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Injection;
+using Convience.JwtAuthentication;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
@@ -51,6 +53,12 @@ namespace Convience.Service.SystemManage
 
         [Autowired]
         private readonly IRoleRepository _roleRepository;
+
+        [Autowired]
+        private readonly IRepository<Position> _positionRepository;
+
+        [Autowired]
+        private readonly IRepository<Department> _departmentRepository;
 
         [Autowired]
         private readonly IMapper _mapper;
@@ -117,7 +125,7 @@ namespace Convience.Service.SystemManage
 
         public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query)
         {
-            Expression<Func<SystemUser, bool>> where = ExpressionExtension.TrueExpression<SystemUser>()
+            var where = ExpressionExtension.TrueExpression<UserResultModel>()
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
@@ -132,31 +140,68 @@ namespace Convience.Service.SystemManage
                             select u;
             }
 
-            userQuery = from u in userQuery
-                        let q = from ur in _userRepository.GetUserRoles()
-                                join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
-                                where ur.UserId == u.Id
-                                select r.Id
-                        orderby u.Id descending
-                        select new SystemUser
-                        {
-                            Avatar = u.Avatar,
-                            Name = u.Name,
-                            UserName = u.UserName,
-                            PhoneNumber = u.PhoneNumber,
-                            Id = u.Id,
-                            IsActive = u.IsActive,
-                            Sex = u.Sex,
-                            CreatedTime = u.CreatedTime,
-                            RoleIds = string.Join(',', q.ToArray())
-                        };
+            if (query.Department != null)
+            {
+                userQuery = from u in userQuery
+                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                            where uc.ClaimType == CustomClaimTypes.UserDepartment &&
+                                    uc.ClaimValue == query.Department.ToString()
+                            select u;
+            }
+
+            if (query.Position != null)
+            {
+                userQuery = from u in userQuery
+                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                            where uc.ClaimType == CustomClaimTypes.UserPosition &&
+                                    uc.ClaimValue == query.Position.ToString()
+                            select u;
+            }
+
+            var resultQuery = from u in userQuery
+                              let rquery = from ur in _userRepository.GetUserRoles()
+                                           join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
+                                           where ur.UserId == u.Id
+                                           select new { r.Id, r.Name }
+
+                              let pquery = from uc in _userRepository.GetUserClaims()
+                                           from pinfo in _positionRepository.Get(false)
+                                           where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition &&
+                                                uc.ClaimValue == pinfo.Id.ToString()
+                                           select new { uc.ClaimValue, pinfo.Name }
+
+                              let dquery = from uc in _userRepository.GetUserClaims()
+                                           from dinfo in _departmentRepository.Get(false)
+                                           where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment &&
+                                                uc.ClaimValue == dinfo.Id.ToString()
+                                           select new { uc.ClaimValue, dinfo.Name }
+
+                              orderby u.Id descending
+                              select new UserResultModel
+                              {
+                                  Avatar = u.Avatar,
+                                  Name = u.Name,
+                                  UserName = u.UserName,
+                                  PhoneNumber = u.PhoneNumber,
+                                  Id = u.Id,
+                                  IsActive = u.IsActive,
+                                  Sex = (int)u.Sex,
+                                  CreatedTime = u.CreatedTime,
+                                  RoleIds = string.Join(',', rquery.Select(r => r.Id).ToArray()),
+                                  DepartmentId = dquery.FirstOrDefault().ClaimValue,
+                                  PositionIds = string.Join(',', pquery.Select(r => r.ClaimValue).ToArray()),
+
+                                  RoleName = string.Join(',', rquery.Select(r => r.Name).ToArray()),
+                                  DepartmentName = dquery.FirstOrDefault().Name,
+                                  PositionName = string.Join(',', pquery.Select(r => r.ClaimValue).ToArray()),
+                              };
 
             var skip = query.Size * (query.Page - 1);
-            var users = userQuery.Where(where).Skip(skip).Take(query.Size).ToArray();
+            var users = resultQuery.Where(where).Skip(skip).Take(query.Size).ToArray();
             return new PagingResultModel<UserResultModel>
             {
-                Data = _mapper.Map<SystemUser[], IEnumerable<UserResultModel>>(users).ToList(),
-                Count = userQuery.Where(where).Count()
+                Data = users,
+                Count = resultQuery.Where(where).Count()
             };
         }
 
