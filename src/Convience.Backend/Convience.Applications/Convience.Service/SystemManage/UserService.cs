@@ -92,6 +92,15 @@ namespace Convience.Service.SystemManage
                         await _unitOfWork.RollBackAsync(tran);
                         return "无法创建用户，设置角色失败！";
                     }
+
+                    // 更新部门信息
+                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                        new List<string> { model.DepartmentId });
+
+                    // 更新职位信息
+                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                        model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
                     await _unitOfWork.CommitAsync(tran);
                 }
                 catch (Exception e)
@@ -108,7 +117,25 @@ namespace Convience.Service.SystemManage
         public async Task<UserResultModel> GetUserAsync(string Id)
         {
             var user = await _userRepository.GetUserByIdAsync(Id);
-            return _mapper.Map<UserResultModel>(user);
+            return new UserResultModel
+            {
+                Avatar = user.Avatar,
+                Name = user.Name,
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Id = user.Id,
+                IsActive = user.IsActive,
+                Sex = (int)user.Sex,
+                CreatedTime = user.CreatedTime,
+
+                RoleIds = user.RoleIds,
+                DepartmentId = (from uc in _userRepository.GetUserClaims()
+                                where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment
+                                select uc.ClaimValue).FirstOrDefault().ToString(),
+                PositionIds = string.Join(',', (from uc in _userRepository.GetUserClaims()
+                                                where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition
+                                                select uc.ClaimValue).ToArray()),
+            };
         }
 
         public IEnumerable<DicResultModel> GetUserDic(string name)
@@ -162,19 +189,19 @@ namespace Convience.Service.SystemManage
                               let rquery = from ur in _userRepository.GetUserRoles()
                                            join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
                                            where ur.UserId == u.Id
-                                           select new { r.Id, r.Name }
+                                           select r.Name
 
                               let pquery = from uc in _userRepository.GetUserClaims()
                                            from pinfo in _positionRepository.Get(false)
                                            where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition &&
                                                 uc.ClaimValue == pinfo.Id.ToString()
-                                           select new { uc.ClaimValue, pinfo.Name }
+                                           select pinfo.Name
 
                               let dquery = from uc in _userRepository.GetUserClaims()
                                            from dinfo in _departmentRepository.Get(false)
                                            where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment &&
                                                 uc.ClaimValue == dinfo.Id.ToString()
-                                           select new { uc.ClaimValue, dinfo.Name }
+                                           select dinfo.Name
 
                               orderby u.Id descending
                               select new UserResultModel
@@ -187,13 +214,10 @@ namespace Convience.Service.SystemManage
                                   IsActive = u.IsActive,
                                   Sex = (int)u.Sex,
                                   CreatedTime = u.CreatedTime,
-                                  RoleIds = string.Join(',', rquery.Select(r => r.Id).ToArray()),
-                                  DepartmentId = dquery.FirstOrDefault().ClaimValue,
-                                  PositionIds = string.Join(',', pquery.Select(r => r.ClaimValue).ToArray()),
 
-                                  RoleName = string.Join(',', rquery.Select(r => r.Name).ToArray()),
-                                  DepartmentName = dquery.FirstOrDefault().Name,
-                                  PositionName = string.Join(',', pquery.Select(r => r.ClaimValue).ToArray()),
+                                  RoleName = string.Join(',', rquery.ToArray()),
+                                  DepartmentName = dquery.FirstOrDefault(),
+                                  PositionName = string.Join(',', pquery.ToArray()),
                               };
 
             var skip = query.Size * (query.Page - 1);
@@ -323,6 +347,15 @@ namespace Convience.Service.SystemManage
                             await _unitOfWork.RollBackAsync(tran);
                             return "可用的超级管理员数量不能为0！";
                         }
+
+                        // 更新部门信息
+                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                            new List<string> { model.DepartmentId });
+
+                        // 更新职位信息
+                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                            model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
                         await _unitOfWork.CommitAsync(tran);
                     }
                 }

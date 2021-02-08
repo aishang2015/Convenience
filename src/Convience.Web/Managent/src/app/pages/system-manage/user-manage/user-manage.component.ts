@@ -88,6 +88,8 @@ export class UserManageComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(10)]],
       phoneNumber: ['', [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
       roleIds: [[]],
+      department: [],
+      positions: [[]],
       sex: [0],
       isActive: [false],
     });
@@ -111,6 +113,8 @@ export class UserManageComponent implements OnInit {
         name: [user['name'], [Validators.required, Validators.maxLength(10)]],
         phoneNumber: [user['phoneNumber'], [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
         roleIds: [user['roleIds'].split(',')],
+        department: [Number(user['departmentId'])],
+        positions: [user['positionIds']?.split(',')],
         sex: [user['sex']],
         isActive: [user['isActive']],
       });
@@ -164,13 +168,15 @@ export class UserManageComponent implements OnInit {
       this.editForm.controls[i].updateValueAndValidity();
     }
     if (this.editForm.valid) {
-      let user = new User();
+      let user: any = {};
       user.avatar = this.editForm.value['avatar'];
       user.userName = this.editForm.value['userName'];
       user.password = this.editForm.value['password'];
       user.name = this.editForm.value['name'];
       user.phoneNumber = this.editForm.value['phoneNumber'].toString();
       user.roleIds = (this.editForm.value['roleIds']).filter(item => item !== '').join(',');
+      user.departmentId = this.editForm.value['department'];
+      user.positionIds = (this.editForm.value['positions']).filter(item => item !== '').join(',');
       user.sex = this.editForm.value['sex'];
       user.isActive = this.editForm.value['isActive'];
       if (this.editedUser.id) {

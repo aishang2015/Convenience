@@ -70,7 +70,7 @@
                     nzBordered="true" [nzScroll]="{ x: '1800px' }">
                     <thead>
                         <tr>
-                            <th nzAlign="center" nzWidth="50px">#</th>
+                            <th nzAlign="center" nzWidth="50px" nzLeft>#</th>
                             <th nzAlign="center" nzWidth="80px">头像</th>
                             <th nzAlign="center" nzWidth="120px">账号</th>
                             <th nzAlign="center" nzWidth="120px">姓名</th>
@@ -81,12 +81,12 @@
                             <th nzAlign="center" nzWidth="180px">所在部门</th>
                             <th nzAlign="center" nzWidth="60px">状态</th>
                             <th nzAlign="center" nzWidth="180px">创建时间</th>
-                            <th nzAlign="center" nzWidth="120px">操作</th>
+                            <th nzAlign="center" nzWidth="120px" nzRight>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let data of dataTable.data;let i = index">
-                            <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                            <td nzAlign="center" nzLeft>{{ i + 1 + (page - 1) * size }}</td>
                             <td nzAlign="center">
                                 <nz-avatar *ngIf="!data.avatar" nzSize="large" nzIcon="user"></nz-avatar>
                                 <nz-avatar *ngIf="data.avatar" nzSize="large" [nzSrc]="getImgUrl(data.avatar)">
@@ -104,7 +104,7 @@
                                 <nz-tag *ngIf="data.isActive" [nzColor]="'green'">激活</nz-tag>
                             </td>
                             <td nzAlign="center">{{ data.createdTime | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
-                            <td nzAlign="center">
+                            <td nzAlign="center" nzRight>
                                 <button nz-button nzType="default" nzShape="circle" *canOperate="'updateUserBtn'"
                                     (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
                                         nzType="edit"></i></button>
@@ -204,18 +204,37 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_isActive'">激活状态</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
-                <nz-switch [attr.id]="'edit_isActive'" formControlName="isActive" nzCheckedChildren="激活"
-                    nzUnCheckedChildren="停用"></nz-switch>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24">系统角色</nz-form-label>
             <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
                 <nz-select nzAllowClear nzPlaceHolder="请选择" [formControlName]="'roleIds'" nzMode="multiple">
                     <nz-option *ngFor="let role of roles" [nzValue]="role.id" [nzLabel]="role.name"></nz-option>
                 </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">选择部门</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-tree-select #menuTree [nzNodes]="departmentNode" nzPlaceHolder="请选择" formControlName="department"
+                    nzVirtualHeight="300px">
+                </nz-tree-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24">选择职务</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-select nzAllowClear nzPlaceHolder="请选择" [attr.id]="'roleid'" formControlName="positions"
+                    nzMode="multiple">
+                    <nz-option *ngFor="let role of positionOptions" [nzValue]="role.id.toString()"
+                        [nzLabel]="role.name">
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" [nzFor]="'edit_isActive'">激活状态</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="roleNameErrorTpl">
+                <nz-switch [attr.id]="'edit_isActive'" formControlName="isActive" nzCheckedChildren="激活"
+                    nzUnCheckedChildren="停用"></nz-switch>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
