@@ -30,7 +30,6 @@ export class LayoutComponent implements OnInit {
     {
       canOperate: 'groupmanage', routerLink: '', iconType: 'team', firstBreadcrumb: '', lastBreadcrumb: '', name: '组织管理',
       children: [
-        { canOperate: 'employeeManage', routerLink: '/group/employee', iconType: 'reconciliation', firstBreadcrumb: '组织管理', lastBreadcrumb: '员工管理', name: '员工管理', },
         { canOperate: 'positionManage', routerLink: '/group/position', iconType: 'credit-card', firstBreadcrumb: '组织管理', lastBreadcrumb: '职位管理', name: '职位管理', },
         { canOperate: 'departmentManage', routerLink: '/group/department', iconType: 'apartment', firstBreadcrumb: '组织管理', lastBreadcrumb: '部门管理', name: '部门管理', },
       ]
