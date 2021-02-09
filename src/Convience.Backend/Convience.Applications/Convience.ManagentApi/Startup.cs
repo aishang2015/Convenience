@@ -3,6 +3,7 @@ using Convience.CapMQ;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Filestorage.Filesystem;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
@@ -57,7 +58,7 @@ namespace Convience.ManagentApi
                 .AddPostgreHangFire(dbConnectionString)
                 .AddPostgreCap(dbConnectionString, mqConnectionString)
                 .AddMemoryCache()
-                .AddMongoDBFileManage(mdbConnectionConfig)
+                .AddFileSystemStore(Configuration)
                 .AddServices()
                 .AddCachingServices()
                 .AddResponseCompression()
