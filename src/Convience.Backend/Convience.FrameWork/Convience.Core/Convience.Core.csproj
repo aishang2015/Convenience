@@ -17,7 +17,6 @@
     <ProjectReference Include="..\Convience.Fluentvalidation\Convience.Fluentvalidation.csproj" />
     <ProjectReference Include="..\Convience.Injection\Convience.Injection.csproj" />
     <ProjectReference Include="..\Convience.Jwtauthentication\Convience.JwtAuthentication.csproj" />
-    <ProjectReference Include="..\Convience.MessageQueue\Convience.CapMQ\Convience.CapMQ.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Background\Convience.Background.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Hangfire\Convience.Hangfire.csproj" />
     <ProjectReference Include="..\Convience.Taskscheduling\Convience.Quartz\Convience.Quartz.csproj" />

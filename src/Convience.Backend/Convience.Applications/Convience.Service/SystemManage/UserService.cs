@@ -131,7 +131,7 @@ namespace Convience.Service.SystemManage
                 RoleIds = user.RoleIds,
                 DepartmentId = (from uc in _userRepository.GetUserClaims()
                                 where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment
-                                select uc.ClaimValue).FirstOrDefault().ToString(),
+                                select uc.ClaimValue.ToString()).FirstOrDefault(),
                 PositionIds = string.Join(',', (from uc in _userRepository.GetUserClaims()
                                                 where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition
                                                 select uc.ClaimValue).ToArray()),
