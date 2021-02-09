@@ -1,7 +1,7 @@
 ﻿using Convience.Entity.Data;
 using Convience.Entity.Entity;
-using Convience.Entity.Entity.OperateLog;
-using Convience.ManagentApi.Infrastructure.OperateLog;
+using Convience.Entity.Entity.Logs;
+using Convience.ManagentApi.Infrastructure.Logs;
 using Convience.Util.Helpers;
 
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +31,7 @@ namespace Convience.ManagentApi.Infrastructure
             InitUsers(userManager);
             InitMenuTree(dbContext);
             InitOpreationInfo(dbContext);
+            InitLoginLogSetting(dbContext);
         }
 
         public static void InitUsers(UserManager<SystemUser> userManager)
@@ -352,6 +353,17 @@ namespace Convience.ManagentApi.Infrastructure
                 });
             });
 
+            dbContext.SaveChanges();
+        }
+
+
+        private static void InitLoginLogSetting(SystemIdentityDbContext dbContext)
+        {
+            var setting = new LoginLogSetting
+            {
+                SaveTime = 14,
+            };
+            dbContext.Add(setting);
             dbContext.SaveChanges();
         }
     }

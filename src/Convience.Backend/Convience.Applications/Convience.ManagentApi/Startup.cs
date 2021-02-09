@@ -41,8 +41,6 @@ namespace Convience.ManagentApi
         public void ConfigureServices(IServiceCollection services)
         {
             var dbConnectionString = Configuration.GetConnectionString("PostgreSQL");
-            var mqConnectionString = Configuration.GetConnectionString("RabbitMQ");
-            var mdbConnectionConfig = Configuration.GetSection("MongoDb");
             var jwtOption = Configuration.GetSection("JwtOption");
 
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()

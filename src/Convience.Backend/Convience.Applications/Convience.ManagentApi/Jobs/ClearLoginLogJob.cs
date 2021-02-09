@@ -5,40 +5,41 @@ using Convience.Entity.Entity.Logs;
 using Convience.EntityFrameWork.Repositories;
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Jobs
 {
-    public class ClearOperateLogJob
+    public class ClearLoginLogJob
     {
-        private readonly IRepository<OperateLogDetail> _logDetaiRrepository;
 
-        private readonly ICachingService<OperateLogSetting> _logSettingCaching;
+        private readonly IRepository<LoginLogDetail> _loginLogDetail;
+
+        private readonly ICachingService<LoginLogSetting> _loginSetting;
 
         private readonly SystemIdentityDbUnitOfWork _systemIdentityDbUnitOfWork;
 
 
-        public ClearOperateLogJob(
-            IRepository<OperateLogDetail> logDetaiRrepository,
-            ICachingService<OperateLogSetting> logSettingCaching,
+        public ClearLoginLogJob(
+            IRepository<LoginLogDetail> logDetailRrepository,
+            ICachingService<LoginLogSetting> loginSetting,
             SystemIdentityDbUnitOfWork systemIdentityDbUnitOfWork)
         {
-            _logDetaiRrepository = logDetaiRrepository;
-            _logSettingCaching = logSettingCaching;
+            _loginLogDetail = logDetailRrepository;
+            _loginSetting = loginSetting;
             _systemIdentityDbUnitOfWork = systemIdentityDbUnitOfWork;
         }
 
         public async Task Run()
         {
             // 清理过期的日志
-            var settings = _logSettingCaching.GetCacheData();
-            foreach (var setting in settings)
+            var setting = _loginSetting.GetCacheData(60 * 60 * 24).FirstOrDefault();
+            if (setting != null)
             {
                 var expire = DateTime.Now.AddDays(-setting.SaveTime);
-                await _logDetaiRrepository.RemoveAsync(d => d.OperateAt < expire && d.SettingId == setting.Id);
+                await _loginLogDetail.RemoveAsync(d => d.OperateAt < expire);
             }
             await _systemIdentityDbUnitOfWork.SaveAsync();
         }
-
     }
 }

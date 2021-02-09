@@ -2,7 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
-using Convience.Entity.Entity.OperateLog;
+using Convience.Entity.Entity.Logs;
 using Convience.Entity.Entity.WorkFlows;
 using Convience.Model.Models.ContentManage;
 using Convience.Model.Models.GroupManage;

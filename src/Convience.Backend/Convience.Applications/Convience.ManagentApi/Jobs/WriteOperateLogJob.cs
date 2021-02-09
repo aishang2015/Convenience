@@ -1,9 +1,9 @@
 ﻿using AppService.Service;
 
 using Convience.Entity.Data;
-using Convience.Entity.Entity.OperateLog;
+using Convience.Entity.Entity.Logs;
 using Convience.EntityFrameWork.Repositories;
-using Convience.ManagentApi.Infrastructure.OperateLog;
+using Convience.ManagentApi.Infrastructure.Logs;
 
 using Microsoft.AspNetCore.Http;
 

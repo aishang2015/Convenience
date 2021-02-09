@@ -1,4 +1,5 @@
 ﻿using Convience.JwtAuthentication;
+using Convience.ManagentApi.Infrastructure.Logs.LoginLog;
 using Convience.Model.Models.Account;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
@@ -39,6 +40,7 @@ namespace Convience.ManagentApi.Controllers
         }
 
         [HttpPost("login")]
+        [LoginLogFilter]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             // 验证验证码

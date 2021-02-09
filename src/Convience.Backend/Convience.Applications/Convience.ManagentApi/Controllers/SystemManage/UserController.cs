@@ -1,6 +1,6 @@
 ﻿using Convience.Injection;
 using Convience.ManagentApi.Infrastructure.Authorization;
-using Convience.ManagentApi.Infrastructure.OperateLog;
+using Convience.ManagentApi.Infrastructure.Logs;
 using Convience.Model.Models.SystemManage;
 using Convience.Service.SystemManage;
 using Convience.Util.Extension;

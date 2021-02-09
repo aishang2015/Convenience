@@ -154,7 +154,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     ];
     const chart = new Chart({
       container: 'c2',
-      autoFit: true,
+      width: 400,
       height: 400,
     });
     chart.data(data);
@@ -369,7 +369,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const color = ['#0086FA', '#FFBF00', '#F5222D'];
     const chart = new Chart({
       container: 'c4',
-      autoFit: true,
+      width: 500,
       height: 500,
       padding: [0, 0, 30, 0],
     });
