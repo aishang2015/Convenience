@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -30,6 +30,9 @@ export class OperateLogViewComponent implements OnInit {
   public page = 1;
   public size = 10;
   public total = 0;
+
+  @ViewChild("settingTpl", { static: true })
+  settingTpl;
 
   constructor(private _operateLogService: OperateLogService,
     private _modalService: NzModalService,
@@ -101,5 +104,15 @@ export class OperateLogViewComponent implements OnInit {
       }
     }
     this.initData();
+  }
+
+  // 打开配置页面
+  openOperateLogSettingPage() {
+    this._modalService.create({
+      nzContent: this.settingTpl,
+      nzTitle: null,
+      nzFooter: null,
+      nzWidth: '1400px'
+    })
   }
 }

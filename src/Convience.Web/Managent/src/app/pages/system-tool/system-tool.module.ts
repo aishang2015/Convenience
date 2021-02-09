@@ -40,7 +40,6 @@ import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
       { path: 'hangfire', component: ManageUiComponent, data: { uri: 'taskview' }, canActivate: [LoginGuard] },
       { path: 'cap', component: ManageUiComponent, data: { uri: 'cap' }, canActivate: [LoginGuard] },
       { path: 'code', component: CodeGeneratorComponent, canActivate: [LoginGuard] },
-      { path: 'logManage', component: OperateLogManageComponent, canActivate: [LoginGuard] },
       { path: 'logDetail', component: OperateLogViewComponent, canActivate: [LoginGuard] },
     ]),
 

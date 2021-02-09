@@ -25,7 +25,7 @@
         </ul>
         <div class="user">
             <a nz-dropdown [nzDropdownMenu]="menu" [nzOverlayStyle]="{width:'130px',top:'15px'}" class="userName">
-                <nz-badge nzDot>
+                <nz-badge>
                     <nz-avatar *ngIf="!avatar" nzIcon="user"></nz-avatar>
                     <nz-avatar *ngIf="avatar" [nzSrc]="getImgUrl(avatar)"></nz-avatar>
                 </nz-badge>
@@ -34,7 +34,6 @@
             </a>
             <nz-dropdown-menu #menu="nzDropdownMenu">
                 <ul nz-menu nzSelectable>
-                    <li nz-menu-item>个人信息</li>
                     <li nz-menu-item (click)="modifyPwd()">修改密码
                     </li>
                     <li nz-menu-divider></li>

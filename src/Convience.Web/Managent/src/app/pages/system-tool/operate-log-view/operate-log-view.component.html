@@ -38,6 +38,9 @@
 </nz-card>
 
 <nz-card [nzSize]="'small'" class="full-double">
+
+    <button nz-button nzType="outline" (click)="openOperateLogSettingPage()"><i nz-icon nzType="setting"
+            nzTheme="outline"></i>设置</button>
     <div class="mt-10">
         <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
             nzBordered="true" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: '2460px' }">
@@ -86,3 +89,8 @@
             nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
     </div>
 </nz-card>
+
+
+<ng-template #settingTpl>
+    <app-operate-log-manage></app-operate-log-manage>
+</ng-template>
