@@ -13,6 +13,7 @@ const routes: Routes = [
       { path: "content", loadChildren: () => import("./pages/content-manage/content-manage.module").then(m => m.ContentManageModule) },
       { path: "tool", loadChildren: () => import("./pages/system-tool/system-tool.module").then(m => m.SystemToolModule) },
       { path: "workflow", loadChildren: () => import("./pages/workflow/workflow.module").then(m => m.WorkflowModule) },
+      { path: "log", loadChildren: () => import("./pages/system-log/system-log.module").then(m => m.SystemLogModule) },
     ]
   },
   { path: "**", loadChildren: () => import("./pages/nofound/nofound.module").then(m => m.NofoundModule) },
