@@ -1,7 +1,7 @@
 ﻿using AppService.Service;
 
 using Convience.Entity.Data;
-using Convience.Entity.Entity.OperateLog;
+using Convience.Entity.Entity.Logs;
 using Convience.EntityFrameWork.Repositories;
 
 using System;

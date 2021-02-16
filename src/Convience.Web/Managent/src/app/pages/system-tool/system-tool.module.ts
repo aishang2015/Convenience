@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { CodeGeneratorComponent } from './code-generator/code-generator.component';
-import { OperateLogManageComponent } from './operate-log-manage/operate-log-manage.component';
-import { OperateLogViewComponent } from './operate-log-view/operate-log-view.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
 import { ManageUiComponent } from './manage-ui/manage-ui.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -29,8 +27,6 @@ import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
   declarations: [
     CodeGeneratorComponent,
     ManageUiComponent,
-    OperateLogManageComponent,
-    OperateLogViewComponent
   ],
   imports: [
     CommonModule,
@@ -40,8 +36,6 @@ import { NzCodeEditorModule } from 'ng-zorro-antd/code-editor';
       { path: 'hangfire', component: ManageUiComponent, data: { uri: 'taskview' }, canActivate: [LoginGuard] },
       { path: 'cap', component: ManageUiComponent, data: { uri: 'cap' }, canActivate: [LoginGuard] },
       { path: 'code', component: CodeGeneratorComponent, canActivate: [LoginGuard] },
-      { path: 'logManage', component: OperateLogManageComponent, canActivate: [LoginGuard] },
-      { path: 'logDetail', component: OperateLogViewComponent, canActivate: [LoginGuard] },
     ]),
 
     // NGZorro组件

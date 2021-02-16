@@ -3,7 +3,7 @@
 using AutoMapper;
 
 using Convience.Entity.Data;
-using Convience.Entity.Entity.OperateLog;
+using Convience.Entity.Entity.Logs;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemTool;

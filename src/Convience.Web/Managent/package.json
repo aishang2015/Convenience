@@ -28,7 +28,7 @@
     "jsplumb": "^2.13.2",
     "jszip": "^3.4.0",
     "monaco-editor": "^0.21.2",
-    "ng-zorro-antd": "^11.0.0",
+    "ng-zorro-antd": "^11.1.0",
     "rxjs": "~6.5.4",
     "tinymce": "^5.4.1",
     "tslib": "^2.0.0",

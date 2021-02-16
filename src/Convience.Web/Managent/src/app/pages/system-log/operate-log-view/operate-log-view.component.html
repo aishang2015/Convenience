@@ -1,0 +1,96 @@
+<nz-card [nzSize]="'small'" id="searchBar">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+
+        <nz-form-item>
+            <nz-form-label [nzFor]="'module'">模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="模块名" [formControlName]="'module'" [attr.id]="'module'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'submodule'">子模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="子模块名" [formControlName]="'submodule'" [attr.id]="'submodule'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'operator'">操作人</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="操作人" [formControlName]="'operator'" [attr.id]="'operator'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'operateAt'">操作时间</nz-form-label>
+            <nz-form-control>
+                <nz-range-picker [nzShowTime]="true" [formControlName]="'operateAt'" [attr.id]="'operateAt'">
+                </nz-range-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+
+<nz-card [nzSize]="'small'" class="full-double">
+
+    <button nz-button nzType="outline" (click)="openOperateLogSettingPage()" *canOperate="'updateLogSettingBtn'"><i
+            nz-icon nzType="setting" nzTheme="outline"></i>设置</button>
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+            nzBordered="true" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: '2460px' }">
+            <thead>
+                <tr>
+                    <th nzAlign="center" nzWidth="50px">#</th>
+                    <th nzAlign="center" nzWidth="200px" nzColumnKey="module" [nzSortFn]="true" [nzSortPriority]="true">
+                        模块名</th>
+                    <th nzAlign="center" nzWidth="200px" nzColumnKey="subModule" [nzSortFn]="true"
+                        [nzSortPriority]="true">子模块名</th>
+                    <th nzAlign="center" nzWidth="200px">功能</th>
+                    <th nzAlign="center" nzWidth="200px">请求uri</th>
+                    <th nzAlign="center" nzWidth="100px">请求方法</th>
+                    <th nzAlign="center">http请求内容</th>
+                    <!-- <th nzAlign="center" nzWidth="200px">变更字段</th>
+                    <th nzAlign="center" nzWidth="200px">旧值</th>
+                    <th nzAlign="center" nzWidth="200px">新值</th> -->
+                    <th nzAlign="center" nzWidth="100px">操作结果</th>
+                    <th nzAlign="center" nzWidth="100px" nzColumnKey="operatorName" [nzSortFn]="true"
+                        [nzSortPriority]="true">操作人</th>
+                    <th nzAlign="center" nzWidth="200px" nzColumnKey="operateAt" [nzSortFn]="true"
+                        [nzSortPriority]="true">操作时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data;let i = index">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">{{ data.moduleName}}</td>
+                    <td nzAlign="center">{{ data.subModuleName}}</td>
+                    <td nzAlign="center">{{ data.function}}</td>
+                    <td nzAlign="center">{{ data.uri}}</td>
+                    <td nzAlign="center">{{ data.method}}</td>
+                    <td nzAlign="center">{{ data.content}}</td>
+                    <td nzAlign="center">{{ data.resultCode}}</td>
+                    <!-- <td nzAlign="center">{{ data.updateField}}</td>
+                    <td nzAlign="center">{{ data.oldValue}}</td>
+                    <td nzAlign="center">{{ data.newValue}}</td> -->
+                    <td nzAlign="center">{{ data.operatorName}}</td>
+                    <td nzAlign="center">{{ data.operateAt | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
+    </div>
+</nz-card>
+
+
+<ng-template #settingTpl>
+    <app-operate-log-manage></app-operate-log-manage>
+</ng-template>

@@ -81,4 +81,6 @@ export class UriConfig {
     get OperateLogSettingUri(): string { return `${this._apiUri}/operateLogSetting` };
 
     get OperateLogDetailUri(): string { return `${this._apiUri}/operateLogDetail` };
+
+    get LoginLogUri(): string { return `${this._apiUri}/loginLog` };
 }

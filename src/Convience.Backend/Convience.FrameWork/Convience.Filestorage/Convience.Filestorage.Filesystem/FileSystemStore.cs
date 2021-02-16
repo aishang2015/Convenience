@@ -1,6 +1,8 @@
 ﻿using Convience.Filestorage.Abstraction;
 
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders.Physical;
+using Microsoft.Extensions.Options;
 
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,17 @@ namespace Convience.Filestorage.Filesystem
     {
         private readonly string _fileSystemRootPath;
 
-        public FileSystemStore(string fileSystemPath)
+        public FileSystemStore(IOptions<FileSystemStoreOption> fileSystemStoreOption,
+            IWebHostEnvironment webHostEnvironment)
         {
-            _fileSystemRootPath = Path.GetFullPath(fileSystemPath);
+            if (!string.IsNullOrEmpty(fileSystemStoreOption.Value?.RootPath))
+            {
+                _fileSystemRootPath = fileSystemStoreOption.Value.RootPath;
+            }
+            else
+            {
+                _fileSystemRootPath = Path.Combine(webHostEnvironment.ContentRootPath, "fileStore");
+            }
         }
 
         public Task<IFileStoreEntry> GetFileInfoAsync(string path)

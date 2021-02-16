@@ -1,0 +1,99 @@
+<nz-card [nzSize]="'small'" id="searchBar">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <nz-form-item>
+            <nz-form-label [nzFor]="'module'">模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="模块名" [formControlName]="'module'" [attr.id]="'module'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzFor]="'submodule'">子模块名</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="子模块名" [formControlName]="'submodule'" [attr.id]="'submodule'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+<nz-card [nzSize]="'small'" class="full-double">
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+            nzBordered="true" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: '2460px' }">
+            <thead>
+                <tr>
+                    <th nzAlign="center" nzWidth="50px">#</th>
+                    <th nzAlign="center" nzWidth="200px" nzColumnKey="module" [nzSortFn]="true" [nzSortPriority]="true">
+                        模块名</th>
+                    <th nzAlign="center" nzWidth="200px" nzColumnKey="subModule" [nzSortFn]="true"
+                        [nzSortPriority]="true">子模块名</th>
+                    <th nzAlign="center" nzWidth="200px">功能</th>
+                    <th nzAlign="center">控制器</th>
+                    <th nzAlign="center" nzWidth="200px">动作</th>
+                    <th nzAlign="center" nzWidth="200px">方法</th>
+                    <th nzAlign="center" nzWidth="200px">保存时间</th>
+                    <th nzAlign="center" nzWidth="200px">是否记录日志</th>
+                    <th nzAlign="center" nzWidth="120px">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data;let i = index">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">{{data.moduleName}}</td>
+                    <td nzAlign="center">{{data.subModuleName}}</td>
+                    <td nzAlign="center">{{data.function}}</td>
+                    <td nzAlign="center">{{data.controller}}</td>
+                    <td nzAlign="center">{{data.action}}</td>
+                    <td nzAlign="center">{{data.method}}</td>
+                    <td nzAlign="center">{{data.saveTime}}</td>
+                    <td nzAlign="center">
+                        <nz-tag *ngIf="data.isRecord" nzColor="success">是</nz-tag>
+                        <nz-tag *ngIf="!data.isRecord" nzColor="default">否</nz-tag>
+                    </td>
+                    <td nzAlign="center">
+                        <button nz-button nzType="default" nzShape="circle" 
+                            (click)="edit(data)" class="mr-10"><i nz-icon nzType="edit"></i></button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
+    </div>
+</nz-card>
+
+<ng-template #editTpl>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="8" [nzXs]="24" [nzFor]="'edit_savetime'">记录保存时间（天）</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="savetimeErrorTpl">
+                <nz-input-number [attr.id]="'edit_savetime'" formControlName="savetime" [nzMin]="1" [nzMax]="365"
+                    [nzStep]="1"></nz-input-number>
+            </nz-form-control>
+            <ng-template #savetimeErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入时间！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="8" [nzXs]="24" [nzFor]="'edit_isRecord'">是否记录该类型日志</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24">
+                <nz-switch [attr.id]="'edit_isRecord'" formControlName="isRecord"></nz-switch>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="8">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancelEdit()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>

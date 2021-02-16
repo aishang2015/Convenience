@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PositionManageComponent } from './position-manage/position-manage.component';
 import { AppCommonModule } from '../app-common/app-common.module';
-import { DepartmentTreeComponent } from './department-tree/department-tree.component';
 import { DepartmentManageComponent } from './department-manage/department-manage.component';
-import { EmployeeComponent } from './employee/employee.component';
 import { LoginGuard } from 'src/app/guards/login.guard';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -25,9 +23,7 @@ import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 @NgModule({
   declarations: [
     PositionManageComponent,
-    DepartmentTreeComponent,
     DepartmentManageComponent,
-    EmployeeComponent,
   ],
   imports: [
     CommonModule,
@@ -35,7 +31,6 @@ import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
     RouterModule.forChild([
       { path: 'position', component: PositionManageComponent, canActivate: [LoginGuard] },
       { path: 'department', component: DepartmentManageComponent, canActivate: [LoginGuard] },
-      { path: 'employee', component: EmployeeComponent, canActivate: [LoginGuard] },
     ]),
     
     // NGZorro组件

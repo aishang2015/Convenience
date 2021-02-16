@@ -1,8 +1,8 @@
 using Convience.Caching;
-using Convience.CapMQ;
 using Convience.Entity.Data;
 using Convience.EntityFrameWork.Infrastructure;
 using Convience.EntityFrameWork.Repositories;
+using Convience.Filestorage.Filesystem;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
@@ -41,8 +41,6 @@ namespace Convience.ManagentApi
         public void ConfigureServices(IServiceCollection services)
         {
             var dbConnectionString = Configuration.GetConnectionString("PostgreSQL");
-            var mqConnectionString = Configuration.GetConnectionString("RabbitMQ");
-            var mdbConnectionConfig = Configuration.GetSection("MongoDb");
             var jwtOption = Configuration.GetSection("JwtOption");
 
             services.AddControllers().AddControllersAsServices().AddNewtonsoftJson()
@@ -55,9 +53,8 @@ namespace Convience.ManagentApi
                 .AddSwashbuckle()
                 .AddAutoMapper()
                 .AddPostgreHangFire(dbConnectionString)
-                .AddPostgreCap(dbConnectionString, mqConnectionString)
                 .AddMemoryCache()
-                .AddMongoDBFileManage(mdbConnectionConfig)
+                .AddFileSystemStore(Configuration)
                 .AddServices()
                 .AddCachingServices()
                 .AddResponseCompression()
@@ -157,13 +154,6 @@ namespace Convience.ManagentApi
         public static IServiceCollection AddMongoDBFileManage(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMongoDBFileStore(configuration);
-            return services;
-        }
-
-        public static IServiceCollection AddPostgreCap(this IServiceCollection services, string dbConnectionString, string mqConnectionString)
-        {
-            services.AddCapMQ<SystemIdentityDbContext>(CapDataBaseType.PostgreSQL, dbConnectionString,
-                 CapMessageQueryType.RabbitMQ, mqConnectionString);
             return services;
         }
 

@@ -1,0 +1,73 @@
+<nz-card [nzSize]="'small'" id="searchBar">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+        <nz-form-item>
+            <nz-form-label [nzFor]="'module'">登录账号</nz-form-label>
+            <nz-form-control>
+                <input nz-input placeholder="登录账号" [formControlName]="'account'" [attr.id]="'module'"
+                    autocomplete="off" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control>
+                <button nz-button nzType="primary">搜索</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-card>
+
+<nz-card [nzSize]="'small'" class="full-double">
+
+    <button nz-button nzType="outline" (click)="setLoginLogSetting()"  *canOperate="'updateLoginLogSettingBtn'"><i nz-icon nzType="setting"
+            nzTheme="outline"></i>设置</button>
+    <div class="mt-10">
+        <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
+            nzBordered="true">
+            <thead>
+                <tr>
+                    <th nzAlign="center" nzWidth="50px">#</th>
+                    <th nzAlign="center" nzWidth="200px">登录名</th>
+                    <th nzAlign="center" nzWidth="200px">登录时间</th>
+                    <th nzAlign="center" nzWidth="200px">ip地址</th>
+                    <th nzAlign="center" nzWidth="200px">是否成功</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let data of dataTable.data;let i = index">
+                    <td nzAlign="center">{{ i + 1 + (page - 1) * size }}</td>
+                    <td nzAlign="center">{{ data.operatorAccount}}</td>
+                    <td nzAlign="center">{{ data.operateAt | date: 'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td nzAlign="center">{{ data.ipAddress}}</td>
+                    <td nzAlign="center">{{ data.isSuccess?"成功":"失败"}}</td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </div>
+    <div class="mt-10">
+        <nz-pagination [(nzPageSize)]="size" [(nzPageIndex)]="page" [nzTotal]="total" nzShowSizeChanger
+            nzShowQuickJumper (nzPageIndexChange)="pageChange()" (nzPageSizeChange)="sizeChange()"></nz-pagination>
+    </div>
+</nz-card>
+
+
+<ng-template #settingTpl>
+    <form nz-form [formGroup]="settingForm" (ngSubmit)="submitSetting()">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSm]="8" [nzXs]="24" [nzFor]="'edit_savetime'">记录保存时间（天）</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="savetimeErrorTpl">
+                <nz-input-number [attr.id]="'edit_savetime'" formControlName="savetime" [nzMin]="1" [nzMax]="365"
+                    [nzStep]="1"></nz-input-number>
+            </nz-form-control>
+            <ng-template #savetimeErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入天数！
+                </ng-container>
+            </ng-template>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="8">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancelEdit()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>

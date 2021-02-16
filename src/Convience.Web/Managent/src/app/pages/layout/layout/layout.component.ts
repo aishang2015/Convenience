@@ -30,7 +30,6 @@ export class LayoutComponent implements OnInit {
     {
       canOperate: 'groupmanage', routerLink: '', iconType: 'team', firstBreadcrumb: '', lastBreadcrumb: '', name: '组织管理',
       children: [
-        { canOperate: 'employeeManage', routerLink: '/group/employee', iconType: 'reconciliation', firstBreadcrumb: '组织管理', lastBreadcrumb: '员工管理', name: '员工管理', },
         { canOperate: 'positionManage', routerLink: '/group/position', iconType: 'credit-card', firstBreadcrumb: '组织管理', lastBreadcrumb: '职位管理', name: '职位管理', },
         { canOperate: 'departmentManage', routerLink: '/group/department', iconType: 'apartment', firstBreadcrumb: '组织管理', lastBreadcrumb: '部门管理', name: '部门管理', },
       ]
@@ -52,14 +51,18 @@ export class LayoutComponent implements OnInit {
       ]
     },
     {
-      canOperate: 'systemtool', routerLink: '', iconType: 'tool', firstBreadcrumb: '', lastBreadcrumb: '', name: '系统工具',
+      canOperate: 'logmanage', routerLink: '', iconType: 'container', firstBreadcrumb: '', lastBreadcrumb: '', name: '日志管理',
       children: [
-        { canOperate: 'logMange', routerLink: '/tool/logManage', iconType: 'login', firstBreadcrumb: '系统工具', lastBreadcrumb: '操作日志', name: '操作日志配置', },
-        { canOperate: 'logDetail', routerLink: '/tool/logDetail', iconType: 'login', firstBreadcrumb: '系统工具', lastBreadcrumb: '操作日志', name: '操作日志内容', },
+        { canOperate: 'operatelog', routerLink: '/log/operate', iconType: 'edit', firstBreadcrumb: '日志管理', lastBreadcrumb: '操作日志', name: '操作日志', },
+        { canOperate: 'loginlog', routerLink: '/log/login', iconType: 'login', firstBreadcrumb: '日志管理', lastBreadcrumb: '登录日志', name: '登录日志', },
+      ]
+    },
+    {
+      canOperate: 'systemtool', routerLink: '', iconType: 'tool', firstBreadcrumb: '', lastBreadcrumb: '', name: '系统工具',
+      children: [        
         { canOperate: 'code', routerLink: '/tool/code', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: '代码生成', name: '代码生成', },
         { canOperate: 'swagger', routerLink: '/tool/swagger', iconType: 'api', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Swagger', name: 'Swagger', },
         { canOperate: 'hangfire', routerLink: '/tool/hangfire', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Hangfire', name: 'Hangfire', },
-        { canOperate: 'cap', routerLink: '/tool/cap', iconType: 'forward', firstBreadcrumb: '系统工具', lastBreadcrumb: 'CAP', name: 'CAP', },
       ]
     },
   ];

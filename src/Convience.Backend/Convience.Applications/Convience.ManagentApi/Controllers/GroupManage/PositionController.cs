@@ -1,5 +1,5 @@
 ﻿using Convience.ManagentApi.Infrastructure.Authorization;
-using Convience.ManagentApi.Infrastructure.OperateLog;
+using Convience.ManagentApi.Infrastructure.Logs;
 using Convience.Model.Models.GroupManage;
 using Convience.Service.GroupManage;
 using Convience.Util.Extension;

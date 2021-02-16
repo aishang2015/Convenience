@@ -1,4 +1,4 @@
-﻿using Convience.Entity.Entity.OperateLog;
+﻿using Convience.Entity.Entity.Logs;
 
 using System;
 

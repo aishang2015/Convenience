@@ -11,7 +11,9 @@ namespace Convience.Filestorage.Filesystem
         private readonly IFileInfo _fileInfo;
         private readonly string _path;
 
-        internal FileSystemStoreEntry(string path, IFileInfo fileInfo)
+        public FileSystemStoreEntry() { }
+
+        public FileSystemStoreEntry(string path, IFileInfo fileInfo)
         {
             _fileInfo = fileInfo ?? throw new ArgumentNullException(nameof(fileInfo));
             _path = path ?? throw new ArgumentNullException(nameof(path));
