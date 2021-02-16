@@ -61,11 +61,6 @@ namespace Convience.ManagentApi.Infrastructure
         public static void InitMenuTree(SystemIdentityDbContext dbContext)
         {
             dbContext.Set<Menu>().RemoveRange(dbContext.Set<Menu>());
-            dbContext.Set<Menu>().Add(new Menu(1, "SAAS管理", "saasmanage", null, 1, null, 4));
-            dbContext.Set<Menu>().Add(new Menu(2, "租户管理", "tenantManage", "tenantList", 1, null, 1));
-            dbContext.Set<Menu>().Add(new Menu(3, "添加按钮", "addTenantBtn", "tenantAdd", 2, null, 1));
-            dbContext.Set<Menu>().Add(new Menu(4, "更新按钮", "updateTenantBtn", "tenantGet,tenantUpdate", 2, null, 2));
-            dbContext.Set<Menu>().Add(new Menu(5, "删除按钮", "deleteTenantBtn", "tenantDelete", 2, null, 3));
             dbContext.Set<Menu>().Add(new Menu(8, "仪表盘", "dashaboard", null, 1, null, 0));
             dbContext.Set<Menu>().Add(new Menu(16, "系统管理", "systemmanage", null, 1, null, 1));
             dbContext.Set<Menu>().Add(new Menu(17, "用户管理", "userManage", "userList,roleNameList", 1, null, 1));
@@ -81,24 +76,20 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().Add(new Menu(27, "更新按钮", "updateMenuBtn", "menuUpdate", 2, null, 2));
             dbContext.Set<Menu>().Add(new Menu(28, "删除按钮", "deleteMenuBtn", "menuDelete", 2, null, 3));
             dbContext.Set<Menu>().Add(new Menu(29, "组织管理", "groupmanage", null, 1, null, 2));
-            dbContext.Set<Menu>().Add(new Menu(30, "员工管理", "employeeManage", "allDepartment,employeeList,allPosition", 1, null, 1));
             dbContext.Set<Menu>().Add(new Menu(31, "职位管理", "positionManage", "positionList", 1, null, 2));
             dbContext.Set<Menu>().Add(new Menu(33, "部门管理", "departmentManage", "allDepartment,userDic", 1, null, 3));
-            dbContext.Set<Menu>().Add(new Menu(34, "更新按钮", "updateEmployeeBtn", "employeeGet,employeeUpdate", 2, null, 1));
             dbContext.Set<Menu>().Add(new Menu(35, "添加按钮", "addPositionBtn", "positionAdd", 2, null, 1));
             dbContext.Set<Menu>().Add(new Menu(36, "更新按钮", "updatePositionBtn", "positionGet,positionUpdate", 2, null, 2));
             dbContext.Set<Menu>().Add(new Menu(37, "删除按钮", "deletePositionBtn", "positionDelete", 2, null, 3));
             dbContext.Set<Menu>().Add(new Menu(38, "添加按钮", "addDepartmentBtn", " departmentAdd", 2, null, 1));
             dbContext.Set<Menu>().Add(new Menu(39, "更新按钮", "updateDepartmentBtn", "departmentGet,departmentUpdate", 2, null, 2));
             dbContext.Set<Menu>().Add(new Menu(40, "删除按钮", "deleteDepartmentBtn", "departmentDelete", 2, null, 3));
-            dbContext.Set<Menu>().Add(new Menu(41, "查看页面", null, null, 3, null, 0));
             dbContext.Set<Menu>().Add(new Menu(42, "查看页面", null, null, 3, null, 0));
             dbContext.Set<Menu>().Add(new Menu(43, "查看页面", null, null, 3, null, 0));
             dbContext.Set<Menu>().Add(new Menu(44, "查看页面", null, null, 3, null, 0));
             dbContext.Set<Menu>().Add(new Menu(45, "查看页面", null, null, 3, null, 0));
             dbContext.Set<Menu>().Add(new Menu(46, "查看页面", null, null, 3, null, 0));
-            dbContext.Set<Menu>().Add(new Menu(47, "查看页面", null, null, 3, null, 0));
-            dbContext.Set<Menu>().Add(new Menu(48, "内容管理", "contentmanage", null, 1, null, 5));
+            dbContext.Set<Menu>().Add(new Menu(48, "内容管理", "contentmanage", null, 1, null, 4));
             dbContext.Set<Menu>().Add(new Menu(49, "文章管理", "articleManage", "allColumn,articleList", 1, null, 1));
             dbContext.Set<Menu>().Add(new Menu(51, "文件管理", "fileManage", "fileList", 1, null, 3));
             dbContext.Set<Menu>().Add(new Menu(52, "查看页面", null, null, 3, null, 1));
@@ -130,20 +121,15 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().Add(new Menu(82, "添加栏目按钮", "addColumnBtn", "columnAdd", 2, null, 5));
             dbContext.Set<Menu>().Add(new Menu(83, "更新栏目按钮", "updateColumnBtn", "columnGet,columnUpdate", 2, null, 6));
             dbContext.Set<Menu>().Add(new Menu(84, "删除栏目按钮", "deleteColumnBtn", "columnDelete", 2, null, 7));
+            dbContext.Set<Menu>().Add(new Menu(85, "日志管理", "logmanage", null, 1, null, 5));
+            dbContext.Set<Menu>().Add(new Menu(86, "操作日志", "operatelog", null, 1, null, 1));
+            dbContext.Set<Menu>().Add(new Menu(87, "登录日志", "loginlog", null, 1, null, 2));
+            dbContext.Set<Menu>().Add(new Menu(88, "查看页面", null, null, 3, null, 1));
+            dbContext.Set<Menu>().Add(new Menu(89, "查看页面", null, null, 3, null, 1));
+            dbContext.Set<Menu>().Add(new Menu(90, "设置登录日志", "updateLoginLogSettingBtn", null, 2,null, 2));
+            dbContext.Set<Menu>().Add(new Menu(91, "设置登录日志", "updateLogSettingBtn", null, 3, null, 2));
 
             dbContext.Set<MenuTree>().RemoveRange(dbContext.Set<MenuTree>());
-            dbContext.Set<MenuTree>().Add(new MenuTree(1, 1, 1, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(2, 1, 2, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(3, 2, 2, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(4, 1, 3, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(5, 2, 3, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(6, 3, 3, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(7, 1, 4, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(8, 2, 4, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(9, 4, 4, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(10, 1, 5, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(11, 2, 5, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(12, 5, 5, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(18, 8, 8, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(25, 16, 16, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(26, 16, 17, 1));
@@ -180,15 +166,10 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<MenuTree>().Add(new MenuTree(57, 19, 28, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(58, 28, 28, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(59, 29, 29, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(60, 29, 30, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(61, 30, 30, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(62, 29, 31, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(63, 31, 31, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(65, 29, 33, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(66, 33, 33, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(67, 29, 34, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(68, 30, 34, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(69, 34, 34, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(70, 29, 35, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(71, 31, 35, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(72, 35, 35, 0));
@@ -207,9 +188,6 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<MenuTree>().Add(new MenuTree(85, 29, 40, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(86, 33, 40, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(87, 40, 40, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(88, 29, 41, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(89, 30, 41, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(90, 41, 41, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(91, 29, 42, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(92, 31, 42, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(93, 42, 42, 0));
@@ -225,9 +203,6 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<MenuTree>().Add(new MenuTree(103, 19, 46, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(104, 16, 46, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(105, 46, 46, 0));
-            dbContext.Set<MenuTree>().Add(new MenuTree(106, 2, 47, 1));
-            dbContext.Set<MenuTree>().Add(new MenuTree(107, 1, 47, 2));
-            dbContext.Set<MenuTree>().Add(new MenuTree(108, 47, 47, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(109, 48, 48, 0));
             dbContext.Set<MenuTree>().Add(new MenuTree(110, 48, 49, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(111, 49, 49, 0));
@@ -308,6 +283,23 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<MenuTree>().Add(new MenuTree(200, 48, 84, 2));
             dbContext.Set<MenuTree>().Add(new MenuTree(201, 49, 84, 1));
             dbContext.Set<MenuTree>().Add(new MenuTree(202, 84, 84, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(203, 85, 85, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(204, 85, 86, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(205, 86, 86, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(206, 85, 87, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(207, 87, 87, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(208, 85, 88, 2));
+            dbContext.Set<MenuTree>().Add(new MenuTree(209, 86, 88, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(210, 88, 88, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(211, 85, 89, 2));
+            dbContext.Set<MenuTree>().Add(new MenuTree(212, 87, 89, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(213, 89, 89, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(214, 85, 90, 2));
+            dbContext.Set<MenuTree>().Add(new MenuTree(215, 87, 90, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(216, 90, 90, 0));
+            dbContext.Set<MenuTree>().Add(new MenuTree(217, 85, 91, 2));
+            dbContext.Set<MenuTree>().Add(new MenuTree(218, 86, 91, 1));
+            dbContext.Set<MenuTree>().Add(new MenuTree(219, 91, 91, 0));
 
             dbContext.SaveChanges();
         }

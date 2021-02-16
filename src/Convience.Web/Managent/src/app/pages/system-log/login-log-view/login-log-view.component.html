@@ -17,7 +17,7 @@
 
 <nz-card [nzSize]="'small'" class="full-double">
 
-    <button nz-button nzType="outline" (click)="setLoginLogSetting()"><i nz-icon nzType="setting"
+    <button nz-button nzType="outline" (click)="setLoginLogSetting()"  *canOperate="'updateLoginLogSettingBtn'"><i nz-icon nzType="setting"
             nzTheme="outline"></i>设置</button>
     <div class="mt-10">
         <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"

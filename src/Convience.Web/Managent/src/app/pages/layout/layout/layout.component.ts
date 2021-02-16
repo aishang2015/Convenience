@@ -51,10 +51,10 @@ export class LayoutComponent implements OnInit {
       ]
     },
     {
-      canOperate: 'logManage', routerLink: '', iconType: 'container', firstBreadcrumb: '', lastBreadcrumb: '', name: '日志管理',
+      canOperate: 'logmanage', routerLink: '', iconType: 'container', firstBreadcrumb: '', lastBreadcrumb: '', name: '日志管理',
       children: [
-        { canOperate: 'operateLog', routerLink: '/log/operate', iconType: 'edit', firstBreadcrumb: '系统日志', lastBreadcrumb: '操作日志', name: '操作日志', },
-        { canOperate: 'loginLog', routerLink: '/log/login', iconType: 'login', firstBreadcrumb: '系统日志', lastBreadcrumb: '登录日志', name: '登录日志', },
+        { canOperate: 'operatelog', routerLink: '/log/operate', iconType: 'edit', firstBreadcrumb: '日志管理', lastBreadcrumb: '操作日志', name: '操作日志', },
+        { canOperate: 'loginlog', routerLink: '/log/login', iconType: 'login', firstBreadcrumb: '日志管理', lastBreadcrumb: '登录日志', name: '登录日志', },
       ]
     },
     {

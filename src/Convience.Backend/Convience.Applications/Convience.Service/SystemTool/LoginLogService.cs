@@ -55,6 +55,7 @@ namespace Convience.Service.SystemTool
         {
             var logs = from detail in _logDetailRepository.Get(false)
                         .AndIfHaveValue(queryModel.Account, l => l.OperatorAccount.Contains(queryModel.Account))
+                       orderby detail.OperateAt descending
                        select new LoginLogDetailResultModel
                        {
                            OperatorAccount = detail.OperatorAccount,
