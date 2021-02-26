@@ -13,7 +13,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-article-manage',
   templateUrl: './article-manage.component.html',
-  styleUrls: ['./article-manage.component.scss']
+  styleUrls: ['./article-manage.component.less']
 })
 export class ArticleManageComponent implements OnInit {
 

@@ -10,7 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-form-design',
   templateUrl: './form-design.component.html',
-  styleUrls: ['./form-design.component.scss']
+  styleUrls: ['./form-design.component.less']
 })
 export class FormDesignComponent implements OnInit {
 

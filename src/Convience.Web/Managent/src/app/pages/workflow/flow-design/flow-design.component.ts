@@ -19,7 +19,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-flow-design',
   templateUrl: './flow-design.component.html',
-  styleUrls: ['./flow-design.component.scss']
+  styleUrls: ['./flow-design.component.less']
 })
 export class FlowDesignComponent implements OnInit {
 

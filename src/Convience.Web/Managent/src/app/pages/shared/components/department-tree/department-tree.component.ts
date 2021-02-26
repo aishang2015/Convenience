@@ -7,7 +7,7 @@ import { Department } from 'src/app/pages/group-manage/model/department';
 @Component({
   selector: 'app-department-tree',
   templateUrl: './department-tree.component.html',
-  styleUrls: ['./department-tree.component.scss']
+  styleUrls: ['./department-tree.component.less']
 })
 export class DepartmentTreeComponent implements OnInit {
 

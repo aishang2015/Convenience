@@ -20,16 +20,20 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTreeModule } from 'ng-zorro-antd/tree';
 import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+import { AvatarSelectComponent } from './avatar-select/avatar-select.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
     RoleManageComponent,
     UserManageComponent,
-    MenuManageComponent
+    MenuManageComponent,
+    AvatarSelectComponent,
   ],
   imports: [
     CommonModule,
     AppCommonModule,
+    SharedModule,
     RouterModule.forChild([
       { path: 'role', component: RoleManageComponent, canActivate: [LoginGuard] },
       { path: 'user', component: UserManageComponent, canActivate: [LoginGuard] },

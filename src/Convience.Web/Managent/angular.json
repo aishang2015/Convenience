@@ -7,7 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "less"
         }
       },
       "root": "",
@@ -26,7 +26,6 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/assets/config/config.json",
               {
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
@@ -34,7 +33,7 @@
               },
               {
                 "glob": "**/*",
-                "input": "node_modules/tinymce",
+                "input": "./node_modules/tinymce",
                 "output": "/tinymce/"
               },
               {
@@ -44,8 +43,7 @@
               }
             ],
             "styles": [
-              "node_modules/ng-zorro-antd/ng-zorro-antd.dark.css",
-              "src/styles.scss"
+              "src/styles.less"
             ],
             "scripts": []
           },
@@ -108,7 +106,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.less"
             ],
             "scripts": []
           }

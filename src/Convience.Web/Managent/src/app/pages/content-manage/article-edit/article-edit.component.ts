@@ -12,7 +12,7 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 @Component({
   selector: 'app-article-edit',
   templateUrl: './article-edit.component.html',
-  styleUrls: ['./article-edit.component.scss']
+  styleUrls: ['./article-edit.component.less']
 })
 export class ArticleEditComponent implements OnInit {
 

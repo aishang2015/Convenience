@@ -9,7 +9,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss']
+  styleUrls: ['./layout.component.less']
 })
 export class LayoutComponent implements OnInit {
 

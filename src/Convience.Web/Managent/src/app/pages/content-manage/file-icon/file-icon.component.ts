@@ -5,7 +5,7 @@ import { FileInfo } from '../model/fileInfo';
 @Component({
   selector: 'app-file-icon',
   templateUrl: './file-icon.component.html',
-  styleUrls: ['./file-icon.component.scss']
+  styleUrls: ['./file-icon.component.less']
 })
 export class FileIconComponent implements OnInit {
 

@@ -5,7 +5,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-avatar-select',
   templateUrl: './avatar-select.component.html',
-  styleUrls: ['./avatar-select.component.scss'],
+  styleUrls: ['./avatar-select.component.less'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => AvatarSelectComponent),

@@ -10,7 +10,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-dic-manage',
   templateUrl: './dic-manage.component.html',
-  styleUrls: ['./dic-manage.component.scss']
+  styleUrls: ['./dic-manage.component.less']
 })
 export class DicManageComponent implements OnInit {
 

@@ -12,7 +12,7 @@ import { NzTreeSelectComponent } from 'ng-zorro-antd/tree-select';
 @Component({
   selector: 'app-role-manage',
   templateUrl: './role-manage.component.html',
-  styleUrls: ['./role-manage.component.scss']
+  styleUrls: ['./role-manage.component.less']
 })
 export class RoleManageComponent implements OnInit {
 

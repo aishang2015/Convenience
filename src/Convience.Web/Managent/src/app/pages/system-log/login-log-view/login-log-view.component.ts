@@ -7,7 +7,7 @@ import { LoginLogService } from 'src/app/business/login-log.service';
 @Component({
   selector: 'app-login-log-view',
   templateUrl: './login-log-view.component.html',
-  styleUrls: ['./login-log-view.component.scss']
+  styleUrls: ['./login-log-view.component.less']
 })
 export class LoginLogViewComponent implements OnInit {
 

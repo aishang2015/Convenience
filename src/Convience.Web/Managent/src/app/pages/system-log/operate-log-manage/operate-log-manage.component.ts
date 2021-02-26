@@ -8,7 +8,7 @@ import { OperateLogService } from '../../../business/operate-log.service';
 @Component({
   selector: 'app-operate-log-manage',
   templateUrl: './operate-log-manage.component.html',
-  styleUrls: ['./operate-log-manage.component.scss']
+  styleUrls: ['./operate-log-manage.component.less']
 })
 export class OperateLogManageComponent implements OnInit {
 
