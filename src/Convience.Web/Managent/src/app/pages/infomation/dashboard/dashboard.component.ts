@@ -1,17 +1,21 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterViewChecked, ApplicationRef } from '@angular/core';
 import { Chart, registerShape } from '@antv/g2';
+import { timeout } from 'rxjs/operators';
 import { DashboardService } from 'src/app/business/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.less'],
+  providers: [ApplicationRef]
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
 
   data = { userCount: 0, roleCount: 0, departmentCount: 0, positionCount: 0 };
 
-  constructor(private _dashboardService: DashboardService) {
+  chartArray = [];
+
+  constructor(private _dashboardService: DashboardService,private appref: ApplicationRef) {
   }
 
   ngOnInit() {
@@ -23,6 +27,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.initGraph2();
     this.initGraph3();
     this.initGraph4();
+    this.initGraph5();
+    this.initGraph6();
+
+    // 初始图像宽度会溢出，通过resize事件触发图标重绘
+    setTimeout(() => {   
+      var myEvent = new Event('resize');
+      window.dispatchEvent(myEvent);
+    }, 10);
   }
 
   initGraph1() {
@@ -42,7 +54,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       container: 'c1',
       autoFit: true,
       height: 400,
-      padding: [20, 100, 50, 100],
+      syncViewPadding: true,
     });
     chart.data(data);
     chart.scale({
@@ -90,7 +102,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       style: {
         fill: '#c0c0c0',
         fontSize: 12,
-        fontWeight: '300',
+        fontWeight: 300,
         textAlign: 'center',
       },
       offsetX: -70,
@@ -103,7 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       style: {
         fill: '#c0c0c0',
         fontSize: 12,
-        fontWeight: '300',
+        fontWeight: 300,
         textAlign: 'center',
       },
       offsetX: -70,
@@ -116,7 +128,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       style: {
         fill: '#c0c0c0',
         fontSize: 12,
-        fontWeight: '300',
+        fontWeight: 300,
         textAlign: 'center',
       },
       offsetX: -70,
@@ -139,7 +151,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
     });
     chart.interaction('element-active');
-
+    chart.theme('dark');
     chart.render();
   }
 
@@ -154,7 +166,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     ];
     const chart = new Chart({
       container: 'c2',
-      width: 400,
+      autoFit: true,
       height: 400,
     });
     chart.data(data);
@@ -228,102 +240,178 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     chart.interaction('element-active');
 
     chart.render();
+    this.chartArray.push(chart);
   }
 
   initGraph3() {
-    const expectData = [
-      { value: 100, name: '展现' },
-      { value: 80, name: '点击' },
-      { value: 60, name: '访问' },
-      { value: 40, name: '咨询' },
-      { value: 30, name: '订单' },
-    ];
-    const actualData = [
-      { value: 80, name: '展现' },
-      { value: 50, name: '点击' },
-      { value: 30, name: '访问' },
-      { value: 10, name: '咨询' },
-      { value: 5, name: '订单' },
-    ];
-    const chart = new Chart({
-      container: 'c3',
-      autoFit: true,
-      height: 500,
-      padding: [20, 100, 40, 60],
-    });
-    chart
-      .coordinate('rect')
-      .transpose()
-      .scale(1, -1);
-    chart.axis(false);
-    chart.legend(false);
-    chart.tooltip({
-      showTitle: false,
-      showMarkers: false,
-      shared: true,
-      itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
-    });
 
-    const expectView = chart.createView();
-    expectView.data(expectData);
-    expectView
-      .interval()
-      .adjust('symmetric')
-      .position('name*value')
-      .color('name', ['#0050B3', '#1890FF', '#40A9FF', '#69C0FF', '#BAE7FF'])
-      .shape('pyramid')
-      .tooltip('name*value', (name, value) => {
-        return {
-          name: '预期' + name,
-          value,
-        };
-      })
-      .label('name', {
-        offset: 35,
-        labelLine: {
-          style: {
-            lineWidth: 1,
-            stroke: 'rgba(0, 0, 0, 0.15)',
-          },
+  function getFillAttrs(cfg) {
+    return {
+      ...cfg.defaultStyle,
+      ...cfg.style,
+      fill: cfg.color,
+      fillOpacity: cfg.opacity,
+    };
+  }
+  function getRectPath(points) {
+    const path = [];
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      if (point) {
+        const action = i === 0 ? 'M' : 'L';
+        path.push([action, point.x, point.y]);
+      }
+    }
+    const first = points[0];
+    path.push(['L', first.x, first.y]);
+    path.push(['z']);
+    return path;
+  }
+  
+  // 顶边带圆角
+  registerShape('interval', 'top', {
+    draw(cfg, container) {
+      const attrs = getFillAttrs(cfg);
+      let path = getRectPath(cfg.points);
+      path = this.parsePath(path); // 将 0 - 1 的值转换为画布坐标
+      const radius = (path[2][1] - path[1][1]) / 2;
+      const temp = [];
+      temp.push(['M', path[0][1], path[0][2]]);
+      temp.push(['L', path[1][1], path[1][2] + radius]);
+      temp.push(['A', radius, radius, 90, 0, 1, path[1][1] + radius, path[1][2]]);
+      temp.push(['L', path[2][1] - radius, path[2][2]]);
+      temp.push(['A', radius, radius, 90, 0, 1, path[2][1], path[2][2] + radius]);
+      temp.push(['L', path[3][1], path[3][2]]);
+      temp.push(['Z']);
+  
+      const group = container.addGroup();
+      group.addShape('path', {
+        attrs: {
+          ...attrs,
+          path: temp,
         },
-      })
-      .animate({
-        appear: {
-          animation: 'fade-in'
-        }
       });
-
-    const actualView = chart.createView();
-    actualView.data(actualData);
-    actualView
-      .interval()
-      .adjust('symmetric')
-      .position('name*value')
-      .color('name', ['#0050B3', '#1890FF', '#40A9FF', '#69C0FF', '#BAE7FF'])
-      .shape('pyramid')
-      .tooltip('name*value', (name, value) => {
-        return {
-          name: '实际' + name,
-          value,
-        };
-      })
-      .style({
-        lineWidth: 1,
-        stroke: '#fff',
-      })
-      .animate({
-        appear: {
-          animation: 'fade-in'
+  
+      return group;
+    },
+  });
+  
+  // 底边带圆角
+  registerShape('interval', 'bottom', {
+    draw(cfg, container) {
+      const attrs = getFillAttrs(cfg);
+      let path = getRectPath(cfg.points);
+      path = this.parsePath(path);
+      const radius = (path[2][1] - path[1][1]) / 2;
+      const temp = [];
+      temp.push(['M', path[0][1] + radius, path[0][2]]);
+      temp.push(['A', radius, radius, 90, 0, 1, path[0][1], path[0][2] - radius]);
+      temp.push(['L', path[1][1], path[1][2]]);
+      temp.push(['L', path[2][1], path[2][2]]);
+      temp.push(['L', path[3][1], path[3][2] - radius]);
+      temp.push(['A', radius, radius, 90, 0, 1, path[3][1] - radius, path[3][2]]);
+      temp.push(['Z']);
+  
+      const group = container.addGroup();
+      group.addShape('path', {
+        attrs: {
+          ...attrs,
+          path: temp,
         },
-        update: {
-          animation: 'fade-in'
-        }
       });
-
-    chart.interaction('element-active');
-
-    chart.render();
-
+  
+      return group;
+    },
+  });
+  
+  const data = [
+    { year: '2014', type: 'Sales', sales: 1000 },
+    { year: '2015', type: 'Sales', sales: 1170 },
+    { year: '2016', type: 'Sales', sales: 660 },
+    { year: '2017', type: 'Sales', sales: 1030 },
+    { year: '2014', type: 'Expenses', sales: 400 },
+    { year: '2015', type: 'Expenses', sales: 460 },
+    { year: '2016', type: 'Expenses', sales: 1120 },
+    { year: '2017', type: 'Expenses', sales: 540 },
+    { year: '2014', type: 'Profit', sales: 300 },
+    { year: '2015', type: 'Profit', sales: 300 },
+    { year: '2016', type: 'Profit', sales: 300 },
+    { year: '2017', type: 'Profit', sales: 350 },
+  ];
+  
+  const chart = new Chart({
+    container: 'c3',
+    autoFit: true,
+    height: 400,
+  });
+  
+  chart.data(data);
+  chart.scale({
+    sales: {
+      max: 2400,
+      tickInterval: 600,
+      nice: true,
+    },
+  });
+  
+  const axisCfg = {
+    title: null,
+    label: {
+      style: {
+        fontFamily: 'Monospace',
+        fontWeight: 700,
+        fontSize: 14,
+        fill: '#545454',
+      },
+    },
+    grid: {
+      line: {
+        style: {
+          lineDash: null,
+          stroke: '#545454',
+        },
+      },
+    },
+    line: {
+      style: {
+        lineDash: null,
+        stroke: '#545454',
+      },
+    },
+  };
+  
+  chart.axis('year', axisCfg);
+  chart.axis('sales', { ...axisCfg, line: null });
+  
+  chart.tooltip({
+    showMarkers: false
+  });
+  
+  chart
+    .interval()
+    .position('year*sales')
+    .color('type')
+    .size(35)
+    .shape('type', (val) => {
+      if (val === 'Profit') {
+        // 顶部圆角
+        return 'bottom';
+      } else if (val === 'Sales') {
+        // 底部圆角
+        return 'top';
+      }
+    })
+    .style({
+      stroke: '#545454',
+      lineWidth: 2,
+    })
+    .adjust('stack');
+  
+  chart.interaction('element-highlight-by-color');
+  
+  chart.render();
+  
+    this.chartArray.push(chart);
   }
 
   initGraph4() {
@@ -369,9 +457,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const color = ['#0086FA', '#FFBF00', '#F5222D'];
     const chart = new Chart({
       container: 'c4',
-      width: 500,
-      height: 500,
-      padding: [0, 0, 30, 0],
+      autoFit: true,
+      height: 400,
     });
     chart.data(creatData());
     chart.animate(false);
@@ -523,6 +610,228 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       });
       chart.changeData(data);
     }
+    this.chartArray.push(chart);
+
+  }
+
+  initGraph5() {
+
+    const data = [
+      [0, 0, 10],
+      [0, 1, 19],
+      [0, 2, 8],
+      [0, 3, 24],
+      [0, 4, 67],
+      [1, 0, 92],
+      [1, 1, 58],
+      [1, 2, 78],
+      [1, 3, 117],
+      [1, 4, 48],
+      [2, 0, 35],
+      [2, 1, 15],
+      [2, 2, 123],
+      [2, 3, 64],
+      [2, 4, 52],
+      [3, 0, 72],
+      [3, 1, 132],
+      [3, 2, 114],
+      [3, 3, 19],
+      [3, 4, 16],
+      [4, 0, 38],
+      [4, 1, 5],
+      [4, 2, 8],
+      [4, 3, 117],
+      [4, 4, 115],
+      [5, 0, 88],
+      [5, 1, 32],
+      [5, 2, 12],
+      [5, 3, 6],
+      [5, 4, 120],
+      [6, 0, 13],
+      [6, 1, 44],
+      [6, 2, 88],
+      [6, 3, 98],
+      [6, 4, 96],
+      [7, 0, 31],
+      [7, 1, 1],
+      [7, 2, 82],
+      [7, 3, 32],
+      [7, 4, 30],
+      [8, 0, 85],
+      [8, 1, 97],
+      [8, 2, 123],
+      [8, 3, 64],
+      [8, 4, 84],
+      [9, 0, 47],
+      [9, 1, 114],
+      [9, 2, 31],
+      [9, 3, 48],
+      [9, 4, 91],
+    ];
+
+    const source = data.map((arr) => {
+      return {
+        name: arr[0],
+        day: arr[1],
+        sales: arr[2],
+      };
+    });
+    const chart = new Chart({
+      container: 'c5',
+      autoFit: true,
+      height: 400,
+    });
+
+    chart.data(source);
+
+    chart.scale('name', {
+      type: 'cat',
+      values: ['Alexander', 'Marie', 'Maximilian', 'Sophia', 'Lukas', 'Maria', 'Leon', 'Anna', 'Tim', 'Laura'],
+    });
+    chart.scale('day', {
+      type: 'cat',
+      values: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    });
+    chart.scale('sales', {
+      nice: true,
+    });
+
+    chart.axis('name', {
+      tickLine: null,
+      grid: {
+        alignTick: false,
+        line: {
+          style: {
+            lineWidth: 1,
+            lineDash: null,
+            stroke: '#f0f0f0',
+          },
+        },
+      },
+    });
+
+    chart.axis('day', {
+      title: null,
+      grid: {
+        alignTick: false,
+        line: {
+          style: {
+            lineWidth: 1,
+            lineDash: null,
+            stroke: '#f0f0f0',
+          },
+        },
+      },
+    });
+
+    chart.tooltip(false);
+    chart.interaction('brush-visible');
+
+    chart
+      .polygon()
+      .position('name*day')
+      .color('sales', '#BAE7FF-#1890FF-#0050B3')
+      .label('sales', {
+        offset: -2,
+        style: {
+          fill: '#fff',
+          shadowBlur: 2,
+          shadowColor: 'rgba(0, 0, 0, .45)',
+        },
+      })
+      .style({
+        lineWidth: 1,
+        stroke: '#fff',
+      }).state({
+        active: {
+          style: {
+            fillOpacity: 0.9
+          },
+        },
+        inactive: {
+          style: {
+            fillOpacity: 0.4
+          },
+        }
+      });;
+
+    chart.render();
+    this.chartArray.push(chart);
+
+  }
+
+  initGraph6() {
+
+    const data = [
+      { month: 'Jan', city: 'Tokyo', temperature: 7 },
+      { month: 'Jan', city: 'London', temperature: 3.9 },
+      { month: 'Feb', city: 'Tokyo', temperature: 6.9 },
+      { month: 'Feb', city: 'London', temperature: 4.2 },
+      { month: 'Mar', city: 'Tokyo', temperature: 9.5 },
+      { month: 'Mar', city: 'London', temperature: 5.7 },
+      { month: 'Apr', city: 'Tokyo', temperature: 14.5 },
+      { month: 'Apr', city: 'London', temperature: 8.5 },
+      { month: 'May', city: 'Tokyo', temperature: 18.4 },
+      { month: 'May', city: 'London', temperature: 11.9 },
+      { month: 'Jun', city: 'Tokyo', temperature: 21.5 },
+      { month: 'Jun', city: 'London', temperature: 15.2 },
+      { month: 'Jul', city: 'Tokyo', temperature: 25.2 },
+      { month: 'Jul', city: 'London', temperature: 17 },
+      { month: 'Aug', city: 'Tokyo', temperature: 26.5 },
+      { month: 'Aug', city: 'London', temperature: 16.6 },
+      { month: 'Sep', city: 'Tokyo', temperature: 23.3 },
+      { month: 'Sep', city: 'London', temperature: 14.2 },
+      { month: 'Oct', city: 'Tokyo', temperature: 18.3 },
+      { month: 'Oct', city: 'London', temperature: 10.3 },
+      { month: 'Nov', city: 'Tokyo', temperature: 13.9 },
+      { month: 'Nov', city: 'London', temperature: 6.6 },
+      { month: 'Dec', city: 'Tokyo', temperature: 9.6 },
+      { month: 'Dec', city: 'London', temperature: 4.8 },
+    ];
+
+    const chart = new Chart({
+      container: 'c6',
+      autoFit: true,
+      height: 400,
+    });
+
+    chart.data(data);
+    chart.scale({
+      month: {
+        range: [0, 1],
+      },
+      temperature: {
+        nice: true,
+      },
+    });
+
+    chart.tooltip({
+      showCrosshairs: true,
+      shared: true,
+    });
+
+    chart.axis('temperature', {
+      label: {
+        formatter: (val) => {
+          return val + ' °C';
+        },
+      },
+    });
+
+    chart
+      .line()
+      .position('month*temperature')
+      .color('city')
+      .shape('smooth');
+
+    chart
+      .point()
+      .position('month*temperature')
+      .color('city')
+      .shape('circle');
+
+    chart.render();
+    this.chartArray.push(chart);
 
   }
 }

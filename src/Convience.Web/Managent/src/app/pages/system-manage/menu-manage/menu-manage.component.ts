@@ -9,7 +9,7 @@ import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/
 @Component({
   selector: 'app-menu-manage',
   templateUrl: './menu-manage.component.html',
-  styleUrls: ['./menu-manage.component.scss']
+  styleUrls: ['./menu-manage.component.less']
 })
 export class MenuManageComponent implements OnInit {
 

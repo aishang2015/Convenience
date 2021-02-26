@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LayoutComponent } from './layout/layout.component';
-import { RouterModule } from '@angular/router';
 import { AppCommonModule } from '../app-common/app-common.module';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
@@ -16,6 +15,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({

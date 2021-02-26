@@ -8,7 +8,7 @@ import { Position } from '../model/position';
 @Component({
   selector: 'app-position-manage',
   templateUrl: './position-manage.component.html',
-  styleUrls: ['./position-manage.component.scss']
+  styleUrls: ['./position-manage.component.less']
 })
 export class PositionManageComponent implements OnInit {
 

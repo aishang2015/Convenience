@@ -17,6 +17,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzTreeModule } from 'ng-zorro-antd/tree';
 import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -28,6 +29,7 @@ import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
   imports: [
     CommonModule,
     AppCommonModule,
+    SharedModule,
     RouterModule.forChild([
       { path: 'position', component: PositionManageComponent, canActivate: [LoginGuard] },
       { path: 'department', component: DepartmentManageComponent, canActivate: [LoginGuard] },

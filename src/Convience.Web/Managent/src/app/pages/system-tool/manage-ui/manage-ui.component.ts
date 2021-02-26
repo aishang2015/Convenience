@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-manage-ui',
   templateUrl: './manage-ui.component.html',
-  styleUrls: ['./manage-ui.component.scss']
+  styleUrls: ['./manage-ui.component.less']
 })
 export class ManageUiComponent implements OnInit {
 

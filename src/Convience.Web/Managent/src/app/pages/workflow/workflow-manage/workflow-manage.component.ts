@@ -12,7 +12,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-workflow-manage',
   templateUrl: './workflow-manage.component.html',
-  styleUrls: ['./workflow-manage.component.scss']
+  styleUrls: ['./workflow-manage.component.less']
 })
 export class WorkflowManageComponent implements OnInit {
 

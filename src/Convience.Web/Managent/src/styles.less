@@ -1,0 +1,123 @@
+// Custom Theming for NG-ZORRO
+// For more information: https://ng.ant.design/docs/customize-theme/en
+//@import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
+@import "~ng-zorro-antd/ng-zorro-antd.dark.less";
+
+// Override less variables to here
+// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+
+@primary-color: #f0c239;
+/* You can add global styles to this file, and also import other style files */
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mb-5 {
+    margin-bottom: 5px !important;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.ml-5 {
+    margin-left: 5px;
+}
+
+.ant-card {
+    margin-top: 10px;
+}
+
+button {
+    -moz-user-select   : none;
+    -webkit-user-select: none;
+    user-select        : none;
+}
+
+// body {
+//   -moz-user-select   : none;
+//   /*火狐*/
+//   -webkit-user-select: none;
+//   /*webkit浏览器*/
+//   -ms-user-select    : none;
+//   /*IE10*/
+//   user-select        : none;
+// }
+
+.content {
+    position: relative;
+    height  : 100%;
+
+    .left {
+        position: absolute;
+        width   : 300px;
+        height  : 100%;
+
+        nz-card {
+            overflow  : auto;
+            margin-top: 0;
+            height    : 100%;
+        }
+    }
+
+    .right {
+        margin-left: 310px;
+        height     : 100%;
+
+        nz-card {
+            overflow: auto;
+            height  : 100%;
+        }
+    }
+}
+
+.full-triple {
+    min-height: calc(100% - 136px);
+}
+
+.full-double {
+    min-height: calc(100% - 71px);
+}
+
+.full-single {
+    min-height: 100%;
+}
+
+::-webkit-scrollbar {
+    width           : 15px;
+    /* 纵向滚动条*/
+    height          : 15px;
+    /* 横向滚动条 */
+    background-color: black;
+}
+
+/*定义滚动条轨道 内阴影*/
+::-webkit-scrollbar-track {
+    box-shadow        : inset 0 0 6px black;
+    -webkit-box-shadow: inset 0 0 6px black;
+    background-color  : black;
+}
+
+/*定义滑块 内阴影*/
+::-webkit-scrollbar-thumb {
+    box-shadow        : inset 0 0 6px rgba(255, 255, 255, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+    background-color  : rgba(255, 255, 255, 0.3);
+}

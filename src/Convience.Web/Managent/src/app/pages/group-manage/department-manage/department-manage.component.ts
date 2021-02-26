@@ -11,7 +11,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-department-manage',
   templateUrl: './department-manage.component.html',
-  styleUrls: ['./department-manage.component.scss']
+  styleUrls: ['./department-manage.component.less']
 })
 export class DepartmentManageComponent implements OnInit {
 

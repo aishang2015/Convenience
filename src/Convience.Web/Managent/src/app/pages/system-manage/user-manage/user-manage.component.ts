@@ -13,7 +13,7 @@ import { PositionService } from 'src/app/business/position.service';
 @Component({
   selector: 'app-user-manage',
   templateUrl: './user-manage.component.html',
-  styleUrls: ['./user-manage.component.scss']
+  styleUrls: ['./user-manage.component.less']
 })
 export class UserManageComponent implements OnInit {
 

@@ -10,7 +10,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 @Component({
   selector: 'app-file-manage',
   templateUrl: './file-manage.component.html',
-  styleUrls: ['./file-manage.component.scss']
+  styleUrls: ['./file-manage.component.less']
 })
 export class FileManageComponent implements OnInit {
 

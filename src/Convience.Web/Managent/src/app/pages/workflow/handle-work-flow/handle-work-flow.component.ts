@@ -19,7 +19,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 @Component({
   selector: 'app-handle-work-flow',
   templateUrl: './handle-work-flow.component.html',
-  styleUrls: ['./handle-work-flow.component.scss']
+  styleUrls: ['./handle-work-flow.component.less']
 })
 export class HandleWorkFlowComponent implements OnInit {
 

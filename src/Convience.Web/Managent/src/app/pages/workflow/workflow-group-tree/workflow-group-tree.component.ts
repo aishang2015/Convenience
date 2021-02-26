@@ -6,7 +6,7 @@ import { WorkflowGroupService } from 'src/app/business/workflowgroup.service';
 @Component({
   selector: 'app-workflow-group-tree',
   templateUrl: './workflow-group-tree.component.html',
-  styleUrls: ['./workflow-group-tree.component.scss']
+  styleUrls: ['./workflow-group-tree.component.less']
 })
 export class WorkflowGroupTreeComponent implements OnInit {
 

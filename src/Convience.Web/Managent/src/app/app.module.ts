@@ -1,22 +1,22 @@
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppComponent } from './app.component';
+
 import { AppRoutingModule } from './app-routing.module';
-import { UriConfig } from './configs/uri-config';
+import { AppComponent } from './app.component';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { zh_CN } from 'ng-zorro-antd/i18n';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import zh from '@angular/common/locales/zh';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from './pages/layout/layout.module';
 import { AuthHeaderInterceptor } from './inceptors/auth-header-inceptor';
 import { CacheInterceptor } from './inceptors/cache-inceptor';
 import { ErrorHandlerInterceptor } from './inceptors/error-handler-inceptor';
-import { LayoutModule } from './pages/layout/layout.module';
+import { UriConfig } from './configs/uri-config';
 
-/** 配置 angular i18n **/
-import { DatePipe, registerLocaleData } from '@angular/common';
-import zh from '@angular/common/locales/zh';
 registerLocaleData(zh);
-
-/** 配置 ng-zorro-antd 国际化 **/
-import { NZ_I18N, zh_CN } from 'ng-zorro-antd/i18n';
 
 export function initializeApp(uriConstant: UriConfig) {
   return () => uriConstant.init();
@@ -27,10 +27,11 @@ export function initializeApp(uriConstant: UriConfig) {
     AppComponent
   ],
   imports: [
-    AppRoutingModule,
     BrowserModule,
-    BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     LayoutModule,
   ],
   bootstrap: [AppComponent],
