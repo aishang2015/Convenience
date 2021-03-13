@@ -6,8 +6,8 @@ namespace Convience.Fluentvalidation.Validators
 {
     public class PostcodeValidator : PropertyValidator
     {
-        public PostcodeValidator() : base("邮政编码格式错误！") { }
-
+        protected override string GetDefaultMessageTemplate()
+            => "邮政编码格式错误！";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

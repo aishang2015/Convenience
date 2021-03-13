@@ -9,7 +9,8 @@ namespace Convience.Fluentvalidation.Validators
         // 数字格式
         private readonly string _numberPattern = @"^-?\d+$|^(-?\d+)(\.\d+)?$";
 
-        public NumberValidator() : base("数字格式错误！") { }
+        protected override string GetDefaultMessageTemplate()
+            => "数字格式错误！";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {

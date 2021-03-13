@@ -42,9 +42,9 @@ namespace Convience.EntityFrameWork.Repositories
                     }
                     await _dbContext.SaveChangesAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
         }
@@ -83,9 +83,9 @@ namespace Convience.EntityFrameWork.Repositories
                     }
                     await _dbContext.SaveChangesAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    throw e;
+                    throw;
                 }
             }
         }
