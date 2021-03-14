@@ -185,23 +185,6 @@ namespace Convience.Service.SystemManage
             }
 
             var resultQuery = from u in userQuery
-                              let rquery = from ur in _userRepository.GetUserRoles()
-                                           join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
-                                           where ur.UserId == u.Id
-                                           select r.Name
-
-                              let pquery = from uc in _userRepository.GetUserClaims()
-                                           from pinfo in _positionRepository.Get(false)
-                                           where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition &&
-                                                uc.ClaimValue == pinfo.Id.ToString()
-                                           select pinfo.Name
-
-                              let dquery = from uc in _userRepository.GetUserClaims()
-                                           from dinfo in _departmentRepository.Get(false)
-                                           where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment &&
-                                                uc.ClaimValue == dinfo.Id.ToString()
-                                           select dinfo.Name
-
                               orderby u.Id descending
                               select new UserResultModel
                               {
@@ -214,9 +197,20 @@ namespace Convience.Service.SystemManage
                                   Sex = (int)u.Sex,
                                   CreatedTime = u.CreatedTime,
 
-                                  RoleName = string.Join(',', rquery.ToArray()),
-                                  DepartmentName = dquery.FirstOrDefault(),
-                                  PositionName = string.Join(',', pquery.ToArray()),
+                                  RoleName = string.Join(',', from ur in _userRepository.GetUserRoles()
+                                                              join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
+                                                              where ur.UserId == u.Id
+                                                              select r.Name),
+                                  DepartmentName = (from uc in _userRepository.GetUserClaims()
+                                                    from dinfo in _departmentRepository.Get(false)
+                                                    where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment &&
+                                                         uc.ClaimValue == dinfo.Id.ToString()
+                                                    select dinfo.Name).FirstOrDefault(),
+                                  PositionName = string.Join(',', from uc in _userRepository.GetUserClaims()
+                                                                  from pinfo in _positionRepository.Get(false)
+                                                                  where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition &&
+                                                                       uc.ClaimValue == pinfo.Id.ToString()
+                                                                  select pinfo.Name),
                               };
 
             var skip = query.Size * (query.Page - 1);

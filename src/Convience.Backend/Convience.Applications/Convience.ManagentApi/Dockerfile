@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
@@ -15,7 +15,8 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
 RUN apt-get update
 RUN apt-get install libgdiplus -y && ln -s libgdiplus.so gdiplus.dll
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+
 WORKDIR /src
 COPY ["Convience.Applications/Convience.ManagentApi/Convience.ManagentApi.csproj", "Convience.Applications/Convience.ManagentApi/"]
 COPY ["Convience.Applications/Convience.Service/Convience.Service.csproj", "Convience.Applications/Convience.Service/"]

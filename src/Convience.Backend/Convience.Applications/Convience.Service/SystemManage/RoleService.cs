@@ -92,10 +92,10 @@ namespace Convience.Service.SystemManage
                     }
                     await trans.CommitAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     await trans.RollbackAsync();
-                    throw e;
+                    throw;
                 }
             }
             return string.Empty;
@@ -198,10 +198,10 @@ namespace Convience.Service.SystemManage
                     }
                     await trans.CommitAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     await trans.RollbackAsync();
-                    throw e;
+                    throw;
                 }
             }
             return string.Empty;

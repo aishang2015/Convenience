@@ -31,7 +31,7 @@ namespace Convience.EntityFrameWork.Infrastructure
                 catch (Exception e)
                 {
                     logger.LogError(e, $"初始化数据库{dbContext.GetType().Name}失败");
-                    throw e;
+                    throw;
                 }
             }
         }
