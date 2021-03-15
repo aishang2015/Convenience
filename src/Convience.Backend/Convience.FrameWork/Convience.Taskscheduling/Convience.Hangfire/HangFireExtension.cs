@@ -1,9 +1,10 @@
 ﻿using Hangfire;
-using Hangfire.Dashboard.BasicAuthorization;
 using Hangfire.MemoryStorage;
 using Hangfire.MySql;
 using Hangfire.PostgreSql;
 using Hangfire.SqlServer;
+
+using HangfireBasicAuthenticationFilter;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -158,21 +159,12 @@ namespace Convience.Hangfire
         {
             app.UseHangfireDashboard(path, new DashboardOptions
             {
-                Authorization = new[] { new BasicAuthAuthorizationFilter(
-                    new BasicAuthAuthorizationFilterOptions
-                    {
-                        RequireSsl = false,
-                        SslRedirect = false,
-                        LoginCaseSensitive = true,
-                        Users = new []
-                        {
-                            new BasicAuthAuthorizationUser
-                            {
-                                Login = userName,
-                                PasswordClear =  password
-                            }
-                        }
-                    })}
+                Authorization = new[] { 
+                    new HangfireCustomBasicAuthenticationFilter{
+                        User = userName,
+                        Pass =  password
+                    }
+                }
             });
             return app;
         }

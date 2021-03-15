@@ -6,11 +6,11 @@ namespace Convience.Fluentvalidation.Validators
 {
     public class UrlValidator : PropertyValidator
     {
-
         // url格式
         private readonly string _urlPattern = @"^(https?)://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?$";
 
-        public UrlValidator() : base("URL格式错误！") { }
+        protected override string GetDefaultMessageTemplate()
+            => "URL格式错误！";
 
         protected override bool IsValid(PropertyValidatorContext context)
         {
