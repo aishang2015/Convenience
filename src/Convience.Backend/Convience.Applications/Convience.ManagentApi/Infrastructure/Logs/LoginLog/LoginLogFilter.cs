@@ -1,8 +1,5 @@
-﻿using Convience.JwtAuthentication;
-
+﻿
 using Microsoft.AspNetCore.Mvc.Filters;
-
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 using System;

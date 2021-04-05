@@ -126,7 +126,7 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().Add(new Menu(87, "登录日志", "loginlog", null, 1, null, 2));
             dbContext.Set<Menu>().Add(new Menu(88, "查看页面", null, null, 3, null, 1));
             dbContext.Set<Menu>().Add(new Menu(89, "查看页面", null, null, 3, null, 1));
-            dbContext.Set<Menu>().Add(new Menu(90, "设置登录日志", "updateLoginLogSettingBtn", null, 2,null, 2));
+            dbContext.Set<Menu>().Add(new Menu(90, "设置登录日志", "updateLoginLogSettingBtn", null, 2, null, 2));
             dbContext.Set<Menu>().Add(new Menu(91, "设置登录日志", "updateLogSettingBtn", null, 3, null, 2));
 
             dbContext.Set<MenuTree>().RemoveRange(dbContext.Set<MenuTree>());
