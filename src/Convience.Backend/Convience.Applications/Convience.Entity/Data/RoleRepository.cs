@@ -11,8 +11,6 @@ namespace Convience.Entity.Data
 {
     public interface IRoleRepository
     {
-        Task<bool> AddRole(SystemRole role);
-
         Task<bool> RemoveRole(string roleName);
 
         Task<bool> UpdateRole(SystemRole role);
@@ -43,12 +41,6 @@ namespace Convience.Entity.Data
         {
             _roleManager = roleManager;
             _userManager = userManager;
-        }
-
-        public async Task<bool> AddRole(SystemRole role)
-        {
-            var result = await _roleManager.CreateAsync(role);
-            return result.Succeeded;
         }
 
         public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where)

@@ -159,7 +159,7 @@ namespace Convience.Hangfire
         {
             app.UseHangfireDashboard(path, new DashboardOptions
             {
-                Authorization = new[] { 
+                Authorization = new[] {
                     new HangfireCustomBasicAuthenticationFilter{
                         User = userName,
                         Pass =  password

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -29,6 +30,11 @@ namespace Convience.JwtAuthentication
                 signingCredentials: _jwtOption.SigningCredentials);
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             return token;
+        }
+
+        public DateTime GetJwtExpireTime()
+        {
+            return _jwtOption.Expires;
         }
     }
 }

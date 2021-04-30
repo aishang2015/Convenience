@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UriConfig } from '../configs/uri-config';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +10,8 @@ export class AccountService {
   constructor(private httpClient: HttpClient,
     private uriConstant: UriConfig) { }
 
-  login(userName, password, captchaKey, captchaValue): Observable<any> {
-    return this.httpClient.post(this.uriConstant.LoginUri,
+  login(userName, password, captchaKey, captchaValue) {
+    return this.httpClient.post<LoginResult>(this.uriConstant.LoginUri,
       { "UserName": userName, "Password": password, "CaptchaKey": captchaKey, "CaptchaValue": captchaValue });
   }
 
@@ -21,8 +20,19 @@ export class AccountService {
   }
 
   getCaptcha() {
-    return this.httpClient.get(this.uriConstant.CaptchaUri);
+    return this.httpClient.get<CaptchaResult>(this.uriConstant.CaptchaUri);
   }
+}
 
+export interface CaptchaResult {
+  captchaKey: string;
+  captchaData: string;
+}
 
+export interface LoginResult {
+  name: string;
+  avatar: string;
+  token: string;
+  identification: string;
+  routes: string;
 }

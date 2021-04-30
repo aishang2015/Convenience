@@ -1,40 +1,25 @@
 ﻿namespace Convience.Model.Models.Account
 {
-    public class CaptchaResultModel
-    {
-        public string CaptchaKey { get; set; }
+    public record CaptchaResultModel(string CaptchaKey, string CaptchaData);
 
-        public string CaptchaData { get; set; }
-    }
+    public record ChangePwdViewModel(string OldPassword, string NewPassword);
 
-    public class ChangePwdViewModel
-    {
-        public string OldPassword { get; set; }
+    public record LoginResultModel(
+        string Name,
+        string Avatar,
+        string Token,
+        string Identification,
+        string Routes);
 
-        public string NewPassword { get; set; }
-    }
+    public record LoginViewModel(
+        string UserName,
+        string Password,
+        string CaptchaKey,
+        string CaptchaValue);
 
-    public class LoginResultModel
-    {
-        public string Name { get; set; }
-
-        public string Avatar { get; set; }
-
-        public string Token { get; set; }
-
-        public string Identification { get; set; }
-
-        public string Routes { get; set; }
-    }
-
-    public class LoginViewModel
-    {
-        public string UserName { get; set; }
-
-        public string Password { get; set; }
-
-        public string CaptchaKey { get; set; }
-
-        public string CaptchaValue { get; set; }
-    }
+    public record ValidateCredentialsResultModel(
+        string Token,
+        string Name,
+        string Avatar,
+        string RoleIds);
 }

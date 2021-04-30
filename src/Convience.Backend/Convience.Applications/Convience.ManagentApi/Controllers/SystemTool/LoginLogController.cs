@@ -1,13 +1,7 @@
 ﻿using Convience.Model.Models.SystemTool;
 using Convience.Service.SystemTool;
 using Convience.Util.Extension;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Controllers.SystemTool

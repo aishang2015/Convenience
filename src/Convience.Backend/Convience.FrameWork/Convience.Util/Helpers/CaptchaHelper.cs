@@ -8,9 +8,10 @@ namespace Convience.Util.Helpers
 {
     public static class CaptchaHelper
     {
-        private static char[] _characters = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a','b','c','d','e','f','j','h','i','g','k','l','m','n','o','p','q','r','s','t','u','v',
-        'w','x','y','z'};
+        private static char[] _characters = { '0', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a','b','c','d','e','f','j','h','i','g','k','m','n','o','p','q','r','s','t','u','v',
+            'w','x','y','z','A','B','C','D','E','F','J','H','G','K','M','N','O','P','Q','R','S',
+            'T','U','V','W','X','Y','Z'};
 
         /// <summary>
         /// 生成随机字符串

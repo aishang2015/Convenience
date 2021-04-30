@@ -19,11 +19,11 @@ namespace Convience.Service.Account
 
         public string ValidateCaptcha(string captchaKey, string captchaValue);
 
-        public Task<bool> IsStopUsing(string userName);
+        public Task<bool> IsStopUsingAsync(string userName);
 
-        public Task<(bool, string, SystemUser)> ValidateCredentials(string userName, string password);
+        public Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password);
 
-        public Task<bool> ChangePassword(string userName, string oldPassword, string newPassword);
+        public Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword);
     }
 
     public class AccountService : IAccountService
@@ -44,7 +44,7 @@ namespace Convience.Service.Account
             _jwtFactory = new JwtFactory(option);
         }
 
-        public async Task<bool> IsStopUsing(string userName)
+        public async Task<bool> IsStopUsingAsync(string userName)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null && user.IsActive)
@@ -54,15 +54,11 @@ namespace Convience.Service.Account
             return false;
         }
 
-        public async Task<(bool, string, SystemUser)> ValidateCredentials(string userName, string password)
+        public async Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
             {
-                if (!user.IsActive)
-                {
-                    return (false, "此账号未激活！", null);
-                }
                 var isValid = await _userRepository.CheckPasswordAsync(user, password);
                 if (isValid)
                 {
@@ -72,13 +68,14 @@ namespace Convience.Service.Account
                         (CustomClaimTypes.UserRoleIds,user.RoleIds),
                         (CustomClaimTypes.Name,user.Name)
                     };
-                    return (true, _jwtFactory.GenerateJwtToken(pairs), user);
+                    return new ValidateCredentialsResultModel(_jwtFactory.GenerateJwtToken(pairs),
+                        user.Name, user.Avatar, user.RoleIds);
                 }
             }
-            return (false, "错误的用户名或密码！", null);
+            return null;
         }
 
-        public async Task<bool> ChangePassword(string userName, string oldPassword, string newPassword)
+        public async Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
@@ -99,11 +96,7 @@ namespace Convience.Service.Account
             var imageData = CaptchaHelper.CreateBase64Image(randomValue);
             var key = Guid.NewGuid().ToString();
             _cachingProvider.Set(key, randomValue, TimeSpan.FromMinutes(2));
-            return new CaptchaResultModel
-            {
-                CaptchaKey = key,
-                CaptchaData = imageData
-            };
+            return new CaptchaResultModel(key, imageData);
         }
 
         public string ValidateCaptcha(string captchaKey, string captchaValue)

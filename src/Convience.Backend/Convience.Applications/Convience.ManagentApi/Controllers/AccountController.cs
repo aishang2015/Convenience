@@ -1,5 +1,6 @@
 ﻿using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure.Logs.LoginLog;
+using Convience.Model.Constants;
 using Convience.Model.Models.Account;
 using Convience.Service.Account;
 using Convience.Service.SystemManage;
@@ -7,8 +8,7 @@ using Convience.Util.Extension;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Linq;
+using System;
 using System.Threading.Tasks;
 
 namespace Convience.ManagentApi.Controllers
@@ -50,36 +50,43 @@ namespace Convience.ManagentApi.Controllers
                 return this.BadRequestResult(validResult);
             }
 
-            // 取得用户信息
-            var result = await _loginService.ValidateCredentials(model.UserName, model.Password);
-            if (!result.Item1)
+            // 验证用户是否可以使用
+            var isActive = await _loginService.IsStopUsingAsync(model.UserName);
+            if (!isActive)
             {
-                return this.BadRequestResult(result.Item2);
+                return this.BadRequestResult(AccountConstants.ACCOUNT_NOT_ACTIVE);
+            }
+
+            // 取得用户信息
+            var validateResult = await _loginService.ValidateCredentialsAsync(model.UserName, model.Password);
+            if (validateResult is null)
+            {
+                return this.BadRequestResult(AccountConstants.ACCOUNT_WRONG_INPUT);
             }
 
             // 取得权限信息
-            var menuIds = _roleService.GetRoleClaimValue(result.Item3.RoleIds.Split(',',
-                System.StringSplitOptions.RemoveEmptyEntries), CustomClaimTypes.RoleMenus);
+            var menuIds = _roleService.GetRoleClaimValue(validateResult.RoleIds.Split(',',
+                StringSplitOptions.RemoveEmptyEntries), CustomClaimTypes.RoleMenus);
 
+            // 获取菜单权限对应的前端标识
             var irs = _menuService.GetIdentificationRoutes(menuIds.ToArray());
-            return Ok(new LoginResultModel
-            {
-                Name = result.Item3.Name,
-                Avatar = result.Item3.Avatar,
-                Identification = irs.Item1,
-                Routes = irs.Item2,
-                Token = result.Item2
-            });
+
+            return Ok(new LoginResultModel(
+                validateResult.Name,
+                validateResult.Avatar,
+                validateResult.Token,
+                irs.Item1,
+                irs.Item2));
         }
 
         [HttpPost("password")]
         [Authorize]
         public async Task<IActionResult> ChangePwdByOldPwd(ChangePwdViewModel viewmodel)
         {
-            var result = await _loginService.ChangePassword(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);
+            var result = await _loginService.ChangePasswordAsync(User.GetUserName(), viewmodel.OldPassword, viewmodel.NewPassword);
             if (!result)
             {
-                return this.BadRequestResult("密码修改失败,请确认旧密码是否正确！");
+                return this.BadRequestResult(AccountConstants.ACCOUNT_MODIFY_PASSWORD_FAIL);
             }
             return Ok();
         }
