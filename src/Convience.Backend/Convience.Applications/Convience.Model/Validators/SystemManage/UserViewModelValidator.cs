@@ -12,9 +12,6 @@ namespace Convience.Model.Validators.SystemManage
             RuleFor(viewmodel => viewmodel.UserName).NotEmpty().NotNull()
                 .WithMessage("用户名不能为空！");
 
-            RuleFor(viewmodel => viewmodel.Password).Must((vm, pwd) => vm.Id == 0 && !string.IsNullOrEmpty(pwd) || vm.Id != 0)
-                .WithMessage("密码不能为空！");
-
             RuleFor(viewmodel => viewmodel.Name).MaximumLength(10).WithMessage("人名过长！");
             RuleFor(viewmodel => viewmodel.Name).NotEmpty().NotNull()
                 .WithMessage("人名不能为空！");
