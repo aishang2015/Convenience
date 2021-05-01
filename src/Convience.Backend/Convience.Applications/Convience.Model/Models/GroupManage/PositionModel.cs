@@ -1,22 +1,22 @@
 ﻿namespace Convience.Model.Models.GroupManage
 {
-    public class PositionQueryModel
+    public record PositionQueryModel
     {
-        public int Page { get; set; }
+        public int Page { get; init; }
 
-        public int Size { get; set; }
+        public int Size { get; init; }
     }
 
-    public class PositionViewModel
+    public record PositionViewModel
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public int Sort { get; set; }
+        public int Sort { get; init; }
     }
 
-    public class PositionResultModel : PositionViewModel
+    public record PositionResultModel : PositionViewModel
     {
     }
 }

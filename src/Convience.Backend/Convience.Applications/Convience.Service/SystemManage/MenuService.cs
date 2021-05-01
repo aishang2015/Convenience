@@ -56,67 +56,45 @@ namespace Convience.Service.SystemManage
 
         public async Task<bool> AddMenuAsync(MenuViewModel model)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            using var tran = await _unitOfWork.StartTransactionAsync();
+            var menu = _mapper.Map<Menu>(model);
+            var entity = await _menuRepository.AddAsync(menu);
+            await _unitOfWork.SaveAsync();
+
+            if (!string.IsNullOrEmpty(model.UpId))
             {
-                try
+                var tree = _menuTreeRepository.Get(t => t.Descendant == int.Parse(model.UpId));
+
+                // 做成树数据
+                foreach (var m in tree)
                 {
-                    var menu = _mapper.Map<Menu>(model);
-                    var entity = await _menuRepository.AddAsync(menu);
-                    await _unitOfWork.SaveAsync();
-
-                    if (!string.IsNullOrEmpty(model.UpId))
-                    {
-                        var upid = int.Parse(model.UpId);
-                        var tree = _menuTreeRepository.Get(t => t.Descendant == upid);
-
-                        // 做成树数据
-                        foreach (var m in tree)
-                        {
-                            await _menuTreeRepository.AddAsync(new MenuTree
-                            {
-                                Ancestor = m.Ancestor,
-                                Descendant = entity.Id,
-                                Length = m.Length + 1
-                            });
-                        }
-                    }
                     await _menuTreeRepository.AddAsync(new MenuTree
                     {
-                        Ancestor = entity.Id,
+                        Ancestor = m.Ancestor,
                         Descendant = entity.Id,
-                        Length = 0
+                        Length = m.Length + 1
                     });
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitAsync(tran);
-                    return true;
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                }
-                return false;
             }
+            await _menuTreeRepository.AddAsync(new MenuTree
+            {
+                Ancestor = entity.Id,
+                Descendant = entity.Id,
+                Length = 0
+            });
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitAsync(tran);
+            return true;
         }
 
         public async Task<bool> DeleteMenuAsync(int id)
         {
-            try
-            {
-                var descendantIds = _menuTreeRepository.Get(menu => menu.Ancestor == id)
-                    .Select(menu => menu.Descendant);
-                await _menuRepository.RemoveAsync(menu => descendantIds.Contains(menu.Id));
-                await _menuTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var descendantIds = _menuTreeRepository.Get(menu => menu.Ancestor == id)
+                .Select(menu => menu.Descendant);
+            await _menuRepository.RemoveAsync(menu => descendantIds.Contains(menu.Id));
+            await _menuTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public IQueryable<MenuResultModel> GetAllMenu()
@@ -143,19 +121,10 @@ namespace Convience.Service.SystemManage
 
         public async Task<bool> UpdateMenuAsync(MenuViewModel model)
         {
-            try
-            {
-                var menu = _mapper.Map<Menu>(model);
-                _menuRepository.Update(menu);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var menu = _mapper.Map<Menu>(model);
+            _menuRepository.Update(menu);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public bool HavePermission(string[] menuIds, string permission)

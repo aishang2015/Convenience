@@ -54,67 +54,46 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> AddColumnAsync(ColumnViewModel model)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            using var tran = await _unitOfWork.StartTransactionAsync();
+
+            var column = _mapper.Map<Column>(model);
+            var entity = await _columnRepository.AddAsync(column);
+            await _unitOfWork.SaveAsync();
+
+            if (!string.IsNullOrEmpty(model.UpId))
             {
-                try
+                var tree = _columnTreeRepository.Get(t => t.Descendant == int.Parse(model.UpId));
+
+                // 做成树数据
+                foreach (var m in tree)
                 {
-                    var column = _mapper.Map<Column>(model);
-                    var entity = await _columnRepository.AddAsync(column);
-                    await _unitOfWork.SaveAsync();
-
-                    if (!string.IsNullOrEmpty(model.UpId))
-                    {
-                        var upid = int.Parse(model.UpId);
-                        var tree = _columnTreeRepository.Get(t => t.Descendant == upid);
-
-                        // 做成树数据
-                        foreach (var m in tree)
-                        {
-                            await _columnTreeRepository.AddAsync(new ColumnTree
-                            {
-                                Ancestor = m.Ancestor,
-                                Descendant = entity.Id,
-                                Length = m.Length + 1
-                            });
-                        }
-                    }
                     await _columnTreeRepository.AddAsync(new ColumnTree
                     {
-                        Ancestor = entity.Id,
+                        Ancestor = m.Ancestor,
                         Descendant = entity.Id,
-                        Length = 0
+                        Length = m.Length + 1
                     });
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitAsync(tran);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
                 }
             }
-            return false;
+            await _columnTreeRepository.AddAsync(new ColumnTree
+            {
+                Ancestor = entity.Id,
+                Descendant = entity.Id,
+                Length = 0
+            });
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitAsync(tran);
+            return true;
         }
 
         public async Task<bool> DeleteColumnAsync(int id)
         {
-            try
-            {
-                var descendantIds = _columnTreeRepository.Get(tree => tree.Ancestor == id)
-                    .Select(tree => tree.Descendant);
-                await _columnRepository.RemoveAsync(column => descendantIds.Contains(column.Id));
-                await _columnTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var descendantIds = _columnTreeRepository.Get(tree => tree.Ancestor == id)
+                .Select(tree => tree.Descendant);
+            await _columnRepository.RemoveAsync(column => descendantIds.Contains(column.Id));
+            await _columnTreeRepository.RemoveAsync(tree => descendantIds.Contains(tree.Ancestor) || descendantIds.Contains(tree.Descendant));
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public IQueryable<ColumnResultModel> GetAllColumn()
@@ -143,19 +122,10 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> UpdateColumnAsync(ColumnViewModel model)
         {
-            try
-            {
-                var column = _mapper.Map<Column>(model);
-                _columnRepository.Update(column);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var column = _mapper.Map<Column>(model);
+            _columnRepository.Update(column);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

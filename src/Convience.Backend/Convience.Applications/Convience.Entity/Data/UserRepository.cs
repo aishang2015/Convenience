@@ -14,8 +14,6 @@ namespace Convience.Entity.Data
 
     public interface IUserRepository
     {
-        public Task<bool> AddUserAsync(SystemUser user);
-
         public Task<bool> SetPasswordAsync(SystemUser user, string password);
 
         public Task<bool> ResetPasswordAsync(SystemUser user, string password);
@@ -42,8 +40,6 @@ namespace Convience.Entity.Data
 
         public DbSet<IdentityUserRole<int>> GetUserRoles();
 
-        public Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user);
-
         Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds);
 
         Task<int> GetUserCountInRoleAsync(string roleName);
@@ -64,13 +60,6 @@ namespace Convience.Entity.Data
             _userManager = userManager;
             _roleManger = roleManger;
             _systemIdentityDbContext = systemIdentityDbContext;
-        }
-
-        public async Task<bool> AddUserAsync(SystemUser user)
-        {
-            user.CreatedTime = DateTime.Now;
-            var result = await _userManager.CreateAsync(user);
-            return result.Succeeded;
         }
 
         public async Task<bool> SetPasswordAsync(SystemUser user, string password)
@@ -167,11 +156,6 @@ namespace Convience.Entity.Data
             return result.Succeeded;
         }
 
-        public async Task<IEnumerable<string>> GetUserRolesAsync(SystemUser user)
-        {
-            return await _userManager.GetRolesAsync(user);
-        }
-
         public async Task<bool> RemoveUserByNameAsync(string name)
         {
             var user = await GetUserByNameAsync(name);
@@ -185,7 +169,6 @@ namespace Convience.Entity.Data
 
         public async Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds)
         {
-            // remove all old roles,add some news
             var roles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, roles);
 

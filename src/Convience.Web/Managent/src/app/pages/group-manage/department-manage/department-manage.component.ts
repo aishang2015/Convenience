@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Department } from '../model/department';
 import { debounceTime } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
-import { UserService } from 'src/app/business/user.service';
+import { UserService } from 'src/app/business/system-manage/user.service';
 import { DepartmentService } from 'src/app/business/department.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';

@@ -63,19 +63,10 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> AddPositionAsync(PositionViewModel model)
         {
-            try
-            {
-                var entity = _mapper.Map<Position>(model);
-                await _positionRepository.AddAsync(entity);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var entity = _mapper.Map<Position>(model);
+            await _positionRepository.AddAsync(entity);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public int Count()
@@ -85,28 +76,17 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> DeletePositionAsync(int id)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
-            {
-                try
-                {
-                    var claims = _userRepository.GetUserClaims()
-                        .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
-                        c.ClaimValue == id.ToString());
-                    _userRepository.GetUserClaims().RemoveRange(claims);
+            using var tran = await _unitOfWork.StartTransactionAsync();
 
-                    await _positionRepository.RemoveAsync(id);
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitAsync(tran);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                    return false;
-                }
-            }
+            var claims = _userRepository.GetUserClaims()
+                .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
+                c.ClaimValue == id.ToString());
+            _userRepository.GetUserClaims().RemoveRange(claims);
+
+            await _positionRepository.RemoveAsync(id);
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitAsync(tran);
+            return true;
         }
 
         public IEnumerable<PositionResultModel> GetAllPosition()
@@ -142,19 +122,10 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> UpdatePositionAsync(PositionViewModel model)
         {
-            try
-            {
-                var entity = _mapper.Map<Position>(model);
-                _positionRepository.Update(entity);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var entity = _mapper.Map<Position>(model);
+            _positionRepository.Update(entity);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

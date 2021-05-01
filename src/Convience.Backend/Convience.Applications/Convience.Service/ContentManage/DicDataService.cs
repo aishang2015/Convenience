@@ -88,52 +88,25 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> AddDicDataAsync(DicDataViewModel model)
         {
-            try
-            {
-                var dicdata = _mapper.Map<DicData>(model);
-                await _dicdataRepository.AddAsync(dicdata);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var dicdata = _mapper.Map<DicData>(model);
+            await _dicdataRepository.AddAsync(dicdata);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<bool> DeleteDicDataAsync(int id)
         {
-            try
-            {
-                await _dicdataRepository.RemoveAsync(id);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            await _dicdataRepository.RemoveAsync(id);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<bool> UpdateDicDataAsync(DicDataViewModel model)
         {
-            try
-            {
-                var entity = _mapper.Map<DicData>(model);
-                _dicdataRepository.Update(entity);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var entity = _mapper.Map<DicData>(model);
+            _dicdataRepository.Update(entity);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

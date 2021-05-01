@@ -81,7 +81,7 @@
                             <th nzAlign="center" nzWidth="180px">所在部门</th>
                             <th nzAlign="center" nzWidth="60px">状态</th>
                             <th nzAlign="center" nzWidth="180px">创建时间</th>
-                            <th nzAlign="center" nzWidth="120px" nzRight>操作</th>
+                            <th nzAlign="center" nzWidth="180px" nzRight>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,6 +108,9 @@
                                 <button nz-button nzType="default" nzShape="circle" *canOperate="'updateUserBtn'"
                                     (click)="edit(editUserTitleTpl,userContentTpl,data)" class="mr-10"><i nz-icon
                                         nzType="edit"></i></button>
+                                <button nz-button nzType="default" nzShape="circle" *canOperate="'setPasswordBtn'"
+                                    (click)="setPassword(pwdContentTpl,data)" class="mr-10"><i nz-icon
+                                        nzType="lock"></i></button>
                                 <button nz-button nzType="default" nzShape="circle" *canOperate="'deleteUserBtn'"
                                     (click)="remove(data.id)" class="mr-10"><i nz-icon nzType="delete"></i></button>
                             </td>
@@ -151,24 +154,6 @@
                 </ng-container>
                 <ng-container *ngIf="control.hasError('maxlength')">
                     角色名长度不能超过15！
-                </ng-container>
-            </ng-template>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzRequired]="isNewUser" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_password'">密码</nz-form-label>
-            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="passwordErrorTpl">
-                <input type="password" [attr.id]="'edit_password'" formControlName="password" nz-input placeholder="密码"
-                    autocomplete="off" />
-            </nz-form-control>
-            <ng-template #passwordErrorTpl let-control>
-                <ng-container *ngIf="control.hasError('required')">
-                    请输入密码！
-                </ng-container>
-                <ng-container *ngIf="control.hasError('maxlength')">
-                    密码长度不能超过30！
-                </ng-container>
-                <ng-container *ngIf="control.hasError('minlength')">
-                    密码长度不能小于4！
                 </ng-container>
             </ng-template>
         </nz-form-item>
@@ -236,6 +221,35 @@
                 <nz-switch [attr.id]="'edit_isActive'" formControlName="isActive" nzCheckedChildren="激活"
                     nzUnCheckedChildren="停用"></nz-switch>
             </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                <button nz-button nzType="primary" class="mr-10">提交</button>
+                <button nz-button type="reset" (click)="cancelEdit()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+
+<ng-template #pwdContentTpl>
+    <form nz-form [formGroup]="passwordSetForm" (ngSubmit)="submitPassword()">
+        <nz-form-item>
+            <nz-form-label [nzRequired]="isNewUser" [nzSm]="6" [nzXs]="24" [nzFor]="'edit_password'">密码</nz-form-label>
+            <nz-form-control [nzSm]="14" [nzXs]="24" [nzErrorTip]="passwordErrorTpl">
+                <input type="password" [attr.id]="'edit_password'" formControlName="password" nz-input placeholder="密码"
+                    autocomplete="off" />
+            </nz-form-control>
+            <ng-template #passwordErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                    请输入密码！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('maxlength')">
+                    密码长度不能超过30！
+                </ng-container>
+                <ng-container *ngIf="control.hasError('minlength')">
+                    密码长度不能小于4！
+                </ng-container>
+            </ng-template>
         </nz-form-item>
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">

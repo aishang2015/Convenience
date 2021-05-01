@@ -2,12 +2,8 @@
 
 namespace Convience.Model.Models.SystemManage
 {
-    public class UserQueryModel
+    public record UserQueryModel : PageQueryModel
     {
-        public int Page { get; set; }
-
-        public int Size { get; set; }
-
         public string UserName { get; set; }
 
         public string PhoneNumber { get; set; }
@@ -21,7 +17,7 @@ namespace Convience.Model.Models.SystemManage
         public int? Position { get; set; }
     }
 
-    public class UserViewModel
+    public record UserViewModel
     {
         public int Id { get; set; }
 
@@ -46,7 +42,7 @@ namespace Convience.Model.Models.SystemManage
         public string Password { get; set; }
     }
 
-    public class UserResultModel : UserViewModel
+    public record UserResultModel : UserViewModel
     {
         public DateTime CreatedTime { get; set; }
 
@@ -56,4 +52,6 @@ namespace Convience.Model.Models.SystemManage
 
         public string DepartmentName { get; set; }
     }
+
+    public record UserPasswordModel(int id, string Password);
 }

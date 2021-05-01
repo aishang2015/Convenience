@@ -61,52 +61,25 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> AddDicTypeAsync(DicTypeViewModel model)
         {
-            try
-            {
-                var dictype = _mapper.Map<DicType>(model);
-                await _dictypeRepository.AddAsync(dictype);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var dictype = _mapper.Map<DicType>(model);
+            await _dictypeRepository.AddAsync(dictype);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<bool> DeleteDicTypeAsync(int id)
         {
-            try
-            {
-                await _dictypeRepository.RemoveAsync(id);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            await _dictypeRepository.RemoveAsync(id);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<bool> UpdateDicTypeAsync(DicTypeViewModel model)
         {
-            try
-            {
-                var entity = await _dictypeRepository.GetAsync(model.Id);
-                _mapper.Map(model, entity);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var entity = await _dictypeRepository.GetAsync(model.Id);
+            _mapper.Map(model, entity);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public IEnumerable<DicTypeResultModel> GetDicTypes()

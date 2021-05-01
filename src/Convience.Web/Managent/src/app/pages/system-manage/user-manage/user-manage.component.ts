@@ -1,8 +1,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { User } from '../model/user';
-import { UserService } from 'src/app/business/user.service';
-import { RoleService } from 'src/app/business/role.service';
+import { UserService } from 'src/app/business/system-manage/user.service';
+import { RoleService } from 'src/app/business/system-manage/role.service';
 import { Role } from '../model/role';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
@@ -18,7 +18,8 @@ import { PositionService } from 'src/app/business/position.service';
 export class UserManageComponent implements OnInit {
 
   searchForm: FormGroup = new FormGroup({});
-  editForm: FormGroup = new FormGroup({});;
+  editForm: FormGroup = new FormGroup({});
+  passwordSetForm: FormGroup = new FormGroup({});
   isNewUser: boolean;
 
   editedUser: User;
@@ -84,7 +85,6 @@ export class UserManageComponent implements OnInit {
     this.editForm = this._formBuilder.group({
       avatar: [''],
       userName: ['', [Validators.required, Validators.maxLength(15)]],
-      password: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(4)]],
       name: ['', [Validators.required, Validators.maxLength(10)]],
       phoneNumber: ['', [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
       roleIds: [[]],
@@ -109,7 +109,6 @@ export class UserManageComponent implements OnInit {
       this.editForm = this._formBuilder.group({
         avatar: [user['avatar']],
         userName: [user['userName'], [Validators.required, Validators.maxLength(15)]],
-        password: [null, [Validators.maxLength(30), Validators.minLength(4)]],
         name: [user['name'], [Validators.required, Validators.maxLength(10)]],
         phoneNumber: [user['phoneNumber'], [Validators.pattern('^1(3|4|5|7|8)[0-9]{9}$')]],
         roleIds: [user['roleIds'].split(',')],
@@ -128,6 +127,20 @@ export class UserManageComponent implements OnInit {
     });
   }
 
+  // 设置用户密码
+  setPassword(tpl: TemplateRef<{}>, user: User) {
+    this.passwordSetForm = this._formBuilder.group({
+      id: [user['id']],
+      password: [null, [Validators.maxLength(30), Validators.minLength(4), Validators.required]]
+    });
+    this.tplModal = this._modalService.create({
+      nzTitle: "设置密码",
+      nzContent: tpl,
+      nzFooter: null,
+      nzClosable: true,
+      nzMaskClosable: false
+    });
+  }
 
   remove(id: string) {
     this._modalService.confirm({
@@ -194,7 +207,22 @@ export class UserManageComponent implements OnInit {
         });
       }
     }
+  }
 
+  submitPassword() {
+    for (const i in this.passwordSetForm.controls) {
+      this.passwordSetForm.controls[i].markAsDirty();
+      this.passwordSetForm.controls[i].updateValueAndValidity();
+    }
+    if (this.passwordSetForm.valid) {
+      this._userService.setPwd({
+        id: this.passwordSetForm.value['id'],
+        password: this.passwordSetForm.value['password'],
+      }).subscribe(result => {
+        this.tplModal.close();
+        this._messageService.success("成功");        
+      });
+    }
   }
 
   cancelEdit() {

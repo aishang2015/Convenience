@@ -82,5 +82,18 @@ namespace Convience.ManagentApi.Controllers.SystemManage
             }
             return Ok();
         }
+
+        [HttpPost("password")]
+        [Permission("userPassword")]
+        public async Task<IActionResult> SetPassword([FromBody] UserPasswordModel model)
+        {
+            var result = await _userService.SetPasswordAsync(model);
+            if (!string.IsNullOrEmpty(result))
+            {
+                return this.BadRequestResult(result);
+            }
+            return Ok();
+
+        }
     }
 }

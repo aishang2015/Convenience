@@ -8,13 +8,13 @@ import { WorkflowFlowService } from 'src/app/business/workflow-flow.service';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { UserService } from 'src/app/business/user.service';
 import { PositionService } from 'src/app/business/position.service';
 import { DepartmentService } from 'src/app/business/department.service';
 import { WorkflowFormService } from 'src/app/business/workflow-form.service';
 import { WorkflowNodeCondition } from '../model/workflowNodeCondition';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { UserService } from 'src/app/business/system-manage/user.service';
 
 @Component({
   selector: 'app-flow-design',
