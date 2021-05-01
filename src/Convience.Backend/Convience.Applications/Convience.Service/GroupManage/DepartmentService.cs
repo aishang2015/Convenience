@@ -63,75 +63,55 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> AddDepartmentAsync(DepartmentViewModel model)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            using var tran = await _unitOfWork.StartTransactionAsync();
+
+            var department = _mapper.Map<Department>(model);
+            var entity = await _departmentRepository.AddAsync(department);
+            await _unitOfWork.SaveAsync();
+
+            if (!string.IsNullOrWhiteSpace(model.UpId))
             {
-                try
+                var tree = _departmentTreeRepository.Get(dt => dt.Descendant == int.Parse(model.UpId));
+                foreach (var node in tree)
                 {
-                    var department = _mapper.Map<Department>(model);
-                    var entity = await _departmentRepository.AddAsync(department);
-                    await _unitOfWork.SaveAsync();
-                    if (!string.IsNullOrWhiteSpace(model.UpId))
-                    {
-                        var upid = int.Parse(model.UpId);
-                        var tree = _departmentTreeRepository.Get(dt => dt.Descendant == upid);
-                        foreach (var node in tree)
-                        {
-                            await _departmentTreeRepository.AddAsync(new DepartmentTree
-                            {
-                                Ancestor = node.Ancestor,
-                                Descendant = entity.Id,
-                                Length = node.Length + 1
-                            });
-                        }
-                    }
                     await _departmentTreeRepository.AddAsync(new DepartmentTree
                     {
-                        Ancestor = entity.Id,
+                        Ancestor = node.Ancestor,
                         Descendant = entity.Id,
-                        Length = 0
+                        Length = node.Length + 1
                     });
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitAsync(tran);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
                 }
             }
-            return false;
+
+            await _departmentTreeRepository.AddAsync(new DepartmentTree
+            {
+                Ancestor = entity.Id,
+                Descendant = entity.Id,
+                Length = 0
+            });
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitAsync(tran);
+            return true;
         }
 
         public async Task<bool> DeleteDepartmentAsync(int id)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
-            {
-                try
-                {
-                    var claims = _userRepository.GetUserClaims()
-                        .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
-                        c.ClaimValue == id.ToString());
-                    _userRepository.GetUserClaims().RemoveRange(claims);
+            using var tran = await _unitOfWork.StartTransactionAsync();
 
-                    var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
-                        .Select(dt => dt.Descendant);
-                    await _departmentRepository.RemoveAsync(d => childId.Contains(d.Id));
-                    await _departmentTreeRepository.RemoveAsync(
-                        dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitAsync(tran);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                    return false;
-                }
-            }
+            var claims = _userRepository.GetUserClaims()
+                .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
+                c.ClaimValue == id.ToString());
+            _userRepository.GetUserClaims().RemoveRange(claims);
+
+            var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
+                .Select(dt => dt.Descendant);
+            await _departmentRepository.RemoveAsync(d => childId.Contains(d.Id));
+            await _departmentTreeRepository.RemoveAsync(
+                dt => childId.Contains(dt.Ancestor) || childId.Contains(dt.Descendant));
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.CommitAsync(tran);
+            return true;
+
         }
 
         public IQueryable<DepartmentResultModel> GetAllDepartment()
@@ -182,19 +162,10 @@ namespace Convience.Service.GroupManage
 
         public async Task<bool> UpdateDepartmentAsync(DepartmentViewModel model)
         {
-            try
-            {
-                var department = _mapper.Map<Department>(model);
-                _departmentRepository.Update(department);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var department = _mapper.Map<Department>(model);
+            _departmentRepository.Update(department);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

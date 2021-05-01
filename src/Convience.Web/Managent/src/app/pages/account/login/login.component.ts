@@ -40,9 +40,8 @@ export class LoginComponent implements OnInit {
   refreshCaptcha() {
     this._accountService.getCaptcha().subscribe(result => {
 
-      this.captchaKey = result['captchaKey'];
-      this.captcha = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,'
-        + result['captchaData']);
+      this.captchaKey = result.captchaKey;
+      this.captcha = this._sanitizer.bypassSecurityTrustResourceUrl(`data:image/jpg;base64,${result.captchaData}`);
     });
   }
 
@@ -60,11 +59,11 @@ export class LoginComponent implements OnInit {
         this.validateForm.controls['captchaValue'].value)
         .subscribe(
           result => {
-            this._storageService.userToken = result["token"];
-            this._storageService.Name = result["name"];
-            this._storageService.Avatar = result["avatar"];
-            this._storageService.Identifycation = result["identification"];
-            this._storageService.Route = result["routes"];
+            this._storageService.userToken = result.token;
+            this._storageService.Name = result.name;
+            this._storageService.Avatar = result.avatar;
+            this._storageService.Identifycation = result.identification;
+            this._storageService.Route = result.routes;
             this._router.navigate(['/dashboard']);
           },
           error => {

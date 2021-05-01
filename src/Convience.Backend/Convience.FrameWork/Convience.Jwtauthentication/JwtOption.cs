@@ -26,7 +26,7 @@ namespace Convience.JwtAuthentication
             get => _secretKey;
         }
 
-        public DateTime Expires { get => DateTime.UtcNow.AddHours(ExpireSpan); }
+        public DateTime Expires { get => DateTime.Now.AddHours(ExpireSpan); }
 
         public SecurityKey SecurityKey { get; private set; }
 

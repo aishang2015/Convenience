@@ -58,35 +58,17 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> AddArticleAsync(ArticleViewModel model)
         {
-            try
-            {
-                var article = _mapper.Map<Article>(model);
-                await _articleRepository.AddAsync(article);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var article = _mapper.Map<Article>(model);
+            await _articleRepository.AddAsync(article);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public async Task<bool> DeleteArticleAsync(int id)
         {
-            try
-            {
-                await _articleRepository.RemoveAsync(id);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            await _articleRepository.RemoveAsync(id);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
 
         public PagingResultModel<ArticleResultModel> GetArticles(ArticleQueryModel query)
@@ -128,19 +110,10 @@ namespace Convience.Service.ContentManage
 
         public async Task<bool> UpdateArticleAsync(ArticleViewModel model)
         {
-            try
-            {
-                var entity = _mapper.Map<Article>(model);
-                _articleRepository.UpdateIgnore(entity, a => a.CreateTime);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                _logger.LogError(e.StackTrace);
-                return false;
-            }
+            var entity = _mapper.Map<Article>(model);
+            _articleRepository.UpdateIgnore(entity, a => a.CreateTime);
+            await _unitOfWork.SaveAsync();
+            return true;
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace Convience.Model.Models.GroupManage
 {
-    public class DepartmentResultModel : DepartmentViewModel
+    public record DepartmentResultModel : DepartmentViewModel
     {
         public string LeaderName { get; set; }
     }
 
-    public class DepartmentViewModel
+    public record DepartmentViewModel
     {
         public int? Id { get; set; }
 

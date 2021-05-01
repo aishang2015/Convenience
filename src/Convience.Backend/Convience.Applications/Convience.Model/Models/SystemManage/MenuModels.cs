@@ -1,25 +1,18 @@
 ﻿namespace Convience.Model.Models.SystemManage
 {
-    public class MenuViewModel
-    {
-        public int Id { get; set; }
+    public record MenuViewModel
+    (
+        int? Id = null,
+        string UpId = null,
+        string Name = null,
+        string Identification = null,
+        string Permission = null,
+        int? Type = null,
+        string Route = null,
+        int? Sort = null 
+   );
 
-        public string UpId { get; set; }
-
-        public string Name { get; set; }
-
-        public string Identification { get; set; }
-
-        public string Permission { get; set; }
-
-        public int Type { get; set; }
-
-        public string Route { get; set; }
-
-        public int Sort { get; set; }
-    }
-
-    public class MenuResultModel : MenuViewModel
+    public record MenuResultModel : MenuViewModel
     {
     }
 }

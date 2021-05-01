@@ -1,17 +1,14 @@
 ﻿namespace Convience.Model.Models.SystemManage
 {
-    public class RoleViewModel
-    {
-        public string Id { get; set; }
+    public record RoleViewModel(
+        string Id = null,
+        string Name = null,
+        string Menus = null,
+        string Remark = null);
 
-        public string Name { get; set; }
-
-        public string Menus { get; set; }
-
-        public string Remark { get; set; }
-    }
-
-    public class RoleResultModel : RoleViewModel
-    {
-    }
+    public record RoleResultModel(
+        string Id = null,
+        string Name = null,
+        string Menus = null,
+        string Remark = null);
 }

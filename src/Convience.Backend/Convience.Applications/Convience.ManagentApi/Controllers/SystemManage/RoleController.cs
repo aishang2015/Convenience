@@ -27,7 +27,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
         [Permission("roleGet")]
         public async Task<IActionResult> GetRoles([FromQuery] string id)
         {
-            return Ok(await _roleService.GetRole(id));
+            return Ok(await _roleService.GetRoleAsync(id));
         }
 
         [HttpGet("list")]
@@ -42,7 +42,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
         [LogFilter("系统管理", "角色管理", "删除角色")]
         public async Task<IActionResult> DeleteRole([FromQuery] string name)
         {
-            var result = await _roleService.RemoveRole(name);
+            var result = await _roleService.RemoveRoleAsync(name);
             if (!string.IsNullOrEmpty(result))
             {
                 return this.BadRequestResult(result);
@@ -68,7 +68,7 @@ namespace Convience.ManagentApi.Controllers.SystemManage
         [LogFilter("系统管理", "角色管理", "更新角色")]
         public async Task<IActionResult> UpdateRole([FromBody] RoleViewModel viewModel)
         {
-            var result = await _roleService.Update(viewModel);
+            var result = await _roleService.UpdateAsync(viewModel);
             if (!string.IsNullOrEmpty(result))
             {
                 return this.BadRequestResult(result);

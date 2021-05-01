@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UriConfig } from '../configs/uri-config';
+import { UriConfig } from 'src/app/configs/uri-config';
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +42,12 @@ export class UserService {
     return this.httpClient.post(this.uriConstant.UserUri, user);
   }
 
+  setPwd(model: UserPassword) {
+    return this.httpClient.post<UserPassword>(`${this.uriConstant.UserUri}/password`, model);
+  }
+}
+
+export interface UserPassword {
+  id?: number;
+  password?: string;
 }

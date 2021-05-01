@@ -5,10 +5,11 @@ using Convience.Entity.Entity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Injection;
 using Convience.JwtAuthentication;
+using Convience.Model.Constants.SystemManage;
 using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 using System;
@@ -32,11 +33,7 @@ namespace Convience.Service.SystemManage
 
         public Task<string> RemoveUserAsync(string Id);
 
-        public Task<string> RemoveUserByNameAsync(string Name);
-
-        public Task<bool> SetUserPassword(string userName, string password);
-
-        public Task<bool> ResetUserPassword(string userName, string password);
+        public Task<string> SetPasswordAsync(UserPasswordModel model);
     }
 
     public class UserService : BaseService, IUserService
@@ -65,52 +62,46 @@ namespace Convience.Service.SystemManage
         [Autowired]
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
+        [Autowired]
+        private readonly UserManager<SystemUser> _userManager;
+
         public async Task<string> AddUserAsync(UserViewModel model)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            // 开启事务
+            using var tran = await _unitOfWork.StartTransactionAsync();
+
+            // 创建用户
+            var user = _mapper.Map<SystemUser>(model);
+            user.CreatedTime = DateTime.Now;
+            var result = await _userManager.CreateAsync(user);
+            if (!result.Succeeded)
             {
-                try
-                {
-                    var user = _mapper.Map<SystemUser>(model);
-                    var isSuccess = await _userRepository.AddUserAsync(user);
-                    if (!isSuccess)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "无法创建用户，请检查用户名是否相同！";
-                    }
-                    isSuccess = await _userRepository.SetPasswordAsync(user, model.Password);
-                    if (!isSuccess)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "无法创建用户，初始密码创建失败！";
-                    }
-                    isSuccess = await _userRepository.AddUserToRoles(user,
-                        model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-                    if (!isSuccess)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "无法创建用户，设置角色失败！";
-                    }
-
-                    // 更新部门信息
-                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
-                        new List<string> { model.DepartmentId });
-
-                    // 更新职位信息
-                    await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
-                        model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-
-                    await _unitOfWork.CommitAsync(tran);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                }
-
-                return string.Empty;
+                await _unitOfWork.RollBackAsync(tran);
+                return UserConstants.USER_NAME_SAME;
             }
+
+            // 添加角色
+            var isSuccess = await _userRepository.AddUserToRoles(user,
+                model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+            if (!isSuccess)
+            {
+                await _unitOfWork.RollBackAsync(tran);
+                return UserConstants.USER_ROLE_FAIL;
+            }
+
+            // 更新部门信息
+            await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                new List<string> { model.DepartmentId });
+
+            // 更新职位信息
+            await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+            // 保存职务
+            await _unitOfWork.CommitAsync(tran);
+
+            return string.Empty;
+
         }
 
         public async Task<UserResultModel> GetUserAsync(string Id)
@@ -151,12 +142,11 @@ namespace Convience.Service.SystemManage
 
         public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query)
         {
-            var where = ExpressionExtension.TrueExpression<UserResultModel>()
+            var userQuery = _userRepository.GetUsers()
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
 
-            var userQuery = _userRepository.GetUsers();
             if (!string.IsNullOrEmpty(query.RoleId))
             {
                 var roleid = int.Parse(query.RoleId);
@@ -214,153 +204,88 @@ namespace Convience.Service.SystemManage
                               };
 
             var skip = query.Size * (query.Page - 1);
-            var users = resultQuery.Where(where).Skip(skip).Take(query.Size).ToArray();
+            var users = resultQuery.Skip(skip).Take(query.Size).ToArray();
             return new PagingResultModel<UserResultModel>
             {
                 Data = users,
-                Count = resultQuery.Where(where).Count()
+                Count = resultQuery.Count()
             };
         }
 
         public async Task<string> RemoveUserAsync(string Id)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            // 开启事务
+            using var tran = await _unitOfWork.StartTransactionAsync();
+
+            // 删除用户
+            var isSuccess = await _userRepository.RemoveUserByIdAsync(Id);
+            if (!isSuccess)
             {
-                try
-                {
-                    var isSuccess = await _userRepository.RemoveUserByIdAsync(Id);
-                    if (!isSuccess)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "删除失败！";
-                    }
-                    var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
-                    if (count == 0)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "可用的超级管理员数量不能为0！";
-                    }
-                    await _unitOfWork.CommitAsync(tran);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                }
-                return string.Empty;
+                await _unitOfWork.RollBackAsync(tran);
+                return UserConstants.USER_DELETE_FAIL;
             }
-        }
 
-        public async Task<string> RemoveUserByNameAsync(string Name)
-        {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            // 检查超级管理员数量
+            var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
+            if (count == 0)
             {
-                try
-                {
-                    var isSuccess = await _userRepository.RemoveUserByNameAsync(Name);
-                    if (!isSuccess)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "删除失败！";
-                    }
-                    var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
-                    if (count == 0)
-                    {
-                        await _unitOfWork.RollBackAsync(tran);
-                        return "可用的超级管理员数量不能为0！";
-                    }
-                    await _unitOfWork.CommitAsync(tran);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
-                    await _unitOfWork.RollBackAsync(tran);
-                }
-
-                return string.Empty;
+                await _unitOfWork.RollBackAsync(tran);
+                return UserConstants.USER_SUPER_ADMIN_NO_ZERO;
             }
-        }
+            await _unitOfWork.CommitAsync(tran);
 
-        public async Task<bool> ResetUserPassword(string userName, string password)
-        {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            return user != null ?
-                await _userRepository.ResetPasswordAsync(user, password) : false;
-        }
+            return string.Empty;
 
-        public async Task<bool> SetUserPassword(string userName, string password)
-        {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            return user != null ?
-                await _userRepository.SetPasswordAsync(user, password) : false;
         }
 
         public async Task<string> UpdateUserAsync(UserViewModel model)
         {
-            using (var tran = await _unitOfWork.StartTransactionAsync())
+            using var tran = await _unitOfWork.StartTransactionAsync();
+            var user = await _userRepository.GetUserByIdAsync(model.Id.ToString());
+            if (user != null)
             {
-                try
+                _mapper.Map(model, user);
+                var result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
                 {
-                    var user = await _userRepository.GetUserByIdAsync(model.Id.ToString());
-                    if (user != null)
-                    {
-                        _mapper.Map(model, user);
-                        var isSuccess = await _userRepository.UpdateUserAsync(user);
-                        if (!isSuccess)
-                        {
-                            await _unitOfWork.RollBackAsync(tran);
-                            return "无法更新用户，请检查用户名是否相同！";
-                        }
-                        else
-                        {
-                            if (!string.IsNullOrEmpty(model.Password))
-                            {
-                                isSuccess = await _userRepository.ResetPasswordAsync(user, model.Password);
-                                if (!isSuccess)
-                                {
-                                    await _unitOfWork.RollBackAsync(tran);
-                                    return "更新密码失败！";
-                                }
-                            }
-                        }
-
-                        isSuccess = await _userRepository.AddUserToRoles(user,
-                            model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-                        if (!isSuccess)
-                        {
-                            await _unitOfWork.RollBackAsync(tran);
-                            return "无法更新用户，更新角色失败！";
-                        }
-
-                        var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
-                        if (count == 0)
-                        {
-                            await _unitOfWork.RollBackAsync(tran);
-                            return "可用的超级管理员数量不能为0！";
-                        }
-
-                        // 更新部门信息
-                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
-                            new List<string> { model.DepartmentId });
-
-                        // 更新职位信息
-                        await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
-                            model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-
-                        await _unitOfWork.CommitAsync(tran);
-                    }
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e.Message);
-                    _logger.LogError(e.StackTrace);
                     await _unitOfWork.RollBackAsync(tran);
-                    return "用户更新失败，请练习管理员！";
+                    return UserConstants.USER_UPDATE_NAME_SAME;
                 }
+
+                var isSuccess = await _userRepository.AddUserToRoles(user,
+                    model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+                if (!isSuccess)
+                {
+                    await _unitOfWork.RollBackAsync(tran);
+                    return UserConstants.USER_UPDATE_ROlE_FAIL;
+                }
+
+                var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
+                if (count == 0)
+                {
+                    await _unitOfWork.RollBackAsync(tran);
+                    return UserConstants.USER_SUPER_ADMIN_NO_ZERO;
+                }
+
+                // 更新部门信息
+                await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                    new List<string> { model.DepartmentId });
+
+                // 更新职位信息
+                await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                    model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+                await _unitOfWork.CommitAsync(tran);
             }
             return string.Empty;
+        }
+
+        public async Task<string> SetPasswordAsync(UserPasswordModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.id.ToString());
+            var result = await _userManager.RemovePasswordAsync(user);
+            result = await _userManager.AddPasswordAsync(user, model.Password);
+            return result.Succeeded ? string.Empty : UserConstants.USER_SUPER_ADMIN_NO_ZERO;
         }
     }
 }
