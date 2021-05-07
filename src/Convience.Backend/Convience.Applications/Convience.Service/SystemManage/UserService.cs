@@ -218,8 +218,14 @@ namespace Convience.Service.SystemManage
             using var tran = await _unitOfWork.StartTransactionAsync();
 
             // 删除用户
-            var isSuccess = await _userRepository.RemoveUserByIdAsync(Id);
-            if (!isSuccess)
+            var user = await _userManager.FindByIdAsync(Id);
+            var haveUser = user != null;
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+
+            if (!haveUser)
             {
                 await _unitOfWork.RollBackAsync(tran);
                 return UserConstants.USER_DELETE_FAIL;

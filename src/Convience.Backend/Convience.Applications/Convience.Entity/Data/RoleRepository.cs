@@ -21,12 +21,6 @@ namespace Convience.Entity.Data
 
         IQueryable<SystemRole> GetRoles();
 
-        IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where);
-
-        IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size);
-
-        IQueryable<SystemRole> GetRoles(int page, int size);
-
         Task<int> GetMemberCount(string roleName);
 
         Task<bool> AddOrUpdateRoleClaim(SystemRole role, string claimType, string claimValue);
@@ -41,23 +35,6 @@ namespace Convience.Entity.Data
         {
             _roleManager = roleManager;
             _userManager = userManager;
-        }
-
-        public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where)
-        {
-            return _roleManager.Roles.Where(where).OrderBy(r => r.Id);
-        }
-
-        public IQueryable<SystemRole> GetRoles(Expression<Func<SystemRole, bool>> where, int page, int size)
-        {
-            var skip = size * (page - 1);
-            return GetRoles(where).Take(size).Skip(skip);
-        }
-
-        public IQueryable<SystemRole> GetRoles(int page, int size)
-        {
-            var skip = size * (page - 1);
-            return _roleManager.Roles.OrderBy(r => r.Id).Skip(skip).Take(size);
         }
 
         public IQueryable<SystemRole> GetRoles()

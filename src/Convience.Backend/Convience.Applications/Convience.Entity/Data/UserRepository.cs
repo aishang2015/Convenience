@@ -14,25 +14,10 @@ namespace Convience.Entity.Data
 
     public interface IUserRepository
     {
-        public Task<bool> SetPasswordAsync(SystemUser user, string password);
-
-        public Task<bool> ResetPasswordAsync(SystemUser user, string password);
-
-        public Task<bool> CheckPasswordAsync(SystemUser user, string password);
-
-        public Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword);
-
-        public Task<bool> UpdateUserAsync(SystemUser user);
-
-        public Task<bool> RemoveUserByIdAsync(string id);
-
-        public Task<bool> RemoveUserByNameAsync(string name);
 
         public Task<SystemUser> GetUserByIdAsync(string id);
 
         public Task<SystemUser> GetUserByNameAsync(string name);
-
-        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size);
 
         public IQueryable<SystemUser> GetUsers();
 
@@ -60,29 +45,6 @@ namespace Convience.Entity.Data
             _userManager = userManager;
             _roleManger = roleManger;
             _systemIdentityDbContext = systemIdentityDbContext;
-        }
-
-        public async Task<bool> SetPasswordAsync(SystemUser user, string password)
-        {
-            var result = await _userManager.AddPasswordAsync(user, password);
-            return result.Succeeded;
-        }
-
-        public async Task<bool> ResetPasswordAsync(SystemUser user, string password)
-        {
-            var result = await _userManager.RemovePasswordAsync(user);
-            return result.Succeeded ? await SetPasswordAsync(user, password) : false;
-        }
-
-        public async Task<bool> ChangePasswordAsync(SystemUser user, string oldPassword, string newPassword)
-        {
-            var result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
-            return result.Succeeded;
-        }
-
-        public async Task<bool> CheckPasswordAsync(SystemUser user, string password)
-        {
-            return await _userManager.CheckPasswordAsync(user, password);
         }
 
         public async Task<SystemUser> GetUserByIdAsync(string id)
@@ -126,45 +88,10 @@ namespace Convience.Entity.Data
             return _systemIdentityDbContext.UserRoles;
         }
 
-
-        public IQueryable<SystemUser> GetUsers(Expression<Func<SystemUser, bool>> where, int page, int size)
-        {
-            var skip = size * (page - 1);
-            return GetUsers().Where(where).Skip(skip).Take(size);
-        }
-
         public async Task<int> GetUserCountInRoleAsync(string roleName)
         {
             var users = await _userManager.GetUsersInRoleAsync(roleName);
             return users.Count(user => user.IsActive);
-        }
-
-        public async Task<bool> RemoveUserByIdAsync(string id)
-        {
-            var user = await GetUserByIdAsync(id);
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return result.Succeeded;
-            }
-            return true;
-        }
-
-        public async Task<bool> UpdateUserAsync(SystemUser user)
-        {
-            var result = await _userManager.UpdateAsync(user);
-            return result.Succeeded;
-        }
-
-        public async Task<bool> RemoveUserByNameAsync(string name)
-        {
-            var user = await GetUserByNameAsync(name);
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return result.Succeeded;
-            }
-            return true;
         }
 
         public async Task<bool> AddUserToRoles(SystemUser user, IEnumerable<string> roleIds)

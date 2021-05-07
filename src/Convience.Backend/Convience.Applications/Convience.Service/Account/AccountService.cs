@@ -3,7 +3,7 @@ using Convience.Entity.Data;
 using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
@@ -30,11 +30,14 @@ namespace Convience.Service.Account
     {
         private readonly IUserRepository _userRepository;
 
+        private readonly UserManager<SystemUser> _userManager;
+
         private readonly IMemoryCache _cachingProvider;
 
         private readonly IJwtFactory _jwtFactory;
 
         public AccountService(IUserRepository userRepository,
+            UserManager<SystemUser> _userManager,
             IMemoryCache cachingProvider,
             IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
@@ -59,7 +62,7 @@ namespace Convience.Service.Account
             var user = await _userRepository.GetUserByNameAsync(userName);
             if (user != null)
             {
-                var isValid = await _userRepository.CheckPasswordAsync(user, password);
+                var isValid = await _userManager.CheckPasswordAsync(user, password);
                 if (isValid)
                 {
                     var pairs = new List<(string, string)>
@@ -78,15 +81,8 @@ namespace Convience.Service.Account
         public async Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
             var user = await _userRepository.GetUserByNameAsync(userName);
-            if (user != null)
-            {
-                var isValid = await _userRepository.ChangePasswordAsync(user, oldPassword, newPassword);
-                if (isValid)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return user == null ? false :
+                (await _userManager.ChangePasswordAsync(user, oldPassword, newPassword)).Succeeded;
 
         }
 
