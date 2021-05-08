@@ -108,7 +108,8 @@ namespace Convience.ManagentApi
     {
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int>
+            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int, SystemUserClaim,
+                SystemUserRole, SystemUserLogin, SystemRoleClaim, SystemUserToken>
                 (connectionString, DataBaseType.PostgreSQL);
 
             services.AddRepositories<SystemIdentityDbContext>();

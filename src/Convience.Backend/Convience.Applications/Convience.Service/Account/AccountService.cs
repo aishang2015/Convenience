@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.Service.Account
@@ -28,38 +29,32 @@ namespace Convience.Service.Account
 
     public class AccountService : IAccountService
     {
-        private readonly IUserRepository _userRepository;
-
         private readonly UserManager<SystemUser> _userManager;
 
         private readonly IMemoryCache _cachingProvider;
 
         private readonly IJwtFactory _jwtFactory;
 
-        public AccountService(IUserRepository userRepository,
-            UserManager<SystemUser> _userManager,
+        public AccountService(
+            UserManager<SystemUser> userManager,
             IMemoryCache cachingProvider,
             IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
             var option = jwtOptionAccessor.Get(JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme);
-            _userRepository = userRepository;
+            _userManager = userManager;
             _cachingProvider = cachingProvider;
             _jwtFactory = new JwtFactory(option);
         }
 
         public async Task<bool> IsStopUsingAsync(string userName)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            if (user != null && user.IsActive)
-            {
-                return true;
-            }
-            return false;
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
+            return user != null;
         }
 
         public async Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
             if (user != null)
             {
                 var isValid = await _userManager.CheckPasswordAsync(user, password);
@@ -80,7 +75,7 @@ namespace Convience.Service.Account
 
         public async Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName);
             return user == null ? false :
                 (await _userManager.ChangePasswordAsync(user, oldPassword, newPassword)).Succeeded;
 

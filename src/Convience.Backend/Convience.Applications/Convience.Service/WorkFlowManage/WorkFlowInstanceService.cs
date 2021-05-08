@@ -79,7 +79,9 @@ namespace Convience.Service.WorkFlowManage
     {
         private readonly ILogger<WorkFlowInstanceService> _logger;
 
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<SystemUser> _userRepository;
+
+        private readonly IRepository<SystemUserClaim> _userClaimRepository;
 
         private readonly IRepository<Department> _departmentRepository;
 
@@ -107,7 +109,8 @@ namespace Convience.Service.WorkFlowManage
 
         public WorkFlowInstanceService(
             ILogger<WorkFlowInstanceService> logger,
-            IUserRepository userRepository,
+            IRepository<SystemUser> userRepository,
+            IRepository<SystemUserClaim> userClaimRepository,
             IRepository<Department> departmentRepository,
             IRepository<WorkFlow> workflowRepository,
             IRepository<WorkFlowLink> linkRepository,
@@ -123,6 +126,7 @@ namespace Convience.Service.WorkFlowManage
         {
             _logger = logger;
             _userRepository = userRepository;
+            _userClaimRepository = userClaimRepository;
             _departmentRepository = departmentRepository;
             _workflowRepository = workflowRepository;
             _linkRepository = linkRepository;
@@ -550,15 +554,15 @@ namespace Convience.Service.WorkFlowManage
 
                     // 指定人员模式，找出所有人员生成route记录
                     var userids = node.Handlers.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    users = from u in _userRepository.GetUsers()
+                    users = from u in _userRepository.Get()
                             where userids.Contains(u.Id.ToString())
                             select u;
                     break;
                 case HandleModeEnum.Position:
 
                     // 指定职位模式，找出当前职位的人员生成route记录
-                    users = from u in _userRepository.GetUsers()
-                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                    users = from u in _userRepository.Get()
+                            join uc in _userClaimRepository.Get() on u.Id equals uc.UserId
                             where uc.ClaimType == CustomClaimTypes.UserPosition &&
                                     uc.ClaimValue == node.Position.ToString()
                             select u;
@@ -570,7 +574,7 @@ namespace Convience.Service.WorkFlowManage
                                    where d.Id.ToString() == node.Department
                                    select d.LeaderId;
 
-                    users = from u in _userRepository.GetUsers()
+                    users = from u in _userRepository.Get()
                             where leaderId.FirstOrDefault() == u.Id
                             select u;
 
@@ -579,8 +583,8 @@ namespace Convience.Service.WorkFlowManage
 
                     // 指定发起人部门负责人模式，找出流程发起人所在部门的负责人
                     // 查找用户所在部门
-                    var department = from u in _userRepository.GetUsers()
-                                     join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                    var department = from u in _userRepository.Get()
+                                     join uc in _userClaimRepository.Get() on u.Id equals uc.UserId
                                      where u.UserName == account &&
                                          uc.ClaimType == CustomClaimTypes.UserDepartment
                                      select uc.ClaimValue;
@@ -590,7 +594,7 @@ namespace Convience.Service.WorkFlowManage
                                where d.Id.ToString() == department.FirstOrDefault()
                                select d.LeaderId;
 
-                    users = from u in _userRepository.GetUsers()
+                    users = from u in _userRepository.Get()
                             where leaderId.FirstOrDefault() == u.Id
                             select u;
                     break;

@@ -12,11 +12,8 @@ namespace Convience.ManagentApi.Infrastructure
     {
         public static ConcurrentDictionary<string, string> Onlines = new ConcurrentDictionary<string, string>();
 
-        private readonly IUserRepository _userRepository;
-
-        public TestHub(IUserRepository userRepository)
+        public TestHub()
         {
-            _userRepository = userRepository;
         }
 
         public override Task OnConnectedAsync()

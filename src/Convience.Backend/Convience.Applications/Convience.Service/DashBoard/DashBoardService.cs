@@ -15,17 +15,17 @@ namespace Convience.Service.DashBoard
 
     public class DashBoardService : IDashBoardService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<SystemUser> _userRepository;
 
-        private readonly IRoleRepository _roleRepository;
+        private readonly IRepository<SystemRole> _roleRepository;
 
         private readonly IRepository<Department> _departmentRespository;
 
         private readonly IRepository<Position> _positionRespository;
 
         public DashBoardService(
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
+            IRepository<SystemUser> userRepository,
+            IRepository<SystemRole> roleRepository,
             IRepository<Department> departmentRespository,
             IRepository<Position> positionRespository)
         {
@@ -39,8 +39,8 @@ namespace Convience.Service.DashBoard
         {
             return new DashBoardResultModel()
             {
-                UserCount = _userRepository.GetUsers().Count(),
-                RoleCount = _roleRepository.GetRoles().Count(),
+                UserCount = await _userRepository.CountAsync(),
+                RoleCount = await _roleRepository.CountAsync(),
                 DepartmentCount = await _departmentRespository.CountAsync(),
                 PositionCount = await _positionRespository.CountAsync(),
             };

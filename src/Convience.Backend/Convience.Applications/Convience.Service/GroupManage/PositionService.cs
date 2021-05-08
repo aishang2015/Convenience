@@ -41,7 +41,7 @@ namespace Convience.Service.GroupManage
 
         private readonly IRepository<Position> _positionRepository;
 
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<SystemUserClaim> _userClaimRepository;
 
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
@@ -50,13 +50,13 @@ namespace Convience.Service.GroupManage
         public PositionService(
             ILogger<PositionService> logger,
             IRepository<Position> positionRepository,
-            IUserRepository userRepository,
+            IRepository<SystemUserClaim> userClaimRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
             _logger = logger;
             _positionRepository = positionRepository;
-            _userRepository = userRepository;
+            _userClaimRepository = userClaimRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -78,10 +78,8 @@ namespace Convience.Service.GroupManage
         {
             using var tran = await _unitOfWork.StartTransactionAsync();
 
-            var claims = _userRepository.GetUserClaims()
-                .Where(c => c.ClaimType == CustomClaimTypes.UserPosition &&
-                c.ClaimValue == id.ToString());
-            _userRepository.GetUserClaims().RemoveRange(claims);
+            await _userClaimRepository.RemoveAsync(uc => uc.ClaimType == CustomClaimTypes.UserPosition &&
+                uc.ClaimValue == id.ToString());
 
             await _positionRepository.RemoveAsync(id);
             await _unitOfWork.SaveAsync();

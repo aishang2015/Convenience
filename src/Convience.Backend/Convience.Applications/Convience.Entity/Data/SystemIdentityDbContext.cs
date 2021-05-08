@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Convience.Entity.Data
 {
-    public class SystemIdentityDbContext : IdentityDbContext<SystemUser, SystemRole, int>
+    public class SystemIdentityDbContext :
+        IdentityDbContext<SystemUser, SystemRole, int, SystemUserClaim, SystemUserRole, SystemUserLogin, SystemRoleClaim, SystemUserToken>
     {
         public SystemIdentityDbContext(DbContextOptions<SystemIdentityDbContext> options) : base(options) { }
 

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
@@ -41,20 +42,24 @@ namespace Convience.Service.SystemManage
 
 #pragma warning disable CS0649
 
-        [Autowired]
-        private readonly ILogger<UserService> _logger;
 
         [Autowired]
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<SystemUser> _userRepository;
 
         [Autowired]
-        private readonly IRoleRepository _roleRepository;
+        private readonly IRepository<SystemUserClaim> _userClaimRepository;
+
+        [Autowired]
+        private readonly IRepository<SystemUserRole> _userRoleRepository;
 
         [Autowired]
         private readonly IRepository<Position> _positionRepository;
 
         [Autowired]
         private readonly IRepository<Department> _departmentRepository;
+
+        [Autowired]
+        private readonly IRepository<SystemRole> _roleRepository;
 
         [Autowired]
         private readonly IMapper _mapper;
@@ -80,21 +85,16 @@ namespace Convience.Service.SystemManage
                 return UserConstants.USER_NAME_SAME;
             }
 
-            // 添加角色
-            var isSuccess = await _userRepository.AddUserToRoles(user,
+            // 设置用户角色
+            await AddUserToRolesAsync(user,
                 model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-            if (!isSuccess)
-            {
-                await _unitOfWork.RollBackAsync(tran);
-                return UserConstants.USER_ROLE_FAIL;
-            }
 
             // 更新部门信息
-            await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+            await UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
                 new List<string> { model.DepartmentId });
 
             // 更新职位信息
-            await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+            await UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
                 model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
             // 保存职务
@@ -106,7 +106,7 @@ namespace Convience.Service.SystemManage
 
         public async Task<UserResultModel> GetUserAsync(string Id)
         {
-            var user = await _userRepository.GetUserByIdAsync(Id);
+            var user = _userRepository.Get(u => u.Id.ToString() == Id).FirstOrDefault();
             return new UserResultModel
             {
                 Avatar = user.Avatar,
@@ -119,10 +119,10 @@ namespace Convience.Service.SystemManage
                 CreatedTime = user.CreatedTime,
 
                 RoleIds = user.RoleIds,
-                DepartmentId = (from uc in _userRepository.GetUserClaims()
+                DepartmentId = (from uc in _userClaimRepository.Get()
                                 where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment
                                 select uc.ClaimValue.ToString()).FirstOrDefault(),
-                PositionIds = string.Join(',', (from uc in _userRepository.GetUserClaims()
+                PositionIds = string.Join(',', (from uc in _userClaimRepository.Get()
                                                 where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition
                                                 select uc.ClaimValue).ToArray()),
             };
@@ -130,7 +130,7 @@ namespace Convience.Service.SystemManage
 
         public IEnumerable<DicResultModel> GetUserDic(string name)
         {
-            var dic = from user in _userRepository.GetUsers()
+            var dic = from user in _userRepository.Get()
                       where user.Name.Contains(name)
                       select new DicResultModel
                       {
@@ -142,7 +142,7 @@ namespace Convience.Service.SystemManage
 
         public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query)
         {
-            var userQuery = _userRepository.GetUsers()
+            var userQuery = _userRepository.Get()
                 .AndIfHaveValue(query.UserName, u => u.UserName.Contains(query.UserName))
                 .AndIfHaveValue(query.Name, u => u.Name.Contains(query.Name))
                 .AndIfHaveValue(query.PhoneNumber, u => u.PhoneNumber.Contains(query.PhoneNumber));
@@ -151,7 +151,7 @@ namespace Convience.Service.SystemManage
             {
                 var roleid = int.Parse(query.RoleId);
                 userQuery = from u in userQuery
-                            join ur in _userRepository.GetUserRoles() on u.Id equals ur.UserId
+                            join ur in _userRoleRepository.Get() on u.Id equals ur.UserId
                             where ur.RoleId == roleid
                             select u;
             }
@@ -159,7 +159,7 @@ namespace Convience.Service.SystemManage
             if (query.Department != null)
             {
                 userQuery = from u in userQuery
-                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                            join uc in _userClaimRepository.Get() on u.Id equals uc.UserId
                             where uc.ClaimType == CustomClaimTypes.UserDepartment &&
                                     uc.ClaimValue == query.Department.ToString()
                             select u;
@@ -168,7 +168,7 @@ namespace Convience.Service.SystemManage
             if (query.Position != null)
             {
                 userQuery = from u in userQuery
-                            join uc in _userRepository.GetUserClaims() on u.Id equals uc.UserId
+                            join uc in _userClaimRepository.Get() on u.Id equals uc.UserId
                             where uc.ClaimType == CustomClaimTypes.UserPosition &&
                                     uc.ClaimValue == query.Position.ToString()
                             select u;
@@ -187,16 +187,16 @@ namespace Convience.Service.SystemManage
                                   Sex = (int)u.Sex,
                                   CreatedTime = u.CreatedTime,
 
-                                  RoleName = string.Join(',', from ur in _userRepository.GetUserRoles()
-                                                              join r in _roleRepository.GetRoles() on ur.RoleId equals r.Id
+                                  RoleName = string.Join(',', from ur in _userRoleRepository.Get(false)
+                                                              join r in _roleRepository.Get(false) on ur.RoleId equals r.Id
                                                               where ur.UserId == u.Id
                                                               select r.Name),
-                                  DepartmentName = (from uc in _userRepository.GetUserClaims()
+                                  DepartmentName = (from uc in _userClaimRepository.Get(false)
                                                     from dinfo in _departmentRepository.Get(false)
                                                     where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment &&
                                                          uc.ClaimValue == dinfo.Id.ToString()
                                                     select dinfo.Name).FirstOrDefault(),
-                                  PositionName = string.Join(',', from uc in _userRepository.GetUserClaims()
+                                  PositionName = string.Join(',', from uc in _userClaimRepository.Get(false)
                                                                   from pinfo in _positionRepository.Get(false)
                                                                   where u.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserPosition &&
                                                                        uc.ClaimValue == pinfo.Id.ToString()
@@ -232,7 +232,8 @@ namespace Convience.Service.SystemManage
             }
 
             // 检查超级管理员数量
-            var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
+            var superManager = _roleRepository.Get(r => r.Name == "超级管理员").FirstOrDefault();
+            var count = _userRoleRepository.Get(ur => ur.RoleId == superManager.Id).Count();
             if (count == 0)
             {
                 await _unitOfWork.RollBackAsync(tran);
@@ -247,7 +248,7 @@ namespace Convience.Service.SystemManage
         public async Task<string> UpdateUserAsync(UserViewModel model)
         {
             using var tran = await _unitOfWork.StartTransactionAsync();
-            var user = await _userRepository.GetUserByIdAsync(model.Id.ToString());
+            var user = _userRepository.Get(u => u.Id == model.Id).FirstOrDefault();
             if (user != null)
             {
                 _mapper.Map(model, user);
@@ -258,15 +259,11 @@ namespace Convience.Service.SystemManage
                     return UserConstants.USER_UPDATE_NAME_SAME;
                 }
 
-                var isSuccess = await _userRepository.AddUserToRoles(user,
+                await AddUserToRolesAsync(user,
                     model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
-                if (!isSuccess)
-                {
-                    await _unitOfWork.RollBackAsync(tran);
-                    return UserConstants.USER_UPDATE_ROlE_FAIL;
-                }
 
-                var count = await _userRepository.GetUserCountInRoleAsync("超级管理员");
+                var superManager = _roleRepository.Get(r => r.Name == "超级管理员").FirstOrDefault();
+                var count = _userRoleRepository.Get(ur => ur.RoleId == superManager.Id).Count();
                 if (count == 0)
                 {
                     await _unitOfWork.RollBackAsync(tran);
@@ -274,11 +271,11 @@ namespace Convience.Service.SystemManage
                 }
 
                 // 更新部门信息
-                await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
+                await UpdateUserClaimsAsync(user, CustomClaimTypes.UserDepartment,
                     new List<string> { model.DepartmentId });
 
                 // 更新职位信息
-                await _userRepository.UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
+                await UpdateUserClaimsAsync(user, CustomClaimTypes.UserPosition,
                     model.PositionIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
                 await _unitOfWork.CommitAsync(tran);
@@ -293,5 +290,36 @@ namespace Convience.Service.SystemManage
             result = await _userManager.AddPasswordAsync(user, model.Password);
             return result.Succeeded ? string.Empty : UserConstants.USER_SUPER_ADMIN_NO_ZERO;
         }
+
+
+        private async Task AddUserToRolesAsync(SystemUser user, IEnumerable<string> roleIds)
+        {
+            await _userRoleRepository.RemoveAsync(r => roleIds.Contains(r.RoleId.ToString()));
+
+            var roleaArray = from role in _roleRepository.Get()
+                             where roleIds.Contains(role.Id.ToString())
+                             select role.Name;
+            foreach (var roleId in roleIds)
+            {
+                await _userRoleRepository.AddAsync(new SystemUserRole
+                {
+                    RoleId = int.Parse(roleId),
+                    UserId = user.Id
+                });
+            }
+        }
+
+        private async Task UpdateUserClaimsAsync(SystemUser user, string claimType, IEnumerable<string> values)
+        {
+            var ucs = from uc in _userClaimRepository.Get()
+                      where uc.ClaimType == claimType && uc.UserId == user.Id
+                      select new Claim(uc.ClaimType, uc.ClaimValue);
+            await _userManager.RemoveClaimsAsync(user, ucs.ToArray());
+
+            var newucs = from v in values
+                         select new Claim(claimType, v ?? string.Empty);
+            await _userManager.AddClaimsAsync(user, newucs.ToArray());
+        }
+
     }
 }
