@@ -1,9 +1,7 @@
-﻿using Convience.Entity.Data;
-using Convience.Entity.Entity;
+﻿using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Model.Models.DashBoard;
-
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.Service.DashBoard

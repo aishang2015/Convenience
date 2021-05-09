@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.Entity.Entity.Logs;
 using Convience.ManagentApi.Infrastructure.Logs;
 using Convience.Util.Helpers;

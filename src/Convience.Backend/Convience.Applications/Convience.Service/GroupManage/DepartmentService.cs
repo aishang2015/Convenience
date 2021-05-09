@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models;
@@ -47,6 +48,7 @@ namespace Convience.Service.GroupManage
             IRepository<Department> departmentRepository,
             IRepository<DepartmentTree> departmentTreeRepository,
             IRepository<SystemUser> userRepository,
+            IRepository<SystemUserClaim> userClaimRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
@@ -54,6 +56,7 @@ namespace Convience.Service.GroupManage
             _departmentRepository = departmentRepository;
             _departmentTreeRepository = departmentTreeRepository;
             _userRepository = userRepository;
+            _userClaimRepository = userClaimRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }

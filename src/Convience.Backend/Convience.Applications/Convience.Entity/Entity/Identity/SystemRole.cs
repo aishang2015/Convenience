@@ -2,7 +2,7 @@
 
 using System.ComponentModel;
 
-namespace Convience.Entity.Data
+namespace Convience.Entity.Entity.Identity
 {
     public class SystemRole : IdentityRole<int>
     {

@@ -1,5 +1,5 @@
-﻿
-using Convience.Entity.Data;
+﻿using Convience.Entity.Entity.Identity;
+using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
@@ -20,7 +20,7 @@ namespace Convience.Service.Account
 
         public string ValidateCaptcha(string captchaKey, string captchaValue);
 
-        public Task<bool> IsStopUsingAsync(string userName);
+        public bool IsStopUsing(string userName);
 
         public Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password);
 
@@ -31,22 +31,26 @@ namespace Convience.Service.Account
     {
         private readonly UserManager<SystemUser> _userManager;
 
+        private readonly IRepository<SystemUserRole> _userRoleRepository;
+
         private readonly IMemoryCache _cachingProvider;
 
         private readonly IJwtFactory _jwtFactory;
 
         public AccountService(
             UserManager<SystemUser> userManager,
+            IRepository<SystemUserRole> userRoleRepository,
             IMemoryCache cachingProvider,
             IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
             var option = jwtOptionAccessor.Get(JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme);
             _userManager = userManager;
+            _userRoleRepository = userRoleRepository;
             _cachingProvider = cachingProvider;
             _jwtFactory = new JwtFactory(option);
         }
 
-        public async Task<bool> IsStopUsingAsync(string userName)
+        public bool IsStopUsing(string userName)
         {
             var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
             return user != null;
@@ -55,6 +59,8 @@ namespace Convience.Service.Account
         public async Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password)
         {
             var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
+            var roleIds = string.Join(',',
+                _userRoleRepository.Get(ur => ur.UserId == user.Id).Select(ur => ur.RoleId));
             if (user != null)
             {
                 var isValid = await _userManager.CheckPasswordAsync(user, password);
@@ -63,11 +69,11 @@ namespace Convience.Service.Account
                     var pairs = new List<(string, string)>
                     {
                         (CustomClaimTypes.UserName,user.UserName),
-                        (CustomClaimTypes.UserRoleIds,user.RoleIds),
+                        (CustomClaimTypes.UserRoleIds,roleIds),
                         (CustomClaimTypes.Name,user.Name)
                     };
                     return new ValidateCredentialsResultModel(_jwtFactory.GenerateJwtToken(pairs),
-                        user.Name, user.Avatar, user.RoleIds);
+                        user.Name, user.Avatar, roleIds);
                 }
             }
             return null;

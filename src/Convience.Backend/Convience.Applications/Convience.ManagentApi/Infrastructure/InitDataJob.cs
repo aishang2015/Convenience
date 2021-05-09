@@ -1,6 +1,6 @@
 ﻿using Convience.Background;
 using Convience.Entity.Data;
-
+using Convience.Entity.Entity.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 

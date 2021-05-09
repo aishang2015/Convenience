@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Constants.SystemManage;

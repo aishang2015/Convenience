@@ -1,4 +1,5 @@
-﻿using Convience.EntityFrameWork.Infrastructure;
+﻿using Convience.Entity.Entity.Identity;
+using Convience.EntityFrameWork.Infrastructure;
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

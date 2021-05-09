@@ -1,7 +1,7 @@
 using Convience.Caching;
 using Convience.Entity.Data;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Infrastructure;
-using Convience.EntityFrameWork.Repositories;
 using Convience.Filestorage.Filesystem;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
@@ -112,9 +112,7 @@ namespace Convience.ManagentApi
                 SystemUserRole, SystemUserLogin, SystemRoleClaim, SystemUserToken>
                 (connectionString, DataBaseType.PostgreSQL);
 
-            services.AddRepositories<SystemIdentityDbContext>();
-
-            services.AddRepositories();
+            services.AddScoped<SystemIdentityDbUnitOfWork>();
 
             return services;
         }

@@ -51,7 +51,7 @@ namespace Convience.ManagentApi.Controllers
             }
 
             // 验证用户是否可以使用
-            var isActive = await _loginService.IsStopUsingAsync(model.UserName);
+            var isActive = _loginService.IsStopUsing(model.UserName);
             if (!isActive)
             {
                 return this.BadRequestResult(AccountConstants.ACCOUNT_NOT_ACTIVE);

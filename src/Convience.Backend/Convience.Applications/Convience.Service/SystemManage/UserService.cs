@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.Injection;
 using Convience.JwtAuthentication;
@@ -10,7 +11,6 @@ using Convience.Model.Models;
 using Convience.Model.Models.SystemManage;
 using Convience.Util.Extension;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace Convience.Service.SystemManage
 
         public PagingResultModel<UserResultModel> GetUsers(UserQueryModel query);
 
-        public Task<UserResultModel> GetUserAsync(string Id);
+        public UserResultModel GetUser(string Id);
 
         public Task<string> AddUserAsync(UserViewModel model);
 
@@ -104,7 +104,7 @@ namespace Convience.Service.SystemManage
 
         }
 
-        public async Task<UserResultModel> GetUserAsync(string Id)
+        public UserResultModel GetUser(string Id)
         {
             var user = _userRepository.Get(u => u.Id.ToString() == Id).FirstOrDefault();
             return new UserResultModel
@@ -118,7 +118,9 @@ namespace Convience.Service.SystemManage
                 Sex = (int)user.Sex,
                 CreatedTime = user.CreatedTime,
 
-                RoleIds = user.RoleIds,
+                RoleIds = string.Join(',', from ur in _userRoleRepository.Get()
+                                           where ur.UserId == user.Id
+                                           select ur.RoleId),
                 DepartmentId = (from uc in _userClaimRepository.Get()
                                 where user.Id == uc.UserId && uc.ClaimType == CustomClaimTypes.UserDepartment
                                 select uc.ClaimValue.ToString()).FirstOrDefault(),

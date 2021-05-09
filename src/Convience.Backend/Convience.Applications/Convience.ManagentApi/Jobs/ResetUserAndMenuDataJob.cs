@@ -1,4 +1,5 @@
 ﻿using Convience.Entity.Data;
+using Convience.Entity.Entity.Identity;
 using Convience.ManagentApi.Infrastructure;
 
 using Microsoft.AspNetCore.Identity;
