@@ -64,7 +64,7 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().RemoveRange(dbContext.Set<Menu>());
             dbContext.Set<Menu>().Add(new Menu(8, "仪表盘", "dashaboard", null, 1, null, 0));
             dbContext.Set<Menu>().Add(new Menu(16, "系统管理", "systemmanage", null, 1, null, 1));
-            dbContext.Set<Menu>().Add(new Menu(17, "用户管理", "userManage", "userList,roleNameList", 1, null, 1));
+            dbContext.Set<Menu>().Add(new Menu(17, "用户管理", "userManage", "userList,roleNameList,allPosition,allDepartment", 1, null, 1));
             dbContext.Set<Menu>().Add(new Menu(18, "角色管理", "roleManage", "roleList,menuList", 1, null, 2));
             dbContext.Set<Menu>().Add(new Menu(19, "菜单管理", "menuManage", "menuList", 1, null, 3));
             dbContext.Set<Menu>().Add(new Menu(20, "添加按钮", "adduserbtn", "userAdd", 2, null, 1));

@@ -254,12 +254,7 @@ namespace Convience.Service.SystemManage
             if (user != null)
             {
                 _mapper.Map(model, user);
-                var result = await _userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                {
-                    await _unitOfWork.RollBackAsync(tran);
-                    return UserConstants.USER_UPDATE_NAME_SAME;
-                }
+                _userRepository.Update(user);
 
                 await AddUserToRolesAsync(user,
                     model.RoleIds.Split(',', StringSplitOptions.RemoveEmptyEntries));
@@ -296,7 +291,7 @@ namespace Convience.Service.SystemManage
 
         private async Task AddUserToRolesAsync(SystemUser user, IEnumerable<string> roleIds)
         {
-            await _userRoleRepository.RemoveAsync(r => roleIds.Contains(r.RoleId.ToString()));
+            await _userRoleRepository.RemoveAsync(r => user.Id == r.UserId);
 
             var roleaArray = from role in _roleRepository.Get()
                              where roleIds.Contains(role.Id.ToString())
