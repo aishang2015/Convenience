@@ -10,6 +10,7 @@ using Convience.Injection;
 using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
+using Convience.ManagentApi.Infrastructure.BackgroudTask;
 using Convience.ManagentApi.Jobs;
 using Convience.SignalRs;
 using Convience.Util.Extension;
@@ -59,6 +60,7 @@ namespace Convience.ManagentApi
                 .AddCachingServices()
                 .AddResponseCompression()
                 .AddAutowired()
+                .AddBackgroundServices()
                 .AddSignalR();
         }
 
@@ -159,8 +161,6 @@ namespace Convience.ManagentApi
 
         public static IApplicationBuilder UseHangfireDashBoard(this IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            GlobalConfiguration.Configuration.UseActivator(new HangFireJobActivator(serviceProvider.GetService<IServiceScopeFactory>()));
-
             app.UseHFAuthorizeDashBoard("/taskManage");
             app.UseHFAnonymousDashBoard("/taskView");
 

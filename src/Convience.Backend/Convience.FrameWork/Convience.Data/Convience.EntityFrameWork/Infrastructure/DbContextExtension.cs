@@ -28,7 +28,7 @@ namespace Convience.EntityFrameWork.Infrastructure
                 {
                     DataBaseType.SqlServer => option.UseSqlServer(connectionString),
                     DataBaseType.Sqlite => option.UseSqlite(connectionString),
-                    DataBaseType.MySQL => option.UseMySql(connectionString),
+                    DataBaseType.MySQL => option.UseMySql(connectionString, null),
                     DataBaseType.PostgreSQL => option.UseNpgsql(connectionString),
                     DataBaseType.Oracle => option.UseOracle(connectionString),
                     _ => option
@@ -73,7 +73,7 @@ namespace Convience.EntityFrameWork.Infrastructure
                 {
                     DataBaseType.SqlServer => option.UseSqlServer(connectionString),
                     DataBaseType.Sqlite => option.UseSqlite(connectionString),
-                    DataBaseType.MySQL => option.UseMySql(connectionString),
+                    DataBaseType.MySQL => option.UseMySql(connectionString, null),
                     DataBaseType.PostgreSQL => option.UseNpgsql(connectionString),
                     DataBaseType.Oracle => option.UseOracle(connectionString),
                     _ => option
@@ -110,7 +110,7 @@ namespace Convience.EntityFrameWork.Infrastructure
                 {
                     DataBaseType.SqlServer => option.UseSqlServer(connectionString),
                     DataBaseType.Sqlite => option.UseSqlite(connectionString),
-                    DataBaseType.MySQL => option.UseMySql(connectionString),
+                    DataBaseType.MySQL => option.UseMySql(connectionString, null),
                     DataBaseType.PostgreSQL => option.UseNpgsql(connectionString),
                     DataBaseType.Oracle => option.UseOracle(connectionString),
                     _ => option
