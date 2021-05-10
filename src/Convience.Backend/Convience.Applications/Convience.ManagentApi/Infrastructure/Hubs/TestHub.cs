@@ -1,11 +1,10 @@
-﻿
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Convience.ManagentApi.Infrastructure
+namespace Convience.ManagentApi.Infrastructure.Hubs
 {
     public class TestHub : Hub
     {

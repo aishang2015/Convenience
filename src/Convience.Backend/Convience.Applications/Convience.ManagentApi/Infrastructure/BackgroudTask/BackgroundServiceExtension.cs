@@ -10,7 +10,8 @@ namespace Convience.ManagentApi.Infrastructure.BackgroudTask
     {
         public static IServiceCollection AddBackgroundServices(this IServiceCollection services)
         {
-            services.AddHostedService<SystemMonitorBackgroundService>();
+            services.AddHostedService<EventListenerBackgroundService>();
+            services.AddSingleton<SimpleEventListener>();
             return services;
         }
     }

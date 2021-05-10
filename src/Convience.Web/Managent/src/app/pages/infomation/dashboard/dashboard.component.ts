@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, AfterViewChecked, ApplicationRef } from '@angular/core';
 import { Chart, registerShape } from '@antv/g2';
-import { timeout } from 'rxjs/operators';
 import { DashboardService } from 'src/app/business/dashboard.service';
+
+const signalR = require("@microsoft/signalr");
 
 @Component({
   selector: 'app-dashboard',
@@ -15,10 +16,173 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   chartArray = [];
 
-  constructor(private _dashboardService: DashboardService,private appref: ApplicationRef) {
+  // 仪表盘图对象
+  chart4;
+
+  // 内存折线图
+  chart6;
+
+  // 内存折线图数据
+  chart6Data = [
+  ];
+
+  // 垃圾回收区域大小饼图
+  chart2;
+
+  // 垃圾回收区域大小饼图数据
+  chart2Data = [
+    { item: '第0代', count: 0, percent: 0 },
+    { item: '第1代', count: 0, percent: 0 },
+    { item: '第2代', count: 0, percent: 0 },
+  ];
+
+  // 应用内存
+  workingSet = 0;
+
+  // 垃圾回收堆内存
+  gcHeapSize = 0;
+
+  // 垃圾回收代数
+  gen0Count = 0;
+  gen1Count = 0;
+  gen2Count = 0;
+
+  // 线程池相关
+  handelThreadPoolThreadCount = 0;
+  handelMonitorLockContentionCount = 0;
+  threadPoolQueueLength = 0;
+  threadPoolCompletedWorkItemCount = 0;
+
+  // 垃圾回收代数空间
+  gen0Size = 0;
+  gen1Size = 0;
+  gen2Size = 0;
+
+  lohSize = 0;
+  pohSize = 0;
+
+
+  constructor(private _dashboardService: DashboardService, private appref: ApplicationRef) {
   }
 
   ngOnInit() {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("https://localhost:5001/appState")
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    async function start() {
+      try {
+        await connection.start();
+        console.log("SignalR Connected.");
+      } catch (err) {
+        console.log(err);
+        setTimeout(start, 5000);
+      }
+    };
+
+    connection.onclose(start);
+
+    connection.on("HandleCpuUsage", data => {
+      if (this.chart4) {
+        const data = [];
+        data.push({ value: +Number(data) });
+        this.drawGraph4(this.chart4, data);
+      }
+    });
+
+    connection.on("HandleWorkingSet", data => {
+      this.workingSet = data;
+      if (this.chart6) {
+        if (this.chart6Data.length > 10) {
+          this.chart6Data.shift();
+        }
+        var myDate = new Date();
+        let hh = myDate.getHours()
+        let mf = myDate.getMinutes() < 10 ? '0' + myDate.getMinutes()
+          : myDate.getMinutes()
+        let ss = myDate.getSeconds() < 10 ? '0' + myDate.getSeconds()
+          : myDate.getSeconds()
+        this.chart6Data.push({ 'time': `${hh}:${mf}:${ss}`, type: '内存', size: Number(data) });
+        this.chart6.render();
+      }
+    });
+
+    connection.on("HandleGCHeapSize", data => {
+      this.gcHeapSize = data;
+    });
+
+    connection.on("HandelGCCount", (gen, count) => {
+      switch (gen) {
+        case 0:
+          this.gen0Count = count;
+          break;
+        case 1:
+          this.gen1Count = count;
+          break;
+        case 2:
+          this.gen2Count = count;
+          break;
+      }
+    });
+
+    connection.on("HandelThreadPoolThreadCount", data => {
+      this.handelThreadPoolThreadCount = data;
+    });
+
+    connection.on("HandelMonitorLockContentionCount", data => {
+      this.handelMonitorLockContentionCount = data;
+    });
+
+    connection.on("ThreadPoolQueueLength", data => {
+      this.threadPoolQueueLength = data;
+    });
+
+    connection.on("ThreadPoolCompletedWorkItemCount", data => {
+      this.threadPoolCompletedWorkItemCount = data;
+    });
+
+    connection.on("HandelGcSize", (gen, count) => {
+      switch (gen) {
+        case 0:
+          this.gen0Size = count;
+          this.chart2Data[0].count = count;
+          break;
+        case 1:
+          this.gen1Size = count;
+          this.chart2Data[1].count = count;
+          break;
+        case 2:
+          this.gen2Size = count;
+          this.chart2Data[2].count = count;
+          break;
+      }
+
+      let fun = (num: number) => {
+        let numStr = num.toString()
+        let index = numStr.indexOf('.')
+        let result = numStr.slice(0, index + 3);
+        return Number(result);
+      }
+
+      let total = this.chart2Data[0].count + this.chart2Data[1].count + this.chart2Data[2].count;
+      this.chart2Data[0].percent = fun(this.chart2Data[0].count / total);
+      this.chart2Data[1].percent = fun(this.chart2Data[1].count / total);
+      this.chart2Data[2].percent = fun(this.chart2Data[2].count / total);
+      this.chart2.render();
+    });
+
+    connection.on("HandeLohSize", data => {
+      this.lohSize = data;
+    });
+
+    connection.on("HandelPohSize", data => {
+      this.pohSize = data;
+    });
+
+    // Start the connection.
+    start();
+
     this._dashboardService.get().subscribe((result: any) => this.data = result);
   }
 
@@ -31,7 +195,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.initGraph6();
 
     // 初始图像宽度会溢出，通过resize事件触发图标重绘
-    setTimeout(() => {   
+    setTimeout(() => {
       var myEvent = new Event('resize');
       window.dispatchEvent(myEvent);
     }, 10);
@@ -155,21 +319,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     chart.render();
   }
 
+  //#region 垃圾回收区域饼图
   initGraph2() {
 
-    const data = [
-      { item: '事例一', count: 40, percent: 0.4 },
-      { item: '事例二', count: 21, percent: 0.21 },
-      { item: '事例三', count: 17, percent: 0.17 },
-      { item: '事例四', count: 13, percent: 0.13 },
-      { item: '事例五', count: 9, percent: 0.09 },
-    ];
     const chart = new Chart({
       container: 'c2',
       autoFit: true,
       height: 400,
     });
-    chart.data(data);
+    chart.data(this.chart2Data);
     chart.scale('percent', {
       formatter: (val) => {
         val = val * 100 + '%';
@@ -185,47 +343,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       showMarkers: false,
       itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
     });
+
     // 辅助文本
     chart
       .annotation()
       .text({
         position: ['50%', '50%'],
-        content: '主机',
+        content: '存储',
         style: {
           fontSize: 14,
           fill: '#8c8c8c',
           textAlign: 'center',
         },
         offsetY: -20,
-      })
-      .text({
-        position: ['50%', '50%'],
-        content: '200',
-        style: {
-          fontSize: 20,
-          fill: '#8c8c8c',
-          textAlign: 'center',
-        },
-        offsetX: -10,
-        offsetY: 20,
-      })
-      .text({
-        position: ['50%', '50%'],
-        content: '台',
-        style: {
-          fontSize: 14,
-          fill: '#8c8c8c',
-          textAlign: 'center',
-        },
-        offsetY: 20,
-        offsetX: 20,
       });
     chart
-      .interval().adjust('stack').position('percent').color('item')
+      .interval().adjust('stack').position(['percent']).color('item')
       .label('percent', (percent) => {
         return {
           content: (data) => {
-            return `${data.item}: ${percent * 100}%`;
+            return `${data.item}: ${(percent * 100).toFixed(2)}% ${data.count}B`;
           },
         };
       })
@@ -241,184 +378,187 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     chart.render();
     this.chartArray.push(chart);
+    this.chart2 = chart;
   }
+  //#endregion
 
   initGraph3() {
 
-  function getFillAttrs(cfg) {
-    return {
-      ...cfg.defaultStyle,
-      ...cfg.style,
-      fill: cfg.color,
-      fillOpacity: cfg.opacity,
-    };
-  }
-  function getRectPath(points) {
-    const path = [];
-    for (let i = 0; i < points.length; i++) {
-      const point = points[i];
-      if (point) {
-        const action = i === 0 ? 'M' : 'L';
-        path.push([action, point.x, point.y]);
-      }
+    function getFillAttrs(cfg) {
+      return {
+        ...cfg.defaultStyle,
+        ...cfg.style,
+        fill: cfg.color,
+        fillOpacity: cfg.opacity,
+      };
     }
-    const first = points[0];
-    path.push(['L', first.x, first.y]);
-    path.push(['z']);
-    return path;
-  }
-  
-  // 顶边带圆角
-  registerShape('interval', 'top', {
-    draw(cfg, container) {
-      const attrs = getFillAttrs(cfg);
-      let path = getRectPath(cfg.points);
-      path = this.parsePath(path); // 将 0 - 1 的值转换为画布坐标
-      const radius = (path[2][1] - path[1][1]) / 2;
-      const temp = [];
-      temp.push(['M', path[0][1], path[0][2]]);
-      temp.push(['L', path[1][1], path[1][2] + radius]);
-      temp.push(['A', radius, radius, 90, 0, 1, path[1][1] + radius, path[1][2]]);
-      temp.push(['L', path[2][1] - radius, path[2][2]]);
-      temp.push(['A', radius, radius, 90, 0, 1, path[2][1], path[2][2] + radius]);
-      temp.push(['L', path[3][1], path[3][2]]);
-      temp.push(['Z']);
-  
-      const group = container.addGroup();
-      group.addShape('path', {
-        attrs: {
-          ...attrs,
-          path: temp,
-        },
-      });
-  
-      return group;
-    },
-  });
-  
-  // 底边带圆角
-  registerShape('interval', 'bottom', {
-    draw(cfg, container) {
-      const attrs = getFillAttrs(cfg);
-      let path = getRectPath(cfg.points);
-      path = this.parsePath(path);
-      const radius = (path[2][1] - path[1][1]) / 2;
-      const temp = [];
-      temp.push(['M', path[0][1] + radius, path[0][2]]);
-      temp.push(['A', radius, radius, 90, 0, 1, path[0][1], path[0][2] - radius]);
-      temp.push(['L', path[1][1], path[1][2]]);
-      temp.push(['L', path[2][1], path[2][2]]);
-      temp.push(['L', path[3][1], path[3][2] - radius]);
-      temp.push(['A', radius, radius, 90, 0, 1, path[3][1] - radius, path[3][2]]);
-      temp.push(['Z']);
-  
-      const group = container.addGroup();
-      group.addShape('path', {
-        attrs: {
-          ...attrs,
-          path: temp,
-        },
-      });
-  
-      return group;
-    },
-  });
-  
-  const data = [
-    { year: '2014', type: 'Sales', sales: 1000 },
-    { year: '2015', type: 'Sales', sales: 1170 },
-    { year: '2016', type: 'Sales', sales: 660 },
-    { year: '2017', type: 'Sales', sales: 1030 },
-    { year: '2014', type: 'Expenses', sales: 400 },
-    { year: '2015', type: 'Expenses', sales: 460 },
-    { year: '2016', type: 'Expenses', sales: 1120 },
-    { year: '2017', type: 'Expenses', sales: 540 },
-    { year: '2014', type: 'Profit', sales: 300 },
-    { year: '2015', type: 'Profit', sales: 300 },
-    { year: '2016', type: 'Profit', sales: 300 },
-    { year: '2017', type: 'Profit', sales: 350 },
-  ];
-  
-  const chart = new Chart({
-    container: 'c3',
-    autoFit: true,
-    height: 400,
-  });
-  
-  chart.data(data);
-  chart.scale({
-    sales: {
-      max: 2400,
-      tickInterval: 600,
-      nice: true,
-    },
-  });
-  
-  const axisCfg = {
-    title: null,
-    label: {
-      style: {
-        fontFamily: 'Monospace',
-        fontWeight: 700,
-        fontSize: 14,
-        fill: '#545454',
+    function getRectPath(points) {
+      const path = [];
+      for (let i = 0; i < points.length; i++) {
+        const point = points[i];
+        if (point) {
+          const action = i === 0 ? 'M' : 'L';
+          path.push([action, point.x, point.y]);
+        }
+      }
+      const first = points[0];
+      path.push(['L', first.x, first.y]);
+      path.push(['z']);
+      return path;
+    }
+
+    // 顶边带圆角
+    registerShape('interval', 'top', {
+      draw(cfg, container) {
+        const attrs = getFillAttrs(cfg);
+        let path = getRectPath(cfg.points);
+        path = this.parsePath(path); // 将 0 - 1 的值转换为画布坐标
+        const radius = (path[2][1] - path[1][1]) / 2;
+        const temp = [];
+        temp.push(['M', path[0][1], path[0][2]]);
+        temp.push(['L', path[1][1], path[1][2] + radius]);
+        temp.push(['A', radius, radius, 90, 0, 1, path[1][1] + radius, path[1][2]]);
+        temp.push(['L', path[2][1] - radius, path[2][2]]);
+        temp.push(['A', radius, radius, 90, 0, 1, path[2][1], path[2][2] + radius]);
+        temp.push(['L', path[3][1], path[3][2]]);
+        temp.push(['Z']);
+
+        const group = container.addGroup();
+        group.addShape('path', {
+          attrs: {
+            ...attrs,
+            path: temp,
+          },
+        });
+
+        return group;
       },
-    },
-    grid: {
+    });
+
+    // 底边带圆角
+    registerShape('interval', 'bottom', {
+      draw(cfg, container) {
+        const attrs = getFillAttrs(cfg);
+        let path = getRectPath(cfg.points);
+        path = this.parsePath(path);
+        const radius = (path[2][1] - path[1][1]) / 2;
+        const temp = [];
+        temp.push(['M', path[0][1] + radius, path[0][2]]);
+        temp.push(['A', radius, radius, 90, 0, 1, path[0][1], path[0][2] - radius]);
+        temp.push(['L', path[1][1], path[1][2]]);
+        temp.push(['L', path[2][1], path[2][2]]);
+        temp.push(['L', path[3][1], path[3][2] - radius]);
+        temp.push(['A', radius, radius, 90, 0, 1, path[3][1] - radius, path[3][2]]);
+        temp.push(['Z']);
+
+        const group = container.addGroup();
+        group.addShape('path', {
+          attrs: {
+            ...attrs,
+            path: temp,
+          },
+        });
+
+        return group;
+      },
+    });
+
+    const data = [
+      { year: '2014', type: 'Sales', sales: 1000 },
+      { year: '2015', type: 'Sales', sales: 1170 },
+      { year: '2016', type: 'Sales', sales: 660 },
+      { year: '2017', type: 'Sales', sales: 1030 },
+      { year: '2014', type: 'Expenses', sales: 400 },
+      { year: '2015', type: 'Expenses', sales: 460 },
+      { year: '2016', type: 'Expenses', sales: 1120 },
+      { year: '2017', type: 'Expenses', sales: 540 },
+      { year: '2014', type: 'Profit', sales: 300 },
+      { year: '2015', type: 'Profit', sales: 300 },
+      { year: '2016', type: 'Profit', sales: 300 },
+      { year: '2017', type: 'Profit', sales: 350 },
+    ];
+
+    const chart = new Chart({
+      container: 'c3',
+      autoFit: true,
+      height: 400,
+    });
+
+    chart.data(data);
+    chart.scale({
+      sales: {
+        max: 2400,
+        tickInterval: 600,
+        nice: true,
+      },
+    });
+
+    const axisCfg = {
+      title: null,
+      label: {
+        style: {
+          fontFamily: 'Monospace',
+          fontWeight: 700,
+          fontSize: 14,
+          fill: '#545454',
+        },
+      },
+      grid: {
+        line: {
+          style: {
+            lineDash: null,
+            stroke: '#545454',
+          },
+        },
+      },
       line: {
         style: {
           lineDash: null,
           stroke: '#545454',
         },
       },
-    },
-    line: {
-      style: {
-        lineDash: null,
+    };
+
+    chart.axis('year', axisCfg);
+    chart.axis('sales', { ...axisCfg, line: null });
+
+    chart.tooltip({
+      showMarkers: false
+    });
+
+    chart
+      .interval()
+      .position('year*sales')
+      .color('type')
+      .size(35)
+      .shape('type', (val) => {
+        if (val === 'Profit') {
+          // 顶部圆角
+          return 'bottom';
+        } else if (val === 'Sales') {
+          // 底部圆角
+          return 'top';
+        }
+      })
+      .style({
         stroke: '#545454',
-      },
-    },
-  };
-  
-  chart.axis('year', axisCfg);
-  chart.axis('sales', { ...axisCfg, line: null });
-  
-  chart.tooltip({
-    showMarkers: false
-  });
-  
-  chart
-    .interval()
-    .position('year*sales')
-    .color('type')
-    .size(35)
-    .shape('type', (val) => {
-      if (val === 'Profit') {
-        // 顶部圆角
-        return 'bottom';
-      } else if (val === 'Sales') {
-        // 底部圆角
-        return 'top';
-      }
-    })
-    .style({
-      stroke: '#545454',
-      lineWidth: 2,
-    })
-    .adjust('stack');
-  
-  chart.interaction('element-highlight-by-color');
-  
-  chart.render();
-  
+        lineWidth: 2,
+      })
+      .adjust('stack');
+
+    chart.interaction('element-highlight-by-color');
+
+    chart.render();
+
     this.chartArray.push(chart);
   }
+
+  //#region cpu使用率
 
   initGraph4() {
     function creatData() {
       const data = [];
-      const val = (Math.random() * 6).toFixed(1);
-      data.push({ value: +val });
+      data.push({ value: +0 });
       return data;
     }
 
@@ -470,8 +610,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
     chart.scale('value', {
       min: 0,
-      max: 6,
-      tickInterval: 1,
+      max: 100,
+      tickInterval: 5,
     });
 
     chart.axis('1', false);
@@ -498,121 +638,125 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       .position('value*1')
       .shape('pointer')
       .color('value', (val) => {
-        if (val < 2) {
+        if (val < 40) {
           return color[0];
-        } else if (val <= 4) {
+        } else if (val <= 80) {
           return color[1];
-        } else if (val <= 6) {
+        } else if (val <= 100) {
           return color[2];
         }
       });
 
-    draw(creatData());
-    setInterval(function () {
-      draw(creatData());
-    }, 1000);
+    this.drawGraph4(chart, creatData());
+    this.chartArray.push(chart);
+    this.chart4 = chart;
+  }
 
-    function draw(data) {
-      const val = data[0].value;
-      const lineWidth = 25;
-      chart.annotation().clear(true);
-      // 绘制仪表盘背景
+  drawGraph4(chart, data) {
+
+    const color = ['#0086FA', '#FFBF00', '#F5222D'];
+    const val = data[0].value;
+    const lineWidth = 25;
+    chart.annotation().clear(true);
+    // 绘制仪表盘背景
+    chart.annotation().arc({
+      top: false,
+      start: [0, 1],
+      end: [100, 1],
+      style: {
+        stroke: '#CBCBCB',
+        lineWidth,
+        lineDash: null,
+      },
+    });
+
+    if (val < 40) {
       chart.annotation().arc({
-        top: false,
         start: [0, 1],
-        end: [6, 1],
+        end: [val, 1],
         style: {
-          stroke: '#CBCBCB',
+          stroke: color[0],
           lineWidth,
           lineDash: null,
         },
       });
-
-      if (val >= 2) {
-        chart.annotation().arc({
-          start: [0, 1],
-          end: [val, 1],
-          style: {
-            stroke: color[0],
-            lineWidth,
-            lineDash: null,
-          },
-        });
-      }
-
-      if (val >= 4) {
-        chart.annotation().arc({
-          start: [2, 1],
-          end: [4, 1],
-          style: {
-            stroke: color[1],
-            lineWidth,
-            lineDash: null,
-          },
-        });
-      }
-
-      if (val > 4 && val <= 6) {
-        chart.annotation().arc({
-          start: [4, 1],
-          end: [val, 1],
-          style: {
-            stroke: color[2],
-            lineWidth,
-            lineDash: null,
-          },
-        });
-      }
-
-      if (val > 2 && val <= 4) {
-        chart.annotation().arc({
-          start: [2, 1],
-          end: [val, 1],
-          style: {
-            stroke: color[1],
-            lineWidth,
-            lineDash: null,
-          },
-        });
-      }
-
-      if (val < 2) {
-        chart.annotation().arc({
-          start: [0, 1],
-          end: [val, 1],
-          style: {
-            stroke: color[0],
-            lineWidth,
-            lineDash: null,
-          },
-        });
-      }
-
-      // 绘制指标数字
-      chart.annotation().text({
-        position: ['50%', '85%'],
-        content: '合格率',
-        style: {
-          fontSize: 20,
-          fill: '#545454',
-          textAlign: 'center',
-        },
-      });
-      chart.annotation().text({
-        position: ['50%', '90%'],
-        content: `${data[0].value * 10} %`,
-        style: {
-          fontSize: 36,
-          fill: '#545454',
-          textAlign: 'center',
-        },
-        offsetY: 15,
-      });
-      chart.changeData(data);
     }
-    this.chartArray.push(chart);
 
+    if (val > 40 && val <= 80) {
+      chart.annotation().arc({
+        start: [0, 1],
+        end: [40, 1],
+        style: {
+          stroke: color[0],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [40, 1],
+        end: [val, 1],
+        style: {
+          stroke: color[1],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+    }
+
+    if (val >= 80) {
+      chart.annotation().arc({
+        start: [0, 1],
+        end: [40, 1],
+        style: {
+          stroke: color[0],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [40, 1],
+        end: [80, 1],
+        style: {
+          stroke: color[1],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [80, 1],
+        end: [val, 1],
+        style: {
+          stroke: color[2],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+    }
+
+    // 绘制指标数字
+    chart.annotation().text({
+      position: ['50%', '85%'],
+      content: '应用CPU使用率',
+      style: {
+        fontSize: 20,
+        fill: '#545454',
+        textAlign: 'center',
+      },
+    });
+    chart.annotation().text({
+      position: ['50%', '90%'],
+      content: `${data[0].value} %`,
+      style: {
+        fontSize: 36,
+        fill: '#545454',
+        textAlign: 'center',
+      },
+      offsetY: 15,
+    });
+    chart.changeData(data);
   }
+
+  //#endregion
 
   initGraph5() {
 
@@ -762,46 +906,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   initGraph6() {
 
-    const data = [
-      { month: 'Jan', city: 'Tokyo', temperature: 7 },
-      { month: 'Jan', city: 'London', temperature: 3.9 },
-      { month: 'Feb', city: 'Tokyo', temperature: 6.9 },
-      { month: 'Feb', city: 'London', temperature: 4.2 },
-      { month: 'Mar', city: 'Tokyo', temperature: 9.5 },
-      { month: 'Mar', city: 'London', temperature: 5.7 },
-      { month: 'Apr', city: 'Tokyo', temperature: 14.5 },
-      { month: 'Apr', city: 'London', temperature: 8.5 },
-      { month: 'May', city: 'Tokyo', temperature: 18.4 },
-      { month: 'May', city: 'London', temperature: 11.9 },
-      { month: 'Jun', city: 'Tokyo', temperature: 21.5 },
-      { month: 'Jun', city: 'London', temperature: 15.2 },
-      { month: 'Jul', city: 'Tokyo', temperature: 25.2 },
-      { month: 'Jul', city: 'London', temperature: 17 },
-      { month: 'Aug', city: 'Tokyo', temperature: 26.5 },
-      { month: 'Aug', city: 'London', temperature: 16.6 },
-      { month: 'Sep', city: 'Tokyo', temperature: 23.3 },
-      { month: 'Sep', city: 'London', temperature: 14.2 },
-      { month: 'Oct', city: 'Tokyo', temperature: 18.3 },
-      { month: 'Oct', city: 'London', temperature: 10.3 },
-      { month: 'Nov', city: 'Tokyo', temperature: 13.9 },
-      { month: 'Nov', city: 'London', temperature: 6.6 },
-      { month: 'Dec', city: 'Tokyo', temperature: 9.6 },
-      { month: 'Dec', city: 'London', temperature: 4.8 },
-    ];
-
     const chart = new Chart({
       container: 'c6',
       autoFit: true,
       height: 400,
     });
 
-    chart.data(data);
+    chart.data(this.chart6Data);
     chart.scale({
-      month: {
+      time: {
         range: [0, 1],
       },
-      temperature: {
+      size: {
         nice: true,
+        min: 0,
       },
     });
 
@@ -810,28 +928,22 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       shared: true,
     });
 
-    chart.axis('temperature', {
+    chart.axis('size', {
       label: {
         formatter: (val) => {
-          return val + ' °C';
+          return val + ' MB';
         },
       },
     });
 
-    chart
-      .line()
-      .position('month*temperature')
-      .color('city')
-      .shape('smooth');
+    // 线
+    chart.line().position('time*size').color('type').shape('smooth');
 
-    chart
-      .point()
-      .position('month*temperature')
-      .color('city')
-      .shape('circle');
+    // 点
+    chart.point().position('time*size').color('type').shape('circle');
 
     chart.render();
     this.chartArray.push(chart);
-
+    this.chart6 = chart;
   }
 }

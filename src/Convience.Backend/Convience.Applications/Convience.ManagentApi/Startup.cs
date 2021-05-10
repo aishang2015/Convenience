@@ -8,9 +8,9 @@ using Convience.Fluentvalidation;
 using Convience.Hangfire;
 using Convience.Injection;
 using Convience.JwtAuthentication;
-using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.ManagentApi.Infrastructure.BackgroudTask;
+using Convience.ManagentApi.Infrastructure.Hubs;
 using Convience.ManagentApi.Jobs;
 using Convience.SignalRs;
 using Convience.Util.Extension;
@@ -101,6 +101,7 @@ namespace Convience.ManagentApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<TestHub>("/hubs");
+                endpoints.MapHub<AppStateHub>("/appState");
                 endpoints.MapControllers();
             });
         }

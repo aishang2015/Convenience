@@ -20,20 +20,100 @@
         </nz-card>
     </nz-col>
 </nz-row>
+
+<nz-row [nzGutter]="10">
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="workingSet" [nzTitle]="'应用使用内存'" [nzSuffix]="'MB'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gcHeapSize" [nzTitle]="'垃圾回收堆内存'" [nzSuffix]="'MB'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen0Count" [nzTitle]="'第0代垃圾数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen1Count" [nzTitle]="'第1代垃圾数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen2Count" [nzTitle]="'第2代垃圾数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+</nz-row>
+
+<nz-row [nzGutter]="10">
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="lohSize" [nzTitle]="'大对象堆'" [nzSuffix]="'B'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="pohSize" [nzTitle]="'固定对象堆'" [nzSuffix]="'B'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen0Size" [nzTitle]="'第0代垃圾空间'" [nzSuffix]="'B'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen1Size" [nzTitle]="'第1代垃圾空间'" [nzSuffix]="'B'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="4">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="gen2Size" [nzTitle]="'第2代垃圾空间'" [nzSuffix]="'B'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+</nz-row>
+
+<nz-row [nzGutter]="10">
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="handelThreadPoolThreadCount" [nzTitle]="'线程池线程数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="handelMonitorLockContentionCount" [nzTitle]="'争抢锁数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="threadPoolQueueLength" [nzTitle]="'线程池队列长度'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+    <nz-col [nzSpan]="6">
+        <nz-card [nzSize]="'small'">
+            <nz-statistic [nzValue]="threadPoolCompletedWorkItemCount" [nzTitle]="'线程池完成工作数量'"></nz-statistic>
+        </nz-card>
+    </nz-col>
+</nz-row>
+
 <div nz-row nzGutter="10">
     <div nz-col class="gutter-row" nzMd="8" nzSm="24">
-        <nz-card [nzSize]="'small'" nzTitle="G2条形图">
-            <div id="c1" style="text-align: center;overflow: hidden;"></div>
+        <nz-card [nzSize]="'small'" nzTitle="当前应用Cpu利用率">
+            <div id="c4"></div>
         </nz-card>
     </div>
     <div nz-col class="gutter-row" nzMd="8" nzSm="24">
-        <nz-card [nzSize]="'small'" nzTitle="G2饼图">
+        <nz-card [nzSize]="'small'" nzTitle="当前应用内存使用">
+            <div id="c6"></div>
+        </nz-card>
+    </div>
+    <div nz-col class="gutter-row" nzMd="8" nzSm="24">
+        <nz-card [nzSize]="'small'" nzTitle="垃圾回收空间比例">
             <div id="c2" style="text-align: center;overflow: hidden;"></div>
-        </nz-card>
-    </div>
-    <div nz-col class="gutter-row" nzMd="8" nzSm="24">
-        <nz-card [nzSize]="'small'" nzTitle="G2圆角堆叠柱状图">
-            <div id="c3" style="text-align: center;overflow: hidden;"></div>
         </nz-card>
     </div>
 </div>
@@ -45,13 +125,13 @@
         </nz-card>
     </div>
     <div nz-col class="gutter-row" nzMd="8" nzSm="24">
-        <nz-card [nzSize]="'small'" nzTitle="G2折线图" style="text-align: center;">
-            <div id="c6"></div>
+        <nz-card [nzSize]="'small'" nzTitle="G2圆角堆叠柱状图">
+            <div id="c3" style="text-align: center;overflow: hidden;"></div>
         </nz-card>
     </div>
     <div nz-col class="gutter-row" nzMd="8" nzSm="24">
-        <nz-card [nzSize]="'small'" nzTitle="G2仪表盘" style="text-align: center;">
-            <div id="c4"></div>
+        <nz-card [nzSize]="'small'" nzTitle="G2条形图">
+            <div id="c1" style="text-align: center;overflow: hidden;"></div>
         </nz-card>
     </div>
 </div>
