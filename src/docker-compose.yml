@@ -2,65 +2,31 @@ version: "3"
 services:
 
   web-nginx: 
-    container_name: web-nginx
+    container_name: web
     image: nginx
     restart: always
-    ports: 
-      - "8888:80"
-    volumes: 
-      - ./config/webnginx.conf:/etc/nginx/conf.d/default.conf
-  api-nginx: 
-    container_name: api-nginx
-    image: nginx
-    restart: always
-    ports: 
-      - "9999:80"
-    volumes: 
-      - ./config/apinginx.conf:/etc/nginx/conf.d/default.conf
-  manage-web1: 
-    container_name: web1
-    image: web-app
     build: 
       context: ./Convience.Web/Managent
       dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "6001:80"
-    volumes:
-      - ./config/env.json:/usr/share/nginx/html/assets/config/env.json
-      - ./config/config.prod.json:/usr/share/nginx/html/assets/config/config.prod.json
-      - ./config/web.conf:/etc/nginx/conf.d/default.conf
-  manage-web2: 
-    container_name: web2
-    image: web-app
-    restart: always
-    ports:
-      - "6002:80"
-    volumes:
-      - ./config/env.json:/usr/share/nginx/html/assets/config/env.json
-      - ./config/config.prod.json:/usr/share/nginx/html/assets/config/config.prod.json
-      - ./config/web.conf:/etc/nginx/conf.d/default.conf
-  manage-api1:
-    container_name: api1
+    ports: 
+      - "8888:80"
+    volumes: 
+      - ./config/web/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/web/default.conf:/etc/nginx/conf.d/default.conf
+      - ./config/web/env.json:/usr/share/nginx/html/assets/config/env.json
+      - ./config/web/config.prod.json:/usr/share/nginx/html/assets/config/config.prod.json
+  manage-api:
+    container_name: api
     image: api-app
     build: 
       context: ./Convience.Backend
       dockerfile: Convience.Applications/Convience.ManagentApi/Dockerfile
     restart: always
     ports:
-      - "5001:80"
+      - "9999:80"
     volumes:
-      - ./config/appsettings.json:/app/appsettings.json
-      - ./config/Logs:/app/Logs
-  manage-api2:
-    container_name: api2
-    image: api-app
-    restart: always
-    ports:
-      - "5002:80"
-    volumes:
-      - ./config/appsettings.json:/app/appsettings.json
-      - ./config/Logs:/app/Logs
+      - ./config/api/appsettings.json:/app/appsettings.json
+      - ./config/api/Logs:/app/Logs
   myproject-pgsql: 
     container_name: pgsql
     image: postgres
@@ -78,10 +44,3 @@ services:
     restart: always
     ports:
       - "32768:27017"
-#  elk:
-#    container_name: elk
-#    image: sebp/elk
-#    restart: always
-#    ports:
-#      - 9200:9200
-#      - 5044:5044

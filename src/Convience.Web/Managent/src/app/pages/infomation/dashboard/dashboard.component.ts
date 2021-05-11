@@ -17,20 +17,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   chartArray = [];
 
   // 仪表盘图对象
-  chart4;
+  cpuChart;
 
   // 内存折线图
-  chart6;
+  memoryChart;
 
   // 内存折线图数据
-  chart6Data = [
+  memoryChartData = [
   ];
 
   // 垃圾回收区域大小饼图
-  chart2;
+  garbageChart;
 
   // 垃圾回收区域大小饼图数据
-  chart2Data = [
+  garbageChartData = [
     { item: '第0代', count: 0, percent: 0 },
     { item: '第1代', count: 0, percent: 0 },
     { item: '第2代', count: 0, percent: 0 },
@@ -84,18 +84,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     connection.onclose(start);
 
     connection.on("HandleCpuUsage", data => {
-      if (this.chart4) {
+      if (this.cpuChart) {
         const data = [];
         data.push({ value: +Number(data) });
-        this.drawGraph4(this.chart4, data);
+        this.drawCpuChart(this.cpuChart, data);
       }
     });
 
     connection.on("HandleWorkingSet", data => {
       this.workingSet = data;
-      if (this.chart6) {
-        if (this.chart6Data.length > 10) {
-          this.chart6Data.shift();
+      if (this.memoryChart) {
+        if (this.memoryChartData.length > 10) {
+          this.memoryChartData.shift();
         }
         var myDate = new Date();
         let hh = myDate.getHours()
@@ -103,8 +103,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           : myDate.getMinutes()
         let ss = myDate.getSeconds() < 10 ? '0' + myDate.getSeconds()
           : myDate.getSeconds()
-        this.chart6Data.push({ 'time': `${hh}:${mf}:${ss}`, type: '内存', size: Number(data) });
-        this.chart6.render();
+        this.memoryChartData.push({ 'time': `${hh}:${mf}:${ss}`, type: '内存', size: Number(data) });
+        this.memoryChart.render();
       }
     });
 
@@ -146,15 +146,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       switch (gen) {
         case 0:
           this.gen0Size = count;
-          this.chart2Data[0].count = count;
+          this.garbageChartData[0].count = count;
           break;
         case 1:
           this.gen1Size = count;
-          this.chart2Data[1].count = count;
+          this.garbageChartData[1].count = count;
           break;
         case 2:
           this.gen2Size = count;
-          this.chart2Data[2].count = count;
+          this.garbageChartData[2].count = count;
           break;
       }
 
@@ -165,11 +165,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         return Number(result);
       }
 
-      let total = this.chart2Data[0].count + this.chart2Data[1].count + this.chart2Data[2].count;
-      this.chart2Data[0].percent = fun(this.chart2Data[0].count / total);
-      this.chart2Data[1].percent = fun(this.chart2Data[1].count / total);
-      this.chart2Data[2].percent = fun(this.chart2Data[2].count / total);
-      this.chart2.render();
+      let total = this.garbageChartData[0].count + this.garbageChartData[1].count + this.garbageChartData[2].count;
+      this.garbageChartData[0].percent = fun(this.garbageChartData[0].count / total);
+      this.garbageChartData[1].percent = fun(this.garbageChartData[1].count / total);
+      this.garbageChartData[2].percent = fun(this.garbageChartData[2].count / total);
+      this.garbageChart.render();
     });
 
     connection.on("HandeLohSize", data => {
@@ -187,12 +187,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.initGarbageChart();
+    this.initCpuChart();
+    this.initMemoryChart();
+    
     this.initGraph1();
-    this.initGraph2();
     this.initGraph3();
-    this.initGraph4();
     this.initGraph5();
-    this.initGraph6();
 
     // 初始图像宽度会溢出，通过resize事件触发图标重绘
     setTimeout(() => {
@@ -200,6 +201,320 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       window.dispatchEvent(myEvent);
     }, 10);
   }
+
+  //#region cpu使用率
+
+  initCpuChart() {
+    function creatData() {
+      const data = [];
+      data.push({ value: +0 });
+      return data;
+    }
+
+    // 自定义Shape 部分
+    registerShape('point', 'pointer', {
+      draw(cfg, container) {
+        const group = container.addGroup({});
+        // 获取极坐标系下画布中心点
+        const center = this.parsePoint({ x: 0, y: 0 });
+        // 绘制指针
+        group.addShape('line', {
+          attrs: {
+            x1: center.x,
+            y1: center.y,
+            x2: cfg.x,
+            y2: cfg.y,
+            stroke: cfg.color,
+            lineWidth: 5,
+            lineCap: 'round',
+          },
+        });
+        group.addShape('circle', {
+          attrs: {
+            x: center.x,
+            y: center.y,
+            r: 9.75,
+            stroke: cfg.color,
+            lineWidth: 4.5,
+            fill: '#fff',
+          },
+        });
+        return group;
+      },
+    });
+
+    const color = ['#0086FA', '#FFBF00', '#F5222D'];
+    const chart = new Chart({
+      container: 'c4',
+      autoFit: true,
+      height: 400,
+    });
+    chart.data(creatData());
+    chart.animate(false);
+
+    chart.coordinate('polar', {
+      startAngle: (-9 / 8) * Math.PI,
+      endAngle: (1 / 8) * Math.PI,
+      radius: 0.75,
+    });
+    chart.scale('value', {
+      min: 0,
+      max: 100,
+      tickInterval: 5,
+    });
+
+    chart.axis('1', false);
+    chart.axis('value', {
+      line: null,
+      label: {
+        offset: -40,
+        style: {
+          fontSize: 18,
+          fill: '#CBCBCB',
+          textAlign: 'center',
+          textBaseline: 'middle',
+        },
+      },
+      tickLine: {
+        length: -24,
+      },
+      grid: null,
+    });
+    chart.legend(false);
+    chart.tooltip(false);
+    chart
+      .point()
+      .position('value*1')
+      .shape('pointer')
+      .color('value', (val) => {
+        if (val < 40) {
+          return color[0];
+        } else if (val <= 80) {
+          return color[1];
+        } else if (val <= 100) {
+          return color[2];
+        }
+      });
+
+    this.drawCpuChart(chart, creatData());
+    this.chartArray.push(chart);
+    this.cpuChart = chart;
+  }
+
+  drawCpuChart(chart, data) {
+
+    const color = ['#0086FA', '#FFBF00', '#F5222D'];
+    const val = data[0].value;
+    const lineWidth = 25;
+    chart.annotation().clear(true);
+    // 绘制仪表盘背景
+    chart.annotation().arc({
+      top: false,
+      start: [0, 1],
+      end: [100, 1],
+      style: {
+        stroke: '#CBCBCB',
+        lineWidth,
+        lineDash: null,
+      },
+    });
+
+    if (val < 40) {
+      chart.annotation().arc({
+        start: [0, 1],
+        end: [val, 1],
+        style: {
+          stroke: color[0],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+    }
+
+    if (val > 40 && val <= 80) {
+      chart.annotation().arc({
+        start: [0, 1],
+        end: [40, 1],
+        style: {
+          stroke: color[0],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [40, 1],
+        end: [val, 1],
+        style: {
+          stroke: color[1],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+    }
+
+    if (val >= 80) {
+      chart.annotation().arc({
+        start: [0, 1],
+        end: [40, 1],
+        style: {
+          stroke: color[0],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [40, 1],
+        end: [80, 1],
+        style: {
+          stroke: color[1],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+      chart.annotation().arc({
+        start: [80, 1],
+        end: [val, 1],
+        style: {
+          stroke: color[2],
+          lineWidth,
+          lineDash: null,
+        },
+      });
+    }
+
+    // 绘制指标数字
+    chart.annotation().text({
+      position: ['50%', '85%'],
+      content: '应用CPU使用率',
+      style: {
+        fontSize: 20,
+        fill: '#545454',
+        textAlign: 'center',
+      },
+    });
+    chart.annotation().text({
+      position: ['50%', '90%'],
+      content: `${data[0].value} %`,
+      style: {
+        fontSize: 36,
+        fill: '#545454',
+        textAlign: 'center',
+      },
+      offsetY: 15,
+    });
+    chart.changeData(data);
+  }
+
+  //#endregion
+
+  //#region  内存图表
+  initMemoryChart() {
+
+    const chart = new Chart({
+      container: 'c6',
+      autoFit: true,
+      height: 400,
+    });
+
+    chart.data(this.memoryChartData);
+    chart.scale({
+      time: {
+        range: [0, 1],
+      },
+      size: {
+        nice: true,
+        min: 0,
+      },
+    });
+
+    chart.tooltip({
+      showCrosshairs: true,
+      shared: true,
+    });
+
+    chart.axis('size', {
+      label: {
+        formatter: (val) => {
+          return val + ' MB';
+        },
+      },
+    });
+
+    // 线
+    chart.line().position('time*size').color('type').shape('smooth');
+
+    // 点
+    chart.point().position('time*size').color('type').shape('circle');
+
+    chart.render();
+    this.chartArray.push(chart);
+    this.memoryChart = chart;
+  }
+  //#endregion
+
+  //#region 垃圾回收区域饼图
+  initGarbageChart() {
+
+    const chart = new Chart({
+      container: 'c2',
+      autoFit: true,
+      height: 400,
+    });
+    chart.data(this.garbageChartData);
+    chart.scale('percent', {
+      formatter: (val) => {
+        val = val * 100 + '%';
+        return val;
+      },
+    });
+    chart.coordinate('theta', {
+      radius: 0.75,
+      innerRadius: 0.6,
+    });
+    chart.tooltip({
+      showTitle: false,
+      showMarkers: false,
+      itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
+    });
+
+    // 辅助文本
+    chart
+      .annotation()
+      .text({
+        position: ['50%', '50%'],
+        content: '存储',
+        style: {
+          fontSize: 14,
+          fill: '#8c8c8c',
+          textAlign: 'center',
+        },
+        offsetY: -20,
+      });
+    chart
+      .interval().adjust('stack').position(['percent']).color('item')
+      .label('percent', (percent) => {
+        return {
+          content: (data) => {
+            return `${data.item}: ${(percent * 100).toFixed(2)}% ${data.count}B`;
+          },
+        };
+      })
+      .tooltip('item*percent', (item, percent) => {
+        percent = percent * 100 + '%';
+        return {
+          name: item,
+          value: percent,
+        };
+      });
+
+    chart.interaction('element-active');
+
+    chart.render();
+    this.chartArray.push(chart);
+    this.garbageChart = chart;
+  }
+  //#endregion
+
 
   initGraph1() {
 
@@ -318,69 +633,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     chart.theme('dark');
     chart.render();
   }
-
-  //#region 垃圾回收区域饼图
-  initGraph2() {
-
-    const chart = new Chart({
-      container: 'c2',
-      autoFit: true,
-      height: 400,
-    });
-    chart.data(this.chart2Data);
-    chart.scale('percent', {
-      formatter: (val) => {
-        val = val * 100 + '%';
-        return val;
-      },
-    });
-    chart.coordinate('theta', {
-      radius: 0.75,
-      innerRadius: 0.6,
-    });
-    chart.tooltip({
-      showTitle: false,
-      showMarkers: false,
-      itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
-    });
-
-    // 辅助文本
-    chart
-      .annotation()
-      .text({
-        position: ['50%', '50%'],
-        content: '存储',
-        style: {
-          fontSize: 14,
-          fill: '#8c8c8c',
-          textAlign: 'center',
-        },
-        offsetY: -20,
-      });
-    chart
-      .interval().adjust('stack').position(['percent']).color('item')
-      .label('percent', (percent) => {
-        return {
-          content: (data) => {
-            return `${data.item}: ${(percent * 100).toFixed(2)}% ${data.count}B`;
-          },
-        };
-      })
-      .tooltip('item*percent', (item, percent) => {
-        percent = percent * 100 + '%';
-        return {
-          name: item,
-          value: percent,
-        };
-      });
-
-    chart.interaction('element-active');
-
-    chart.render();
-    this.chartArray.push(chart);
-    this.chart2 = chart;
-  }
-  //#endregion
 
   initGraph3() {
 
@@ -553,211 +805,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.chartArray.push(chart);
   }
 
-  //#region cpu使用率
-
-  initGraph4() {
-    function creatData() {
-      const data = [];
-      data.push({ value: +0 });
-      return data;
-    }
-
-    // 自定义Shape 部分
-    registerShape('point', 'pointer', {
-      draw(cfg, container) {
-        const group = container.addGroup({});
-        // 获取极坐标系下画布中心点
-        const center = this.parsePoint({ x: 0, y: 0 });
-        // 绘制指针
-        group.addShape('line', {
-          attrs: {
-            x1: center.x,
-            y1: center.y,
-            x2: cfg.x,
-            y2: cfg.y,
-            stroke: cfg.color,
-            lineWidth: 5,
-            lineCap: 'round',
-          },
-        });
-        group.addShape('circle', {
-          attrs: {
-            x: center.x,
-            y: center.y,
-            r: 9.75,
-            stroke: cfg.color,
-            lineWidth: 4.5,
-            fill: '#fff',
-          },
-        });
-        return group;
-      },
-    });
-
-    const color = ['#0086FA', '#FFBF00', '#F5222D'];
-    const chart = new Chart({
-      container: 'c4',
-      autoFit: true,
-      height: 400,
-    });
-    chart.data(creatData());
-    chart.animate(false);
-
-    chart.coordinate('polar', {
-      startAngle: (-9 / 8) * Math.PI,
-      endAngle: (1 / 8) * Math.PI,
-      radius: 0.75,
-    });
-    chart.scale('value', {
-      min: 0,
-      max: 100,
-      tickInterval: 5,
-    });
-
-    chart.axis('1', false);
-    chart.axis('value', {
-      line: null,
-      label: {
-        offset: -40,
-        style: {
-          fontSize: 18,
-          fill: '#CBCBCB',
-          textAlign: 'center',
-          textBaseline: 'middle',
-        },
-      },
-      tickLine: {
-        length: -24,
-      },
-      grid: null,
-    });
-    chart.legend(false);
-    chart.tooltip(false);
-    chart
-      .point()
-      .position('value*1')
-      .shape('pointer')
-      .color('value', (val) => {
-        if (val < 40) {
-          return color[0];
-        } else if (val <= 80) {
-          return color[1];
-        } else if (val <= 100) {
-          return color[2];
-        }
-      });
-
-    this.drawGraph4(chart, creatData());
-    this.chartArray.push(chart);
-    this.chart4 = chart;
-  }
-
-  drawGraph4(chart, data) {
-
-    const color = ['#0086FA', '#FFBF00', '#F5222D'];
-    const val = data[0].value;
-    const lineWidth = 25;
-    chart.annotation().clear(true);
-    // 绘制仪表盘背景
-    chart.annotation().arc({
-      top: false,
-      start: [0, 1],
-      end: [100, 1],
-      style: {
-        stroke: '#CBCBCB',
-        lineWidth,
-        lineDash: null,
-      },
-    });
-
-    if (val < 40) {
-      chart.annotation().arc({
-        start: [0, 1],
-        end: [val, 1],
-        style: {
-          stroke: color[0],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-    }
-
-    if (val > 40 && val <= 80) {
-      chart.annotation().arc({
-        start: [0, 1],
-        end: [40, 1],
-        style: {
-          stroke: color[0],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-      chart.annotation().arc({
-        start: [40, 1],
-        end: [val, 1],
-        style: {
-          stroke: color[1],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-    }
-
-    if (val >= 80) {
-      chart.annotation().arc({
-        start: [0, 1],
-        end: [40, 1],
-        style: {
-          stroke: color[0],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-      chart.annotation().arc({
-        start: [40, 1],
-        end: [80, 1],
-        style: {
-          stroke: color[1],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-      chart.annotation().arc({
-        start: [80, 1],
-        end: [val, 1],
-        style: {
-          stroke: color[2],
-          lineWidth,
-          lineDash: null,
-        },
-      });
-    }
-
-    // 绘制指标数字
-    chart.annotation().text({
-      position: ['50%', '85%'],
-      content: '应用CPU使用率',
-      style: {
-        fontSize: 20,
-        fill: '#545454',
-        textAlign: 'center',
-      },
-    });
-    chart.annotation().text({
-      position: ['50%', '90%'],
-      content: `${data[0].value} %`,
-      style: {
-        fontSize: 36,
-        fill: '#545454',
-        textAlign: 'center',
-      },
-      offsetY: 15,
-    });
-    chart.changeData(data);
-  }
-
-  //#endregion
-
   initGraph5() {
 
     const data = [
@@ -902,48 +949,5 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     chart.render();
     this.chartArray.push(chart);
 
-  }
-
-  initGraph6() {
-
-    const chart = new Chart({
-      container: 'c6',
-      autoFit: true,
-      height: 400,
-    });
-
-    chart.data(this.chart6Data);
-    chart.scale({
-      time: {
-        range: [0, 1],
-      },
-      size: {
-        nice: true,
-        min: 0,
-      },
-    });
-
-    chart.tooltip({
-      showCrosshairs: true,
-      shared: true,
-    });
-
-    chart.axis('size', {
-      label: {
-        formatter: (val) => {
-          return val + ' MB';
-        },
-      },
-    });
-
-    // 线
-    chart.line().position('time*size').color('type').shape('smooth');
-
-    // 点
-    chart.point().position('time*size').color('type').shape('circle');
-
-    chart.render();
-    this.chartArray.push(chart);
-    this.chart6 = chart;
   }
 }

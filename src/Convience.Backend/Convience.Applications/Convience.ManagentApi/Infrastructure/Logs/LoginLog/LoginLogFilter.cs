@@ -19,7 +19,7 @@ namespace Convience.ManagentApi.Infrastructure.Logs.LoginLog
 
             var message = new LoginLogMessage();
             message.OperateAt = DateTime.Now;
-            message.OperatorAccount = body["userName"].ToString();
+            message.OperatorAccount = body["UserName"].ToString();
             message.IpAddress = context.HttpContext.Connection.RemoteIpAddress.ToString();
             message.IsSuccess = context.HttpContext.Response.StatusCode == 200;
             LoginLogQueue.Queue.Enqueue(message);
