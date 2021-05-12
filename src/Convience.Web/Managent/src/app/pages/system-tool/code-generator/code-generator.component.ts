@@ -48,6 +48,8 @@ export class CodeGeneratorComponent implements OnInit {
 
   editCode = '';
 
+  properties = [];
+
   constructor(
     private _formBuilder: FormBuilder,
     private _messageService: NzMessageService,
@@ -55,8 +57,7 @@ export class CodeGeneratorComponent implements OnInit {
 
   ngOnInit(): void {
     this.editForm = this._formBuilder.group({
-      entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]],
-      databaseContext: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
+      entityName: [null, [Validators.required, Validators.pattern("[a-zA-Z\$_][a-zA-Z\\d_]*$")]]
     });
   }
 
@@ -103,9 +104,8 @@ export class CodeGeneratorComponent implements OnInit {
     });
 
     this.currentIndex = 1;
-    let properties = [];
     this.controls.forEach(control => {
-      properties.push({
+      this.properties.push({
         type: this.editForm.value[control.type],
         property: this.editForm.value[control.property],
         isRequired: this.editForm.value[control.isRequired],
@@ -113,18 +113,8 @@ export class CodeGeneratorComponent implements OnInit {
       })
     });
 
-    this.code[0] = this._codeService.getBackEntity(this.editForm.value['entityName'], this.editForm.value['databaseContext'], properties);
-    this.code[1] = this._codeService.getBackEntityConfig(this.editForm.value['entityName'], properties);
-    this.code[2] = this._codeService.getBackModels(this.editForm.value['entityName'], properties);
-    this.code[3] = this._codeService.getBackViewModelValidator(this.editForm.value['entityName'], properties);
-    this.code[4] = this._codeService.getBackQueryValidator(this.editForm.value['entityName']);
-    this.code[5] = this._codeService.getBackService(this.editForm.value['entityName'], this.editForm.value['databaseContext']);
-    this.code[6] = this._codeService.getBackController(this.editForm.value['entityName']);
+    this.code[0] ??= this._codeService.getBackEntity(this.editForm.value['entityName'], this.properties);
 
-    this.code[7] = this._codeService.getFrontModel(this.editForm.value['entityName'], properties);
-    this.code[8] = this._codeService.getFrontService(this.editForm.value['entityName'], properties);
-    this.code[9] = this._codeService.getFrontHtml(this.editForm.value['entityName'], properties);
-    this.code[10] = this._codeService.getFrontTs(this.editForm.value['entityName'], properties);
     this.isGenerateFinish = true;
   }
 
@@ -133,9 +123,59 @@ export class CodeGeneratorComponent implements OnInit {
     this.currentIndex = 2;
   }
 
+  // 选中文件发生变化
+  radioChange(index) {
+    switch (index) {
+      case 0:
+        this.code[0] ??= this._codeService.getBackEntity(this.editForm.value['entityName'], this.properties);
+        break;
+      case 1:
+        this.code[1] ??= this._codeService.getBackEntityConfig(this.editForm.value['entityName'], this.properties);
+        break;
+      case 2:
+        this.code[2] ??= this._codeService.getBackModels(this.editForm.value['entityName'], this.properties);
+        break;
+      case 3:
+        this.code[3] ??= this._codeService.getBackViewModelValidator(this.editForm.value['entityName'], this.properties);
+        break;
+      case 4:
+        this.code[4] ??= this._codeService.getBackQueryValidator(this.editForm.value['entityName']);
+        break;
+      case 5:
+        this.code[5] ??= this._codeService.getBackService(this.editForm.value['entityName'], this.properties);
+        break;
+      case 6:
+        this.code[6] ??= this._codeService.getBackController(this.editForm.value['entityName']);
+        break;
+      case 7:
+        this.code[7] ??= this._codeService.getFrontModel(this.editForm.value['entityName'], this.properties);
+        break;
+      case 8:
+        this.code[8] ??= this._codeService.getFrontService(this.editForm.value['entityName'], this.properties);
+        break;
+      case 9:
+        this.code[9] ??= this._codeService.getFrontHtml(this.editForm.value['entityName'], this.properties);
+        break;
+      case 10:
+        this.code[10] ??= this._codeService.getFrontTs(this.editForm.value['entityName'], this.properties);
+        break;
+    }
+  }
+
 
   generateFile() {
     let zip = new JSZip();
+    this.code[0] ??= this._codeService.getBackEntity(this.editForm.value['entityName'], this.properties);
+    this.code[1] ??= this._codeService.getBackEntityConfig(this.editForm.value['entityName'], this.properties);
+    this.code[2] ??= this._codeService.getBackModels(this.editForm.value['entityName'], this.properties);
+    this.code[3] ??= this._codeService.getBackViewModelValidator(this.editForm.value['entityName'], this.properties);
+    this.code[4] ??= this._codeService.getBackQueryValidator(this.editForm.value['entityName']);
+    this.code[5] ??= this._codeService.getBackService(this.editForm.value['entityName'], this.properties);
+    this.code[6] ??= this._codeService.getBackController(this.editForm.value['entityName']);
+    this.code[7] ??= this._codeService.getFrontModel(this.editForm.value['entityName'], this.properties);
+    this.code[8] ??= this._codeService.getFrontService(this.editForm.value['entityName'], this.properties);
+    this.code[9] ??= this._codeService.getFrontHtml(this.editForm.value['entityName'], this.properties);
+    this.code[10] ??= this._codeService.getFrontTs(this.editForm.value['entityName'], this.properties);
 
     for (let index in this.fileNameList) {
       let content = this.code[index];

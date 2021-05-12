@@ -17,15 +17,6 @@
                     </nz-form-control>
                 </nz-form-item>
             </div>
-            <div nz-col style="width: 300px;">
-                <nz-form-item>
-                    <nz-form-label [nzFor]="'databasecontext'">数据库上下文</nz-form-label>
-                    <nz-form-control [nzErrorTip]="errorTpl">
-                        <input [attr.id]="'databasecontext'" formControlName="databaseContext" nz-input
-                            placeholder="数据库上下文" autocomplete="off" />
-                    </nz-form-control>
-                </nz-form-item>
-            </div>
         </div>
         <div class="activeForm">
             <div nz-row [nzGutter]="24" *ngFor="let control of controls">
@@ -90,16 +81,10 @@
         </nz-form-item>
     </form>
     <div *ngIf="currentIndex==1">
-        <nz-radio-group [(ngModel)]="radioValue">
+        <nz-radio-group [(ngModel)]="radioValue" (ngModelChange)="radioChange($event)">
             <label nz-radio-button [nzValue]="radio.value" *ngFor="let radio of radioList">{{radio.name}}</label>
         </nz-radio-group>
-        <!-- <ngx-monaco-editor class="codeEditor mt-10" [options]="editorOptions"
-            [(ngModel)]="this.code[this.radioValue]" style="height: 600px;" *ngIf="isGenerateFinish">
-        </ngx-monaco-editor> -->
         <nz-code-editor class="mt-10" style="height: 700px;"  [(ngModel)]="this.code[this.radioValue]" [nzEditorOption]="{ language: 'csharp' }"></nz-code-editor>
-        <div *ngIf="!isGenerateFinish" style="text-align: center;margin-top: 5rem;">
-            <i nz-icon [nzType]="'loading'" style="font-size: 5rem;"></i>
-        </div>
         <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="backToFirstStep()">返回</button>
         <button class="mt-10 mr-10" nz-button type="button" nzType="primary" (click)="toThirdStep()">修改完成,下载文件</button>
     </div>
