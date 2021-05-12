@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UriConfig } from '../configs/uri-config';
+import { UriConfig } from '../../configs/uri-config';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

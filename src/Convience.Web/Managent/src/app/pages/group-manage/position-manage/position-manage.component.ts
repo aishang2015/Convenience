@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { PositionService } from 'src/app/business/position.service';
+import { PositionService } from 'src/app/business/group-manage/position.service';
 import { Position } from '../model/position';
 
 @Component({

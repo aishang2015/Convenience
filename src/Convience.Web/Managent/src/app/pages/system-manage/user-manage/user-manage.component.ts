@@ -8,7 +8,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { Position } from '../../group-manage/model/position';
-import { PositionService } from 'src/app/business/position.service';
+import { PositionService } from 'src/app/business/group-manage/position.service';
 
 @Component({
   selector: 'app-user-manage',

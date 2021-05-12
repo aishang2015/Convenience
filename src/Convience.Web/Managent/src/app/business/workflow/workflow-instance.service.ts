@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { UriConfig } from '../configs/uri-config';
+import { UriConfig } from '../../configs/uri-config';
 
 @Injectable({
   providedIn: 'root'

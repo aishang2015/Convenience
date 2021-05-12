@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
-import { DepartmentService } from 'src/app/business/department.service';
+import { DepartmentService } from 'src/app/business/group-manage/department.service';
 import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/tree';
 import { Department } from 'src/app/pages/group-manage/model/department';
 

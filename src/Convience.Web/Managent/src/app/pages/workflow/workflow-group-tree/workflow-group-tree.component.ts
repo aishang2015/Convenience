@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { WorkFlowGroup } from '../model/workflowGroup';
 import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/tree/ng-zorro-antd-tree';
-import { WorkflowGroupService } from 'src/app/business/workflowgroup.service';
+import { WorkflowGroupService } from 'src/app/business/workflow/workflowgroup.service';
 
 @Component({
   selector: 'app-workflow-group-tree',
