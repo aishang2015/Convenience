@@ -38,9 +38,9 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpGet]
         [Permission("userDetail")]
-        public async Task<IActionResult> GetUser([FromQuery] string id)
+        public IActionResult GetUser([FromQuery] string id)
         {
-            var user = await _userService.GetUserAsync(id);
+            var user = _userService.GetUser(id);
             return Ok(user);
         }
 

@@ -25,9 +25,9 @@ namespace Convience.ManagentApi.Controllers.SystemManage
 
         [HttpGet()]
         [Permission("roleGet")]
-        public async Task<IActionResult> GetRoles([FromQuery] string id)
+        public IActionResult GetRoles([FromQuery] string id)
         {
-            return Ok(await _roleService.GetRoleAsync(id));
+            return Ok(_roleService.GetRole(id));
         }
 
         [HttpGet("list")]

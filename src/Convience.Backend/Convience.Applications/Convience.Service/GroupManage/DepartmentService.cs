@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models;
@@ -34,13 +35,10 @@ namespace Convience.Service.GroupManage
     public class DepartmentService : IDepartmentService
     {
         private readonly ILogger<DepartmentService> _logger;
-
         private readonly IRepository<Department> _departmentRepository;
-
         private readonly IRepository<DepartmentTree> _departmentTreeRepository;
-
-        private readonly IUserRepository _userRepository;
-
+        private readonly IRepository<SystemUser> _userRepository;
+        private readonly IRepository<SystemUserClaim> _userClaimRepository;
         private readonly IUnitOfWork<SystemIdentityDbContext> _unitOfWork;
 
         private IMapper _mapper;
@@ -49,7 +47,8 @@ namespace Convience.Service.GroupManage
             ILogger<DepartmentService> logger,
             IRepository<Department> departmentRepository,
             IRepository<DepartmentTree> departmentTreeRepository,
-            IUserRepository userRepository,
+            IRepository<SystemUser> userRepository,
+            IRepository<SystemUserClaim> userClaimRepository,
             IUnitOfWork<SystemIdentityDbContext> unitOfWork,
             IMapper mapper)
         {
@@ -57,6 +56,7 @@ namespace Convience.Service.GroupManage
             _departmentRepository = departmentRepository;
             _departmentTreeRepository = departmentTreeRepository;
             _userRepository = userRepository;
+            _userClaimRepository = userClaimRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
@@ -98,10 +98,9 @@ namespace Convience.Service.GroupManage
         {
             using var tran = await _unitOfWork.StartTransactionAsync();
 
-            var claims = _userRepository.GetUserClaims()
-                .Where(c => c.ClaimType == CustomClaimTypes.UserDepartment &&
-                c.ClaimValue == id.ToString());
-            _userRepository.GetUserClaims().RemoveRange(claims);
+            // 删除用户相关的部门信息
+            await _userClaimRepository.RemoveAsync(uc => uc.ClaimType == CustomClaimTypes.UserDepartment &&
+                uc.ClaimValue == id.ToString());
 
             var childId = _departmentTreeRepository.Get(dt => dt.Ancestor == id)
                 .Select(dt => dt.Descendant);
@@ -123,7 +122,7 @@ namespace Convience.Service.GroupManage
                         into newdt
                         from dt in newdt.DefaultIfEmpty()
 
-                        join u in _userRepository.GetUsers()
+                        join u in _userRepository.Get()
                         on d.LeaderId equals u.Id into newu
                         from u in newu.DefaultIfEmpty()
 

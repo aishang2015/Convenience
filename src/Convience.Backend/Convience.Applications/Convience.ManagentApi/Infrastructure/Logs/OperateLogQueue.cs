@@ -5,7 +5,7 @@ namespace Convience.ManagentApi.Infrastructure.Logs
 {
     public class OperateLogQueue
     {
-        public static ConcurrentQueue<OperateLogMessage> Queue { get; private set; }
-            = new ConcurrentQueue<OperateLogMessage>();
+        public static BlockingCollection<OperateLogMessage> blockingCollection { get; private set; }
+            = new BlockingCollection<OperateLogMessage>();
     }
 }

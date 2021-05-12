@@ -3,14 +3,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
-
-RUN ln -s /lib/x86_64-linux-gnu/libdl-2.24.so /lib/x86_64-linux-gnu/libdl.so
-
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-	echo " " > /etc/apt/sources.list  && \
-	echo "deb http://mirrors.aliyun.com/debian jessie main" >> /etc/apt/sources.list  && \
-	echo "deb http://mirrors.aliyun.com/debian jessie-updates main" >> /etc/apt/sources.list 
+EXPOSE 44
 
 RUN apt-get update
 RUN apt-get install libgdiplus -y && ln -s libgdiplus.so gdiplus.dll

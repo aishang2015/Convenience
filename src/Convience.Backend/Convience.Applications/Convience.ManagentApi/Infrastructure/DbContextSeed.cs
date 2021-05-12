@@ -1,5 +1,6 @@
 ﻿using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.Entity.Entity.Logs;
 using Convience.ManagentApi.Infrastructure.Logs;
 using Convience.Util.Helpers;
@@ -63,7 +64,7 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().RemoveRange(dbContext.Set<Menu>());
             dbContext.Set<Menu>().Add(new Menu(8, "仪表盘", "dashaboard", null, 1, null, 0));
             dbContext.Set<Menu>().Add(new Menu(16, "系统管理", "systemmanage", null, 1, null, 1));
-            dbContext.Set<Menu>().Add(new Menu(17, "用户管理", "userManage", "userList,roleNameList", 1, null, 1));
+            dbContext.Set<Menu>().Add(new Menu(17, "用户管理", "userManage", "userList,roleNameList,allPosition,allDepartment", 1, null, 1));
             dbContext.Set<Menu>().Add(new Menu(18, "角色管理", "roleManage", "roleList,menuList", 1, null, 2));
             dbContext.Set<Menu>().Add(new Menu(19, "菜单管理", "menuManage", "menuList", 1, null, 3));
             dbContext.Set<Menu>().Add(new Menu(20, "添加按钮", "adduserbtn", "userAdd", 2, null, 1));
@@ -104,8 +105,8 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().Add(new Menu(65, "系统工具", "systemtool", null, 1, null, 6));
             dbContext.Set<Menu>().Add(new Menu(66, "代码生成", "code", null, 3, null, 1));
             dbContext.Set<Menu>().Add(new Menu(67, "Swagger", "swagger", null, 3, null, 2));
-            dbContext.Set<Menu>().Add(new Menu(68, "Hangfire", "hangfire", null, 3, null, 3));
-            dbContext.Set<Menu>().Add(new Menu(69, "CAP", "cap", null, 3, null, 4));
+            //dbContext.Set<Menu>().Add(new Menu(68, "Hangfire", "hangfire", null, 3, null, 3));
+            //dbContext.Set<Menu>().Add(new Menu(69, "CAP", "cap", null, 3, null, 4));
             dbContext.Set<Menu>().Add(new Menu(70, "字典管理", "dicManage", "dicTypeList,dicDataList", 1, null, 4));
             dbContext.Set<Menu>().Add(new Menu(71, "查看页面", null, null, 3, null, 1));
             dbContext.Set<Menu>().Add(new Menu(72, "添加类型按钮", "addDicTypeBtn", "dicTypeAdd", 2, null, 2));

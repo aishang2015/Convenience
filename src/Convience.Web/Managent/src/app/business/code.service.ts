@@ -27,18 +27,19 @@ export class CodeService {
     return result;
   }
 
-  getBackEntity(entityName: string, dbcontext: string, properties: { type; property; }[]) {
+  // 后端实体
+  getBackEntity(entityName: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }
+      propertyString += propertyString ? `
 
-        `;
+        public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }` :
+        `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }`;
     });
     return `using Convience.EntityFrameWork.Infrastructure;
 
 namespace Convience.Entity.Entity
 {
-    [Entity(DbContextType = typeof(${this.upperFirstCharacter(dbcontext)}))]
     public class ${this.upperFirstCharacter(entityName)}
     {
         ${propertyString}
@@ -79,9 +80,10 @@ namespace Convience.Entity.Configurations
   getBackModels(entityName: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} {get;set;}
+      propertyString += propertyString ? `
 
-        `;
+        public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }` :
+        `public ${this.getCsharpType(element.type)} ${this.upperFirstCharacter(element.property)} { get; set; }`;
     });
     return `namespace Convience.Model.Models
 {
@@ -90,15 +92,14 @@ namespace Convience.Entity.Configurations
         ${propertyString}
     }
     
-    public class ${this.upperFirstCharacter(entityName)}ResultModel : ${this.upperFirstCharacter(entityName)}ViewModel
+    public class ${this.upperFirstCharacter(entityName)}ResultModel
     {
+        ${propertyString}
     }
     
-    public class ${this.upperFirstCharacter(entityName)}QueryModel
+    public class ${this.upperFirstCharacter(entityName)}QueryModel : PageSortQueryModel
     {
-        public int Page { get; set; }
-
-        public int Size { get; set; }
+        ${propertyString}
     }
 }`;
   }
@@ -152,12 +153,26 @@ namespace Convience.Model.Validators
 }`;
   }
 
-  getBackService(entityName: string, dbcontext: string) {
+  getBackService(entityName: string, properties: { type; property; }[]) {
     let camel = this.upperFirstCharacter(entityName);
     let lower = this.lowerFirstCharacter(entityName);
+
+    var sortFieldDic = '';
+    properties.forEach(p => {
+      sortFieldDic += sortFieldDic ? `
+            sortFieldDic["${this.lowerFirstCharacter(p.property)}"] = t => t.${this.upperFirstCharacter(p.property)};` :
+        `sortFieldDic["${this.lowerFirstCharacter(p.property)}"] = t => t.${this.upperFirstCharacter(p.property)};`
+    })
+
+
     return `using Convience.EntityFrameWork.Repositories;
 using Convience.Util.Extension;
+using Convience.Model.Models;
+using Convience.Entity.Entity;
+using Convience.Entity.Data;
 using AutoMapper;
+
+using System.Linq.Expressions;
 
 using System;
 using System.Collections.Generic;
@@ -166,29 +181,29 @@ using System.Threading.Tasks;
 
 namespace Convience.Service
 {
-    public interface I${camel}Service
+    public interface I${camel}Service : IBaseService
     {
         Task<${camel}ResultModel> GetByIdAsync(int id);
 
-        (IEnumerable<${camel}ResultModel>, int) Get${camel}s(${camel}QueryModel query);
+        PagingResultModel<${camel}ResultModel> Get${camel}s(${camel}QueryModel query);
 
-        Task<bool> Add${camel}Async(${camel}ViewModel model);
+        Task Add${camel}Async(${camel}ViewModel model);
 
-        Task<bool> Update${camel}Async(${camel}ViewModel model);
+        Task Update${camel}Async(${camel}ViewModel model);
 
-        Task<bool> Delete${camel}Async(int id);
+        Task Delete${camel}Async(int id);
     }
 
-    public class ${camel}Service : I${camel}Service
+    public class ${camel}Service : BaseService , I${camel}Service
     {
         private readonly IRepository<${camel}> _${lower}Repository;
         
-        private readonly IUnitOfWork<${this.upperFirstCharacter(dbcontext)}> _unitOfWork;
+        private readonly SystemIdentityDbUnitOfWork _unitOfWork;
 
         private readonly IMapper _mapper;
 
         public ${camel}Service(IRepository<${camel}> ${lower}Repository,
-          IUnitOfWork<${this.upperFirstCharacter(dbcontext)}> unitOfWork,
+          SystemIdentityDbUnitOfWork unitOfWork,
           IMapper mapper)
         {
             _${lower}Repository = ${lower}Repository;
@@ -202,57 +217,45 @@ namespace Convience.Service
             return _mapper.Map<${camel}ResultModel>(${camel});
         }
         
-        public (IEnumerable<${camel}ResultModel>, int) Get${camel}s(${camel}QueryModel query)
+        public PagingResultModel<${camel}ResultModel> Get${camel}s(${camel}QueryModel queryModel)
         {
-            var where = ExpressionExtension.TrueExpression<${camel}>();
-            var ${lower}Query =  _${lower}Repository.Get().Where(@where);
-            var skip = query.Size * (query.Page - 1);
-            var result = _mapper.Map<IEnumerable<${camel}>,IEnumerable<${camel}ResultModel>>(${lower}Query.Skip(skip).Take(query.Size).ToList());
-            return (result, ${lower}Query.Count());
+            // 构造查询
+            var query = from ${lower} in _${lower}Repository.Get(false)
+                        select ${lower};
+            
+            // 构造排序
+            var sortFieldDic = new Dictionary<string, Expression<Func<${camel}, object>>>();
+            ${sortFieldDic}            
+            query = GetOrderQuery(query, queryModel.Sort, queryModel.Order, sortFieldDic);            
+                        
+            // 取得数据
+            var skip = queryModel.Size * (queryModel.Page - 1);
+            var result = query.Skip(skip).Take(queryModel.Size).ToList();
+            return new PagingResultModel<${camel}ResultModel>
+            {
+                Count = query.Count(),
+                Data = _mapper.Map<List<${camel}ResultModel>>(result)
+            };
         }
 
-        public async Task<bool> Add${camel}Async(${camel}ViewModel model)
+        public async Task Add${camel}Async(${camel}ViewModel model)
         {
-            try
-            {
-                var ${camel} = _mapper.Map<${camel}>(model);
-                await _${lower}Repository.AddAsync(${camel});
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            var ${camel} = _mapper.Map<${camel}>(model);
+            await _${lower}Repository.AddAsync(${camel});
+            await _unitOfWork.SaveAsync();
         }
 
-        public async Task<bool> Delete${camel}Async(int id)
+        public async Task Delete${camel}Async(int id)
         {
-            try
-            {
-                await _${lower}Repository.RemoveAsync(id);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            await _${lower}Repository.RemoveAsync(id);
+            await _unitOfWork.SaveAsync();
         }
 
-        public async Task<bool> Update${camel}Async(${camel}ViewModel model)
+        public async Task Update${camel}Async(${camel}ViewModel model)
         {
-            try
-            {
-                var entity = await _${lower}Repository.GetAsync(model.Id);
-                _mapper.Map(model, entity);
-                await _unitOfWork.SaveAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            var entity = await _${lower}Repository.GetAsync(model.Id);
+            _mapper.Map(model, entity);
+            await _unitOfWork.SaveAsync();
         }
     }
 }`;
@@ -276,6 +279,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.Fluentvalidation;
+using Convience.Service;
+using Convience.Model.Models;
 
 using System.Threading.Tasks;
 
@@ -303,49 +308,33 @@ namespace Convience.ManagentApi.Controllers
 
         [HttpGet("list")]
         [Permission("${camel}List")]
-        public IActionResult Get([FromQuery]${camel}QueryModel ${camel}Query)
+        public IActionResult Get([FromQuery]${camel}QueryModel ${lower}Query)
         {
-            var result = _${lower}Service.Get${camel}s(${camel}Query);
-            return Ok(new
-            {
-                data = result.Item1,
-                count = result.Item2
-            });
+            var result = _${lower}Service.Get${camel}s(${lower}Query);
+            return Ok(result);
         }
 
         [HttpDelete]
         [Permission("${camel}Delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var isSuccess = await _${lower}Service.Delete${camel}Async(id);
-            if (!isSuccess)
-            {
-                return this.BadRequestResult("删除失败!");
-            }
+            await _${lower}Service.Delete${camel}Async(id);
             return Ok();
         }
 
         [HttpPost]
         [Permission("${camel}Add")]
-        public async Task<IActionResult> Add(${camel}ViewModel ${camel}ViewModel)
+        public async Task<IActionResult> Add(${camel}ViewModel ${lower}ViewModel)
         {
-            var isSuccess = await _${lower}Service.Add${camel}Async(${camel}ViewModel);
-            if (!isSuccess)
-            {
-                return this.BadRequestResult("添加失败!");
-            }
+            await _${lower}Service.Add${camel}Async(${lower}ViewModel);
             return Ok();
         }
 
         [HttpPatch]
         [Permission("${camel}Update")]
-        public async Task<IActionResult> Update(${camel}ViewModel ${camel}ViewModel)
+        public async Task<IActionResult> Update(${camel}ViewModel ${lower}ViewModel)
         {
-            var isSuccess = await _${lower}Service.Update${camel}Async(${camel}ViewModel);
-            if (!isSuccess)
-            {
-                return this.BadRequestResult("更新失败!");
-            }
+            await _${lower}Service.Update${camel}Async(${lower}ViewModel);
             return Ok();
         }
     }
@@ -355,10 +344,11 @@ namespace Convience.ManagentApi.Controllers
   getFrontModel(entityName: string, properties: { type; property; }[]) {
     let propertyString = '';
     properties.forEach(element => {
-      propertyString += `${this.lowerFirstCharacter(element.property)}?: ${this.getTypeScriptType(element.type)};
-    `;
+      propertyString += propertyString ? `
+    ${this.lowerFirstCharacter(element.property)}?: ${this.getTypeScriptType(element.type)};` :
+        `${this.lowerFirstCharacter(element.property)}?: ${this.getTypeScriptType(element.type)};`;
     });
-    return `export class ${this.upperFirstCharacter(entityName)} {
+    return `export interface ${this.upperFirstCharacter(entityName)} {
     ${this.lowerFirstCharacter(propertyString)}
 }`;
   }
@@ -386,29 +376,30 @@ import { UriConstant } from '../core/configs/uri-constant';
 })
 export class ${camel}Service {
 
-  constructor(private httpClient: HttpClient,
-    private uriConstant: UriConstant) { }
+  constructor(
+    private _httpClient: HttpClient,
+    private _uriConstant: UriConstant) { }
 
   get(id) {
-    return this.httpClient.get(\`\${this.uriConstant.${camel}Uri}?id=\${id}\`);
+    return this._httpClient.get(\`\${this._uriConstant.${camel}Uri}?id=\${id}\`);
   }
 
-  getList(page, size, searchObj) {
-    let uri = \`\${this.uriConstant.${camel}Uri}/list?page=\${page}&&size=\${size}\`;
+  getList(page, size, sort, order, searchObj) {
+    let uri = \`\${this._uriConstant.${camel}Uri}/list?page=\${page}&&size=\${size}&&sort=\${sort}&&order=\${order}\`;
     ${tds}
-    return this.httpClient.get(uri);
+    return this._httpClient.get(uri);
   }
 
   delete(id) {
-    return this.httpClient.delete(\`\${this.uriConstant.${camel}Uri}?id=\${id}\`);
+    return this._httpClient.delete(\`\${this._uriConstant.${camel}Uri}?id=\${id}\`);
   }
 
   update(${lower}) {
-    return this.httpClient.patch(this.uriConstant.${camel}Uri, ${lower});
+    return this._httpClient.patch(this._uriConstant.${camel}Uri, ${lower});
   }
 
   add(${lower}) {
-    return this.httpClient.post(this.uriConstant.${camel}Uri, ${lower});
+    return this._httpClient.post(this._uriConstant.${camel}Uri, ${lower});
   }
 }
 `
@@ -420,7 +411,7 @@ export class ${camel}Service {
 
     let ths = '';
     properties.forEach(element => {
-      ths += `<th nzAlign="center">${element.property}</th>
+      ths += `<th nzAlign="center" nzColumnKey="${this.lowerFirstCharacter(element.property)}" [nzSortFn]="true" [nzSortPriority]="true">${element.property}</th>
                     `;
     });
     let tds = '';
@@ -442,16 +433,20 @@ export class ${camel}Service {
     });
 
     let result = `
+<!--搜索表单-->
 <nz-card [nzSize]="'small'">
-    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">
+    <form nz-form [nzLayout]="'inline'" [formGroup]="searchForm" (ngSubmit)="submitSearch()">    
+        ${items}
         <nz-form-item>
             <nz-form-control>
                 <button nz-button nzType="primary">搜索</button>
+                <button nz-button type="reset" (click)="reset()">重置</button>
             </nz-form-control>
         </nz-form-item>
     </form>
 </nz-card>
 
+<!--数据表格-->
 <nz-card [nzSize]="'small'">
     <div>
         <button nz-button class="mr-10" (click)="add()" *canOperate="'add${camel}Btn'">
@@ -460,7 +455,7 @@ export class ${camel}Service {
     </div>
     <div class="mt-10">
         <nz-table #dataTable nzSize="middle" [nzData]="data" nzShowPagination="false" nzFrontPagination="false"
-            nzBordered="true">
+            nzBordered="true" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: '2460px' }">
             <thead>
                 <tr>
                     <th nzAlign="center" nzWidth="50px">#</th>
@@ -488,10 +483,9 @@ export class ${camel}Service {
     </div>
 </nz-card>
 
+<!--编辑表单-->
 <ng-template #contentTpl>
     <form nz-form [formGroup]="editForm" (ngSubmit)="submitEdit()">
-
-
         ${items}
         <nz-form-item>
             <nz-form-control [nzSpan]="14" [nzOffset]="6">
@@ -559,6 +553,12 @@ export class ${camel}Component implements OnInit {
     // 模态框
     public modal: NzModalRef;
 
+    // 表格排序功能
+    private _sortArray: string[] = [];
+  
+    // 表格排序功能
+    private _orderArray: string[] = [];
+
     // 搜索参数
     private _searchObj : any = {};
 
@@ -591,7 +591,7 @@ export class ${camel}Component implements OnInit {
 
     // 初始化页面数据
     initData() { 
-      this._${lower}Service.getList(this.page, this.size, this._searchObj)
+      this._${lower}Service.getList(this.page, this.size, this._sortArray, this._orderArray, this._searchObj)
         .subscribe(result => {
           this.data = result['data'];
           this.total = result['count'];
@@ -677,6 +677,33 @@ export class ${camel}Component implements OnInit {
 
     cancel() {
       this.modal.close();
+    }
+   
+    // 排序发生变化
+    public onQueryParamsChange(params: NzTableQueryParams) {
+      let currentSort = params.sort.filter(s => s.value != null);
+
+      // 移除了排序字段
+      if (this._sortArray.length > currentSort.length) {
+        let removedField = this._sortArray.find(f => currentSort.find(c => c.key == f) == null);
+        let removeIndex = this._sortArray.findIndex(f => f == removedField);
+
+        // 移除元素
+        this._sortArray.splice(removeIndex, 1);
+        this._orderArray.splice(removeIndex, 1);
+      } else if (this._sortArray.length < currentSort.length) {
+
+        // 添加了排序字段
+        let newField = currentSort.find(c => this._sortArray.find(f => f == c.key) == null);
+        this._sortArray.push(newField.key);
+        this._orderArray.push(newField.value);
+      } else {
+        for (let s of currentSort) {
+          let index = this._sortArray.findIndex(f => f == s.key);
+          this._orderArray[index] = s.value;
+        }
+      }
+      this.initData();
     }
 }
 

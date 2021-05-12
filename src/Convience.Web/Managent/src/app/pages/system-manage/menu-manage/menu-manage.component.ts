@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Menu } from '../model/menu';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MenuService } from 'src/app/business/menu.service';
+import { MenuService } from 'src/app/business/system-manage/menu.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzTreeNodeOptions, NzTreeNode, NzFormatEmitEvent } from 'ng-zorro-antd/tree';

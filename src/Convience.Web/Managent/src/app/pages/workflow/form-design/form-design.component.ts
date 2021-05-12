@@ -3,7 +3,7 @@ import * as jp from 'jsplumb';
 import { fromEvent } from 'rxjs';
 import { WorkFlowFormControl, ControlTypeEnum } from '../model/workFlowFormControl';
 import { ActivatedRoute } from '@angular/router';
-import { WorkflowFormService } from 'src/app/business/workflow-form.service';
+import { WorkflowFormService } from 'src/app/business/workflow/workflow-form.service';
 import { WorkFlowForm } from '../model/workflowForm';
 import { NzMessageService } from 'ng-zorro-antd/message';
 

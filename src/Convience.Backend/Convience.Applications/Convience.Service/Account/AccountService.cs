@@ -1,14 +1,15 @@
-﻿
-using Convience.Entity.Data;
+﻿using Convience.Entity.Entity.Identity;
+using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Models.Account;
 using Convience.Util.Helpers;
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Convience.Service.Account
@@ -19,7 +20,7 @@ namespace Convience.Service.Account
 
         public string ValidateCaptcha(string captchaKey, string captchaValue);
 
-        public Task<bool> IsStopUsingAsync(string userName);
+        public bool IsStopUsing(string userName);
 
         public Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password);
 
@@ -28,48 +29,51 @@ namespace Convience.Service.Account
 
     public class AccountService : IAccountService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<SystemUser> _userManager;
+
+        private readonly IRepository<SystemUserRole> _userRoleRepository;
 
         private readonly IMemoryCache _cachingProvider;
 
         private readonly IJwtFactory _jwtFactory;
 
-        public AccountService(IUserRepository userRepository,
+        public AccountService(
+            UserManager<SystemUser> userManager,
+            IRepository<SystemUserRole> userRoleRepository,
             IMemoryCache cachingProvider,
             IOptionsSnapshot<JwtOption> jwtOptionAccessor)
         {
             var option = jwtOptionAccessor.Get(JwtAuthenticationSchemeConstants.DefaultAuthenticationScheme);
-            _userRepository = userRepository;
+            _userManager = userManager;
+            _userRoleRepository = userRoleRepository;
             _cachingProvider = cachingProvider;
             _jwtFactory = new JwtFactory(option);
         }
 
-        public async Task<bool> IsStopUsingAsync(string userName)
+        public bool IsStopUsing(string userName)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            if (user != null && user.IsActive)
-            {
-                return true;
-            }
-            return false;
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
+            return user != null;
         }
 
         public async Task<ValidateCredentialsResultModel> ValidateCredentialsAsync(string userName, string password)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName && u.IsActive);
+            var roleIds = string.Join(',',
+                _userRoleRepository.Get(ur => ur.UserId == user.Id).Select(ur => ur.RoleId));
             if (user != null)
             {
-                var isValid = await _userRepository.CheckPasswordAsync(user, password);
+                var isValid = await _userManager.CheckPasswordAsync(user, password);
                 if (isValid)
                 {
                     var pairs = new List<(string, string)>
                     {
                         (CustomClaimTypes.UserName,user.UserName),
-                        (CustomClaimTypes.UserRoleIds,user.RoleIds),
+                        (CustomClaimTypes.UserRoleIds,roleIds),
                         (CustomClaimTypes.Name,user.Name)
                     };
                     return new ValidateCredentialsResultModel(_jwtFactory.GenerateJwtToken(pairs),
-                        user.Name, user.Avatar, user.RoleIds);
+                        user.Name, user.Avatar, roleIds);
                 }
             }
             return null;
@@ -77,16 +81,9 @@ namespace Convience.Service.Account
 
         public async Task<bool> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
-            var user = await _userRepository.GetUserByNameAsync(userName);
-            if (user != null)
-            {
-                var isValid = await _userRepository.ChangePasswordAsync(user, oldPassword, newPassword);
-                if (isValid)
-                {
-                    return true;
-                }
-            }
-            return false;
+            var user = _userManager.Users.FirstOrDefault(u => u.UserName == userName);
+            return user == null ? false :
+                (await _userManager.ChangePasswordAsync(user, oldPassword, newPassword)).Succeeded;
 
         }
 

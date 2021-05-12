@@ -1,21 +1,19 @@
 using Convience.Caching;
 using Convience.Entity.Data;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Infrastructure;
-using Convience.EntityFrameWork.Repositories;
 using Convience.Filestorage.Filesystem;
 using Convience.Filestorage.MongoDB;
 using Convience.Fluentvalidation;
 using Convience.Hangfire;
 using Convience.Injection;
 using Convience.JwtAuthentication;
-using Convience.ManagentApi.Infrastructure;
 using Convience.ManagentApi.Infrastructure.Authorization;
-using Convience.ManagentApi.Jobs;
+using Convience.ManagentApi.Infrastructure.BackgroudTask;
+using Convience.ManagentApi.Infrastructure.Hubs;
 using Convience.SignalRs;
 using Convience.Util.Extension;
 using Convience.Util.Middlewares;
-
-using Hangfire;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -52,13 +50,13 @@ namespace Convience.ManagentApi
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddAutoMapper()
-                .AddPostgreHangFire(dbConnectionString)
                 .AddMemoryCache()
                 .AddFileSystemStore(Configuration)
                 .AddServices()
                 .AddCachingServices()
                 .AddResponseCompression()
                 .AddAutowired()
+                .AddBackgroundServices()
                 .AddSignalR();
         }
 
@@ -88,8 +86,6 @@ namespace Convience.ManagentApi
 
             app.UseAuthentication();
 
-            app.UseHangfireDashBoard(serviceProvider);
-
             app.UseRouting();
 
             app.UseAuthorization();
@@ -99,6 +95,7 @@ namespace Convience.ManagentApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<TestHub>("/hubs");
+                endpoints.MapHub<AppStateHub>("/appState");
                 endpoints.MapControllers();
             });
         }
@@ -108,12 +105,11 @@ namespace Convience.ManagentApi
     {
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, string connectionString)
         {
-            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int>
+            services.AddCustomDbContext<SystemIdentityDbContext, SystemUser, SystemRole, int, SystemUserClaim,
+                SystemUserRole, SystemUserLogin, SystemRoleClaim, SystemUserToken>
                 (connectionString, DataBaseType.PostgreSQL);
 
-            services.AddRepositories<SystemIdentityDbContext>();
-
-            services.AddRepositories();
+            services.AddScoped<SystemIdentityDbUnitOfWork>();
 
             return services;
         }
@@ -160,12 +156,14 @@ namespace Convience.ManagentApi
 
         public static IApplicationBuilder UseHangfireDashBoard(this IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-            GlobalConfiguration.Configuration.UseActivator(new HangFireJobActivator(serviceProvider.GetService<IServiceScopeFactory>()));
-
             app.UseHFAuthorizeDashBoard("/taskManage");
             app.UseHFAnonymousDashBoard("/taskView");
 
-            AllJobSetting.SetJobs();
+            //RecurringJob.AddOrUpdate<WriteOperateLogJob>("定时写入操作日志", j => j.Run(), Cron.Minutely);
+            //RecurringJob.AddOrUpdate<ClearOperateLogJob>("定时清理操作日志", j => j.Run(), Cron.Daily);
+
+            //RecurringJob.AddOrUpdate<WriteLoginLogJob>("定时写入登录日志", j => j.Run(), Cron.Minutely);
+            //RecurringJob.AddOrUpdate<ClearLoginLogJob>("定时清理登录日志", j => j.Run(), Cron.Daily);
             return app;
         }
     }

@@ -2,6 +2,7 @@
 
 using Convience.Entity.Data;
 using Convience.Entity.Entity;
+using Convience.Entity.Entity.Identity;
 using Convience.EntityFrameWork.Repositories;
 using Convience.JwtAuthentication;
 using Convience.Model.Constants.SystemManage;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Convience.Service.SystemManage
@@ -27,7 +29,7 @@ namespace Convience.Service.SystemManage
         /// <summary>
         /// 获取角色数据
         /// </summary>
-        Task<RoleResultModel> GetRoleAsync(string id);
+        RoleResultModel GetRole(string id);
 
         /// <summary>
         /// 角色列表(分页)
@@ -59,23 +61,26 @@ namespace Convience.Service.SystemManage
     {
         private readonly IMapper _mapper;
         private readonly IRepository<MenuTree> _menuTreeRepository;
-        private readonly IRoleRepository _roleRepository;
-        private readonly SystemIdentityDbContext _systemIdentityDbContext;
+        private readonly IRepository<SystemUserRole> _systemUserRoleRepository;
+        private readonly IRepository<SystemRoleClaim> _systemRoleClaimRepository;
+        private readonly IRepository<SystemRole> _systemRoleRepository;
         private readonly SystemIdentityDbUnitOfWork _systemIdentityDbUnitOfWork;
         private readonly RoleManager<SystemRole> _roleManager;
 
         public RoleService(
             IMapper mapper,
             IRepository<MenuTree> menuTreeRepository,
-            IRoleRepository roleRepository,
-            SystemIdentityDbContext systemIdentityDbContext,
+            IRepository<SystemUserRole> systemUserRoleRepository,
+            IRepository<SystemRoleClaim> systemRoleClaimRepository,
+            IRepository<SystemRole> systemRoleRepository,
             SystemIdentityDbUnitOfWork systemIdentityDbUnitOfWork,
             RoleManager<SystemRole> roleManager)
         {
             _mapper = mapper;
             _menuTreeRepository = menuTreeRepository;
-            _roleRepository = roleRepository;
-            _systemIdentityDbContext = systemIdentityDbContext;
+            _systemUserRoleRepository = systemUserRoleRepository;
+            _systemRoleClaimRepository = systemRoleClaimRepository;
+            _systemRoleRepository = systemRoleRepository;
             _systemIdentityDbUnitOfWork = systemIdentityDbUnitOfWork;
             _roleManager = roleManager;
         }
@@ -110,22 +115,14 @@ namespace Convience.Service.SystemManage
             var role = await _roleManager.FindByNameAsync(model.Name);
 
             // 关联角色和菜单
-            var isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                CustomClaimTypes.RoleMenus, string.Join(',', menuIds.Distinct()));
-            if (!isSuccess)
-            {
-                await trans.RollbackAsync();
-                return RoleConstants.ROLE_RIGHT_FAIL;
-            }
+            await AddOrUpdateRoleClaim(role, CustomClaimTypes.RoleMenus,
+                menuIds.Select(i => i.ToString()).ToArray());
 
             // 关联角色和菜单 这个主要是为了前端设置界面用
-            isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                CustomClaimTypes.RoleMenusFront, string.Join(',', menuIdArray.Distinct()));
-            if (!isSuccess)
-            {
-                await trans.RollbackAsync();
-                return RoleConstants.ROLE_RIGHT_FAIL;
-            }
+            await AddOrUpdateRoleClaim(role, CustomClaimTypes.RoleMenusFront,
+                menuIdArray.Distinct().ToArray());
+
+            await _systemIdentityDbUnitOfWork.SaveAsync();
 
             await trans.CommitAsync();
             return string.Empty;
@@ -134,17 +131,17 @@ namespace Convience.Service.SystemManage
         /// <summary>
         /// 获取角色数据
         /// </summary>
-        public async Task<RoleResultModel> GetRoleAsync(string id)
+        public RoleResultModel GetRole(string id)
         {
-            var role = await _roleRepository.GetRoleById(id);
-            var menus = from roleclaim in _systemIdentityDbContext.RoleClaims
+            var role = _systemRoleRepository.Get(r => r.Id.ToString() == id).FirstOrDefault();
+            var menus = from roleclaim in _systemRoleClaimRepository.Get()
                         where roleclaim.RoleId == role.Id
                             && roleclaim.ClaimType == CustomClaimTypes.RoleMenusFront
                         select roleclaim.ClaimValue;
 
             var roleResult = _mapper.Map<RoleResultModel>(role) with
             {
-                Menus = menus.FirstOrDefault()
+                Menus = string.Join(',', menus)
             };
             return roleResult;
         }
@@ -154,7 +151,7 @@ namespace Convience.Service.SystemManage
         /// </summary>
         public PagingResultModel<RoleResultModel> GetRoles(int page, int size, string name)
         {
-            var query = _roleRepository.GetRoles()
+            var query = _systemRoleRepository.Get()
                 .AndIfHaveValue(name, r => r.Name.Contains(name));
             var roles = query.Skip(size * (page - 1)).Take(size);
             return new PagingResultModel<RoleResultModel>
@@ -169,7 +166,7 @@ namespace Convience.Service.SystemManage
         /// </summary>
         public IEnumerable<RoleResultModel> GetRoles()
         {
-            var roles = _roleRepository.GetRoles();
+            var roles = _systemRoleRepository.Get();
             return _mapper.Map<List<RoleResultModel>>(roles.ToArray());
         }
 
@@ -178,7 +175,7 @@ namespace Convience.Service.SystemManage
         /// </summary>
         public async Task<string> RemoveRoleAsync(string roleName)
         {
-            var role = await _roleRepository.GetRole(roleName);
+            var role = await _roleManager.FindByNameAsync(roleName);
             if (role == null)
             {
                 return RoleConstants.ROLE_NO_EXIST;
@@ -187,13 +184,13 @@ namespace Convience.Service.SystemManage
             {
                 return RoleConstants.ROLE_SYSTEM_CANNOT_MODIFY;
             }
-            var count = await _roleRepository.GetMemberCount(roleName);
+            var count = _systemUserRoleRepository.Get(ur => ur.RoleId == role.Id).Count();
             if (count > 0)
             {
                 return RoleConstants.ROLE_CONTAIN_USER;
             }
-            var isSuccess = await _roleRepository.RemoveRole(roleName);
-            if (!isSuccess)
+            var deleteResult = await _roleManager.DeleteAsync(role);
+            if (!deleteResult.Succeeded)
             {
                 return RoleConstants.ROLE_REMOVE_FAIL;
             }
@@ -206,16 +203,12 @@ namespace Convience.Service.SystemManage
         public async Task<string> UpdateAsync(RoleViewModel model)
         {
             // 开始事务
-            using var trans = await _systemIdentityDbContext.Database.BeginTransactionAsync();
+            using var trans = await _systemIdentityDbUnitOfWork.StartTransactionAsync();
 
             // 取得角色并更新
-            var role = await _roleRepository.GetRoleById(model.Id);
+            var role = _systemRoleRepository.Get(r => r.Id.ToString() == model.Id, false).FirstOrDefault();
             _mapper.Map(model, role);
-            var isSuccess = await _roleRepository.UpdateRole(role);
-            if (!isSuccess)
-            {
-                return RoleConstants.ROLE_UPDATE_NAME_SAME;
-            }
+            _systemRoleRepository.Update(role);
 
             // 找到菜单树所有父和子节点
             var menuIdArray = model.Menus.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -229,22 +222,15 @@ namespace Convience.Service.SystemManage
                     menuTree.Select(tree => tree.Ancestor)).Distinct();
 
             // 关联角色和菜单
-            isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                CustomClaimTypes.RoleMenus, string.Join(',', menuIds.Distinct()));
-            if (!isSuccess)
-            {
-                await trans.RollbackAsync();
-                return RoleConstants.ROLE_UPDATE_RIGHT_FAIL;
-            }
+            await AddOrUpdateRoleClaim(role, CustomClaimTypes.RoleMenus,
+                menuIds.Select(i => i.ToString()).ToArray());
 
             // 关联角色和菜单 这个主要是为了前端设置界面用
-            isSuccess = await _roleRepository.AddOrUpdateRoleClaim(role,
-                CustomClaimTypes.RoleMenusFront, string.Join(',', menuIdArray.Distinct()));
-            if (!isSuccess)
-            {
-                await trans.RollbackAsync();
-                return RoleConstants.ROLE_UPDATE_RIGHT_FAIL;
-            }
+            await AddOrUpdateRoleClaim(role, CustomClaimTypes.RoleMenusFront,
+               menuIdArray.ToArray());
+
+            await _systemIdentityDbUnitOfWork.SaveAsync();
+
             await trans.CommitAsync();
             return string.Empty;
         }
@@ -254,9 +240,25 @@ namespace Convience.Service.SystemManage
         /// </summary>
         public List<string> GetRoleClaimValue(string[] roleIds, string claimType)
         {
-            return (from rc in _systemIdentityDbContext.RoleClaims
+            return (from rc in _systemRoleClaimRepository.Get()
                     where rc.ClaimType == claimType && roleIds.Contains(rc.RoleId.ToString())
                     select rc.ClaimValue).Distinct().ToList();
+        }
+
+
+        private async Task AddOrUpdateRoleClaim(SystemRole role, string claimType, string[] claimValues)
+        {
+            await _systemRoleClaimRepository.RemoveAsync(rc => rc.RoleId == role.Id && rc.ClaimType == claimType);
+
+            foreach (var claimValue in claimValues)
+            {
+                await _systemRoleClaimRepository.AddAsync(new SystemRoleClaim
+                {
+                    RoleId = role.Id,
+                    ClaimType = claimType,
+                    ClaimValue = claimValue,
+                });
+            }
         }
     }
 }

@@ -9,7 +9,7 @@
         string Permission = null,
         int? Type = null,
         string Route = null,
-        int? Sort = null 
+        int? Sort = null
    );
 
     public record MenuResultModel : MenuViewModel

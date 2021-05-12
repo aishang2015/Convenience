@@ -140,8 +140,10 @@ namespace Convience.Service.SystemManage
             var query = from menu in _menuRepository.Get()
                         where menuIds.Contains(menu.Id.ToString())
                         select menu;
-            var identifications = string.Join(',', query.Select(m => m.Identification));
-            var routes = string.Join(',', query.Select(m => m.Route));
+            var identifications = string.Join(',', query
+                .Where(m => !string.IsNullOrEmpty(m.Identification)).Select(m => m.Identification));
+            var routes = string.Join(',', query
+                .Where(m => !string.IsNullOrEmpty(m.Route)).Select(m => m.Route));
             return (identifications, routes);
         }
     }

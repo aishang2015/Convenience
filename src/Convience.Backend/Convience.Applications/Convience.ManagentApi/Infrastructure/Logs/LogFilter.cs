@@ -38,7 +38,7 @@ namespace Convience.ManagentApi.Infrastructure.Logs
             context.HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             message.RequestContent = reader.ReadToEndAsync().Result;
 
-            OperateLogQueue.Queue.Enqueue(message);
+            OperateLogQueue.blockingCollection.Add(message);
         }
 
         public void OnResultExecuting(ResultExecutingContext context)
