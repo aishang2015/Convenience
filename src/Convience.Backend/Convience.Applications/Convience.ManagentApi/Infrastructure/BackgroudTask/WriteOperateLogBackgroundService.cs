@@ -1,50 +1,66 @@
 ﻿using AppService.Service;
-
 using Convience.Entity.Data;
 using Convience.Entity.Entity.Logs;
 using Convience.EntityFrameWork.Repositories;
 using Convience.ManagentApi.Infrastructure.Logs;
-
-using Microsoft.AspNetCore.Http;
-
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Convience.ManagentApi.Jobs
+namespace Convience.ManagentApi.Infrastructure.BackgroudTask
 {
-    public class WriteOperateLogJob
+    public class WriteOperateLogBackgroundService : BackgroundService
+    {
+        public IServiceProvider Services { get; }
+
+        public WriteOperateLogBackgroundService(IServiceProvider services)
+        {
+            Services = services;
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            using (var scope = Services.CreateScope())
+            {
+                var writeOperateLogService = scope.ServiceProvider
+                        .GetRequiredService<IWriteOperateLogService>();
+                await writeOperateLogService.DoWork();
+            }
+        }
+    }
+
+    internal interface IWriteOperateLogService
+    {
+        Task DoWork();
+    }
+
+    internal class WriteOperateLogService : IWriteOperateLogService
     {
         private readonly IRepository<OperateLogDetail> _logDetaiRrepository;
 
         private readonly ICachingService<OperateLogSetting> _logSettingCaching;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
         private readonly SystemIdentityDbUnitOfWork _systemIdentityDbUnitOfWork;
 
-        // 每次最大处理量
-        private const int BatchLimitCount = 1000;
-
-        public WriteOperateLogJob(
+        public WriteOperateLogService(
             IRepository<OperateLogDetail> logDetaiRrepository,
             ICachingService<OperateLogSetting> logSettingCaching,
-            IHttpContextAccessor httpContextAccessor,
             SystemIdentityDbUnitOfWork systemIdentityDbUnitOfWork)
         {
             _logDetaiRrepository = logDetaiRrepository;
             _logSettingCaching = logSettingCaching;
-            _httpContextAccessor = httpContextAccessor;
             _systemIdentityDbUnitOfWork = systemIdentityDbUnitOfWork;
         }
 
-        public async Task Run()
+        public async Task DoWork()
         {
-            int runCount = 0;
-            while (!OperateLogQueue.Queue.IsEmpty && runCount++ < BatchLimitCount)
+            // GetConsumingEnumerable在程序启动时会阻塞主线程，加上了这个delay就可以了
+            await Task.Delay(1);
+            foreach (var message in OperateLogQueue.blockingCollection.GetConsumingEnumerable())
             {
-                OperateLogQueue.Queue.TryDequeue(out OperateLogMessage message);
-
                 // 有消息将数据写入数据库
                 if (message != null)
                 {
@@ -65,11 +81,11 @@ namespace Convience.ManagentApi.Jobs
                             Uri = message.Uri
                         };
                         await _logDetaiRrepository.AddAsync(detail);
+                        await _systemIdentityDbUnitOfWork.SaveAsync();
                     }
                 }
             }
-            await _systemIdentityDbUnitOfWork.SaveAsync();
-        }
 
+        }
     }
 }

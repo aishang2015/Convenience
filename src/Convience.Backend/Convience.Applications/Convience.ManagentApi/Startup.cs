@@ -11,12 +11,9 @@ using Convience.JwtAuthentication;
 using Convience.ManagentApi.Infrastructure.Authorization;
 using Convience.ManagentApi.Infrastructure.BackgroudTask;
 using Convience.ManagentApi.Infrastructure.Hubs;
-using Convience.ManagentApi.Jobs;
 using Convience.SignalRs;
 using Convience.Util.Extension;
 using Convience.Util.Middlewares;
-
-using Hangfire;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -53,7 +50,6 @@ namespace Convience.ManagentApi
                 .AddCorsPolicy()
                 .AddSwashbuckle()
                 .AddAutoMapper()
-                .AddPostgreHangFire(dbConnectionString)
                 .AddMemoryCache()
                 .AddFileSystemStore(Configuration)
                 .AddServices()
@@ -89,8 +85,6 @@ namespace Convience.ManagentApi
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
-            app.UseHangfireDashBoard(serviceProvider);
 
             app.UseRouting();
 
@@ -165,7 +159,11 @@ namespace Convience.ManagentApi
             app.UseHFAuthorizeDashBoard("/taskManage");
             app.UseHFAnonymousDashBoard("/taskView");
 
-            AllJobSetting.SetJobs();
+            //RecurringJob.AddOrUpdate<WriteOperateLogJob>("定时写入操作日志", j => j.Run(), Cron.Minutely);
+            //RecurringJob.AddOrUpdate<ClearOperateLogJob>("定时清理操作日志", j => j.Run(), Cron.Daily);
+
+            //RecurringJob.AddOrUpdate<WriteLoginLogJob>("定时写入登录日志", j => j.Run(), Cron.Minutely);
+            //RecurringJob.AddOrUpdate<ClearLoginLogJob>("定时清理登录日志", j => j.Run(), Cron.Daily);
             return app;
         }
     }

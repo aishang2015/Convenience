@@ -40,7 +40,6 @@ namespace Convience.ManagentApi.Infrastructure.BackgroudTask
                 if (eventData.Payload[i] is IDictionary<string, object> eventPayload)
                 {
                     var (counterName, counterValue, counterUnit) = GetRelevantMetric(eventPayload);
-                    Console.WriteLine($"{counterName} : {counterValue} {counterUnit}");
                     switch (counterName)
                     {
                         case "cpu-usage":

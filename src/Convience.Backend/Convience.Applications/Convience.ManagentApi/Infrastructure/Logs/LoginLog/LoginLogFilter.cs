@@ -22,7 +22,7 @@ namespace Convience.ManagentApi.Infrastructure.Logs.LoginLog
             message.OperatorAccount = body["UserName"].ToString();
             message.IpAddress = context.HttpContext.Connection.RemoteIpAddress.ToString();
             message.IsSuccess = context.HttpContext.Response.StatusCode == 200;
-            LoginLogQueue.Queue.Enqueue(message);
+            LoginLogQueue.blockingCollection.Add(message);
         }
 
         public void OnResultExecuting(ResultExecutingContext context)

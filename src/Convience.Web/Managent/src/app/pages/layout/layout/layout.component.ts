@@ -62,7 +62,6 @@ export class LayoutComponent implements OnInit {
       children: [        
         { canOperate: 'code', routerLink: '/tool/code', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: '代码生成', name: '代码生成', },
         { canOperate: 'swagger', routerLink: '/tool/swagger', iconType: 'api', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Swagger', name: 'Swagger', },
-        { canOperate: 'hangfire', routerLink: '/tool/hangfire', iconType: 'fund-view', firstBreadcrumb: '系统工具', lastBreadcrumb: 'Hangfire', name: 'Hangfire', },
       ]
     },
   ];

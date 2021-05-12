@@ -105,8 +105,8 @@ namespace Convience.ManagentApi.Infrastructure
             dbContext.Set<Menu>().Add(new Menu(65, "系统工具", "systemtool", null, 1, null, 6));
             dbContext.Set<Menu>().Add(new Menu(66, "代码生成", "code", null, 3, null, 1));
             dbContext.Set<Menu>().Add(new Menu(67, "Swagger", "swagger", null, 3, null, 2));
-            dbContext.Set<Menu>().Add(new Menu(68, "Hangfire", "hangfire", null, 3, null, 3));
-            dbContext.Set<Menu>().Add(new Menu(69, "CAP", "cap", null, 3, null, 4));
+            //dbContext.Set<Menu>().Add(new Menu(68, "Hangfire", "hangfire", null, 3, null, 3));
+            //dbContext.Set<Menu>().Add(new Menu(69, "CAP", "cap", null, 3, null, 4));
             dbContext.Set<Menu>().Add(new Menu(70, "字典管理", "dicManage", "dicTypeList,dicDataList", 1, null, 4));
             dbContext.Set<Menu>().Add(new Menu(71, "查看页面", null, null, 3, null, 1));
             dbContext.Set<Menu>().Add(new Menu(72, "添加类型按钮", "addDicTypeBtn", "dicTypeAdd", 2, null, 2));

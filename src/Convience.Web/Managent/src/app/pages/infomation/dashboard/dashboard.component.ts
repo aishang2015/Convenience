@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, AfterViewChecked, ApplicationRef } from '@angular/core';
 import { Chart, registerShape } from '@antv/g2';
 import { DashboardService } from 'src/app/business/dashboard.service';
+import { UriConfig } from 'src/app/configs/uri-config';
 
 const signalR = require("@microsoft/signalr");
 
@@ -62,12 +63,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   pohSize = 0;
 
 
-  constructor(private _dashboardService: DashboardService, private appref: ApplicationRef) {
+
+  constructor(
+    private _uriConstant: UriConfig,
+    private _dashboardService: DashboardService,
+    private appref: ApplicationRef) {
   }
 
   ngOnInit() {
     const connection = new signalR.HubConnectionBuilder()
-      .withUrl("https://localhost:5001/appState")
+      .withUrl(`${this._uriConstant._baseUri}/appState`)
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
@@ -190,7 +195,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.initGarbageChart();
     this.initCpuChart();
     this.initMemoryChart();
-    
+
     this.initGraph1();
     this.initGraph3();
     this.initGraph5();
