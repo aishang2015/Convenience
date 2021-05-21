@@ -49,7 +49,7 @@ namespace Convience.Util.Helpers
         public static string NewGuidString()
         {
             // 1f3c6041-c68f-4ab3-ae19-f66f541e3209
-            return _generator.Next().ToString();
+            return Guid.NewGuid().ToString();
         }
 
         public static string NewGuidNoDash()
