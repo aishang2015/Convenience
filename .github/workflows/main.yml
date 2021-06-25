@@ -23,6 +23,7 @@ jobs:
         dotnet restore
     - name: Build
       run: | 
+        cd src/Convience.Backend
         dotnet build --no-restore
         
   build-web:
@@ -34,4 +35,4 @@ jobs:
         run: |
           cd src/Convience.Web/Managent
           npm install
-          ng serve --prod
+          npm run build
