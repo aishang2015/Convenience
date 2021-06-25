@@ -24,7 +24,7 @@ namespace Convience.ManagentApi.Infrastructure.BackgroudTask
 
             EnableEvents(source, EventLevel.Verbose, EventKeywords.All, new Dictionary<string, string>()
             {
-                ["EventCounterIntervalSec"] = "10"
+                ["EventCounterIntervalSec"] = "2"
             });
         }
 
