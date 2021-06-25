@@ -23,7 +23,6 @@ jobs:
         dotnet restore
     - name: Build
       run: | 
-        cd api
         dotnet build --no-restore
         
   build-web:
