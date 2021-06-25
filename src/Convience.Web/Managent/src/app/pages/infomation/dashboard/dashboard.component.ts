@@ -174,7 +174,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       this.garbageChartData[0].percent = fun(this.garbageChartData[0].count / total);
       this.garbageChartData[1].percent = fun(this.garbageChartData[1].count / total);
       this.garbageChartData[2].percent = fun(this.garbageChartData[2].count / total);
-      this.garbageChart.render();
+      this.garbageChart.changeData(this.garbageChartData);
     });
 
     connection.on("HandeLohSize", data => {
