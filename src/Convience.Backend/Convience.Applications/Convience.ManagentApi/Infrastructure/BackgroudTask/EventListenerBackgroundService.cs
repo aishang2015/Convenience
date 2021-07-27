@@ -1,10 +1,4 @@
-﻿using Convience.ManagentApi.Infrastructure.Hubs;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
+﻿using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
 
