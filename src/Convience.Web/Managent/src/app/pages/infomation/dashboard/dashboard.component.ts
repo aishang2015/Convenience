@@ -73,13 +73,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     const connection = new signalR.HubConnectionBuilder()
       .withUrl(`${this._uriConstant._baseUri}/appState`)
-      .configureLogging(signalR.LogLevel.Information)
+      .configureLogging(signalR.LogLevel.Warning)
       .build();
 
     async function start() {
       try {
         await connection.start();
-        console.log("SignalR Connected.");
       } catch (err) {
         console.log(err);
         setTimeout(start, 5000);
