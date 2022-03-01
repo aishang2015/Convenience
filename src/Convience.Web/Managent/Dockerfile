@@ -1,4 +1,4 @@
-FROM node AS builder
+FROM node:14 AS builder
 WORKDIR /app
 COPY . /app
 RUN mkdir -p /app/node_modules
